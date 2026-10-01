@@ -12,7 +12,7 @@
 
   // startData(room) gives the shared data of a match (e.g. the arc and the character to find);
   // it is used both by the host's Start button and by the automatic start when the room is full.
-  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {} }) {
+  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {}, onInvite = () => {} }) {
     const api = {
       status: "connecting", // connecting | live | offline
       selfId: null,
@@ -80,6 +80,13 @@
         if (!room || api.myRoom?.id !== room.id || !room.members.some((m) => m.id === api.selfId)) return;
         api.myRoom = room;
         onStart(room, d.data ?? {});
+      } else if (type === "invite") {
+        // Any member can invite; the host still decides when the join request arrives.
+        const room = sanitizeRoom(d.room, d.room?.host);
+        if (!room || room.started || room.members.length >= room.size || !room.members.some((m) => m.id === from)) return;
+        if (api.myRoom?.id === room.id) return;
+        if (!api.rooms.has(room.id)) api.rooms.set(room.id, room);
+        onInvite(room, from);
       } else if (type === "msg") {
         if (!api.myRoom || d.roomId !== api.myRoom.id || !api.myRoom.members.some((m) => m.id === from)) return;
         onMessage(String(d.type), d.data ?? {}, from);
@@ -93,7 +100,7 @@
         const { joinRoom, selfId } = await import(TRYSTERO);
         api.selfId = selfId;
         const room = joinRoom({ appId: APP_ID }, `${channel}-lobby`);
-        for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg"]) {
+        for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
           const action = room.makeAction(name);
           send[name] = (data, target) => action.send(data, target ? { target } : undefined);
           action.onMessage = (data, { peerId }) => handle(name, data, peerId);
@@ -195,6 +202,19 @@
       onChange();
     };
 
+    // Invite a player from the lobby into my room, creating one first if I have none.
+    api.invite = (peerId, { game, size }) => {
+      if (api.status !== "live" || !api.peers.has(peerId)) return false;
+      if (!api.myRoom || api.myRoom.started) api.createRoom({ game, size });
+      const room = api.myRoom;
+      if (!room || room.members.length >= room.size || room.members.some((m) => m.id === peerId)) return false;
+      send.invite({ room }, peerId);
+      return true;
+    };
+
+    // The open room a player is waiting in, if any (to join them directly).
+    api.roomOf = (peerId) => [...api.rooms.values()].find((r) => !r.started && r.members.some((m) => m.id === peerId)) ?? null;
+
     api.isHost = isHost;
     api.openRooms = () => [...api.rooms.values()].filter((r) => !r.started && r.members.length < r.size && r.id !== api.myRoom?.id);
 
@@ -202,5 +222,31 @@
     return api;
   }
 
-  window.DLE_Rooms = { create, cleanName };
+  // Banner shown when someone invites me; the newest invitation replaces the previous one.
+  function inviteBanner({ text, join, dismiss, onJoin, ms = 20000 }) {
+    document.querySelector(".invite-banner")?.remove();
+    const box = document.createElement("div");
+    box.className = "invite-banner";
+    box.setAttribute("role", "alert");
+    const msg = document.createElement("span");
+    msg.className = "invite-text";
+    msg.textContent = text;
+    const yes = document.createElement("button");
+    yes.type = "button";
+    yes.className = "btn-primary btn-small";
+    yes.textContent = join;
+    const no = document.createElement("button");
+    no.type = "button";
+    no.className = "btn-ghost btn-small";
+    no.textContent = dismiss;
+    const close = () => { clearTimeout(timer); box.classList.add("is-out"); setTimeout(() => box.remove(), 250); };
+    const timer = setTimeout(close, ms);
+    yes.addEventListener("click", () => { close(); onJoin(); });
+    no.addEventListener("click", close);
+    box.append(msg, yes, no);
+    document.body.append(box);
+    return close;
+  }
+
+  window.DLE_Rooms = { create, cleanName, inviteBanner };
 })();

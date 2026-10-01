@@ -28,7 +28,7 @@ Open `index.html` (the category picker) in a browser; there is nothing to instal
 
 ## Online play
 
-Rooms (`shared/rooms.js`) are peer to peer: players connect directly with [Trystero](https://github.com/dmotz/trystero) (WebRTC, public Nostr relays to find each other), so no server is needed. The player who creates a room hosts it; a match uses the lowest arc among the players so nobody gets spoiled. In Crew Roll online, everyone rolls on their own with 3 rerolls, and a character rolled or placed by one player can't be rolled by the others.
+Rooms (`shared/rooms.js`) are peer to peer: players connect directly with [Trystero](https://github.com/dmotz/trystero) (WebRTC, public Nostr relays to find each other), so no server is needed. The player who creates a room hosts it; a match uses the lowest arc among the players so nobody gets spoiled. In Crew Roll online, everyone rolls on their own with 3 rerolls, and a character rolled or placed by one player can't be rolled by the others. Players in the lobby can be invited with one click (a room is created if needed), or joined directly when they already wait in a room.
 
 ## Structure
 

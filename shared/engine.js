@@ -787,6 +787,15 @@
         if (race && !race.done) finishRace();
         else if (!race && isOnline()) renderRace();
       },
+      onInvite: (room, from) => {
+        if (race && !race.done) return;
+        window.DLE_Rooms.inviteBanner({
+          text: t("invitedBy")(rooms.peers.get(from)?.name ?? "Player", ""),
+          join: t("join"),
+          dismiss: t("ignore"),
+          onJoin: () => joinRaceRoom(room),
+        });
+      },
     });
     updateRaceProfile();
   }
@@ -948,6 +957,45 @@
     }
   }
 
+  function joinRaceRoom(r) {
+    if (!isOnline()) { settings.mode = "online"; saveSettings(); startGame(); }
+    if (race) race = null;
+    rooms.join(r.id);
+    renderRace();
+  }
+
+  // Who is around: join the room a player waits in, or invite them into mine.
+  function racePeers(box) {
+    const around = [...rooms.peers.values()];
+    if (!around.length) return;
+    box.append(el("h3", "room-title", esc(t("inLobby")(around.length + 1))));
+    const chips = el("div", "lobby-chips");
+    const mine = rooms.myRoom;
+    for (const p of around) {
+      const chip = el("span", "lobby-chip");
+      const name = el("span");
+      name.textContent = p.name;
+      chip.append(name);
+      const theirs = rooms.roomOf(p.id);
+      let btn = null;
+      if (theirs && theirs.id !== mine?.id) {
+        if (theirs.members.length < theirs.size) {
+          btn = el("button", "btn-primary btn-small", esc(t("join")));
+          btn.addEventListener("click", () => { if (myName()) joinRaceRoom(theirs); else { $("#raceName")?.focus(); toast(t("pickName")); } });
+        }
+      } else if (!theirs && !(mine && mine.members.length >= mine.size)) {
+        btn = el("button", "btn-ghost btn-small", esc(t("invite")));
+        btn.addEventListener("click", () => {
+          if (!myName()) { $("#raceName")?.focus(); toast(t("pickName")); return; }
+          if (rooms.invite(p.id, { game: CFG.id, size: raceSize })) toast(t("inviteSent")(p.name));
+        });
+      }
+      if (btn) { btn.type = "button"; chip.classList.add("has-action"); chip.append(btn); }
+      chips.append(chip);
+    }
+    box.append(chips);
+  }
+
   function renderRaceLobby(box) {
     box.append(el("h2", null, esc(t("raceTitle"))));
     box.append(el("p", "muted", esc(t("raceHelp"))));
@@ -1022,6 +1070,7 @@
       actions.append(leave);
       card.append(actions);
       box.append(card);
+      racePeers(box);
       return;
     }
 
@@ -1058,6 +1107,7 @@
       list.append(li);
     }
     box.append(list);
+    racePeers(box);
   }
 
   // ── Boot ──

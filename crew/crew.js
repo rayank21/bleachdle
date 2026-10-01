@@ -57,6 +57,10 @@
       waitHost: "Waiting for the host to start…",
       needTwo: "At least 2 players are needed to start.",
       roomClosed: "The host closed the room.",
+      invite: "Invite",
+      inviteSent: (n) => `Invitation sent to ${n}`,
+      invitedBy: (n, a) => `${n} invites you to play${a ? ` (${a})` : ""}`,
+      ignore: "Ignore",
       connecting: "Connecting to the lobby…",
       offline: "Online play is unavailable right now.",
       you: "you",
@@ -115,6 +119,10 @@
       waitHost: "En attente du lancement par l'hôte…",
       needTwo: "Il faut au moins 2 joueurs pour lancer.",
       roomClosed: "L'hôte a fermé la salle.",
+      invite: "Inviter",
+      inviteSent: (n) => `Invitation envoyée à ${n}`,
+      invitedBy: (n, a) => `${n} t'invite à jouer${a ? ` (${a})` : ""}`,
+      ignore: "Ignorer",
       connecting: "Connexion au lobby…",
       offline: "Le jeu en ligne est indisponible pour l'instant.",
       you: "toi",
@@ -653,6 +661,16 @@
         else { match = null; renderLobby(); }
         toast(t("roomClosed"));
       },
+      onInvite: (room, from) => {
+        if (match && !match.done) return;
+        const g = GAMES.find((x) => x.id === room.game);
+        window.DLE_Rooms.inviteBanner({
+          text: t("invitedBy")(rooms.peers.get(from)?.name ?? "Player", g?.anime),
+          join: t("join"),
+          dismiss: t("ignore"),
+          onJoin: () => joinRoom(room),
+        });
+      },
     });
     updateProfile();
   }
@@ -740,10 +758,9 @@
         li.append(el("span", "lobby-pname", t("roomOf")(host?.name ?? "Player")), el("span", "lobby-badge", `${r.members.length}/${r.size}`));
         const join = el("button", "btn-primary btn-small", t("join"));
         join.type = "button";
-        join.addEventListener("click", async () => {
+        join.addEventListener("click", () => {
           if (!myName()) { input.placeholder = t("pickName"); input.focus(); return; }
-          if (r.game !== currentGame.id) await selectGame(r.game, { quiet: true });
-          rooms.join(r.id);
+          joinRoom(r);
         });
         li.append(join);
         list.append(li);
@@ -756,9 +773,44 @@
     if (around.length) {
       box.append(el("h3", "room-title", t("inLobby")(around.length + 1)));
       const chips = el("div", "lobby-chips");
-      for (const p of around) chips.append(el("span", "lobby-chip", p.name));
+      for (const p of around) chips.append(peerChip(p));
       box.append(chips);
     }
+  }
+
+  async function joinRoom(r) {
+    if (match) { match = null; }
+    if (mode !== "online") setMode("online");
+    if (r.game !== currentGame.id) await selectGame(r.game, { quiet: true });
+    rooms.join(r.id);
+  }
+
+  // A player in the lobby: join the room they wait in, or invite them into mine.
+  function peerChip(p) {
+    const chip = el("span", "lobby-chip");
+    const name = el("span");
+    name.textContent = p.name;
+    chip.append(name);
+    const mine = rooms.myRoom;
+    const theirs = rooms.roomOf(p.id);
+    let btn = null;
+    if (theirs && theirs.id !== mine?.id) {
+      if (theirs.members.length < theirs.size) {
+        btn = el("button", "btn-primary btn-small", t("join"));
+        btn.addEventListener("click", () => {
+          if (!myName()) { $("#lobbyName")?.focus(); toast(t("pickName")); return; }
+          joinRoom(theirs);
+        });
+      }
+    } else if (!theirs && !(mine && mine.members.length >= mine.size)) {
+      btn = el("button", "btn-ghost btn-small", t("invite"));
+      btn.addEventListener("click", () => {
+        if (!myName()) { $("#lobbyName")?.focus(); toast(t("pickName")); return; }
+        if (rooms.invite(p.id, { game: currentGame.id, size: roomSize })) toast(t("inviteSent")(p.name));
+      });
+    }
+    if (btn) { btn.type = "button"; chip.classList.add("has-action"); chip.append(btn); }
+    return chip;
   }
 
   function roomCard(room) {
