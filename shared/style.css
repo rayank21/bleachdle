@@ -863,7 +863,9 @@ a.arc-chip { text-decoration: none; }
   transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 .crew-slot:disabled { cursor: default; }
-.crew-icon { position: absolute; top: 8px; left: 8px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; background: rgba(var(--accent-rgb), 0.14); color: var(--accent-strong); }
+/* Each role has its own colour (--role-rgb, set from its icon in crew.js); red stays for actions. */
+.crew-slot { --role-rgb: 200, 200, 210; }
+.crew-icon { position: absolute; top: 8px; left: 8px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; background: rgba(var(--role-rgb), 0.16); color: rgb(var(--role-rgb)); box-shadow: inset 0 0 0 1px rgba(var(--role-rgb), 0.3); }
 .crew-face {
   width: 88px;
   height: 88px;
@@ -878,11 +880,11 @@ a.arc-chip { text-decoration: none; }
   font-weight: 800;
 }
 .crew-face img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-.crew-slot.is-filled { border-color: rgba(var(--accent-rgb), 0.35); }
-.crew-slot.is-filled .crew-face { border: 2px solid rgba(var(--accent-rgb), 0.85); }
+.crew-slot.is-filled { border-color: rgba(var(--role-rgb), 0.35); }
+.crew-slot.is-filled .crew-face { border: 2px solid rgba(var(--role-rgb), 0.9); }
 .crew-name { font-weight: 800; font-size: 14px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: center; }
 .crew-slot:not(.is-filled) .crew-name { color: var(--muted); font-weight: 600; }
-.crew-role { font-size: 11px; font-weight: 800; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 0.6px; }
+.crew-role { padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; color: #f1f1f4; background: rgba(var(--role-rgb), 0.16); box-shadow: inset 0 0 0 1px rgba(var(--role-rgb), 0.35); text-transform: uppercase; letter-spacing: 0.6px; }
 .crew-points {
   position: absolute;
   top: 10px;
@@ -898,17 +900,17 @@ a.arc-chip { text-decoration: none; }
 .crew-points.p8, .crew-points.p9, .crew-points.p10 { background: var(--correct); }
 .crew-points.p5, .crew-points.p6, .crew-points.p7 { background: var(--partial); color: #141414; }
 .crew-points.p1, .crew-points.p2, .crew-points.p3, .crew-points.p4 { background: var(--wrong); }
-.crew-points.is-preview { background: rgba(var(--accent-rgb), 0.9); color: #fff; }
-.crew-slot.is-target { border-color: rgba(var(--accent-rgb), 0.9); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2); }
+.crew-points.is-preview { background: #f1f1f4; color: #141414; }
+.crew-slot.is-target { border-color: rgba(255, 255, 255, 0.45); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08); }
 .crew-slot.is-target:hover { transform: translateY(-3px); }
-.crew-slot.is-target .crew-face { border-color: rgba(var(--accent-rgb), 0.9); }
+.crew-slot.is-target .crew-face { border-color: rgba(var(--role-rgb), 0.9); }
 .crew-slot.is-locked { opacity: 0.45; }
 
 /* The captain stands out: red glow, gold crown, leader tag */
 .crew-slot.is-captain {
-  border-color: rgba(var(--accent-rgb), 0.7);
-  background: radial-gradient(120% 70% at 50% 0%, rgba(var(--accent-rgb), 0.38), transparent 65%), linear-gradient(180deg, #2a0d10, var(--surface));
-  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.35), 0 12px 30px rgba(var(--accent-rgb), 0.22);
+  border-color: rgba(255, 205, 70, 0.6);
+  background: radial-gradient(120% 70% at 50% 0%, rgba(255, 190, 60, 0.22), transparent 65%), linear-gradient(180deg, #221a0c, var(--surface));
+  box-shadow: 0 0 0 1px rgba(255, 205, 70, 0.25), 0 12px 30px rgba(255, 180, 40, 0.15);
 }
 .crew-slot.is-captain .crew-icon { background: linear-gradient(135deg, #ffe16b, #ff9d2e); color: #141414; }
 .crew-slot.is-captain .crew-face { border-color: #ffd34d; border-style: solid; }
@@ -920,8 +922,8 @@ a.arc-chip { text-decoration: none; }
   transform: translateX(-50%);
   padding: 1px 8px;
   border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
+  background: linear-gradient(135deg, #ffe16b, #ff9d2e);
+  color: #2a1600;
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;

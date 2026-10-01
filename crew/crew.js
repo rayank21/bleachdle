@@ -304,6 +304,14 @@
     eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
     globe: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20",
   };
+  // Role colours by icon, so each role reads at a glance.
+  const ROLE_RGB = {
+    crown: "255, 205, 70", swords: "120, 170, 255", sword: "120, 170, 255", compass: "60, 200, 210", chef: "255, 150, 60",
+    cross: "70, 210, 120", book: "180, 130, 255", hammer: "215, 165, 100", shield: "150, 165, 190", skull: "190, 190, 200",
+    mask: "235, 235, 240", star: "255, 215, 90", person: "120, 200, 255", card: "90, 200, 150", bug: "150, 210, 80",
+    spider: "200, 120, 255", bolt: "120, 200, 255", dice: "255, 150, 200", flame: "255, 140, 50", leaf: "100, 210, 110",
+    cloud: "255, 100, 110", hat: "255, 190, 80", eye: "255, 90, 90", globe: "90, 180, 255",
+  };
   function icon(name, cls = "icon") {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
@@ -580,6 +588,7 @@
       const card = el("button", "crew-slot");
       card.type = "button";
       card.classList.toggle("is-captain", isCaptain(slot));
+      if (ROLE_RGB[slot.def.icon]) card.style.setProperty("--role-rgb", ROLE_RGB[slot.def.icon]);
       const ic = el("span", "crew-icon");
       ic.append(icon(slot.def.icon));
       card.append(ic);
