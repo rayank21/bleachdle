@@ -230,6 +230,7 @@ function addMessage(raw, { quiet = false } = {}) {
   chat.messages.sort((a, b) => a.ts - b.ts);
   if (chat.messages.length > CHAT_KEEP) chat.messages.splice(0, chat.messages.length - CHAT_KEEP);
   if (!quiet && !chat.open && !m.mine) chat.unread++;
+  if (!quiet && !m.mine) window.DLE_FX?.play("message");
   try { sessionStorage.setItem("dle:chat", JSON.stringify(chat.messages)); } catch {}
   return true;
 }

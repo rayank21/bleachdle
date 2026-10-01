@@ -250,6 +250,8 @@
       if (animate) {
         tile.classList.add("flip");
         tile.style.animationDelay = `${i * FLIP_STEP}ms`;
+        // Each tile sounds its colour as it flips in.
+        setTimeout(() => window.DLE_FX?.play(status), i * FLIP_STEP + 120);
       }
       row.append(tile);
     });
@@ -423,6 +425,7 @@
     b.type = "button";
     b.addEventListener("click", () => {
       game.status = "lost";
+      window.DLE_FX?.play("lose");
       if (isOnline()) { renderAll(); raceProgress(); return; }
       saveGame();
       recordGiveUp();
@@ -456,7 +459,6 @@
   }
 
   function burst() {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const layer = el("div", "burst");
     for (let i = 0; i < 46; i++) {
       const p = el("i");
@@ -503,6 +505,8 @@
       setTimeout(() => {
         row.classList.add("is-win");
         burst();
+        window.DLE_FX?.play("win");
+        window.DLE_FX?.flash("rgba(var(--accent-rgb), 0.35)");
         renderResult();
         renderWeekly();
         $("#resultBanner").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -849,9 +853,8 @@
     right.textContent = others.join(" · ");
     s.append(left, mark, right);
     document.body.append(s);
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    return new Promise((r) => setTimeout(r, reduce ? 0 : 2200))
-      .then(() => { s.classList.add("is-out"); return new Promise((r) => setTimeout(r, reduce ? 0 : 350)); })
+    return new Promise((r) => setTimeout(r, 2200))
+      .then(() => { s.classList.add("is-out"); return new Promise((r) => setTimeout(r, 350)); })
       .then(() => s.remove());
   }
 

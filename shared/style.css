@@ -632,9 +632,6 @@ body[data-game="jujutsukaisen"] .hero-title { font-size: 33px; white-space: nowr
   .hints { grid-template-columns: 1fr; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
 
 /* ── Home: category picker ──────────────────────────────────── */
 body[data-game="home"] { --tint-rgb: 120, 40, 60; }
@@ -880,7 +877,7 @@ a.arc-chip { text-decoration: none; }
   font-size: 28px;
   font-weight: 800;
 }
-.crew-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
+.crew-face img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .crew-slot.is-filled { border-color: rgba(var(--accent-rgb), 0.35); }
 .crew-slot.is-filled .crew-face { border: 2px solid rgba(var(--accent-rgb), 0.85); }
 .crew-name { font-weight: 800; font-size: 14px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: center; }
@@ -1144,3 +1141,25 @@ body[data-game="home"] .cat .cat-name { display: none; }
   .anime-mini-pick img { width: 28px; height: 28px; }
   .anime-mini { gap: 4px; }
 }
+
+/* ── Effects (shared/fx.js) ─────────────────────────────────── */
+.fx-host { overflow: hidden; isolation: isolate; }
+.fx-ripple { position: absolute; z-index: 0; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.35), transparent 60%); transform: scale(0); pointer-events: none; animation: fx-ripple 0.6s ease-out forwards; }
+@keyframes fx-ripple { to { transform: scale(1); opacity: 0; } }
+.fx-flash { position: fixed; inset: 0; z-index: 96; pointer-events: none; animation: fx-flash 0.7s ease-out forwards; }
+@keyframes fx-flash { from { opacity: 1; } to { opacity: 0; } }
+.fx-sound { color: var(--muted); transition: color 0.15s, transform 0.15s; }
+.fx-sound:hover { color: var(--text); }
+.fx-sound:active { transform: scale(0.9); }
+.fx-sound.is-muted { color: rgba(255, 255, 255, 0.35); }
+
+/* Home cards: tilt and a glare that follows the mouse */
+.game-card, .crew-card { position: relative; transform-style: preserve-3d; }
+.game-card.is-tilting, .crew-card.is-tilting { transition: transform 0.08s linear; }
+.game-card::before, .crew-card::before { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; opacity: 0; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.18), transparent 55%); transition: opacity 0.2s; }
+.game-card.is-tilting::before, .crew-card.is-tilting::before { opacity: 1; }
+
+/* Guess tiles: a light sweep on correct tiles, a jolt on wrong ones */
+.tile.flip.is-correct::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%); transform: translateX(-120%); animation: tile-shine 0.7s ease-out both; animation-delay: inherit; }
+@keyframes tile-shine { 0%, 50% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+.row.is-win .tile { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5), 0 0 28px rgba(31, 157, 76, 0.7); }

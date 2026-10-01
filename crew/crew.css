@@ -1,8 +1,10 @@
 /* Crew Roll: motion design and online 1v1 (loaded after shared/style.css) */
 
-/* ── Reel: a large portrait card ── */
+/* ── Reel: a large portrait card on a stage of light ── */
+.reel-stage { position: relative; display: grid; place-items: center; width: 100%; padding: 6px 0; isolation: isolate; }
 .reel-window {
   position: relative;
+  z-index: 2;
   width: var(--reel-w, 132px);
   height: var(--reel-h, 132px);
   border-radius: 18px;
@@ -10,52 +12,139 @@
   background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.18), var(--surface-2) 70%);
   border: 3px solid rgba(var(--accent-rgb), 0.8);
   box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.25), inset 0 0 0 1px rgba(0, 0, 0, 0.4);
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, border-color 0.3s, transform 0.25s cubic-bezier(.3, 1.4, .5, 1);
 }
-.reel-strip { display: flex; flex-direction: column; will-change: transform; }
-.reel-strip img { width: 100%; height: var(--reel-h, 132px); flex: none; object-fit: cover; object-position: center 15%; }
-.reel-q { position: absolute; inset: 0; display: grid; place-items: center; font-size: 96px; font-weight: 900; font-style: italic; color: rgba(var(--accent-rgb), 0.55); text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.5); }
+.reel-strip { display: flex; flex-direction: column; will-change: transform, filter; }
+/* Whole portrait over a blurred, zoomed copy of itself: nobody is cut off. */
+.reel-item { position: relative; flex: none; height: calc(var(--reel-h, 132px) - 6px); overflow: hidden; }
+.reel-bg { position: absolute; inset: -12%; width: 124%; height: 124%; max-width: none; object-fit: cover; filter: blur(16px) brightness(0.55) saturate(1.3); }
+.reel-fg { position: relative; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.6)); }
+.reel-q { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; font-size: 110px; font-weight: 900; font-style: italic; color: rgba(var(--accent-rgb), 0.6); text-shadow: 0 0 34px rgba(var(--accent-rgb), 0.6); animation: q-breathe 2.4s ease-in-out infinite; }
 .reel-q[hidden] { display: none !important; }
-.reel.is-spinning .reel-window { box-shadow: 0 0 46px rgba(var(--accent-rgb), 0.55); }
-.reel.is-spinning .reel-strip img { filter: blur(1.2px) saturate(1.2); }
+@keyframes q-breathe { 50% { transform: scale(1.08); color: rgba(var(--accent-rgb), 0.85); } }
+
+/* Idle: an ember glow breathes behind the card */
+.reel-glow { position: absolute; z-index: 0; width: calc(var(--reel-w, 132px) * 1.25); height: calc(var(--reel-h, 132px) * 1.1); border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.45), transparent); filter: blur(18px); animation: glow-breathe 3s ease-in-out infinite; pointer-events: none; }
+@keyframes glow-breathe { 50% { opacity: 0.55; transform: scale(0.92); } }
+
+/* Diagonal light sweep across the glass */
+.reel-shine { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.28) 48%, transparent 60%); transform: translateX(-120%); animation: shine 4.5s ease-in-out infinite; }
+@keyframes shine { 0%, 60% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
+
+/* Wind-up */
+.reel.is-charging .reel-window { transform: scale(0.92); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.25), 0 0 60px rgba(var(--accent-rgb), 0.6); }
+.reel.is-charging .reel-glow { animation: none; opacity: 1; transform: scale(1.15); transition: transform 0.25s; }
+
+/* Spinning: speed lines, darker edges, frame ticks on each face */
+.reel-lines { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: repeating-linear-gradient(90deg, transparent 0 18px, rgba(255, 255, 255, 0.07) 18px 20px); transition: opacity 0.3s; }
+.reel.is-spinning .reel-lines { opacity: 1; animation: lines 0.25s linear infinite; }
+@keyframes lines { to { background-position: 0 40px; } }
+.reel.is-spinning .reel-window { box-shadow: 0 0 60px rgba(var(--accent-rgb), 0.6); border-color: var(--accent-strong); }
 .reel.is-spinning .reel-window::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.55));
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.7));
 }
-.reel.is-landed .reel-window {
-  animation: land 0.55s cubic-bezier(.3, 1.6, .5, 1);
-  box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.18), 0 0 50px rgba(var(--accent-rgb), 0.45);
+.reel.is-spinning .reel-glow { animation: glow-breathe 0.4s ease-in-out infinite; }
+.reel-window.tick { animation: tick 0.12s ease-out; }
+@keyframes tick { 40% { transform: scale(1.025); border-color: #fff; } }
+.reel.is-spinning .reel-name { animation: blink 0.5s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0.45; } }
+
+/* Landing: slam, white flash, rotating rays behind the card */
+.reel.is-landed .reel-window { animation: land 0.6s cubic-bezier(.3, 1.7, .5, 1); box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.18), 0 0 50px rgba(var(--accent-rgb), 0.45); }
+@keyframes land { 0% { transform: scale(1.18); } 35% { transform: scale(0.94); } 70% { transform: scale(1.03); } 100% { transform: scale(1); } }
+.reel-flash { position: absolute; inset: 0; z-index: 4; background: #fff; opacity: 0; pointer-events: none; mix-blend-mode: screen; }
+.reel-flash.go { animation: flash 0.5s ease-out; }
+@keyframes flash { 0% { opacity: 0.95; } 100% { opacity: 0; } }
+.reel-rays {
+  position: absolute;
+  z-index: 1;
+  width: calc(var(--reel-w, 132px) * 2.1);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(var(--ray-rgb, var(--accent-rgb)), 0.38) 0deg 7deg, transparent 7deg 20deg);
+  -webkit-mask: radial-gradient(closest-side, #000 25%, transparent);
+  mask: radial-gradient(closest-side, #000 25%, transparent);
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
 }
-.reel.is-landed .reel-name { animation: rise 0.35s ease both; }
-.power-fill { width: 0; transition: width 0.7s cubic-bezier(.2, .8, .2, 1); }
-@keyframes land { 0% { transform: scale(0.88); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+.reel.is-landed .reel-rays { opacity: 1; transform: scale(1); transition: opacity 0.4s, transform 0.6s cubic-bezier(.2, .8, .2, 1); animation: rays 14s linear infinite; }
+.reel.is-landed.tier-common .reel-rays { opacity: 0.45; }
+@keyframes rays { to { rotate: 360deg; } }
+
+/* Rarity tiers */
+.reel-tier { padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.6px; background: var(--surface-3); color: var(--muted); animation: tier-in 0.5s 0.1s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes tier-in { from { opacity: 0; transform: translateY(8px) scale(0.6); } }
+.tier-epic .reel-tier { background: rgba(var(--accent-rgb), 0.2); color: var(--accent-strong); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.5); }
+.tier-legend { --ray-rgb: 255, 200, 60; }
+.tier-legend .reel-tier { background: linear-gradient(90deg, #ffe16b, #ff9d2e, #ffe16b); background-size: 200% 100%; color: #2a1600; animation: tier-in 0.5s 0.1s cubic-bezier(.3, 1.6, .5, 1) both, gold-slide 1.6s linear infinite; box-shadow: 0 0 20px rgba(255, 190, 60, 0.55); }
+@keyframes gold-slide { to { background-position: -200% 0; } }
+.reel.tier-legend .reel-window { border-color: #ffd34d; box-shadow: 0 0 0 6px rgba(255, 200, 60, 0.2), 0 0 60px rgba(255, 190, 60, 0.6); }
+.reel.tier-legend .reel-glow { background: radial-gradient(closest-side, rgba(255, 190, 60, 0.55), transparent); }
+.reel.tier-legend .power-fill { background: linear-gradient(90deg, #ff9d2e, #ffe16b); }
+
+/* Name reveal, letter by letter */
+.reel-letter { display: inline-block; animation: letter 0.45s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes letter { from { opacity: 0; transform: translateY(14px) scale(0.6) rotate(-8deg); filter: blur(4px); } }
+.tier-legend .reel-name { background: linear-gradient(90deg, #fff, #ffe16b, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tier-legend .reel-letter { color: #ffe16b; }
+.reel.is-landed .power { animation: rise 0.35s 0.2s ease both; }
+.power-fill { width: 0; position: relative; overflow: hidden; transition: width 0.8s cubic-bezier(.2, .8, .2, 1); }
+.power-fill::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent); transform: translateX(-100%); animation: power-shine 1.8s 0.9s ease-in-out infinite; }
+@keyframes power-shine { 60%, 100% { transform: translateX(100%); } }
+
+/* Shake for legendary draws */
+.roll-panel.shake { animation: shake 0.5s cubic-bezier(.36, .07, .19, .97); }
+@keyframes shake {
+  10%, 90% { transform: translate(-1px, 0); }
+  20%, 80% { transform: translate(3px, -1px); }
+  30%, 50%, 70% { transform: translate(-5px, 2px); }
+  40%, 60% { transform: translate(5px, -2px); }
+}
+
+/* Expanding ring (reel and slot landings) */
+.shockwave { position: fixed; z-index: 94; border-radius: 50%; border: 3px solid rgba(var(--accent-rgb), 0.9); transform: translate(-50%, -50%) scale(0.6); pointer-events: none; animation: shockwave 0.8s cubic-bezier(.1, .7, .3, 1) forwards; }
+.shockwave.is-legend { border-color: #ffd34d; box-shadow: 0 0 24px rgba(255, 200, 60, 0.6); }
+@keyframes shockwave { to { transform: translate(-50%, -50%) scale(2.2); opacity: 0; border-width: 1px; } }
+.burst.is-gold i { background: #ffd34d; }
 
 /* ── Slots ── */
-.crew-slot.enter { animation: slot-in 0.45s cubic-bezier(.2, .8, .2, 1) both; }
-@keyframes slot-in { from { opacity: 0; transform: translateY(14px) scale(0.96); } }
-.crew-slot.is-target { animation: target-pulse 1.4s ease-in-out infinite; }
-@keyframes target-pulse { 50% { box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.08), 0 0 22px rgba(var(--accent-rgb), 0.3); } }
-.crew-slot.pop { animation: slot-pop 0.5s cubic-bezier(.3, 1.6, .5, 1); }
-.crew-slot.pop .crew-points { animation: badge-pop 0.5s 0.1s cubic-bezier(.3, 1.6, .5, 1) both; }
-@keyframes slot-pop { 0% { transform: scale(0.92); } 55% { transform: scale(1.05); } 100% { transform: scale(1); } }
-@keyframes badge-pop { from { transform: scale(0); } }
+.crew-slot.enter { animation: slot-in 0.5s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes slot-in { from { opacity: 0; transform: translateY(18px) scale(0.94) rotateX(25deg); } }
+/* Targets light up in a wave, then keep pulsing */
+.crew-slot.is-target { animation: target-in 0.45s var(--d, 0ms) cubic-bezier(.3, 1.6, .5, 1) both, target-pulse 1.4s calc(var(--d, 0ms) + 0.45s) ease-in-out infinite; }
+@keyframes target-in { 0% { transform: scale(1); } 50% { transform: scale(1.05); border-color: #fff; } }
+@keyframes target-pulse { 50% { box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.08), 0 0 26px rgba(var(--accent-rgb), 0.4); } }
+.crew-slot.is-target .crew-points.is-preview { animation: badge-pop 0.45s calc(var(--d, 0ms) + 0.1s) cubic-bezier(.3, 1.6, .5, 1) both; }
+.crew-slot.pop { animation: slot-pop 0.55s cubic-bezier(.3, 1.6, .5, 1); }
+.crew-slot.pop .crew-face img { animation: face-in 0.5s cubic-bezier(.3, 1.6, .5, 1) both; }
+.crew-slot.pop .crew-points { animation: badge-pop 0.5s 0.15s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes slot-pop { 0% { transform: scale(0.9); } 50% { transform: scale(1.07); box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.55); } 100% { transform: scale(1); } }
+@keyframes face-in { from { transform: scale(1.5); filter: brightness(2.5); } }
+@keyframes badge-pop { from { transform: scale(0) rotate(-30deg); } }
 .flyer {
   position: fixed;
   z-index: 95;
   border-radius: 18px;
   object-fit: cover;
-  object-position: center 15%;
+  object-position: center top;
   pointer-events: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  transform-origin: center;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 30px rgba(var(--accent-rgb), 0.5);
 }
+.flyer.is-ghost { z-index: 94; box-shadow: none; filter: saturate(2) hue-rotate(-10deg); }
 .crew-rank { transform: rotate(-4deg); animation: stamp 0.6s cubic-bezier(.3, 1.6, .5, 1) both; }
 @keyframes stamp {
   0% { opacity: 0; transform: scale(2.4) rotate(-14deg); }
   70% { opacity: 1; transform: scale(0.94) rotate(3deg); }
   100% { transform: scale(1) rotate(-4deg); }
 }
+/* Live rank badge stamps in when it changes */
+.crew-live-rank.stamp { animation: stamp 0.55s cubic-bezier(.3, 1.6, .5, 1) both; }
 
 /* ── Duel ── */
 .duel { width: 100%; display: flex; flex-direction: column; gap: 14px; }

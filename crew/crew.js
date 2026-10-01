@@ -12,7 +12,6 @@
   const ROOT = "../";
   const TRYSTERO = "https://cdn.jsdelivr.net/npm/trystero@0.25.4/+esm";
   const APP_ID = "bleachdle.rayank21.v1";
-  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const T = {
     en: {
@@ -28,6 +27,7 @@
       draw: "Draw",
       waitingRoll: "Who joins the crew?",
       captainTag: "Leader",
+      tiers: { legend: "Legendary", epic: "Epic", common: "Common" },
       rolling: "Rolling…",
       chooseSlot: "Choose a slot for this character",
       noSlot: "No free slot fits this character",
@@ -114,6 +114,7 @@
       draw: "Tirage",
       waitingRoll: "Qui rejoint l'équipage ?",
       captainTag: "Chef",
+      tiers: { legend: "Légendaire", epic: "Épique", common: "Commun" },
       rolling: "Tirage…",
       chooseSlot: "Choisis une place pour ce personnage",
       noSlot: "Aucune place libre ne convient à ce personnage",
@@ -198,7 +199,7 @@
     if (text != null) e.textContent = text;
     return e;
   };
-  const wait = (ms) => new Promise((r) => setTimeout(r, REDUCED ? 0 : ms));
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ── Data ──
   const loaded = {};
@@ -315,29 +316,34 @@
   }
 
   // ── Motion helpers ──
+  // The draw is the heart of Crew Roll, so its motion always plays (even with reduced motion on).
+  const easeOutCubic = (k) => 1 - Math.pow(1 - k, 3);
+  const easeOutQuint = (k) => 1 - Math.pow(1 - k, 5);
+  const frame = () => new Promise((r) => requestAnimationFrame(r));
+  const sfx = (name, opts) => window.DLE_FX?.play(name, opts);
+
   function countUp(node, to, decimals = 1, ms = 650) {
     const from = Number(node.dataset.value || 0);
     node.dataset.value = to;
-    if (REDUCED || from === to) { node.textContent = to.toFixed(decimals); return; }
+    if (from === to) { node.textContent = to.toFixed(decimals); return; }
     const start = performance.now();
     const step = (now) => {
       const k = Math.min(1, (now - start) / ms);
-      const e = 1 - Math.pow(1 - k, 3);
-      node.textContent = (from + (to - from) * e).toFixed(decimals);
+      node.textContent = (from + (to - from) * easeOutCubic(k)).toFixed(decimals);
       if (k < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
   }
 
-  function burst(x, y) {
-    if (REDUCED) return;
-    const layer = el("div", "burst");
+  // Shards flung out from a point; `gold` for legendary draws.
+  function burst(x, y, { count = 40, spread = 220, gold = false } = {}) {
+    const layer = el("div", `burst${gold ? " is-gold" : ""}`);
     layer.style.left = `${x}px`;
     layer.style.top = `${y}px`;
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < count; i++) {
       const p = el("i");
       const a = Math.random() * Math.PI * 2;
-      const d = 90 + Math.random() * 220;
+      const d = spread * (0.4 + Math.random() * 0.6);
       p.style.setProperty("--x", `${Math.cos(a) * d}px`);
       p.style.setProperty("--y", `${Math.sin(a) * d - 60}px`);
       p.style.setProperty("--r", `${Math.random() * 720 - 360}deg`);
@@ -349,114 +355,214 @@
     setTimeout(() => layer.remove(), 1600);
   }
 
-  // A portrait flies from the reel to the chosen slot along a short arc.
+  // A ring that expands from an element (slot landing, reel landing).
+  function shockwave(target, cls = "") {
+    if (!target) return;
+    const r = target.getBoundingClientRect();
+    const ring = el("span", `shockwave ${cls}`);
+    Object.assign(ring.style, { left: `${r.left + r.width / 2}px`, top: `${r.top + r.height / 2}px`, width: `${Math.max(r.width, r.height)}px`, height: `${Math.max(r.width, r.height)}px` });
+    document.body.append(ring);
+    setTimeout(() => ring.remove(), 900);
+  }
+
+  // A portrait flies from the reel to the chosen slot along an arc, leaving a short trail of ghosts.
   function fly(fromEl, toEl, src) {
-    if (REDUCED || !fromEl || !toEl || !fromEl.animate) return Promise.resolve();
+    if (!fromEl || !toEl || !fromEl.animate) return Promise.resolve();
     const a = fromEl.getBoundingClientRect();
     const b = toEl.getBoundingClientRect();
-    const img = el("img", "flyer");
-    img.src = src;
-    img.alt = "";
-    Object.assign(img.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
-    document.body.append(img);
     const dx = b.left + b.width / 2 - (a.left + a.width / 2);
     const dy = b.top + b.height / 2 - (a.top + a.height / 2);
     const s = b.width / a.width;
-    const anim = img.animate(
-      [
-        { transform: "translate(0, 0) scale(1)" },
-        { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 60}px) scale(${(1 + s) / 2 + 0.08})`, offset: 0.55 },
-        { transform: `translate(${dx}px, ${dy}px) scale(${s})` },
-      ],
-      { duration: 520, easing: "cubic-bezier(.4,.1,.2,1)" }
-    );
-    return anim.finished.then(() => img.remove(), () => img.remove());
+    const sy = b.height / a.height;
+    const make = (cls) => {
+      const img = el("img", cls);
+      img.src = src;
+      img.alt = "";
+      Object.assign(img.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
+      document.body.append(img);
+      return img;
+    };
+    const path = [
+      { transform: "translate(0, 0) scale(1) rotate(0deg)", borderRadius: "18px" },
+      { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 90}px) scale(${(1 + s) / 2 + 0.12}, ${(1 + sy) / 2 + 0.12}) rotate(-8deg)`, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${s}, ${sy}) rotate(0deg)`, borderRadius: "50%" },
+    ];
+    const ghosts = [1, 2, 3].map((i) => {
+      const g = make("flyer is-ghost");
+      g.style.opacity = String(0.35 - i * 0.08);
+      g.animate(path, { duration: 640, delay: i * 45, easing: "cubic-bezier(.5,0,.2,1)", fill: "both" }).finished.then(() => g.remove(), () => g.remove());
+      return g;
+    });
+    const img = make("flyer");
+    sfx("whoosh");
+    const anim = img.animate(path, { duration: 640, easing: "cubic-bezier(.5,0,.2,1)", fill: "both" });
+    return anim.finished.then(() => { img.remove(); ghosts.forEach((g) => g.remove()); }, () => img.remove());
   }
 
-  // Slot-machine reel: a strip of portraits that decelerates onto the picked character.
+  // Rarity tier from the character's power.
+  const tierOf = (power) => (power >= 9 ? "legend" : power >= 7 ? "epic" : "common");
+
+  // Slot-machine reel: a strip of portraits that winds up, races, ticks past each face and slams
+  // onto the picked character with a flash, a shockwave and light rays.
   function makeReel() {
     const wrap = el("div", "reel");
+    const stage = el("div", "reel-stage");
+    const rays = el("div", "reel-rays");
+    const glow = el("div", "reel-glow");
     const win = el("div", "reel-window");
     const strip = el("div", "reel-strip");
     const q = el("span", "reel-q", "?");
-    win.append(strip, q);
+    const shine = el("span", "reel-shine");
+    const flash = el("span", "reel-flash");
+    const lines = el("span", "reel-lines");
+    win.append(strip, lines, q, shine, flash);
+    stage.append(rays, glow, win);
+    const tier = el("span", "reel-tier");
+    tier.hidden = true;
     const name = el("p", "reel-name");
     const power = el("div", "power");
     const powerLabel = el("span", "power-label");
     const track = el("span", "power-track");
     const fill = el("span", "power-fill");
     const value = el("b");
+    value.dataset.value = 0;
     track.append(fill);
     power.append(powerLabel, track, value);
     power.hidden = true;
     const hint = el("p", "reel-hint");
-    wrap.append(el("p", "reel-kicker", t("draw")), win, name, power, hint);
+    wrap.append(el("p", "reel-kicker", t("draw")), stage, tier, name, power, hint);
 
-    const reset = () => {
-      strip.style.transition = "none";
-      strip.style.transform = "translateY(0)";
+    // Each portrait is shown whole over a blurred, zoomed copy of itself, so no one is cut off.
+    const card = (c) => {
+      const item = el("div", "reel-item");
+      const bg = el("img", "reel-bg");
+      const fg = el("img", "reel-fg");
+      bg.src = fg.src = c.image;
+      bg.alt = fg.alt = "";
+      item.append(bg, fg);
+      return item;
     };
-    const portrait = (c) => { const img = el("img"); img.src = c.image; img.alt = ""; return img; };
+    const setName = (text, animate) => {
+      name.textContent = "";
+      if (!animate) { name.textContent = text; return; }
+      [...text].forEach((ch, i) => {
+        const s = el("span", "reel-letter", ch === " " ? " " : ch);
+        s.style.animationDelay = `${120 + i * 32}ms`;
+        name.append(s);
+      });
+    };
+    const clearTier = () => wrap.classList.remove("tier-legend", "tier-epic", "tier-common");
 
     const reel = {
       el: wrap,
       window: win,
       idle(text = t("waitingRoll")) {
         strip.textContent = "";
-        reset();
-        wrap.classList.remove("is-landed", "is-spinning");
+        strip.style.transform = "translateY(0)";
+        strip.style.filter = "";
+        wrap.classList.remove("is-landed", "is-spinning", "is-charging");
+        clearTier();
         q.hidden = false;
-        name.textContent = text;
+        tier.hidden = true;
+        setName(text, false);
         power.hidden = true;
         hint.textContent = "";
       },
-      show(c) {
+      show(c, animate = false) {
         strip.textContent = "";
-        strip.append(portrait(c));
-        reset();
+        strip.append(card(c));
+        strip.style.transform = "translateY(0)";
+        strip.style.filter = "";
         q.hidden = true;
-        wrap.classList.add("is-landed");
-        name.textContent = c.name;
+        clearTier();
+        const tr = tierOf(c.power);
+        wrap.classList.add("is-landed", `tier-${tr}`);
+        tier.textContent = t("tiers")[tr];
+        tier.hidden = false;
+        setName(c.name, animate);
         power.hidden = false;
         powerLabel.textContent = t("power");
+        fill.style.transition = "none";
         fill.style.width = "0%";
-        requestAnimationFrame(() => requestAnimationFrame(() => (fill.style.width = `${c.power * 10}%`)));
-        value.textContent = c.power;
+        if (animate) {
+          value.dataset.value = 0;
+          value.textContent = "0";
+          setTimeout(() => { fill.style.transition = ""; fill.style.width = `${c.power * 10}%`; countUp(value, c.power, 0, 700); }, 260);
+        } else {
+          fill.getBoundingClientRect();
+          fill.style.transition = "";
+          fill.style.width = `${c.power * 10}%`;
+          value.textContent = c.power;
+          value.dataset.value = c.power;
+        }
       },
       async spin(list, pick) {
         wrap.classList.remove("is-landed");
-        wrap.classList.add("is-spinning");
-        q.hidden = true;
+        clearTier();
+        tier.hidden = true;
         power.hidden = true;
         hint.textContent = "";
-        name.textContent = t("rolling");
-        if (REDUCED) {
-          // Reduced motion: no scrolling, the portraits just swap in place before landing.
-          strip.textContent = "";
-          const img = portrait(pick);
-          strip.append(img);
-          reset();
-          for (let i = 0; i < 10; i++) {
-            img.src = list[Math.floor(Math.random() * list.length)].image;
-            await new Promise((r) => setTimeout(r, 70 + i * 12));
-          }
-          wrap.classList.remove("is-spinning");
-          reel.show(pick);
-          return;
-        }
-        const n = 18;
+        setName(t("rolling"), false);
+
+        // Wind-up: the card shrinks and charges before letting go.
+        wrap.classList.add("is-charging");
+        sfx("charge");
+        await new Promise((r) => setTimeout(r, 260));
+        wrap.classList.remove("is-charging");
+        wrap.classList.add("is-spinning");
+        q.hidden = true;
+        sfx("whoosh");
+
+        const n = 30;
         strip.textContent = "";
-        for (let i = 0; i < n; i++) strip.append(portrait(list[Math.floor(Math.random() * list.length)]));
-        strip.append(portrait(pick));
-        reset();
-        {
-          strip.getBoundingClientRect();
-          strip.style.transition = "transform 1.9s cubic-bezier(.12,.75,.18,1)";
-          strip.style.transform = `translateY(${-n * win.clientHeight}px)`;
-          await new Promise((r) => setTimeout(r, 1950));
+        for (let i = 0; i < n; i++) strip.append(card(list[Math.floor(Math.random() * list.length)]));
+        strip.append(card(pick));
+        const h = strip.firstElementChild.offsetHeight;
+        const total = n * h;
+        const ms = 2700;
+        const start = performance.now();
+        let lastIndex = 0;
+        let lastPos = 0;
+        let lastTick = 0;
+        for (;;) {
+          const now = await frame();
+          const k = Math.min(1, (now - start) / ms);
+          const pos = easeOutQuint(k) * total;
+          // Motion blur follows the speed.
+          const speed = pos - lastPos;
+          lastPos = pos;
+          strip.style.transform = `translateY(${-pos}px)`;
+          strip.style.filter = speed > 4 ? `blur(${Math.min(7, speed / 9).toFixed(1)}px)` : "";
+          // Each face that passes the frame makes it tick.
+          const idx = Math.floor((pos + h / 2) / h);
+          if (idx !== lastIndex) {
+            lastIndex = idx;
+            win.classList.remove("tick");
+            void win.offsetWidth;
+            win.classList.add("tick");
+            // Ticks are spaced out at full speed so they rattle instead of buzzing.
+            if (now - lastTick > 45) { lastTick = now; sfx("tick", { pitch: 0.8 + k * 0.7 }); }
+          }
+          if (k >= 1) break;
         }
+        strip.style.filter = "";
         wrap.classList.remove("is-spinning");
-        reel.show(pick);
+        reel.show(pick, true);
+
+        // Impact: flash, shockwave, shards; legendary draws shake the panel and burst in gold.
+        const tr = tierOf(pick.power);
+        sfx("land");
+        if (tr === "epic") sfx("epic");
+        if (tr === "legend") { sfx("legend"); window.DLE_FX?.flash("rgba(255, 200, 60, 0.3)"); }
+        flash.classList.remove("go");
+        void flash.offsetWidth;
+        flash.classList.add("go");
+        shockwave(win, `is-${tr}`);
+        const r = win.getBoundingClientRect();
+        if (tr !== "common") burst(r.left + r.width / 2, r.top + r.height / 2, { count: tr === "legend" ? 60 : 26, spread: tr === "legend" ? 260 : 170, gold: tr === "legend" });
+        const panel = wrap.closest(".roll-panel");
+        if (panel && tr === "legend") { panel.classList.remove("shake"); void panel.offsetWidth; panel.classList.add("shake"); }
+        await new Promise((r2) => setTimeout(r2, 380));
       },
       hint(text) { hint.textContent = text; },
     };
@@ -478,10 +584,11 @@
       ic.append(icon(slot.def.icon));
       card.append(ic);
       if (isCaptain(slot) && !mini) card.append(el("span", "crew-captain-tag", t("captainTag")));
-      if (stagger && !REDUCED) { card.classList.add("enter"); card.style.animationDelay = `${i * 45}ms`; }
+      if (stagger) { card.classList.add("enter"); card.style.animationDelay = `${i * 45}ms`; }
       const canPlace = !!(onPlace && rolled && !slot.char && !slot.locked && slot.def.fits(rolled));
       card.classList.toggle("is-filled", !!slot.char);
       card.classList.toggle("is-target", canPlace);
+      if (canPlace) card.style.setProperty("--d", `${i * 50}ms`); // targets light up in a wave
       card.classList.toggle("is-locked", slot.locked);
       card.disabled = !canPlace;
       card.dataset.index = i;
@@ -512,9 +619,18 @@
   }
 
   const slotFace = (container, i) => container.querySelector(`[data-index="${i}"] .crew-face`);
-  function popSlot(container, i) {
-    if (REDUCED) return;
-    container.querySelector(`[data-index="${i}"]`)?.classList.add("pop");
+  // Landing in a slot: the card pops, a ring spreads from the face, strong picks throw sparks.
+  function popSlot(container, i, points = 0) {
+    const card = container.querySelector(`[data-index="${i}"]`);
+    if (!card) return;
+    card.classList.add("pop");
+    sfx("place");
+    const face = card.querySelector(".crew-face");
+    shockwave(face, points >= 8 ? "is-legend" : "is-epic");
+    if (points >= 8) {
+      const r = face.getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height / 2, { count: 22, spread: 120, gold: points >= 9 });
+    }
   }
 
   // ── Shared UI ──
@@ -624,7 +740,7 @@
     slot.points = pointsFor(slot, c);
     soloReel.idle();
     renderBoard($("#crewBoard"), run.slots);
-    popSlot($("#crewBoard"), i);
+    popSlot($("#crewBoard"), i, slot.points);
     renderSoloStatus();
     if (!openSlots(run.slots).length || !soloCandidates().length) soloFinish();
     else renderSoloActions();
@@ -652,6 +768,7 @@
     box.append(el("p", "result-kicker", title));
     if (outcome) box.append(el("p", `duel-outcome is-${outcome.kind}`, outcome.text));
     const r = el("div", `crew-rank rank-${rank}`);
+    setTimeout(() => sfx(rank === "S" || rank === "A" ? "win" : "stamp"), 150);
     r.append(el("span", null, rank));
     box.append(r);
     const avgEl = el("p", "crew-avg");
@@ -687,7 +804,13 @@
     $("#crewRing").style.strokeDasharray = `${f ? average(solo.slots) * 10 : 0} 100`;
     const rank = $("#crewLiveRank");
     rank.hidden = !f;
-    if (f) { rank.textContent = rankOf(average(solo.slots)); rank.className = `crew-live-rank rank-${rank.textContent}`; }
+    if (f) {
+      const letter = rankOf(average(solo.slots));
+      // The badge stamps in again whenever the rank changes.
+      const changed = rank.textContent !== letter;
+      rank.textContent = letter;
+      rank.className = `crew-live-rank rank-${letter}${changed ? " stamp" : ""}`;
+    } else rank.textContent = "";
     const pips = $("#crewPips");
     pips.textContent = "";
     for (const s of solo.slots) {
@@ -1214,7 +1337,7 @@
     slot.points = pointsFor(slot, c);
     matchReel.idle();
     renderBoard($("#duelMine"), myBoard());
-    popSlot($("#duelMine"), i);
+    popSlot($("#duelMine"), i, slot.points);
     run.claims.delete(rooms.selfId);
     rooms.broadcast("place", { slot: i, charId: c.id });
     renderScoreboard();
