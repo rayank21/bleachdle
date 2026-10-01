@@ -116,7 +116,7 @@
   // ── Stats ──
   const emptyStats = () => ({ played: 0, wins: 0, streak: 0, max: 0, last: null, dist: {} });
   const stats = Object.assign({ daily: emptyStats(), endless: emptyStats(), history: {} }, store.get("stats", {}));
-  const saveStats = () => store.set("stats", stats);
+  const saveStats = () => { store.set("stats", stats); window.dispatchEvent(new Event("dle:stats")); }; // the profile syncs on this event
 
   function currentStreak(mode) {
     const s = stats[mode];

@@ -770,6 +770,17 @@
       title: t("resultTitle"),
       actions: [[t("share"), "btn-ghost", () => copyText(shareSolo())], [t("again"), "btn-primary", startSolo]],
     }));
+    // Saved once per crew to the player's profile (best crew and leaderboard).
+    if (!solo.recorded) {
+      solo.recorded = true;
+      const avg = average(solo.slots);
+      window.DLE_Profile?.recordCrew({
+        anime: solo.g.id,
+        rank: rankOf(avg),
+        score: avg,
+        members: filledOf(solo.slots).map((s) => ({ id: s.char.id, name: s.char.name, role: slotLabel(s), points: s.points })),
+      });
+    }
   }
 
   function resultBlock(avg, slots, { title, actions, outcome }) {

@@ -1,0 +1,8 @@
+{
+  "name": "bleachdle",
+  "private": true,
+  "description": "Anime guessing games; Netlify Functions for player profiles.",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.3"
+  }
+}
