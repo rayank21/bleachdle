@@ -84,6 +84,19 @@
     wrong: () => { tone({ freq: 200, to: 120, type: "triangle", dur: 0.18, vol: 0.22 }); noise({ dur: 0.06, vol: 0.12, type: "lowpass", freq: 900 }); },
     win: () => { notes([523, 659, 784], { step: 0.1, dur: 0.4, vol: 0.2 }); notes([1047, 1319, 1568, 2093], { start: 0.32, step: 0.08, dur: 0.8, vol: 0.18 }); noise({ start: 0.3, dur: 1, vol: 0.05, type: "highpass", freq: 7000 }); },
     lose: () => notes([392, 330, 262, 196], { type: "sine", step: 0.14, dur: 0.4, vol: 0.18 }),
+    // Transformation: a rumble and a rising scream of energy, then a blast with a bright chord.
+    powerup: () => {
+      tone({ freq: 55, to: 90, type: "sawtooth", dur: 1.5, vol: 0.18, attack: 0.4 });
+      tone({ freq: 110, to: 880, type: "sawtooth", dur: 1.5, vol: 0.06, attack: 0.6 });
+      noise({ dur: 1.5, vol: 0.22, freq: 200, to: 4000, q: 1.5 });
+      for (let i = 0; i < 6; i++) noise({ start: 0.3 + i * 0.2, dur: 0.06, vol: 0.18, type: "highpass", freq: 3000 });
+    },
+    transform: () => {
+      tone({ freq: 140, to: 35, dur: 0.9, vol: 0.7 });
+      noise({ dur: 0.9, vol: 0.45, type: "lowpass", freq: 3000, to: 200 });
+      notes([392, 523, 659, 784, 1047], { type: "sawtooth", step: 0.015, dur: 1.2, vol: 0.06, start: 0.05 });
+      notes([1568, 2093], { type: "sine", step: 0.08, dur: 0.9, vol: 0.06, start: 0.15 });
+    },
     message: () => { tone({ freq: 1180, type: "sine", dur: 0.12, vol: 0.12 }); tone({ freq: 1580, type: "sine", start: 0.07, dur: 0.16, vol: 0.1 }); },
   };
 

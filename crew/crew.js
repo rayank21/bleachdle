@@ -347,8 +347,9 @@
   }
 
   // Shards flung out from a point; `gold` for legendary draws.
-  function burst(x, y, { count = 40, spread = 220, gold = false } = {}) {
+  function burst(x, y, { count = 40, spread = 220, gold = false, color = null } = {}) {
     const layer = el("div", `burst${gold ? " is-gold" : ""}`);
+    if (color) layer.style.setProperty("--burst-c", `rgb(${color})`);
     layer.style.left = `${x}px`;
     layer.style.top = `${y}px`;
     for (let i = 0; i < count; i++) {
@@ -410,6 +411,13 @@
     return anim.finished.then(() => { img.remove(); ghosts.forEach((g) => g.remove()); }, () => img.remove());
   }
 
+  // Transformation of a character at this arc (crew/forms.js), with its portrait.
+  function formFor(game, c, arc) {
+    const f = window.CREW_FORMS?.[game]?.[c.id];
+    if (!f || arc < f.arc) return null;
+    return { ...f, image: `assets/forms/${game}-${c.id}.webp` };
+  }
+
   // Rarity tier from the character's power.
   const tierOf = (power) => (power >= 9 ? "legend" : power >= 7 ? "epic" : "common");
 
@@ -427,7 +435,11 @@
     const flash = el("span", "reel-flash");
     const lines = el("span", "reel-lines");
     win.append(strip, lines, q, shine, flash);
-    stage.append(rays, glow, win);
+    const fxLayer = el("div", "tf-layer");
+    const kanji = el("span", "tf-kanji");
+    stage.append(rays, glow, fxLayer, win, kanji);
+    const formTag = el("span", "tf-name");
+    formTag.hidden = true;
     const tier = el("span", "reel-tier");
     tier.hidden = true;
     const name = el("p", "reel-name");
@@ -441,11 +453,11 @@
     power.append(powerLabel, track, value);
     power.hidden = true;
     const hint = el("p", "reel-hint");
-    wrap.append(el("p", "reel-kicker", t("draw")), stage, tier, name, power, hint);
+    wrap.append(el("p", "reel-kicker", t("draw")), stage, tier, formTag, name, power, hint);
 
     // Each portrait is shown whole over a blurred, zoomed copy of itself, so no one is cut off.
     const card = (c) => {
-      const item = el("div", "reel-item");
+      const item = el("div", `reel-item${c.isForm ? " is-form" : ""}`);
       const bg = el("img", "reel-bg");
       const fg = el("img", "reel-fg");
       bg.src = fg.src = c.image;
@@ -463,6 +475,58 @@
       });
     };
     const clearTier = () => wrap.classList.remove("tier-legend", "tier-epic", "tier-common");
+    const clearForm = () => {
+      wrap.classList.remove("is-powering", "is-transformed", "tf-aura", "tf-pillar", "tf-domain");
+      fxLayer.textContent = "";
+      kanji.classList.remove("go");
+      formTag.hidden = true;
+    };
+    // The effect's pieces: flame tongues and sparks for an aura, a beam for a pillar, a sphere for a domain.
+    const buildFx = (f) => {
+      fxLayer.textContent = "";
+      wrap.style.setProperty("--fx1", f.c1);
+      wrap.style.setProperty("--fx2", f.c2);
+      wrap.classList.add(`tf-${f.fx}`);
+      if (f.fx === "aura") {
+        for (let i = 0; i < 14; i++) {
+          const flame = el("i", "tf-flame");
+          flame.style.setProperty("--x", `${(i / 13) * 100}%`);
+          flame.style.setProperty("--h", `${55 + Math.random() * 45}%`);
+          flame.style.animationDelay = `${Math.random() * -0.6}s`;
+          fxLayer.append(flame);
+        }
+      }
+      if (f.fx === "pillar") fxLayer.append(el("i", "tf-beam"), el("i", "tf-beam is-core"));
+      if (f.fx === "domain") fxLayer.append(el("i", "tf-sphere"), el("i", "tf-ring"));
+      for (let i = 0; i < 18; i++) {
+        const spark = el("i", "tf-spark");
+        spark.style.setProperty("--x", `${Math.random() * 100}%`);
+        spark.style.animationDelay = `${Math.random() * -1.2}s`;
+        spark.style.animationDuration = `${0.8 + Math.random() * 0.8}s`;
+        fxLayer.append(spark);
+      }
+      if (f.lightning || f.fx === "aura") {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 100 100");
+        svg.setAttribute("preserveAspectRatio", "none");
+        svg.setAttribute("class", "tf-bolts");
+        for (let b = 0; b < 3; b++) {
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          let x = 15 + Math.random() * 70, d = `M${x} 0`;
+          for (let y = 12; y <= 100; y += 12) { x += Math.random() * 18 - 9; d += ` L${x.toFixed(1)} ${y}`; }
+          path.setAttribute("d", d);
+          path.style.animationDelay = `${b * 0.23}s`;
+          svg.append(path);
+        }
+        fxLayer.append(svg);
+      }
+    };
+    const showForm = (c) => {
+      buildFx(c.form);
+      wrap.classList.add("is-transformed");
+      formTag.textContent = c.form.name[lang];
+      formTag.hidden = false;
+    };
 
     const reel = {
       el: wrap,
@@ -473,6 +537,7 @@
         strip.style.filter = "";
         wrap.classList.remove("is-landed", "is-spinning", "is-charging");
         clearTier();
+        clearForm();
         q.hidden = false;
         tier.hidden = true;
         setName(text, false);
@@ -481,7 +546,9 @@
       },
       show(c, animate = false) {
         strip.textContent = "";
-        strip.append(card(c));
+        clearForm();
+        strip.append(card(c.form && !animate ? { image: c.formImage, isForm: true } : c));
+        if (c.form && !animate) showForm(c);
         strip.style.transform = "translateY(0)";
         strip.style.filter = "";
         q.hidden = true;
@@ -507,7 +574,7 @@
           value.dataset.value = c.power;
         }
       },
-      async spin(list, pick) {
+      async spin(list, pick, { game = null, arc = 99 } = {}) {
         wrap.classList.remove("is-landed");
         clearTier();
         tier.hidden = true;
@@ -574,6 +641,38 @@
         const panel = wrap.closest(".roll-panel");
         if (panel && tr === "legend") { panel.classList.remove("shake"); void panel.offsetWidth; panel.classList.add("shake"); }
         await new Promise((r2) => setTimeout(r2, 380));
+        const form = game && formFor(game, pick, arc);
+        if (form) await reel.transform(pick, form);
+      },
+      // Power-up: the card trembles in a rising aura, then a flash, the kanji slams down and the
+      // portrait becomes the transformed form, which keeps glowing.
+      async transform(c, form) {
+        buildFx(form);
+        wrap.classList.add("is-powering");
+        hint.textContent = "";
+        sfx("powerup");
+        await new Promise((r) => setTimeout(r, 1500));
+        c.form = form;
+        c.formImage = form.image;
+        strip.textContent = "";
+        strip.append(card({ image: form.image, isForm: true }));
+        wrap.classList.remove("is-powering");
+        showForm(c);
+        kanji.textContent = form.kanji;
+        kanji.classList.remove("go");
+        void kanji.offsetWidth;
+        kanji.classList.add("go");
+        flash.classList.remove("go");
+        void flash.offsetWidth;
+        flash.classList.add("go");
+        sfx("transform");
+        window.DLE_FX?.flash(`rgba(${form.c1}, 0.45)`);
+        shockwave(win, "is-form");
+        const r = win.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2, { count: 70, spread: 280, color: form.c1 });
+        const panel = wrap.closest(".roll-panel");
+        if (panel) { panel.classList.remove("shake"); void panel.offsetWidth; panel.classList.add("shake"); }
+        await new Promise((r2) => setTimeout(r2, 900));
       },
       hint(text) { hint.textContent = text; },
     };
@@ -609,7 +708,8 @@
       const face = el("span", "crew-face");
       if (slot.char) {
         const img = el("img");
-        img.src = slot.char.image;
+        img.src = slot.char.formImage || slot.char.image;
+        if (slot.char.form) { card.classList.add("is-transformed"); card.style.setProperty("--fx1", slot.char.form.c1); card.style.setProperty("--fx2", slot.char.form.c2); }
         img.alt = "";
         face.append(img);
       } else {
@@ -709,7 +809,7 @@
     const data = await loadGame(g);
     const arc = playerArc(data.config) ?? data.config.arcs.length - 1;
     const pool = makePool(g, data, arc);
-    solo = { g, pool, slots: makeSlots(g, pool), rolled: null, rerolls: REROLLS, done: false, rolling: false };
+    solo = { g, pool, arc, slots: makeSlots(g, pool), rolled: null, rerolls: REROLLS, done: false, rolling: false };
     renderSolo(true);
   }
 
@@ -729,7 +829,7 @@
     run.rolled = null;
     renderSoloActions();
     renderBoard($("#crewBoard"), run.slots);
-    await soloReel.spin(list, pick);
+    await soloReel.spin(list, pick, { game: run.g.id, arc: run.arc });
     if (solo !== run) return; // a new crew was started meanwhile
     run.rolling = false;
     run.rolled = pick;
@@ -746,7 +846,7 @@
     renderSoloActions();
     const target = slotFace($("#crewBoard"), i);
     renderBoard($("#crewBoard"), run.slots);
-    await fly(soloReel.window, target, c.image);
+    await fly(soloReel.window, target, c.formImage || c.image);
     if (solo !== run) return;
     const slot = run.slots[i];
     slot.char = c;
@@ -1335,7 +1435,7 @@
     run.rolled = null;
     renderMatchActions();
     renderBoard($("#duelMine"), myBoard());
-    await matchReel.spin(list, pick);
+    await matchReel.spin(list, pick, { game: match.g.id, arc: match.arc });
     if (match !== run || run.done) return;
     const winner = lostClaim(pick);
     if (winner) return onStolen(winner);
@@ -1354,7 +1454,7 @@
     renderMatchActions();
     const target = slotFace($("#duelMine"), i);
     renderBoard($("#duelMine"), myBoard());
-    await fly(matchReel.window, target, c.image);
+    await fly(matchReel.window, target, c.formImage || c.image);
     if (match !== run) return;
     const slot = myBoard()[i];
     slot.char = c;

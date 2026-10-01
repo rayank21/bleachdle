@@ -11,7 +11,7 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | **Onepiecedle** (One Piece) | `onepiece/` | 99 |
 | **Jujutsudle** (Jujutsu Kaisen) | `jujutsukaisen/` | 60 |
 
-Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions or One Piece roles); every character has a 1–10 rating and the crew's average is your score.
+Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions or One Piece roles); every character has a 1–10 rating and the crew's average is your score. Iconic characters transform when drawn (Super Saiyan, Bankai, Susanoo, domain expansions…), only from the arc where the form appears; the forms are listed in `crew/forms.js` and their portraits fetched by `node crew/scripts/forms.mjs`.
 
 ## Play
 
