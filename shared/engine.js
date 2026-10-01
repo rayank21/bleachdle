@@ -758,6 +758,8 @@
     const narrow = COLS.map((c) => (c.width ? `${Math.round(c.width * 0.84)}px` : "var(--tile)")).join(" ");
     document.documentElement.style.setProperty("--cols", widths);
     document.documentElement.style.setProperty("--cols-narrow", narrow);
+    const phone = COLS.map((c) => (c.width ? `${Math.round(c.width * 0.68)}px` : "var(--tile)")).join(" ");
+    document.documentElement.style.setProperty("--cols-phone", phone);
   }
 
   // ── Online race (2–8 players, first to find the character wins) ──
@@ -975,15 +977,25 @@
   let pendingJoin = null;
   const joinHash = location.hash.match(/^#join=(.+)$/);
   if (joinHash) {
-    pendingJoin = decodeURIComponent(joinHash[1]).slice(0, 64);
+    const key = decodeURIComponent(joinHash[1]).slice(0, 64);
+    pendingJoin = key;
     settings.mode = "online";
-    setTimeout(() => { if (pendingJoin && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderRace(); } }, 25000);
+    setTimeout(() => { if (pendingJoin === key && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderRace(); } }, 25000);
+  }
+
+  function waitForRoom(key, ms, message) {
+    pendingJoin = key;
+    tryPendingJoin.asked = false;
+    setTimeout(() => { if (pendingJoin === key && !rooms?.myRoom) { pendingJoin = null; toast(t(message)); renderRace(); } }, ms);
+    tryPendingJoin();
+    renderRace();
   }
 
   function tryPendingJoin() {
     if (!pendingJoin || !rooms || rooms.status !== "live" || settings.arc == null) return;
-    if (rooms.myRoom?.id === pendingJoin) { pendingJoin = null; return; }
-    const r = rooms.rooms.get(pendingJoin);
+    const mine = rooms.myRoom;
+    if (mine && (mine.id === pendingJoin || mine.code === pendingJoin)) { pendingJoin = null; return; }
+    const r = rooms.findRoom(pendingJoin);
     if (!r) return;
     if (r.started || r.members.length >= r.size) { pendingJoin = null; toast(t("linkGone")); renderRace(); return; }
     if (!myName()) {
@@ -1062,7 +1074,7 @@
     if (pendingJoin && !rooms.myRoom) {
       const w = el("p", "lobby-waiting");
       w.append(el("span", "spinner"));
-      w.append(t("joiningLink"));
+      w.append(t("searching"));
       box.append(w);
     }
 
@@ -1088,6 +1100,28 @@
     });
     box.append(form);
     const needName = () => { if (myName()) return false; input.placeholder = t("pickName"); input.focus(); return true; };
+    if (!rooms.myRoom) {
+      box.append(el("h3", "room-title", esc(t("withCode"))));
+      const codeForm = el("form", "code-form");
+      const codeInput = el("input");
+      codeInput.id = "roomCodeInput";
+      codeInput.maxLength = 6;
+      codeInput.placeholder = t("codePlaceholder");
+      codeInput.autocomplete = "off";
+      codeInput.setAttribute("autocapitalize", "characters");
+      codeInput.setAttribute("aria-label", t("codePlaceholder"));
+      codeInput.addEventListener("input", () => { codeInput.value = window.DLE_Rooms.cleanCode(codeInput.value); });
+      const go = el("button", "btn-primary", esc(t("joinCode")));
+      go.type = "submit";
+      codeForm.append(codeInput, go);
+      codeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const code = window.DLE_Rooms.cleanCode(codeInput.value);
+        if (code.length < 4) { codeInput.focus(); return; }
+        if (!needName()) waitForRoom(code, 12000, "codeNotFound");
+      });
+      box.append(codeForm);
+    }
 
     const room = rooms.myRoom;
     if (room) {
@@ -1098,6 +1132,20 @@
       title.textContent = t("roomOf")(host?.name ?? "Player");
       head.append(title, el("span", "lobby-badge", `${room.members.length}/${room.size}`));
       card.append(head);
+      if (room.code) {
+        const code = el("div", "room-code");
+        const label = el("span", null, esc(t("codeLabel")));
+        const value = el("b");
+        value.textContent = room.code;
+        const copy = el("button", "btn-ghost btn-small", esc(t("copyCode")));
+        copy.type = "button";
+        copy.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(room.code); } catch {}
+          toast(t("codeCopied"));
+        });
+        code.append(label, value, copy);
+        card.append(code);
+      }
       const seats = el("ul", "room-members");
       for (let i = 0; i < room.size; i++) {
         const m = room.members[i];

@@ -12,6 +12,10 @@
     fr: { title: "Chat de la salle", say: "Écris à la salle…", send: "Envoyer", empty: "Seuls les joueurs de cette salle voient ces messages." },
   };
 
+  // Room codes: 5 characters, no 0/O or 1/I to mix up.
+  const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const cleanCode = (s) => String(s ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+  const newCode = () => Array.from({ length: 5 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join("");
   const cleanName = (s) => String(s ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 
@@ -34,7 +38,7 @@
     const sanitizeRoom = (r, from) => {
       if (!r || typeof r !== "object" || typeof r.id !== "string" || r.host !== from) return null;
       const members = Array.isArray(r.members) ? r.members.slice(0, 8).map((m) => ({ id: String(m.id), name: cleanName(m.name) || "Player", arc: Number.isInteger(m.arc) ? m.arc : 0 })) : [];
-      return { id: r.id.slice(0, 64), host: from, game: String(r.game), size: clamp(Number(r.size) || 2, 2, 8), members, started: !!r.started };
+      return { id: r.id.slice(0, 64), code: cleanCode(r.code), host: from, game: String(r.game), size: clamp(Number(r.size) || 2, 2, 8), members, started: !!r.started };
     };
     const announce = (target) => {
       if (!isHost()) return;
@@ -151,6 +155,7 @@
       api.leave();
       api.myRoom = {
         id: `${api.selfId}-${Date.now().toString(36)}`,
+        code: newCode(),
         host: api.selfId,
         game,
         size: clamp(size, 2, 8),
@@ -324,6 +329,12 @@
       return box;
     };
 
+    // The room with this code (or this id), as announced by its host.
+    api.findRoom = (key) => {
+      const code = cleanCode(key);
+      return api.rooms.get(key) ?? (code ? [...api.rooms.values()].find((r) => r.code === code) : null) ?? null;
+    };
+
     api.isHost = isHost;
     api.openRooms = () => [...api.rooms.values()].filter((r) => !r.started && r.members.length < r.size && r.id !== api.myRoom?.id);
 
@@ -357,5 +368,5 @@
     return close;
   }
 
-  window.DLE_Rooms = { create, cleanName, inviteBanner };
+  window.DLE_Rooms = { create, cleanName, cleanCode, inviteBanner };
 })();

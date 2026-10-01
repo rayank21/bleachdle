@@ -979,3 +979,36 @@ body[data-game="home"] .cat .cat-name { display: none; }
   .chat-toggle { width: 48px; height: 48px; }
   .chat-panel { height: min(420px, calc(100vh - 100px)); }
 }
+
+/* ── Phone ──────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  :root { --tile: 62px; --gap: 4px; }
+  .topbar { gap: 8px; padding: 0 10px; }
+  /* Every category fits as a small logo; the strip scrolls, with a fade on the edge. */
+  .categories { gap: 2px; -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); padding-right: 18px; }
+  .cat, .cat:not(.is-current) { gap: 0; padding: 3px; }
+  .cat .cat-name, .cat.is-current .cat-name { display: none; }
+  .cat-logo, .brand-logo { width: 36px; height: 36px; }
+  .cat:not(.is-current) .cat-logo { width: 32px; height: 32px; }
+  .cat-crew .cat-dice, .cat-crew:not(.is-current) .cat-dice { width: 32px; height: 32px; }
+  .lang-switch button { padding: 5px 7px; font-size: 12px; }
+  .page { padding-left: 12px; padding-right: 12px; }
+  .board-head, .row { grid-template-columns: var(--cols-phone, var(--cols-narrow)); }
+  .board, .board-rows { gap: 6px; }
+  .col { font-size: 11px; padding: 6px 2px; }
+  .tile { font-size: 10px; padding: 3px; border-radius: 3px; }
+  .tile .arrow { font-size: 11px; }
+  .tile-caption { font-size: 10px; padding: 12px 3px 4px; }
+  /* Room for the chat button under the last element of the page. */
+  body { padding-bottom: 76px; }
+  .chat { left: 10px; bottom: 10px; }
+  .chat-toggle { width: 46px; height: 46px; }
+  .chat-toggle svg { width: 21px; height: 21px; }
+  .chat-panel { width: calc(100vw - 20px); height: min(70vh, calc(100vh - 140px)); }
+  .room-create { padding: 10px; }
+  .room-label { flex: 1 1 100%; }
+  .size-picker { gap: 4px; flex-wrap: nowrap; }
+  .size-pick { width: 34px; height: 34px; border-radius: 8px; flex: none; }
+  .anime-mini-pick img { width: 28px; height: 28px; }
+  .anime-mini { gap: 4px; }
+}

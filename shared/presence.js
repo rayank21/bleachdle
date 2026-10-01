@@ -366,6 +366,13 @@ function receiveHistory(data, peerId) {
 // What a newcomer receives: the recent messages, without my "mine" flags.
 const shareable = () => chat.messages.slice(-30).map(({ mine, ...m }) => m);
 
+// On a phone the category strip scrolls: bring the current page into view.
+window.addEventListener("load", () => {
+  const nav = document.getElementById("categories");
+  const cur = nav?.querySelector(".is-current");
+  if (nav && cur && nav.scrollWidth > nav.clientWidth) nav.scrollLeft += cur.getBoundingClientRect().left - nav.getBoundingClientRect().left - nav.clientWidth / 2 + cur.offsetWidth / 2;
+});
+
 window.addEventListener("dle:lang", () => { render(); renderChat(); });
 // A name saved in a game lobby is the name here too.
 window.addEventListener("dle:name", () => {

@@ -61,6 +61,14 @@
       inviteSent: (n) => `Invitation sent to ${n}`,
       invitedBy: (n, a) => `${n} invites you to play${a ? ` (${a})` : ""}`,
       ignore: "Ignore",
+      withCode: "Join with a code",
+      codePlaceholder: "Room code",
+      joinCode: "Join",
+      codeLabel: "Room code",
+      copyCode: "Copy",
+      codeCopied: "Code copied!",
+      codeNotFound: "No open room with this code.",
+      searching: "Looking for the room…",
       aloneHere: "Nobody else is on this page yet. Send the link to your friends: they'll show up here with an Invite button.",
       copyLink: "Copy the link",
       linkCopied: "Link copied!",
@@ -133,6 +141,14 @@
       inviteSent: (n) => `Invitation envoyée à ${n}`,
       invitedBy: (n, a) => `${n} t'invite à jouer${a ? ` (${a})` : ""}`,
       ignore: "Ignorer",
+      withCode: "Rejoindre avec un code",
+      codePlaceholder: "Code de salle",
+      joinCode: "Rejoindre",
+      codeLabel: "Code de la salle",
+      copyCode: "Copier",
+      codeCopied: "Code copié !",
+      codeNotFound: "Aucune salle ouverte avec ce code.",
+      searching: "Recherche de la salle…",
       aloneHere: "Personne d'autre sur cette page pour l'instant. Envoie le lien à tes potes : ils apparaîtront ici avec un bouton Inviter.",
       copyLink: "Copier le lien",
       linkCopied: "Lien copié !",
@@ -765,12 +781,14 @@
     const room = rooms.myRoom;
     if (!room && pendingJoin) {
       const w = el("p", "lobby-waiting");
-      w.append(el("span", "spinner"), t("joiningLink"));
+      w.append(el("span", "spinner"), t("searching"));
       box.append(w);
     }
     if (room) box.append(roomCard(room));
     else {
       // Create a room
+      box.append(el("h3", "room-title", t("withCode")));
+      box.append(codeForm());
       box.append(el("h3", "room-title", t("pick")));
       box.append(animeChooser());
       const create = el("div", "room-create");
@@ -880,10 +898,53 @@
   // Invite links: crew/#join=<room id>. The room shows up once its host is found, then we join it.
   const inviteLink = (room) => `${location.href.split("#")[0]}#join=${encodeURIComponent(room.id)}`;
 
+  // Wait for a room (from a link or a code) to be announced by its host, then join it.
+  function waitForRoom(key, ms, message) {
+    pendingJoin = key;
+    tryPendingJoin.asked = false;
+    setTimeout(() => { if (pendingJoin === key && !rooms?.myRoom) { pendingJoin = null; toast(t(message)); renderLobby(); } }, ms);
+    tryPendingJoin();
+    renderLobby();
+  }
+
+  function codeBadge(code) {
+    const wrap = el("div", "room-code");
+    wrap.append(el("span", null, t("codeLabel")), el("b", null, code));
+    const b = el("button", "btn-ghost btn-small", t("copyCode"));
+    b.type = "button";
+    b.addEventListener("click", async () => { await copyText(code); toast(t("codeCopied")); });
+    wrap.append(b);
+    return wrap;
+  }
+
+  function codeForm() {
+    const form = el("form", "code-form");
+    const input = el("input");
+    input.id = "roomCodeInput";
+    input.maxLength = 6;
+    input.placeholder = t("codePlaceholder");
+    input.autocomplete = "off";
+    input.setAttribute("autocapitalize", "characters");
+    input.setAttribute("aria-label", t("codePlaceholder"));
+    input.addEventListener("input", () => { input.value = window.DLE_Rooms.cleanCode(input.value); });
+    const go = el("button", "btn-primary", t("joinCode"));
+    go.type = "submit";
+    form.append(input, go);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const code = window.DLE_Rooms.cleanCode(input.value);
+      if (code.length < 4) { input.focus(); return; }
+      if (!myName()) { toast(t("pickName")); $("#lobbyName")?.focus(); return; }
+      waitForRoom(code, 12000, "codeNotFound");
+    });
+    return form;
+  }
+
   function tryPendingJoin() {
     if (!pendingJoin || !rooms || rooms.status !== "live") return;
-    if (rooms.myRoom?.id === pendingJoin) { pendingJoin = null; return; }
-    const r = rooms.rooms.get(pendingJoin);
+    const mine = rooms.myRoom;
+    if (mine && (mine.id === pendingJoin || mine.code === pendingJoin)) { pendingJoin = null; return; }
+    const r = rooms.findRoom(pendingJoin);
     if (!r) return;
     if (r.started || r.members.length >= r.size) { pendingJoin = null; toast(t("linkGone")); renderLobby(); return; }
     if (!myName()) {
@@ -930,6 +991,7 @@
     if (g) hint.append(el("b", null, g.anime), " · ");
     hint.append(rooms.isHost() ? t("hostPicks") : t("hostChooses"));
     card.append(hint);
+    if (room.code) card.append(codeBadge(room.code));
     if (rooms.isHost()) card.append(animeChooser());
     const list = el("ul", "room-members");
     for (let i = 0; i < room.size; i++) {
@@ -1371,9 +1433,10 @@
   currentGame = GAMES.find((g) => g.id === saved) ?? GAMES.find((g) => g.id === "onepiece");
   const joinHash = location.hash.match(/^#join=(.+)$/);
   if (joinHash) {
-    pendingJoin = decodeURIComponent(joinHash[1]).slice(0, 64);
+    const key = decodeURIComponent(joinHash[1]).slice(0, 64);
+    pendingJoin = key;
     // Give up after a while if the host is gone.
-    setTimeout(() => { if (pendingJoin && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderLobby(); } }, 25000);
+    setTimeout(() => { if (pendingJoin === key && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderLobby(); } }, 25000);
   }
   mode = location.hash === "#online" || joinHash ? "online" : "solo";
   setMode(mode);

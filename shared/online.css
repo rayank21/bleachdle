@@ -186,3 +186,13 @@
 .anime-mini-pick img { width: 32px; height: 32px; border-radius: 50%; background: #fff; object-fit: cover; object-position: 50% 40%; }
 .anime-mini-pick.is-active { padding-right: 14px; border-color: rgb(var(--accent-rgb)); background: rgba(var(--accent-rgb), 0.15); }
 .lobby-anime { display: block; color: var(--muted); font-size: 12px; font-weight: 600; }
+
+/* Room code */
+.code-form { display: flex; gap: 8px; }
+.code-form input { flex: 1; min-width: 0; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; font-weight: 800; font-size: 16px; letter-spacing: 3px; text-transform: uppercase; }
+.code-form input::placeholder { letter-spacing: 0; font-weight: 500; text-transform: none; }
+.code-form input:focus { outline: none; border-color: rgba(var(--accent-rgb), 0.6); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2); }
+.room-code { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; border: 1px dashed rgba(var(--accent-rgb), 0.6); background: rgba(0, 0, 0, 0.25); }
+.room-code span { color: var(--muted); font-size: 13px; font-weight: 700; }
+.room-code b { flex: 1; font-size: 24px; font-weight: 900; letter-spacing: 5px; color: var(--accent); font-variant-numeric: tabular-nums; }
+@media (max-width: 520px) { .room-code { gap: 8px; } .room-code span { flex: 1 1 100%; } .room-code b { font-size: 21px; letter-spacing: 4px; } }
