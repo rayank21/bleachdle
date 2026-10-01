@@ -189,7 +189,7 @@
     switch (col.type) {
       case "name": return v.name;
       case "set": return x.map(tv).join(", ");
-      case "number": return x == null ? tv("Unknown") : `${x}${col.unit || ""}`;
+      case "number": return x == null ? tv("Unknown") : col.format ? col.format(x, settings.lang, tv) : `${x}${col.unit || ""}`;
       case "arc": return arcName(x);
       default: return tv(x);
     }

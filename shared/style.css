@@ -65,6 +65,23 @@ body[data-game="naruto"] {
   --tint-rgb: 30, 70, 170;
 }
 
+/* Onepiecedle: Luffy-vest red over a treasure-gold glow */
+body[data-game="onepiece"] {
+  --accent: #ff4040;
+  --accent-strong: #ff6b6b;
+  --accent-rgb: 255, 64, 64;
+  --tint-rgb: 220, 170, 30;
+}
+
+/* Jujutsudle: cursed-energy purple over a Gojo-blue glow */
+body[data-game="jujutsukaisen"] {
+  --accent: #a46bff;
+  --accent-strong: #bf94ff;
+  --accent-rgb: 164, 107, 255;
+  --tint-rgb: 40, 90, 210;
+}
+body[data-game="jujutsukaisen"] .hero-title { font-size: 33px; white-space: nowrap; }
+
 /* ── Background collage ─────────────────────────────────────── */
 .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #0b0b0d; }
 .bg-grid {
@@ -641,6 +658,8 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
 .game-card[data-game="hunterxhunter"] { --accent-rgb: 242, 191, 42; }
 .game-card[data-game="dragonball"] { --accent-rgb: 63, 162, 255; }
 .game-card[data-game="naruto"] { --accent-rgb: 255, 106, 31; }
+.game-card[data-game="onepiece"] { --accent-rgb: 255, 64, 64; }
+.game-card[data-game="jujutsukaisen"] { --accent-rgb: 164, 107, 255; }
 .game-card:hover, .game-card:focus-visible { transform: translateY(-4px); border-color: rgba(var(--accent-rgb), 0.7); }
 .game-strip { display: grid; grid-template-columns: repeat(6, 1fr); height: 130px; }
 .game-strip span { background: center 15% / cover no-repeat; filter: grayscale(0.35); transition: filter 0.2s; }
