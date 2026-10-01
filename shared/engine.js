@@ -73,10 +73,13 @@
     return value[k];
   }
   const byId = new Map(CHARS.map((c) => [c.id, c]));
+  // Some characters have a different name in the French dub (Son Goku, Freezer, Hercule…).
+  const nameOf = (c) => CFG.names?.[settings.lang]?.[c.name] ?? c.name;
   const view = (id) => {
     const c = byId.get(id);
     const out = {};
     for (const [k, v] of Object.entries(c)) out[k] = resolve(v);
+    out.name = nameOf(c);
     return CFG.derive ? CFG.derive(out, settings.arc) : out;
   };
   const pool = () => CHARS.filter((c) => c.arc <= settings.arc);
@@ -490,12 +493,15 @@
     return pool()
       .filter((c) => !game.guesses.includes(c.id))
       .map((c) => {
-        const n = normalize(c.name);
-        const score = n.startsWith(nq) ? 0 : n.split(" ").some((w) => w.startsWith(nq)) ? 1 : n.includes(nq) ? 2 : -1;
-        return { c, score };
+        const scoreOf = (name) => {
+          const n = normalize(name);
+          return n.startsWith(nq) ? 0 : n.split(" ").some((w) => w.startsWith(nq)) ? 1 : n.includes(nq) ? 2 : 9;
+        };
+        const score = Math.min(scoreOf(nameOf(c)), scoreOf(c.name));
+        return { c, score: score === 9 ? -1 : score };
       })
       .filter((x) => x.score >= 0)
-      .sort((a, b) => a.score - b.score || a.c.name.localeCompare(b.c.name))
+      .sort((a, b) => a.score - b.score || nameOf(a.c).localeCompare(nameOf(b.c)))
       .map((x) => x.c);
   }
 
@@ -508,7 +514,7 @@
       list.innerHTML = `<li class="empty">${esc(t("noMatch"))}</li>`;
     } else {
       matches.forEach((c, i) => {
-        const li = el("li", i === active ? "is-active" : "", `<img src="${esc(c.image)}" alt="" loading="lazy" /><span>${esc(c.name)}</span>`);
+        const li = el("li", i === active ? "is-active" : "", `<img src="${esc(c.image)}" alt="" loading="lazy" /><span>${esc(nameOf(c))}</span>`);
         li.id = `sug-${c.id}`;
         li.setAttribute("role", "option");
         li.setAttribute("aria-selected", i === active);

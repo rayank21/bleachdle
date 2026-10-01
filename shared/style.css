@@ -49,6 +49,22 @@ body[data-game="hunterxhunter"] {
   --tint-rgb: 34, 139, 74;
 }
 
+/* Dragonballdle: Shenron-sky blue over a dragon-ball orange glow */
+body[data-game="dragonball"] {
+  --accent: #3fa2ff;
+  --accent-strong: #6db8ff;
+  --accent-rgb: 63, 162, 255;
+  --tint-rgb: 240, 120, 20;
+}
+
+/* Narutodle: jumpsuit red-orange over a Konoha-headband blue glow */
+body[data-game="naruto"] {
+  --accent: #ff6a1f;
+  --accent-strong: #ff8a4a;
+  --accent-rgb: 255, 106, 31;
+  --tint-rgb: 30, 70, 170;
+}
+
 /* ── Background collage ─────────────────────────────────────── */
 .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #0b0b0d; }
 .bg-grid {
@@ -608,7 +624,7 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
 .home-intro { max-width: 640px; text-align: center; }
 .home-intro h1 { margin: 6px 0 6px; font-size: clamp(32px, 6vw, 46px); font-weight: 900; font-style: italic; text-wrap: balance; }
 .home-intro p { margin: 0; color: #d4d4d8; font-size: 17px; text-wrap: balance; }
-.game-grid { width: min(100%, 880px); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.game-grid { width: min(100%, 900px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 18px; }
 .game-card {
   --accent-rgb: 242, 138, 30;
   display: flex;
@@ -623,6 +639,8 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .game-card[data-game="hunterxhunter"] { --accent-rgb: 242, 191, 42; }
+.game-card[data-game="dragonball"] { --accent-rgb: 63, 162, 255; }
+.game-card[data-game="naruto"] { --accent-rgb: 255, 106, 31; }
 .game-card:hover, .game-card:focus-visible { transform: translateY(-4px); border-color: rgba(var(--accent-rgb), 0.7); }
 .game-strip { display: grid; grid-template-columns: repeat(6, 1fr); height: 130px; }
 .game-strip span { background: center 15% / cover no-repeat; filter: grayscale(0.35); transition: filter 0.2s; }
