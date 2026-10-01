@@ -68,6 +68,9 @@ window.DLE_UI = {
         <li><strong>Daily</strong>: one character a day, the same for everyone who picked the same arc. <strong>Endless</strong>: play as much as you like.</li>
         <li>Set <strong>how far you've watched</strong> so no future characters or reveals slip through.</li>
       </ul>`,
+    crew: "Crew Roll",
+    crewTitle: "Crew Roll",
+    crewDesc: "Roll random characters, place them in your crew and aim for the best score.",
     homeTitle: "Pick your anime",
     homeSub: "Daily character guessing games, spoiler-free for where you are in the anime.",
     play: "Play",
@@ -141,6 +144,9 @@ window.DLE_UI = {
         <li><strong>Du jour</strong> : un personnage par jour, le même pour tous ceux qui ont choisi le même arc. <strong>Infini</strong> : joue autant que tu veux.</li>
         <li>Indique <strong>jusqu'où tu as regardé</strong> pour éviter tout spoiler.</li>
       </ul>`,
+    crew: "Équipage",
+    crewTitle: "Roll ton équipage",
+    crewDesc: "Tire des persos au hasard, place-les dans ton équipage et vise le meilleur score.",
     homeTitle: "Choisis ton anime",
     homeSub: "Des jeux pour deviner un personnage par jour, sans spoiler selon où tu en es dans l'anime.",
     play: "Jouer",

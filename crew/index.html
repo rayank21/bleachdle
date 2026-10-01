@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crew Roll</title>
+  <meta name="description" content="Roll random anime characters and build the strongest crew: One Piece, Naruto, Dragon Ball, Hunter × Hunter, Bleach and Jujutsu Kaisen." />
+  <meta name="theme-color" content="#0b0b0d" />
+  <link rel="icon" type="image/png" href="../assets/logos/onepiecedle.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/style.css" />
+</head>
+<body data-game="crew">
+  <div class="bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <nav class="categories" id="categories" aria-label="Games"></nav>
+    <div class="topbar-actions">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="fr">FR</button>
+      </div>
+    </div>
+  </header>
+  <div class="presence" id="presence"></div>
+
+  <main class="page">
+    <section class="card crew-hero">
+      <h1 id="crewTitle"></h1>
+      <p class="muted" id="crewSub"></p>
+      <p class="crew-pick-label" id="crewPickLabel"></p>
+      <div class="anime-picker" id="animePicker"></div>
+      <a class="arc-chip" id="crewArcLink" href="#"><span id="crewArc"></span></a>
+    </section>
+
+    <section class="crew-layout">
+      <div class="card crew-status">
+        <div><span class="crew-score-label" id="crewScoreLabel"></span> <b id="crewScore">–</b><span class="muted"> / 10</span></div>
+        <span class="muted" id="crewFilled"></span>
+      </div>
+      <div class="crew-board" id="crewBoard"></div>
+      <div class="card roll-panel" id="rollPanel" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="../shared/games.js"></script>
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/presence.js"></script>
+  <script src="roster.js"></script>
+  <script src="crew.js"></script>
+</body>
+</html>

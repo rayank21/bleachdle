@@ -32,6 +32,7 @@
       <p data-i18n="homeSub"></p>
     </section>
     <section class="game-grid" id="gameGrid"></section>
+    <section class="crew-card-wrap" id="crewCard"></section>
     <footer class="footer"><p data-i18n="homeFooter"></p></footer>
   </main>
 
@@ -47,7 +48,8 @@
       let lang = window.DLE_LANG.get();
 
       $("#categories").innerHTML = GAMES.map((g) =>
-        `<a class="cat" href="${g.path}"><span class="cat-logo">${logo(g)}</span><span class="cat-name">${esc(g.brand)}</span></a>`).join("");
+        `<a class="cat" href="${g.path}" title="${esc(g.brand)}"><span class="cat-logo">${logo(g)}</span><span class="cat-name">${esc(g.brand)}</span></a>`).join("");
+      const renderNav = () => { document.querySelectorAll(".cat-crew").forEach((n) => n.remove()); $("#categories").insertAdjacentHTML("beforeend", window.DLE_CREW_LINK("", window.DLE_UI[lang].crew)); };
 
       $("#bgGrid").innerHTML = GAMES.flatMap((g) => g.featured.map((id) => `${g.path}assets/characters/${id}.webp`))
         .flatMap((src, i, all) => [src, all[(i * 7 + 3) % all.length]])
@@ -60,6 +62,8 @@
         document.querySelectorAll("[data-i18n]").forEach((n) => (n.textContent = t[n.dataset.i18n]));
         document.querySelectorAll("[data-i18n-aria]").forEach((n) => n.setAttribute("aria-label", t[n.dataset.i18nAria]));
         document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
+        renderNav();
+        $("#crewCard").innerHTML = `<a class="crew-card" href="crew/"><span class="cat-logo cat-dice"><svg viewBox="0 0 24 24" width="30" height="30"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="8.5" r="1.4" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span><span><b>${t.crewTitle}</b><small>${t.crewDesc}</small></span><span class="game-play">${t.play} <span aria-hidden="true">→</span></span></a>`;
         $("#gameGrid").innerHTML = GAMES.map((g) => `
           <a class="game-card" href="${g.path}" data-game="${g.id}">
             <div class="game-strip">${g.featured.map((id) => `<span style="background-image:url('${g.path}assets/characters/${id}.webp')"></span>`).join("")}</div>

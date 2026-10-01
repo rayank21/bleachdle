@@ -215,10 +215,10 @@
     const nav = $("#categories");
     nav.innerHTML = GAMES.map((g) => {
       const current = g.id === CFG.id;
-      return `<a class="cat ${current ? "is-current" : ""}" href="${ROOT}${g.path}" ${current ? 'aria-current="page"' : ""}>
+      return `<a class="cat ${current ? "is-current" : ""}" href="${ROOT}${g.path}" title="${esc(g.brand)}" ${current ? 'aria-current="page"' : ""}>
         <span class="cat-logo"><img src="${ROOT}${g.logo}" alt="" onerror="this.onerror=null;this.src='${ROOT}assets/logos/placeholder.svg'" /></span>
         <span class="cat-name">${esc(g.brand)}</span></a>`;
-    }).join("");
+    }).join("") + window.DLE_CREW_LINK(ROOT, t("crew"));
   }
 
   // ── Board ──
@@ -676,6 +676,7 @@
 
   function applyLang() {
     document.documentElement.lang = settings.lang;
+    renderCategories();
     $$("[data-i18n]").forEach((n) => { const v = t(n.dataset.i18n); if (typeof v === "string") n.textContent = v; });
     $$("[data-i18n-aria]").forEach((n) => n.setAttribute("aria-label", t(n.dataset.i18nAria)));
     $$("[data-i18n-title]").forEach((n) => { n.title = t(n.dataset.i18nTitle); n.setAttribute("aria-label", n.title); });
