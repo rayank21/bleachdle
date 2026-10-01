@@ -52,10 +52,11 @@
 .room-title { margin: 6px 0 0; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
 .room-create { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
 .room-label { font-weight: 700; color: var(--muted); }
-.size-picker { display: flex; gap: 6px; flex: 1; }
+.size-picker { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; }
+.room-create > .btn-primary { flex: 1 1 100%; }
 .size-pick {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   border: 1px solid var(--line);
   background: var(--surface-3);
@@ -177,3 +178,11 @@
 .room-chat-input:focus { outline: none; border-color: rgba(var(--accent-rgb), 0.6); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2); }
 .room-hint { margin: -4px 0 0; color: var(--muted); font-size: 13px; }
 .room-hint b { color: var(--text); }
+
+/* Anime chosen inside the online lobby */
+.anime-mini { display: flex; flex-wrap: wrap; gap: 6px; }
+.anime-mini-pick { display: inline-flex; align-items: center; gap: 8px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font-weight: 800; font-size: 13px; transition: transform 0.15s, border-color 0.15s; }
+.anime-mini-pick:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), 0.5); }
+.anime-mini-pick img { width: 32px; height: 32px; border-radius: 50%; background: #fff; object-fit: cover; object-position: 50% 40%; }
+.anime-mini-pick.is-active { padding-right: 14px; border-color: rgb(var(--accent-rgb)); background: rgba(var(--accent-rgb), 0.15); }
+.lobby-anime { display: block; color: var(--muted); font-size: 12px; font-weight: 600; }

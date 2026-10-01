@@ -766,7 +766,7 @@
   // number of guesses and the tile colours of their last guess, never the names they tried.
   let rooms = null;
   let raceSize = 2;
-  const SIZES = [2, 3, 4, 6, 8];
+  const SIZES = [2, 3, 4, 5, 6, 7, 8];
   const STATUSES = new Set(["correct", "partial", "wrong"]);
   const myName = () => {
     try { return window.DLE_Rooms.cleanName(localStorage.getItem("dle:name")); } catch { return ""; }
@@ -779,7 +779,7 @@
   function ensureRooms() {
     if (rooms || !window.DLE_Rooms) return;
     rooms = window.DLE_Rooms.create({
-      channel: `race-${CFG.id}`,
+      channel: "race",
       startData: raceStartData,
       onChange: () => { tryPendingJoin(); if (isOnline()) renderRace(); },
       onStart: startRace,
@@ -792,7 +792,7 @@
       onInvite: (room, from) => {
         if (race && !race.done) return;
         window.DLE_Rooms.inviteBanner({
-          text: t("invitedBy")(rooms.peers.get(from)?.name ?? "Player", ""),
+          text: t("invitedBy")(rooms.peers.get(from)?.name ?? "Player", (window.DLE_GAMES || []).find((g) => g.id === room.game)?.anime ?? ""),
           join: t("join"),
           dismiss: t("ignore"),
           onJoin: () => joinRaceRoom(room),
@@ -806,7 +806,7 @@
   function raceStartData(room) {
     const arc = Math.min(...room.members.map((m) => m.arc), CFG.arcs.length - 1);
     const candidates = CHARS.filter((c) => c.arc <= arc);
-    return { arc, target: candidates[Math.floor(Math.random() * candidates.length)].id };
+    return { arc, target: candidates[Math.floor(Math.random() * candidates.length)].id, key: Math.random().toString(36).slice(2, 10) };
   }
 
   function updateRaceProfile() {
@@ -818,6 +818,7 @@
     if (!target || !Number.isInteger(data.arc) || target.arc > data.arc) return;
     race = {
       room,
+      key: String(data.key ?? ""), // tells this race's messages from the previous one's
       arc: data.arc,
       startedAt: 0,
       done: false,
@@ -862,7 +863,15 @@
     me.found = game.status === "won";
     me.gaveUp = game.status === "lost";
     if (me.found && me.ms == null) me.ms = Date.now() - race.startedAt;
-    rooms.broadcast("progress", { n: me.n, last: me.last, found: me.found, gaveUp: me.gaveUp, ms: me.ms });
+    const state = { key: race.key, n: me.n, last: me.last, found: me.found, gaveUp: me.gaveUp, ms: me.ms };
+    rooms.broadcast("progress", state);
+    // My final state is sent again for a minute: a lost message would leave the others waiting.
+    if ((me.found || me.gaveUp) && !race.resending) {
+      const run = race;
+      run.resending = true;
+      let left = 20;
+      const timer = setInterval(() => { if (race !== run || --left <= 0) clearInterval(timer); else rooms.broadcast("progress", state); }, 3000);
+    }
     renderRace();
     checkRaceEnd();
   }
@@ -872,6 +881,7 @@
     const p = race.players.get(from);
     if (!p) return;
     if (type === "progress") {
+      if (d.key != null && String(d.key) !== race.key) return;
       p.n = Math.max(0, Math.min(999, Math.floor(Number(d.n) || 0)));
       p.last = Array.isArray(d.last) ? d.last.slice(0, COLS.length).filter((s) => STATUSES.has(s)) : [];
       p.found = !!d.found;
@@ -986,6 +996,8 @@
   }
 
   function joinRaceRoom(r) {
+    const other = r.game !== CFG.id && (window.DLE_GAMES || []).find((g) => g.id === r.game);
+    if (other) { location.href = `../${other.path}index.html#join=${encodeURIComponent(r.id)}`; return; }
     if (!isOnline()) { settings.mode = "online"; saveSettings(); startGame(); }
     if (race) race = null;
     rooms.join(r.id);
@@ -1149,15 +1161,19 @@
     const open = rooms.openRooms();
     if (!open.length) box.append(el("p", "muted lobby-empty", esc(t("noRooms"))));
     const list = el("ul", "lobby-list");
+    open.sort((a, b) => Number(b.game === CFG.id) - Number(a.game === CFG.id));
     for (const r of open) {
-      const li = el("li", "lobby-player same-game");
+      const g = (window.DLE_GAMES || []).find((x) => x.id === r.game);
+      const li = el("li", `lobby-player${r.game === CFG.id ? " same-game" : ""}`);
+      if (g) { const img = el("img"); img.src = `../${g.logo}`; img.alt = ""; img.title = g.anime; li.append(img); }
       const host = r.members.find((m) => m.id === r.host);
       const label = el("span", "lobby-pname");
       label.textContent = t("roomOf")(host?.name ?? "Player");
+      if (g) { const small = el("small", "lobby-anime"); small.textContent = g.anime; label.append(small); }
       li.append(label, el("span", "lobby-badge", `${r.members.length}/${r.size}`));
       const join = el("button", "btn-primary btn-small", esc(t("join")));
       join.type = "button";
-      join.addEventListener("click", () => { if (!needName()) rooms.join(r.id); });
+      join.addEventListener("click", () => { if (!needName()) joinRaceRoom(r); });
       li.append(join);
       list.append(li);
     }

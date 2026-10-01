@@ -69,7 +69,7 @@
       joiningLink: "Joining the room from your link…",
       linkGone: "This room is full, already playing or closed.",
       pickToJoin: "Pick a name to join the room.",
-      hostPicks: "You're the host: change the anime above, everyone follows.",
+      hostPicks: "You're the host: change the anime below, everyone follows.",
       hostChooses: "The host picks the anime.",
       connecting: "Connecting to the lobby…",
       offline: "Online play is unavailable right now.",
@@ -141,7 +141,7 @@
       joiningLink: "Connexion à la salle de ton lien…",
       linkGone: "Cette salle est pleine, déjà en partie ou fermée.",
       pickToJoin: "Choisis un pseudo pour rejoindre la salle.",
-      hostPicks: "Tu es l'hôte : change d'anime au-dessus, tout le monde suit.",
+      hostPicks: "Tu es l'hôte : change d'anime ci-dessous, tout le monde suit.",
       hostChooses: "L'hôte choisit l'anime.",
       connecting: "Connexion au lobby…",
       offline: "Le jeu en ligne est indisponible pour l'instant.",
@@ -451,6 +451,11 @@
   function renderPicker() {
     const box = $("#animePicker");
     box.textContent = "";
+    // Online, the lobby is the same for every anime: the anime is picked when creating a room.
+    const online = mode === "online";
+    box.hidden = online;
+    $("#crewPickLabel").hidden = online;
+    $("#crewArcLink").hidden = online;
     for (const g of GAMES) {
       const b = el("button", `anime-pick${currentGame?.id === g.id ? " is-active" : ""}`);
       b.type = "button";
@@ -664,7 +669,7 @@
   // ════════════════════ ONLINE (2–8 players) ════════════════════
   // Rooms come from shared/rooms.js. In a match the host picks one character per round for
   // everyone; each player places it on their own board and the boards are shared live.
-  const SIZES = [2, 3, 4, 6, 8];
+  const SIZES = [2, 3, 4, 5, 6, 7, 8];
   let rooms = null;
   let roomSize = 2;
   let match = null;
@@ -679,7 +684,7 @@
     if (rooms) return;
     rooms = window.DLE_Rooms.create({
       channel: "crew",
-      startData: (room) => ({ arc: Math.min(...room.members.map((m) => m.arc)) }),
+      startData: (room) => ({ arc: Math.min(...room.members.map((m) => m.arc)), key: Math.random().toString(36).slice(2, 10) }),
       onChange: () => { tryPendingJoin(); if (!match) renderLobby(); else renderScoreboard(); },
       onStart: (room, data) => startMatch(room, data),
       onMessage: onMatchMessage,
@@ -766,6 +771,8 @@
     if (room) box.append(roomCard(room));
     else {
       // Create a room
+      box.append(el("h3", "room-title", t("pick")));
+      box.append(animeChooser());
       const create = el("div", "room-create");
       create.append(el("span", "room-label", t("players")));
       const sizes = el("div", "size-picker");
@@ -795,7 +802,9 @@
         const li = el("li", `lobby-player${r.game === currentGame.id ? " same-game" : ""}`);
         if (g) { const img = el("img"); img.src = ROOT + g.logo; img.alt = ""; img.title = g.anime; li.append(img); }
         const host = r.members.find((m) => m.id === r.host);
-        li.append(el("span", "lobby-pname", t("roomOf")(host?.name ?? "Player")), el("span", "lobby-badge", `${r.members.length}/${r.size}`));
+        const label = el("span", "lobby-pname", t("roomOf")(host?.name ?? "Player"));
+        if (g) label.append(el("small", "lobby-anime", g.anime));
+        li.append(label, el("span", "lobby-badge", `${r.members.length}/${r.size}`));
         const join = el("button", "btn-primary btn-small", t("join"));
         join.type = "button";
         join.addEventListener("click", () => {
@@ -886,6 +895,29 @@
     joinRoom(r);
   }
 
+  // Small row of anime logos (create a room, or the host changing the room's anime).
+  function animeChooser() {
+    const row = el("div", "anime-mini");
+    row.setAttribute("role", "group");
+    row.setAttribute("aria-label", "Anime");
+    for (const g of GAMES) {
+      const on = currentGame?.id === g.id;
+      const b = el("button", `anime-mini-pick${on ? " is-active" : ""}`);
+      b.type = "button";
+      b.title = g.anime;
+      b.setAttribute("aria-label", g.anime);
+      b.setAttribute("aria-pressed", on);
+      const img = el("img");
+      img.src = ROOT + g.logo;
+      img.alt = "";
+      b.append(img);
+      if (on) b.append(el("span", null, g.anime));
+      b.addEventListener("click", () => { if (!on) selectGame(g.id); });
+      row.append(b);
+    }
+    return row;
+  }
+
   function roomCard(room) {
     const card = el("div", "room-card");
     const g = GAMES.find((x) => x.id === room.game);
@@ -898,6 +930,7 @@
     if (g) hint.append(el("b", null, g.anime), " · ");
     hint.append(rooms.isHost() ? t("hostPicks") : t("hostChooses"));
     card.append(hint);
+    if (rooms.isHost()) card.append(animeChooser());
     const list = el("ul", "room-members");
     for (let i = 0; i < room.size; i++) {
       const m = room.members[i];
@@ -955,6 +988,7 @@
       finished: new Set(),
       claims: new Map(), // playerId → character they have rolled and not placed yet
       rolled: null, rerolls: REROLLS, rolling: false, done: false, starting: true,
+      key: String(data.key ?? ""), // tells this match's messages from the previous one's
     };
     renderPicker();
     renderMatch();
@@ -1054,10 +1088,16 @@
     else renderMatchActions();
   }
 
+  // "I'm done" with my whole board. A lost message would leave the others waiting forever, so it is
+  // sent again every few seconds for a minute (even after the ranking); receiving it twice is harmless.
   function markDone() {
     if (!match || match.finished.has(rooms.selfId)) return;
-    match.finished.add(rooms.selfId);
-    rooms.broadcast("done", {});
+    const run = match;
+    run.finished.add(rooms.selfId);
+    const sendDone = () => rooms.broadcast("done", { key: run.key, board: myBoard().map((s, i) => (s.char ? [i, s.char.id] : null)).filter(Boolean) });
+    sendDone();
+    let left = 20;
+    const timer = setInterval(() => { if (match !== run || --left <= 0) clearInterval(timer); else sendDone(); }, 3000);
     matchReel.idle(t("waitOthers"));
     renderMatchActions();
     renderScoreboard();
@@ -1112,7 +1152,24 @@
         renderScoreboard();
       }
     } else if (type === "done") {
+      if (d.key != null && String(d.key) !== match.key) return;
+      if (match.finished.has(from)) return;
       match.claims.delete(from);
+      // Fill in any placement whose message was lost.
+      const board = match.boards.get(from);
+      if (Array.isArray(d.board) && !match.done) {
+        for (const pair of d.board.slice(0, board.length)) {
+          const [i, charId] = Array.isArray(pair) ? pair : [];
+          const slot = board[i];
+          const c = match.pool.find((x) => x.id === charId);
+          if (c && slot && !slot.char && !slot.locked && slot.def.fits(c) && !board.some((s) => s.char?.id === c.id)) {
+            slot.char = c;
+            slot.points = pointsFor(slot, c);
+          }
+        }
+        const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
+        if (box) renderBoard(box, board, { mini: true });
+      }
       match.finished.add(from);
       renderScoreboard();
       checkMatchEnd();
