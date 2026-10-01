@@ -61,6 +61,9 @@
       inviteSent: (n) => `Invitation sent to ${n}`,
       invitedBy: (n, a) => `${n} invites you to play${a ? ` (${a})` : ""}`,
       ignore: "Ignore",
+      aloneHere: "Nobody else is on this page yet. Send the link to your friends: they'll show up here with an Invite button.",
+      copyLink: "Copy the link",
+      linkCopied: "Link copied!",
       connecting: "Connecting to the lobby…",
       offline: "Online play is unavailable right now.",
       you: "you",
@@ -123,6 +126,9 @@
       inviteSent: (n) => `Invitation envoyée à ${n}`,
       invitedBy: (n, a) => `${n} t'invite à jouer${a ? ` (${a})` : ""}`,
       ignore: "Ignorer",
+      aloneHere: "Personne d'autre sur cette page pour l'instant. Envoie le lien à tes potes : ils apparaîtront ici avec un bouton Inviter.",
+      copyLink: "Copier le lien",
+      linkCopied: "Lien copié !",
       connecting: "Connexion au lobby…",
       offline: "Le jeu en ligne est indisponible pour l'instant.",
       you: "toi",
@@ -770,12 +776,25 @@
 
     // Who is around
     const around = [...rooms.peers.values()];
+    box.append(el("h3", "room-title", t("inLobby")(around.length + 1)));
     if (around.length) {
-      box.append(el("h3", "room-title", t("inLobby")(around.length + 1)));
       const chips = el("div", "lobby-chips");
       for (const p of around) chips.append(peerChip(p));
       box.append(chips);
-    }
+    } else box.append(aloneNote());
+  }
+
+  function aloneNote() {
+    const wrap = el("div", "lobby-alone");
+    wrap.append(el("p", "muted", t("aloneHere")));
+    const b = el("button", "btn-ghost btn-small", t("copyLink"));
+    b.type = "button";
+    b.addEventListener("click", async () => {
+      await copyText(location.href.split("#")[0] + "#online");
+      toast(t("linkCopied"));
+    });
+    wrap.append(b);
+    return wrap;
   }
 
   async function joinRoom(r) {

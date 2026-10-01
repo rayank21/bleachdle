@@ -967,8 +967,20 @@
   // Who is around: join the room a player waits in, or invite them into mine.
   function racePeers(box) {
     const around = [...rooms.peers.values()];
-    if (!around.length) return;
     box.append(el("h3", "room-title", esc(t("inLobby")(around.length + 1))));
+    if (!around.length) {
+      const wrap = el("div", "lobby-alone");
+      wrap.append(el("p", "muted", esc(t("aloneHere"))));
+      const b = el("button", "btn-ghost btn-small", esc(t("copyLink")));
+      b.type = "button";
+      b.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(location.href.split("#")[0]); } catch {}
+        toast(t("linkCopied"));
+      });
+      wrap.append(b);
+      box.append(wrap);
+      return;
+    }
     const chips = el("div", "lobby-chips");
     const mine = rooms.myRoom;
     for (const p of around) {
