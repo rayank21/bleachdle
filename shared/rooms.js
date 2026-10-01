@@ -10,7 +10,9 @@
   const cleanName = (s) => String(s ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 
-  function create({ channel, onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {} }) {
+  // startData(room) gives the shared data of a match (e.g. the arc and the character to find);
+  // it is used both by the host's Start button and by the automatic start when the room is full.
+  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {} }) {
     const api = {
       status: "connecting", // connecting | live | offline
       selfId: null,
@@ -170,10 +172,10 @@
     };
 
     // Host only: lock the room and tell every member to start, with shared match data.
-    api.start = (data = {}) => {
+    api.start = () => {
       if (!isHost() || api.myRoom.members.length < 2 || api.myRoom.started) return;
       api.myRoom.started = true;
-      const payload = typeof data === "function" ? data(api.myRoom) : data;
+      const payload = startData(api.myRoom);
       for (const id of members()) send.roomstart({ room: api.myRoom, data: payload }, id);
       announce();
       onStart(api.myRoom, payload);

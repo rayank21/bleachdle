@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared/style.css" />
+  <link rel="stylesheet" href="../shared/online.css" />
 </head>
 <body data-game="jujutsukaisen">
   <div class="bg" aria-hidden="true"><div class="bg-grid" id="bgGrid"></div></div>
@@ -64,12 +65,15 @@
       <div class="mode-tabs" role="tablist">
         <button type="button" role="tab" data-mode="daily" data-i18n="modeDaily"></button>
         <button type="button" role="tab" data-mode="endless" data-i18n="modeEndless"></button>
+        <button type="button" role="tab" data-mode="online" data-i18n="modeOnline"></button>
       </div>
       <button class="arc-chip" type="button" data-action="arc">
         <span data-i18n="watchedUpTo"></span> <strong id="arcChipName"></strong>
         <svg viewBox="0 0 24 24" width="14" height="14"><path d="M4 20h4L19 9l-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
       </button>
     </section>
+
+    <section class="card race-box" id="raceBox" hidden aria-live="polite"></section>
 
     <section class="guess-box card">
       <form class="search" id="searchForm" autocomplete="off">
@@ -144,6 +148,7 @@
   <script src="../shared/games.js"></script>
   <script src="../shared/i18n.js"></script>
   <script src="../shared/presence.js"></script>
+  <script src="../shared/rooms.js"></script>
   <script src="config.js"></script>
   <script src="../shared/engine.js"></script>
 </body>

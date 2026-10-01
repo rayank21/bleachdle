@@ -37,10 +37,9 @@
       share: "Copy result",
       copied: "Result copied!",
       again: "New crew",
-      locked: "Not available yet at your arc",
       empty: "Empty",
       lobbyTitle: "Lobby",
-      lobbyHelp: "Create a room for 2 to 8 players, or join an open one. Everyone gets the same characters each round, with no rerolls.",
+      lobbyHelp: "Create a room for 2 to 8 players, or join an open one. Everyone builds a crew at the same time with their own rolls and 3 rerolls; the best crew wins.",
       yourName: "Your name",
       saveName: "Save",
       nameSaved: "Name saved",
@@ -61,7 +60,9 @@
       connecting: "Connecting to the lobby…",
       offline: "Online play is unavailable right now.",
       you: "you",
-      round: (a, b) => `Round ${a}/${b}`,
+      taken: (n) => `${n} already took this character: free roll!`,
+      arcUsed: (arc) => `Arc: ${arc} (the lowest in the room, so nobody is spoiled)`,
+      lockedNote: (roles) => `Not reached yet at this arc: ${roles}`,
       waitOthers: "Waiting for the other players…",
       skipped: "No free slot fits: skipped",
       finalRanking: "Final ranking",
@@ -94,10 +95,9 @@
       share: "Copier le résultat",
       copied: "Résultat copié !",
       again: "Nouvel équipage",
-      locked: "Pas encore disponible à ton arc",
       empty: "Libre",
       lobbyTitle: "Lobby",
-      lobbyHelp: "Crée une salle de 2 à 8 joueurs, ou rejoins-en une. Tout le monde reçoit les mêmes persos à chaque manche, sans relance.",
+      lobbyHelp: "Crée une salle de 2 à 8 joueurs, ou rejoins-en une. Chacun construit son équipage en même temps avec ses propres tirages et 3 relances : le meilleur équipage gagne.",
       yourName: "Ton pseudo",
       saveName: "OK",
       nameSaved: "Pseudo enregistré",
@@ -118,7 +118,9 @@
       connecting: "Connexion au lobby…",
       offline: "Le jeu en ligne est indisponible pour l'instant.",
       you: "toi",
-      round: (a, b) => `Manche ${a}/${b}`,
+      taken: (n) => `${n} a déjà pris ce perso : relance gratuite !`,
+      arcUsed: (arc) => `Arc : ${arc} (le plus bas de la salle, pour ne spoiler personne)`,
+      lockedNote: (roles) => `Pas encore atteint à cet arc : ${roles}`,
       waitOthers: "En attente des autres joueurs…",
       skipped: "Aucune place libre ne convient : passé",
       finalRanking: "Classement final",
@@ -333,12 +335,26 @@
         power.hidden = true;
         hint.textContent = "";
         name.textContent = t("rolling");
-        const n = REDUCED ? 0 : 18;
+        if (REDUCED) {
+          // Reduced motion: no scrolling, the portraits just swap in place before landing.
+          strip.textContent = "";
+          const img = portrait(pick);
+          strip.append(img);
+          reset();
+          for (let i = 0; i < 10; i++) {
+            img.src = list[Math.floor(Math.random() * list.length)].image;
+            await new Promise((r) => setTimeout(r, 70 + i * 12));
+          }
+          wrap.classList.remove("is-spinning");
+          reel.show(pick);
+          return;
+        }
+        const n = 18;
         strip.textContent = "";
         for (let i = 0; i < n; i++) strip.append(portrait(list[Math.floor(Math.random() * list.length)]));
         strip.append(portrait(pick));
         reset();
-        if (n) {
+        {
           strip.getBoundingClientRect();
           strip.style.transition = "transform 1.9s cubic-bezier(.12,.75,.18,1)";
           strip.style.transform = `translateY(${-n * win.clientHeight}px)`;
@@ -357,6 +373,7 @@
     container.textContent = "";
     container.classList.toggle("is-mini", mini);
     slots.forEach((slot, i) => {
+      if (slot.locked) return;
       const card = el("button", "crew-slot");
       card.type = "button";
       if (stagger && !REDUCED) { card.classList.add("enter"); card.style.animationDelay = `${i * 45}ms`; }
@@ -374,10 +391,10 @@
         img.alt = "";
         face.append(img);
       } else {
-        face.textContent = slot.locked ? "–" : "?";
+        face.textContent = "?";
       }
       card.append(face);
-      card.append(el("span", "crew-name", slot.char ? slot.char.name : slot.locked ? t("locked") : t("empty")));
+      card.append(el("span", "crew-name", slot.char ? slot.char.name : t("empty")));
       card.append(el("span", "crew-role", slotLabel(slot)));
       if (slot.char) card.append(el("span", `crew-points p${Math.min(10, Math.round(slot.points))}`, String(slot.points)));
       else if (canPlace) card.append(el("span", "crew-points is-preview", `+${pointsFor(slot, rolled)}`));
@@ -385,6 +402,11 @@
       if (canPlace) card.addEventListener("click", () => onPlace(i));
       container.append(card);
     });
+    const hidden = slots.filter((s) => s.locked);
+    if (hidden.length && !mini) {
+      const roles = [...new Set(hidden.map(slotLabel))].join(", ");
+      container.append(el("p", "crew-note", t("lockedNote")(roles)));
+    }
   }
 
   const slotFace = (container, i) => container.querySelector(`[data-index="${i}"] .crew-face`);
@@ -612,7 +634,6 @@
   let roomSize = 2;
   let match = null;
   let matchReel = null;
-  let pendingRound = null;
 
   const cleanName = (s) => window.DLE_Rooms.cleanName(s);
   function myName() {
@@ -623,6 +644,7 @@
     if (rooms) return;
     rooms = window.DLE_Rooms.create({
       channel: "crew",
+      startData: (room) => ({ arc: Math.min(...room.members.map((m) => m.arc)) }),
       onChange: () => { if (!match) renderLobby(); else renderScoreboard(); },
       onStart: (room, data) => startMatch(room, data),
       onMessage: onMatchMessage,
@@ -762,7 +784,7 @@
       const start = el("button", "btn-primary", t("start"));
       start.type = "button";
       start.disabled = room.members.length < 2;
-      start.addEventListener("click", () => rooms.start((r) => ({ arc: Math.min(...r.members.map((m) => m.arc)) })));
+      start.addEventListener("click", () => rooms.start());
       actions.append(start);
       if (room.members.length < 2) card.append(el("p", "muted", t("needTwo")));
     } else {
@@ -779,6 +801,8 @@
   }
 
   // ── Match ──
+  // Everyone plays at the same time with their own rolls and rerolls, like in solo. Each
+  // placement is shared so the other boards fill up live; the match ends when everyone is done.
   async function startMatch(room, data) {
     const g = GAMES.find((x) => x.id === room.game);
     if (!g) return;
@@ -788,20 +812,22 @@
     const pool = makePool(g, gameData, arc);
     const ids = room.members.map((m) => m.id);
     match = {
-      room, g, pool, host: room.host === rooms.selfId, ids,
+      room, g, pool, ids, arc, config: gameData.config,
       names: new Map(room.members.map((m) => [m.id, m.id === rooms.selfId ? myName() || t("you") : m.name])),
       boards: new Map(ids.map((id) => [id, makeSlots(g, pool)])),
       active: new Set(ids),
-      round: 0, roundChar: null, current: null, placed: new Set(), used: new Set(), done: false, starting: true,
+      finished: new Set(),
+      claims: new Map(), // playerId → character they have rolled and not placed yet
+      rolled: null, rerolls: REROLLS, rolling: false, done: false, starting: true,
     };
-    match.total = match.boards.get(rooms.selfId).filter((s) => !s.locked).length;
     renderPicker();
     renderMatch();
     const others = ids.filter((id) => id !== rooms.selfId).map(memberName);
     await vsSplash(memberName(rooms.selfId), others.join(" · "));
+    if (!match || match.room.id !== room.id) return;
     match.starting = false;
-    if (pendingRound) { const r = pendingRound; pendingRound = null; onRound(r); }
-    if (match.host) nextRound();
+    renderMatchActions();
+    if (!matchCandidates().length) markDone();
   }
 
   function vsSplash(a, b) {
@@ -813,104 +839,151 @@
       .then(() => s.remove());
   }
 
-  // Host only: the next shared character is the one that fits the most crews.
-  function nextRound() {
-    if (!match || match.done) return;
-    const boards = [...match.active].map((id) => match.boards.get(id));
-    const free = match.pool.filter((c) => !match.used.has(c.id));
-    let best = 0;
-    let list = [];
-    for (const c of free) {
-      const n = boards.filter((b) => fitsIn(b, c)).length;
-      if (n > best) { best = n; list = [c]; } else if (n === best && n > 0) list.push(c);
-    }
-    if (match.round >= match.total || !list.length) {
-      rooms.broadcast("end", {});
-      return finishMatch();
-    }
-    const pick = list[Math.floor(Math.random() * list.length)];
-    const msg = { round: match.round + 1, charId: pick.id };
-    rooms.broadcast("round", msg);
-    onRound(msg);
+  const myBoard = () => match.boards.get(rooms.selfId);
+
+  // Taken: placed on any board, or currently rolled by another player.
+  function takenIds() {
+    const ids = new Set();
+    for (const board of match.boards.values()) for (const s of filledOf(board)) ids.add(s.char.id);
+    for (const [id, charId] of match.claims) if (id !== rooms.selfId) ids.add(charId);
+    return ids;
   }
 
-  async function onRound(d) {
-    if (!match || match.starting) { pendingRound = d; return; }
-    const c = match.pool.find((x) => x.id === d.charId);
-    if (!c || d.round !== match.round + 1) return;
-    Object.assign(match, { round: d.round, roundChar: c, current: null, placed: new Set() });
-    match.used.add(c.id);
-    renderScoreboard();
-    const mine = match.boards.get(rooms.selfId);
-    renderBoard($("#duelMine"), mine);
+  function matchCandidates(exclude) {
+    const board = myBoard();
+    const taken = takenIds();
+    return match.pool.filter((c) => !taken.has(c.id) && c.id !== exclude && fitsIn(board, c));
+  }
+
+  // Two players rolled the same character at the same moment: the smaller id keeps it,
+  // the other one gets a free roll.
+  function lostClaim(c) {
+    for (const [id, charId] of match.claims) if (id !== rooms.selfId && charId === c.id && id < rooms.selfId) return id;
+    return null;
+  }
+
+  function onStolen(byId) {
+    toast(t("taken")(memberName(byId)));
+    match.rolled = null;
+    match.rolling = false;
+    matchReel.idle();
+    renderBoard($("#duelMine"), myBoard());
+    matchRoll(false, true);
+  }
+
+  async function matchRoll(isReroll, free = false) {
     const run = match;
-    await matchReel.spin(match.pool, c);
-    if (match !== run || match.done || match.round !== d.round) return;
-    if (!fitsIn(mine, c)) { matchReel.hint(t("skipped")); return sendPlace(-1); }
-    match.current = c;
+    if (!run || run.rolling || run.done || run.starting || run.finished.has(rooms.selfId)) return;
+    const list = matchCandidates(run.rolled?.id);
+    if (!list.length) return markDone();
+    if (isReroll && !free) run.rerolls--;
+    const pick = list[Math.floor(Math.random() * list.length)];
+    run.claims.set(rooms.selfId, pick.id);
+    rooms.broadcast("claim", { charId: pick.id });
+    run.rolling = true;
+    run.rolled = null;
+    renderMatchActions();
+    renderBoard($("#duelMine"), myBoard());
+    await matchReel.spin(list, pick);
+    if (match !== run || run.done) return;
+    const winner = lostClaim(pick);
+    if (winner) return onStolen(winner);
+    run.rolling = false;
+    run.rolled = pick;
     matchReel.hint(t("chooseSlot"));
-    renderBoard($("#duelMine"), mine, { rolled: c, onPlace: matchPlace });
+    renderBoard($("#duelMine"), myBoard(), { rolled: pick, onPlace: matchPlace });
+    renderMatchActions();
   }
 
   async function matchPlace(i) {
     const run = match;
-    const c = run.current;
-    if (!c || run.placed.has(rooms.selfId)) return;
-    run.current = null;
-    const mine = run.boards.get(rooms.selfId);
+    const c = run?.rolled;
+    if (!c) return;
+    run.rolled = null;
+    renderMatchActions();
     const target = slotFace($("#duelMine"), i);
-    renderBoard($("#duelMine"), mine);
+    renderBoard($("#duelMine"), myBoard());
     await fly(matchReel.window, target, c.image);
     if (match !== run) return;
-    mine[i].char = c;
-    mine[i].points = pointsFor(mine[i], c);
-    renderBoard($("#duelMine"), mine);
+    const slot = myBoard()[i];
+    slot.char = c;
+    slot.points = pointsFor(slot, c);
+    matchReel.idle();
+    renderBoard($("#duelMine"), myBoard());
     popSlot($("#duelMine"), i);
-    sendPlace(i);
-  }
-
-  function sendPlace(slot) {
-    match.placed.add(rooms.selfId);
-    rooms.broadcast("place", { round: match.round, slot, charId: match.roundChar.id });
-    if (!allPlaced()) matchReel.hint(t("waitOthers"));
+    run.claims.delete(rooms.selfId);
+    rooms.broadcast("place", { slot: i, charId: c.id });
     renderScoreboard();
-    maybeAdvance();
+    if (!openSlots(myBoard()).length || !matchCandidates().length) markDone();
+    else renderMatchActions();
   }
 
-  const allPlaced = () => [...match.active].every((id) => match.placed.has(id));
-  function maybeAdvance() {
-    if (match.host && !match.done && allPlaced()) setTimeout(nextRound, REDUCED ? 0 : 700);
+  function markDone() {
+    if (!match || match.finished.has(rooms.selfId)) return;
+    match.finished.add(rooms.selfId);
+    rooms.broadcast("done", {});
+    matchReel.idle(t("waitOthers"));
+    renderMatchActions();
+    renderScoreboard();
+    checkMatchEnd();
+  }
+
+  function checkMatchEnd() {
+    if (match && !match.done && [...match.active].every((id) => match.finished.has(id))) finishMatch();
+  }
+
+  function renderMatchActions() {
+    const box = $("#matchActions");
+    if (!box || !match) return;
+    box.textContent = "";
+    if (match.done || match.starting || match.finished.has(rooms.selfId)) return;
+    if (!match.rolled) {
+      const b = el("button", "btn-primary roll-btn", match.rolling ? t("rolling") : t("roll"));
+      b.type = "button";
+      b.disabled = match.rolling;
+      b.addEventListener("click", () => matchRoll(false));
+      box.append(b);
+    } else {
+      const b = el("button", "btn-ghost", t("reroll")(match.rerolls));
+      b.type = "button";
+      b.disabled = match.rerolls <= 0;
+      b.addEventListener("click", () => matchRoll(true));
+      box.append(b);
+    }
   }
 
   function onMatchMessage(type, d, from) {
-    if (type === "round") {
-      if (!match) { pendingRound = d; return; }
-      if (from === match.room.host) onRound(d);
+    if (!match || !match.boards.has(from)) return;
+    if (type === "claim") {
+      if (typeof d.charId !== "string") return;
+      match.claims.set(from, d.charId);
+      // They rolled the character I'm holding at the same moment and they win the tie.
+      const mine = match.rolled ?? null;
+      if (mine && mine.id === d.charId && from < rooms.selfId) onStolen(from);
       return;
     }
-    if (!match) return;
     if (type === "place") {
-      if (d.round !== match.round || match.placed.has(from) || !match.boards.has(from)) return;
+      match.claims.delete(from);
       const c = match.pool.find((x) => x.id === d.charId);
       const board = match.boards.get(from);
-      const slot = board[Number(d.slot)];
-      if (c && c === match.roundChar && slot && !slot.char && !slot.locked && slot.def.fits(c)) {
+      const i = Number(d.slot);
+      const slot = board[i];
+      if (c && slot && !slot.char && !slot.locked && slot.def.fits(c) && !board.some((s) => s.char?.id === c.id)) {
         slot.char = c;
         slot.points = pointsFor(slot, c);
         const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
-        if (box) { renderBoard(box, board, { mini: true }); popSlot(box, Number(d.slot)); }
+        if (box) { renderBoard(box, board, { mini: true }); popSlot(box, i); }
+        renderScoreboard();
       }
-      match.placed.add(from);
+    } else if (type === "done") {
+      match.claims.delete(from);
+      match.finished.add(from);
       renderScoreboard();
-      maybeAdvance();
+      checkMatchEnd();
     } else if (type === "left") {
-      if (!match.active.has(from)) return;
       match.active.delete(from);
       renderScoreboard();
-      if (match.active.size < 2 && !match.done) { if (match.host) rooms.broadcast("end", {}); finishMatch(); }
-      else maybeAdvance();
-    } else if (type === "end") {
-      if (from === match.room.host) finishMatch();
+      checkMatchEnd();
     }
   }
 
@@ -965,7 +1038,7 @@
     box.textContent = "";
     for (const id of match.ids) {
       const chip = el("div", `score-chip${id === rooms.selfId ? " is-me" : ""}${match.active.has(id) ? "" : " has-left"}`);
-      const dot = el("span", `duel-state${match.placed.has(id) ? " is-done" : ""}`);
+      const dot = el("span", `duel-state${match.finished.has(id) ? " is-done" : ""}`);
       const score = el("b", "duel-score");
       // Scores animate from the value shown last time.
       score.dataset.value = match.shown?.get(id) ?? 0;
@@ -975,7 +1048,7 @@
       countUp(score, value);
       (match.shown ??= new Map()).set(id, value);
     }
-    $("#duelRound").textContent = t("round")(Math.max(1, match.round), match.total);
+    $("#duelRound").textContent = t("arcUsed")(match.config.arcs[match.arc][lang]);
   }
 
   function renderMatch() {
@@ -998,7 +1071,9 @@
     panel.id = "duelPanel";
     matchReel = makeReel();
     matchReel.idle();
-    panel.append(matchReel.el);
+    const actions = el("div", "roll-actions");
+    actions.id = "matchActions";
+    panel.append(matchReel.el, actions);
     grid.append(mine, panel);
 
     const others = el("div", "others");

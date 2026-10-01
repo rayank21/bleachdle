@@ -36,6 +36,11 @@
   delete settings.lang;
   settings.lang = window.DLE_LANG.get();
   const saveSettings = () => store.set("settings", { arc: settings.arc, mode: settings.mode });
+  const isOnline = () => settings.mode === "online";
+  let race = null; // online race in progress (see "Online race" below)
+  const arcCap = () => (isOnline() && race ? race.arc : settings.arc);
+  // Online games don't count in the daily / endless statistics.
+  const statsMode = () => (settings.mode === "endless" ? "endless" : "daily");
 
   // ── i18n helpers ──
   const t = (key) => UI[settings.lang][key];
@@ -69,7 +74,7 @@
   function resolve(value) {
     if (!isByArc(value)) return value;
     const keys = Object.keys(value).map(Number).sort((a, b) => a - b);
-    const k = keys.filter((x) => x <= settings.arc).pop() ?? keys[0];
+    const k = keys.filter((x) => x <= arcCap()).pop() ?? keys[0];
     return value[k];
   }
   const byId = new Map(CHARS.map((c) => [c.id, c]));
@@ -80,9 +85,9 @@
     const out = {};
     for (const [k, v] of Object.entries(c)) out[k] = resolve(v);
     out.name = nameOf(c);
-    return CFG.derive ? CFG.derive(out, settings.arc) : out;
+    return CFG.derive ? CFG.derive(out, arcCap()) : out;
   };
-  const pool = () => CHARS.filter((c) => c.arc <= settings.arc);
+  const pool = () => CHARS.filter((c) => c.arc <= arcCap());
 
   // ── Game state ──
   let game = null;
@@ -98,6 +103,7 @@
   }
 
   function loadGame() {
+    if (isOnline()) { game = race ? race.game : null; return; }
     const saved = store.get(gameKey(), null);
     const valid = saved && byId.has(saved.target) && byId.get(saved.target).arc <= settings.arc;
     game = valid
@@ -105,7 +111,7 @@
       : { target: settings.mode === "daily" ? dailyTarget() : randomTarget(), guesses: [], status: "playing", revealed: {} };
     saveGame();
   }
-  const saveGame = () => store.set(gameKey(), game);
+  const saveGame = () => { if (!isOnline()) store.set(gameKey(), game); };
 
   // ── Stats ──
   const emptyStats = () => ({ played: 0, wins: 0, streak: 0, max: 0, last: null, dist: {} });
@@ -291,14 +297,14 @@
   }
 
   function renderStatsBar() {
-    $("#statStreak").textContent = currentStreak(settings.mode);
-    $("#statWins").textContent = stats[settings.mode].wins;
+    $("#statStreak").textContent = currentStreak(statsMode());
+    $("#statWins").textContent = stats[statsMode()].wins;
     $("#statArc").textContent = settings.arc == null ? "-" : settings.arc + 1;
   }
 
   function renderHero() {
     $("#heroTitle").textContent = CFG.heroTitle;
-    $("#heroSub").textContent = t(settings.mode === "daily" ? "subDaily" : "subEndless");
+    $("#heroSub").textContent = t(isOnline() ? "subOnline" : settings.mode === "daily" ? "subDaily" : "subEndless");
     $("#arcChipName").textContent = settings.arc == null ? "-" : arcName(settings.arc);
     $$(".mode-tabs [data-mode]").forEach((b) => {
       const on = b.dataset.mode === settings.mode;
@@ -332,7 +338,7 @@
       return COLS.map((c) => emoji[r[c.key].status]).join("");
     });
     const shown = lines.length > 8 ? [...lines.slice(0, 7), "…", lines[lines.length - 1]] : lines;
-    const title = settings.mode === "daily" ? `${CFG.brand} #${dayNumber()}` : `${CFG.brand} ∞`;
+    const title = isOnline() ? `${CFG.brand} · ${t("modeOnline")}` : settings.mode === "daily" ? `${CFG.brand} #${dayNumber()}` : `${CFG.brand} ∞`;
     const result = game.status === "won" ? t("guesses")(game.guesses.length) : "X";
     return `${title} · ${arcName(settings.arc)} · ${result}\n${shown.join("\n")}`;
   }
@@ -342,6 +348,7 @@
     const banner = $("#resultBanner");
     const form = $("#searchForm");
     clearInterval(countdownTimer);
+    if (isOnline() && game.status !== "playing") return renderRaceResult(banner, form);
     if (game.status === "playing") {
       banner.hidden = true;
       form.hidden = false;
@@ -388,15 +395,35 @@
     }
   }
 
+  function renderRaceResult(banner, form) {
+    form.hidden = true;
+    $("#giveUp")?.remove();
+    const tg = view(game.target);
+    const won = game.status === "won";
+    const me = race.players.get(rooms.selfId);
+    const place = raceRanking().filter((p) => p.found).findIndex((p) => p.id === me.id) + 1;
+    banner.innerHTML = `
+      <div class="result-portrait ${won ? "is-won" : ""}"><img src="${esc(tg.image)}" alt="${esc(tg.name)}" /></div>
+      <div class="result-body">
+        <p class="result-kicker">${won ? t("winTitle") : t("giveUpTitle")}</p>
+        <h2 class="result-name">${esc(tg.name)}</h2>
+        ${won ? `<p class="muted">${t("raceWon")(place, game.guesses.length, clock(me.ms ?? 0))}</p>` : ""}
+        <p class="muted">${race.done ? "" : esc(t("raceWait"))}</p>
+      </div>`;
+    banner.hidden = false;
+  }
+
   function renderGiveUp() {
     const existing = $("#giveUp");
-    if (settings.mode !== "endless" || game.guesses.length === 0) { existing?.remove(); return; }
+    const canGiveUp = settings.mode === "endless" || (isOnline() && race && !race.done);
+    if (!canGiveUp || game.guesses.length === 0) { existing?.remove(); return; }
     if (existing) { existing.textContent = t("giveUp"); return; }
     const b = el("button", "link-btn", esc(t("giveUp")));
     b.id = "giveUp";
     b.type = "button";
     b.addEventListener("click", () => {
       game.status = "lost";
+      if (isOnline()) { renderAll(); raceProgress(); return; }
       saveGame();
       recordGiveUp();
       renderAll();
@@ -449,14 +476,16 @@
   // ── Guessing ──
   function submitGuess(id) {
     if (game.status !== "playing" || game.guesses.includes(id)) return;
-    if (game.guesses.length === 0) recordStart();
+    if (isOnline() && (!race || !race.startedAt || race.done)) return;
+    if (!isOnline() && game.guesses.length === 0) recordStart();
     game.guesses.push(id);
     const won = id === game.target;
     if (won) {
       game.status = "won";
-      recordWin(game.guesses.length);
+      if (!isOnline()) recordWin(game.guesses.length);
     }
     saveGame();
+    if (isOnline()) raceProgress();
 
     renderHead();
     const row = renderRow(id, true);
@@ -489,7 +518,7 @@
 
   function search(q) {
     const nq = normalize(q.trim());
-    if (!nq) return [];
+    if (!nq || !game) return [];
     return pool()
       .filter((c) => !game.guesses.includes(c.id))
       .map((c) => {
@@ -601,7 +630,7 @@
   }
 
   function openStats() {
-    const s = stats[settings.mode];
+    const s = stats[statsMode()];
     const buckets = ["1", "2", "3", "4", "5", "6", "7-9", "10+"];
     const bucketOf = (n) => (n <= 6 ? String(n) : n <= 9 ? "7-9" : "10+");
     const dist = Object.fromEntries(buckets.map((b) => [b, 0]));
@@ -611,11 +640,11 @@
       .map((b) => `<div class="dist-row"><span>${b}</span><div class="dist-bar" style="--w:${(dist[b] / max) * 100}%"><b>${dist[b]}</b></div></div>`)
       .join("");
     $("#statsBody").innerHTML = `
-      <p class="muted center">${CFG.brand} · ${t(settings.mode === "daily" ? "modeDaily" : "modeEndless")}</p>
+      <p class="muted center">${CFG.brand} · ${t(statsMode() === "daily" ? "modeDaily" : "modeEndless")}</p>
       <div class="stats-grid">
         <div><b>${s.played}</b><span>${t("statsPlayed")}</span></div>
         <div><b>${s.wins}</b><span>${t("statsWins")}</span></div>
-        <div><b>${currentStreak(settings.mode)}</b><span>${t("statsStreak")}</span></div>
+        <div><b>${currentStreak(statsMode())}</b><span>${t("statsStreak")}</span></div>
         <div><b>${s.max}</b><span>${t("statsMax")}</span></div>
       </div>
       <h3>${t("statsDist")}</h3>
@@ -639,6 +668,7 @@
       if (settings.mode === b.dataset.mode) return;
       settings.mode = b.dataset.mode;
       saveSettings();
+      if (isOnline()) ensureRooms();
       startGame();
     }));
 
@@ -685,12 +715,18 @@
     $("#searchInput").setAttribute("aria-label", t("placeholder")(CFG.example));
     $("#footerText").textContent = CFG.footer[settings.lang];
     if ($("#helpModal").open) $("#helpBody").innerHTML = helpHtml();
-    if (game) renderAll();
+    if (game || isOnline()) renderAll();
   }
 
   function renderAll() {
     renderHero();
     renderStatsBar();
+    renderRace();
+    // Online without a race in progress: only the lobby is shown.
+    const active = !!game;
+    $(".guess-box").hidden = !active;
+    $(".board-wrap").hidden = !active;
+    if (!active) { $("#resultBanner").hidden = true; renderWeekly(); return; }
     renderBoard();
     renderHints();
     renderResult();
@@ -722,12 +758,315 @@
     document.documentElement.style.setProperty("--cols-narrow", narrow);
   }
 
+  // ── Online race (2–8 players, first to find the character wins) ──
+  // Rooms come from shared/rooms.js, with one lobby per anime. The host draws the character at the
+  // lowest arc among the players so nobody gets spoiled. Players share their progress live: the
+  // number of guesses and the tile colours of their last guess, never the names they tried.
+  let rooms = null;
+  let raceSize = 2;
+  const SIZES = [2, 3, 4, 6, 8];
+  const STATUSES = new Set(["correct", "partial", "wrong"]);
+  const myName = () => {
+    try { return window.DLE_Rooms.cleanName(localStorage.getItem("dle:name")); } catch { return ""; }
+  };
+  const clock = (ms) => {
+    const s = Math.max(0, Math.round(ms / 1000));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  };
+
+  function ensureRooms() {
+    if (rooms || !window.DLE_Rooms) return;
+    rooms = window.DLE_Rooms.create({
+      channel: `race-${CFG.id}`,
+      startData: raceStartData,
+      onChange: () => { if (isOnline()) renderRace(); },
+      onStart: startRace,
+      onMessage: onRaceMessage,
+      onClosed: () => {
+        toast(t("roomClosed"));
+        if (race && !race.done) finishRace();
+        else if (!race && isOnline()) renderRace();
+      },
+    });
+    updateRaceProfile();
+  }
+
+  // Host: the race uses the lowest arc among the players, and a character from that pool.
+  function raceStartData(room) {
+    const arc = Math.min(...room.members.map((m) => m.arc), CFG.arcs.length - 1);
+    const candidates = CHARS.filter((c) => c.arc <= arc);
+    return { arc, target: candidates[Math.floor(Math.random() * candidates.length)].id };
+  }
+
+  function updateRaceProfile() {
+    rooms?.setProfile({ name: myName() || "Player", game: CFG.id, arc: settings.arc ?? CFG.arcs.length - 1 });
+  }
+
+  function startRace(room, data) {
+    const target = byId.get(data.target);
+    if (!target || !Number.isInteger(data.arc) || target.arc > data.arc) return;
+    race = {
+      room,
+      arc: data.arc,
+      startedAt: 0,
+      done: false,
+      game: { target: target.id, guesses: [], status: "playing", revealed: {} },
+      players: new Map(room.members.map((m) => [m.id, {
+        id: m.id, name: m.id === rooms.selfId ? myName() || t("you") : m.name, n: 0, last: [], found: false, gaveUp: false, ms: null, left: false,
+      }])),
+    };
+    if (!isOnline()) { settings.mode = "online"; saveSettings(); }
+    startGame();
+    raceSplash().then(() => {
+      if (!race || race.room.id !== room.id) return;
+      race.startedAt = Date.now();
+      renderRace();
+      $("#searchInput").focus();
+    });
+  }
+
+  function raceSplash() {
+    const others = [...race.players.values()].filter((p) => p.id !== rooms.selfId).map((p) => p.name);
+    const s = el("div", "vs-splash");
+    const left = el("span", "vs-name vs-left");
+    left.textContent = myName() || t("you");
+    const mark = el("span", "vs-mark", esc(t("vs")));
+    const right = el("span", "vs-name vs-right");
+    right.textContent = others.join(" · ");
+    s.append(left, mark, right);
+    document.body.append(s);
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    return new Promise((r) => setTimeout(r, reduce ? 0 : 2200))
+      .then(() => { s.classList.add("is-out"); return new Promise((r) => setTimeout(r, reduce ? 0 : 350)); })
+      .then(() => s.remove());
+  }
+
+  // Called after each of my guesses (or when I give up).
+  function raceProgress() {
+    const me = race.players.get(rooms.selfId);
+    const tg = view(game.target);
+    const lastId = game.guesses[game.guesses.length - 1];
+    me.n = game.guesses.length;
+    me.last = lastId ? (() => { const r = compare(view(lastId), tg); return COLS.map((c) => r[c.key].status); })() : [];
+    me.found = game.status === "won";
+    me.gaveUp = game.status === "lost";
+    if (me.found && me.ms == null) me.ms = Date.now() - race.startedAt;
+    rooms.broadcast("progress", { n: me.n, last: me.last, found: me.found, gaveUp: me.gaveUp, ms: me.ms });
+    renderRace();
+    checkRaceEnd();
+  }
+
+  function onRaceMessage(type, d, from) {
+    if (!race) return;
+    const p = race.players.get(from);
+    if (!p) return;
+    if (type === "progress") {
+      p.n = Math.max(0, Math.min(999, Math.floor(Number(d.n) || 0)));
+      p.last = Array.isArray(d.last) ? d.last.slice(0, COLS.length).filter((s) => STATUSES.has(s)) : [];
+      p.found = !!d.found;
+      p.gaveUp = !!d.gaveUp && !p.found;
+      p.ms = p.found && Number.isFinite(d.ms) ? Math.max(0, d.ms) : null;
+    } else if (type === "left") {
+      p.left = true;
+    } else return;
+    renderRace();
+    checkRaceEnd();
+  }
+
+  function checkRaceEnd() {
+    if (race && !race.done && [...race.players.values()].every((p) => p.found || p.gaveUp || p.left)) finishRace();
+  }
+
+  function finishRace() {
+    if (!race || race.done) return;
+    race.done = true;
+    renderRace();
+    if (game) renderResult();
+  }
+
+  // Found first (fastest, then fewest guesses), then the others.
+  const raceRanking = () => [...race.players.values()].sort((a, b) =>
+    Number(b.found) - Number(a.found) || (a.ms ?? Infinity) - (b.ms ?? Infinity) || a.n - b.n);
+
+  function leaveRace() {
+    race = null;
+    rooms?.leave();
+    startGame();
+  }
+
+  function backToRoom() {
+    race = null;
+    if (rooms?.isHost()) rooms.reopen();
+    startGame();
+  }
+
+  function renderRace() {
+    const box = $("#raceBox");
+    if (!box) return;
+    box.hidden = !isOnline();
+    if (!isOnline()) return;
+    box.textContent = "";
+    if (race) renderRaceBoard(box);
+    else renderRaceLobby(box);
+  }
+
+  function renderRaceBoard(box) {
+    const head = el("div", "race-head");
+    head.append(el("h2", null, esc(race.done ? t("finalRanking") : t("raceLive"))));
+    if (!race.done && race.startedAt) {
+      const timer = el("span", "race-timer", clock(Date.now() - race.startedAt));
+      head.append(timer);
+      clearInterval(renderRaceBoard.timer);
+      renderRaceBoard.timer = setInterval(() => {
+        if (!race || race.done || !document.body.contains(timer)) return clearInterval(renderRaceBoard.timer);
+        timer.textContent = clock(Date.now() - race.startedAt);
+      }, 1000);
+    }
+    box.append(head);
+    const list = el("ol", "ranking race-list");
+    for (const p of raceRanking()) {
+      const li = el("li", `${p.id === rooms.selfId ? "is-me" : ""}${p.found ? " is-found" : ""}${p.left ? " has-left" : ""}`);
+      const name = el("span", "ranking-name");
+      name.textContent = p.id === rooms.selfId ? `${p.name} (${t("you")})` : p.name;
+      const status = p.found ? t("foundIn")(p.n, clock(p.ms)) : p.gaveUp ? t("gaveUpShort") : p.left ? t("left") : t("looking")(p.n);
+      const sq = el("span", "race-squares");
+      for (const s of p.last) sq.append(el("i", `sq is-${s}`));
+      li.append(name, sq, el("span", "race-status", esc(status)));
+      list.append(li);
+    }
+    box.append(list);
+    if (race.done) {
+      const actions = el("div", "result-actions");
+      const leave = el("button", "btn-ghost", esc(t("leave")));
+      leave.type = "button";
+      leave.addEventListener("click", leaveRace);
+      const again = el("button", "btn-primary", esc(t("backRoom")));
+      again.type = "button";
+      again.addEventListener("click", backToRoom);
+      actions.append(leave, again);
+      box.append(actions);
+    }
+  }
+
+  function renderRaceLobby(box) {
+    box.append(el("h2", null, esc(t("raceTitle"))));
+    box.append(el("p", "muted", esc(t("raceHelp"))));
+    if (!rooms || rooms.status === "connecting") {
+      const w = el("p", "lobby-waiting");
+      w.append(el("span", "spinner"));
+      w.append(t("connecting"));
+      box.append(w);
+      return;
+    }
+    if (rooms.status === "offline") { box.append(el("p", "lobby-status is-error", esc(t("offline")))); return; }
+
+    const form = el("form", "lobby-form");
+    const input = el("input");
+    input.id = "raceName";
+    input.maxLength = 20;
+    input.placeholder = t("yourName");
+    input.setAttribute("aria-label", t("yourName"));
+    input.value = myName();
+    const save = el("button", "btn-ghost", esc(t("saveName")));
+    save.type = "submit";
+    form.append(input, save);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = window.DLE_Rooms.cleanName(input.value);
+      if (!name) { input.placeholder = t("pickName"); input.focus(); return; }
+      try { localStorage.setItem("dle:name", name); } catch {}
+      updateRaceProfile();
+      toast(t("nameSaved"));
+    });
+    box.append(form);
+    const needName = () => { if (myName()) return false; input.placeholder = t("pickName"); input.focus(); return true; };
+
+    const room = rooms.myRoom;
+    if (room) {
+      const card = el("div", "room-card");
+      const host = room.members.find((m) => m.id === room.host);
+      const head = el("div", "room-head");
+      const title = el("b");
+      title.textContent = t("roomOf")(host?.name ?? "Player");
+      head.append(title, el("span", "lobby-badge", `${room.members.length}/${room.size}`));
+      card.append(head);
+      const seats = el("ul", "room-members");
+      for (let i = 0; i < room.size; i++) {
+        const m = room.members[i];
+        const li = el("li", m ? "is-taken" : "is-free");
+        li.append(el("span", "room-seat", String(i + 1)));
+        const label = el("span");
+        label.textContent = m ? (m.id === rooms.selfId ? `${m.name} (${t("you")})` : m.name) : t("freeSeat");
+        li.append(label);
+        if (m && m.id === room.host) li.append(el("span", "lobby-badge", esc(t("host"))));
+        seats.append(li);
+      }
+      card.append(seats);
+      const actions = el("div", "result-actions");
+      if (rooms.isHost()) {
+        const start = el("button", "btn-primary", esc(t("startRace")));
+        start.type = "button";
+        start.disabled = room.members.length < 2;
+        start.addEventListener("click", () => rooms.start());
+        actions.append(start);
+        if (room.members.length < 2) card.append(el("p", "muted", esc(t("needTwo"))));
+      } else {
+        const w = el("p", "lobby-waiting");
+        w.append(el("span", "spinner"));
+        w.append(t("waitHost"));
+        card.append(w);
+      }
+      const leave = el("button", "btn-ghost", esc(t("leave")));
+      leave.type = "button";
+      leave.addEventListener("click", () => rooms.leave());
+      actions.append(leave);
+      card.append(actions);
+      box.append(card);
+      return;
+    }
+
+    const create = el("div", "room-create");
+    create.append(el("span", "room-label", esc(t("players"))));
+    const sizes = el("div", "size-picker");
+    for (const n of SIZES) {
+      const b = el("button", `size-pick${n === raceSize ? " is-active" : ""}`, String(n));
+      b.type = "button";
+      b.setAttribute("aria-pressed", n === raceSize);
+      b.addEventListener("click", () => { raceSize = n; renderRace(); });
+      sizes.append(b);
+    }
+    const go = el("button", "btn-primary", esc(t("createRoom")));
+    go.type = "button";
+    go.addEventListener("click", () => { if (!needName()) rooms.createRoom({ game: CFG.id, size: raceSize }); });
+    create.append(sizes, go);
+    box.append(create);
+
+    box.append(el("h3", "room-title", esc(t("openRooms"))));
+    const open = rooms.openRooms();
+    if (!open.length) box.append(el("p", "muted lobby-empty", esc(t("noRooms"))));
+    const list = el("ul", "lobby-list");
+    for (const r of open) {
+      const li = el("li", "lobby-player same-game");
+      const host = r.members.find((m) => m.id === r.host);
+      const label = el("span", "lobby-pname");
+      label.textContent = t("roomOf")(host?.name ?? "Player");
+      li.append(label, el("span", "lobby-badge", `${r.members.length}/${r.size}`));
+      const join = el("button", "btn-primary btn-small", esc(t("join")));
+      join.type = "button";
+      join.addEventListener("click", () => { if (!needName()) rooms.join(r.id); });
+      li.append(join);
+      list.append(li);
+    }
+    box.append(list);
+  }
+
   // ── Boot ──
   setupLayout();
   renderCategories();
   renderBackground();
   bindUi();
   bindSearch();
+  if (isOnline()) ensureRooms();
   applyLang();
   if (settings.arc == null) {
     renderHero();
