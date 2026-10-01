@@ -1,26 +1,50 @@
-# Bleachdle
+# Bleachdle & Hunterdle
 
-A daily Bleach character guessing game (Wordle-style), in English and French.
+Daily anime character guessing games (Wordle-style), in English and French. Each anime is its own category:
+
+| Category | Page | Characters |
+| --- | --- | --- |
+| **Bleachdle** (Bleach) | `bleach/` | 97 |
+| **Hunterdle** (Hunter × Hunter) | `hunterxhunter/` | 92 |
 
 ## Play
 
-Open `index.html` in a browser; there is nothing to install. To publish it, upload the whole folder to any static host (GitHub Pages, Netlify, Vercel…).
+Open `index.html` (the category picker) in a browser; there is nothing to install. To publish, upload the whole folder to any static host (GitHub Pages, Netlify, Vercel…).
 
 ## Features
 
-- **Arc selection**: before playing, choose how far you've watched. Only characters introduced up to that arc can be picked, and spoiler-prone details (e.g. Ichigo's or Isshin's race, Aizen's residence) are shown as they were at that point.
+- **Arc selection**: before playing, choose how far you've watched. Only characters introduced up to that arc can come up, and spoiler-prone details stay hidden (e.g. Ichigo's race in Bleach, Nen types in HxH until the arc that reveals them).
 - **Daily mode** (one character a day, per arc) and **Endless mode**.
-- Hints unlock after 4 guesses (affiliation) and 8 guesses (blurred portrait).
+- Hints after 4 guesses (Bleach: affiliation, HxH: ability) and 8 guesses (blurred portrait).
 - Statistics, streaks, weekly average, copyable emoji result.
-- EN / FR toggle, responsive on mobile.
+- EN / FR toggle (shared across categories), responsive on mobile.
+
+## Structure
+
+```
+index.html             category picker
+shared/                game engine, styles, interface text, category list (games.js)
+assets/logos/          one logo per category
+bleach/                config.js, data/, assets/characters/, scripts/
+hunterxhunter/         config.js, data/, assets/characters/, scripts/
+```
+
+Each category has a `config.js` (columns, arcs, hints, FR translations) read by `shared/engine.js`.
 
 ## Data
 
-- `scripts/seed.mjs`: the character list and attributes (gender, race, age, hair, residence, first arc, affiliation). Edit this file to add characters.
-- `scripts/scrape.mjs`: fetches portraits and official heights from the Bleach wiki (Fandom), then generates `data/characters.js` and `assets/characters/`.
+- `<category>/scripts/seed.mjs`: the character list and the hand-curated attributes.
+- `<category>/scripts/scrape.mjs`: fetches portraits (and heights for Bleach, or gender/age/hair/Nen/abilities/first arc for HxH) from the Fandom wikis, then generates `data/characters.js` and `assets/characters/`.
 
 ```
-node scripts/scrape.mjs
+node bleach/scripts/scrape.mjs
+node hunterxhunter/scripts/scrape.mjs
 ```
 
-Fan-made game, not affiliated with Tite Kubo, Shueisha or Studio Pierrot.
+## Adding a category
+
+1. Copy `hunterxhunter/` and adapt `config.js` and `scripts/`.
+2. Add the logo to `assets/logos/`.
+3. Register it in `shared/games.js`.
+
+Fan-made games, not affiliated with the authors, publishers or studios.
