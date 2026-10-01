@@ -165,7 +165,7 @@ function render() {
 async function connect() {
   try {
     const { joinRoom } = await import(TRYSTERO);
-    const room = joinRoom({ appId: APP_ID }, "lobby");
+    const room = joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, "lobby");
     const info = room.makeAction("info");
     sendInfo = (data, opts) => info.send(data, opts);
     info.onMessage = (data, { peerId }) => {

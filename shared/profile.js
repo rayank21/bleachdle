@@ -92,6 +92,15 @@
     }, 1200);
   }
   window.addEventListener("dle:stats", syncStats);
+  // A name changed in the online bar or a lobby renames the profile too (or is put back if taken).
+  window.addEventListener("dle:name", async () => {
+    if (!session) return;
+    let name = "";
+    try { name = localStorage.getItem("dle:name") || ""; } catch {}
+    if (!name || name === session.profile.name) return;
+    try { const { profile } = await api({ action: "update", id: session.id, token: session.token, name }); adopt(profile); }
+    catch { try { localStorage.setItem("dle:name", session.profile.name); } catch {} window.dispatchEvent(new Event("dle:name")); }
+  });
 
   async function recordCrew(crew) {
     if (!session) return;

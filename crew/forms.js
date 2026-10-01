@@ -4,7 +4,7 @@
 // fx: the effect's shape (aura: flames and lightning, pillar: a beam of energy, domain: a sphere
 // that swallows the panel); c1/c2: its colours; kanji: the word slammed over the card.
 (() => {
-  const SAIYAN = { fx: "aura", c1: "255, 225, 77", c2: "255, 157, 46", kanji: "超" };
+  const SAIYAN = { fx: "aura", c1: "255, 225, 77", c2: "255, 157, 46", kanji: "超", lightning: true };
   const BANKAI = { fx: "pillar", c1: "255, 42, 42", c2: "30, 6, 8", kanji: "卍解" };
   const RESURRECCION = { fx: "pillar", c1: "60, 220, 140", c2: "10, 40, 25", kanji: "帰刃" };
   const DOMAIN = { fx: "domain", c1: "150, 90, 255", c2: "8, 4, 20", kanji: "領域展開" };
@@ -16,7 +16,7 @@
       gohan: { arc: 6, name: { en: "Super Saiyan 2", fr: "Super Saiyan 2" }, ...SAIYAN, lightning: true },
       "future-trunks": { arc: 6, name: { en: "Super Saiyan", fr: "Super Saiyan" }, ...SAIYAN },
       frieza: { arc: 8, name: { en: "Golden Frieza", fr: "Golden Freezer" }, fx: "aura", c1: "255, 211, 77", c2: "255, 245, 190", kanji: "金" },
-      "goku-black": { arc: 8, name: { en: "Super Saiyan Rosé", fr: "Super Saiyan Rosé" }, fx: "aura", c1: "255, 122, 217", c2: "176, 77, 255", kanji: "超" },
+      "goku-black": { arc: 8, name: { en: "Super Saiyan Rosé", fr: "Super Saiyan Rosé" }, fx: "aura", c1: "255, 122, 217", c2: "176, 77, 255", kanji: "超", lightning: true },
     },
     bleach: {
       "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI },

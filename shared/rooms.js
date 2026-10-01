@@ -109,7 +109,7 @@
       try {
         const { joinRoom, selfId } = await import(TRYSTERO);
         api.selfId = selfId;
-        const room = joinRoom({ appId: APP_ID }, `${channel}-lobby`);
+        const room = joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, `${channel}-lobby`);
         for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
           const action = room.makeAction(name);
           send[name] = (data, target) => action.send(data, target ? { target } : undefined);

@@ -418,6 +418,13 @@
     return { ...f, image: `assets/forms/${game}-${c.id}.webp` };
   }
 
+  // Ripple filters for transformations: an animated turbulence displaces the picture like heat or energy.
+  function ensureFilters() {
+    if (document.getElementById("tf-filters")) return;
+    const wave = (id, scale, dur, f1, f2) => `<filter id="${id}" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="${f1}" numOctaves="2" seed="4"><animate attributeName="baseFrequency" dur="${dur}" values="${f1};${f2};${f1}" repeatCount="indefinite"/><animate attributeName="seed" dur="0.5s" values="4;9;2;7;4" calcMode="discrete" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="${scale}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
+    document.body.insertAdjacentHTML("beforeend", `<svg id="tf-filters" width="0" height="0" style="position:absolute" aria-hidden="true">${wave("tf-wave", 12, "1.4s", "0.010 0.040", "0.016 0.065")}${wave("tf-wave-strong", 22, "0.6s", "0.012 0.05", "0.03 0.09")}${wave("tf-wave-soft", 4, "1.6s", "0.03 0.08", "0.05 0.12")}</svg>`);
+  }
+
   // Rarity tier from the character's power.
   const tierOf = (power) => (power >= 9 ? "legend" : power >= 7 ? "epic" : "common");
 
@@ -438,6 +445,32 @@
     const fxLayer = el("div", "tf-layer");
     const kanji = el("span", "tf-kanji");
     stage.append(rays, glow, fxLayer, win, kanji);
+    const zap = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    zap.setAttribute("viewBox", "0 0 100 100");
+    zap.setAttribute("preserveAspectRatio", "none");
+    zap.setAttribute("class", "tf-zap");
+    win.append(zap);
+    let zapTimer = null;
+    // A few jagged bolts at random places, redrawn several times a second.
+    const drawZap = () => {
+      zap.textContent = "";
+      const n = 1 + Math.floor(Math.random() * 3);
+      for (let b = 0; b < n; b++) {
+        let x = Math.random() * 100, y = Math.random() * 55;
+        const ang = Math.random() * Math.PI * 2;
+        let d = `M${x.toFixed(1)} ${y.toFixed(1)}`;
+        for (let k = 0; k < 6; k++) {
+          x += Math.cos(ang) * 6 + (Math.random() * 10 - 5);
+          y += Math.sin(ang) * 6 + (Math.random() * 10 - 5);
+          d += ` L${x.toFixed(1)} ${y.toFixed(1)}`;
+        }
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        zap.append(path);
+      }
+    };
+    const startZap = () => { stopZap(); drawZap(); zapTimer = setInterval(() => (Math.random() < 0.75 ? drawZap() : (zap.textContent = "")), 110); };
+    const stopZap = () => { clearInterval(zapTimer); zapTimer = null; zap.textContent = ""; };
     const formTag = el("span", "tf-name");
     formTag.hidden = true;
     const tier = el("span", "reel-tier");
@@ -465,6 +498,13 @@
       bg.src = fg.src = c.image;
       bg.alt = fg.alt = "";
       item.append(bg, fg);
+      // Transformed: a rippling copy over the top of the picture makes hair and aura move.
+      if (c.isForm) {
+        const hair = el("img", "reel-hair");
+        hair.src = c.image;
+        hair.alt = "";
+        item.append(hair);
+      }
       return item;
     };
     const setName = (text, animate) => {
@@ -478,6 +518,7 @@
     };
     const clearTier = () => wrap.classList.remove("tier-legend", "tier-epic", "tier-common");
     const clearForm = () => {
+      stopZap();
       wrap.classList.remove("is-powering", "is-transformed", "tf-aura", "tf-pillar", "tf-domain");
       fxLayer.textContent = "";
       kanji.classList.remove("go");
@@ -524,7 +565,9 @@
       }
     };
     const showForm = (c) => {
+      ensureFilters();
       buildFx(c.form);
+      if (c.form.lightning) startZap();
       wrap.classList.add("is-transformed");
       formTag.textContent = c.form.name[lang];
       formTag.hidden = false;
@@ -649,7 +692,9 @@
       // Power-up: the card trembles in a rising aura, then a flash, the kanji slams down and the
       // portrait becomes the transformed form, which keeps glowing.
       async transform(c, form) {
+        ensureFilters();
         buildFx(form);
+        startZap();
         wrap.classList.add("is-powering");
         hint.textContent = "";
         sfx("powerup");
@@ -711,7 +756,7 @@
       if (slot.char) {
         const img = el("img");
         img.src = slot.char.formImage || slot.char.image;
-        if (slot.char.form) { card.classList.add("is-transformed"); card.style.setProperty("--fx1", slot.char.form.c1); card.style.setProperty("--fx2", slot.char.form.c2); }
+        if (slot.char.form) { ensureFilters(); card.classList.add("is-transformed"); card.style.setProperty("--fx1", slot.char.form.c1); card.style.setProperty("--fx2", slot.char.form.c2); }
         img.alt = "";
         face.append(img);
       } else {
@@ -845,6 +890,7 @@
     const c = run.rolled;
     if (!c) return;
     run.rolled = null;
+    soloReel.hint("");
     renderSoloActions();
     const target = slotFace($("#crewBoard"), i);
     renderBoard($("#crewBoard"), run.slots);
@@ -1453,6 +1499,7 @@
     const c = run?.rolled;
     if (!c) return;
     run.rolled = null;
+    matchReel.hint("");
     renderMatchActions();
     const target = slotFace($("#duelMine"), i);
     renderBoard($("#duelMine"), myBoard());
