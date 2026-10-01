@@ -1,4 +1,4 @@
-# Bleachdle & Hunterdle
+# Bleachdle, Hunterdle, Dragonballdle & Narutodle
 
 Daily anime character guessing games (Wordle-style), in English and French. Each anime is its own category:
 
@@ -6,6 +6,8 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | --- | --- | --- |
 | **Bleachdle** (Bleach) | `bleach/` | 97 |
 | **Hunterdle** (Hunter × Hunter) | `hunterxhunter/` | 92 |
+| **Dragonballdle** (Dragon Ball, Z, Super) | `dragonball/` | 77 |
+| **Narutodle** (Naruto, Shippūden) | `naruto/` | 93 |
 
 ## Play
 
@@ -17,7 +19,8 @@ Open `index.html` (the category picker) in a browser; there is nothing to instal
 - **Daily mode** (one character a day, per arc) and **Endless mode**.
 - Hints after 4 guesses (Bleach: affiliation, HxH: ability) and 8 guesses (blurred portrait).
 - Statistics, streaks, weekly average, copyable emoji result.
-- EN / FR toggle (shared across categories), responsive on mobile.
+- EN / FR toggle (shared across categories), responsive on mobile. Dragon Ball characters also have their French dub names.
+- **Player names and live “online” bar**: each player picks a name (kept in their browser); the bar under the header lists who is on the site right now and which game they are playing. Players connect directly to each other (WebRTC) with [Trystero](https://github.com/dmotz/trystero), using public Nostr relays to find each other: no server or account needed. As with any peer-to-peer connection, players’ IP addresses are visible to each other.
 
 ## Structure
 
@@ -39,6 +42,8 @@ Each category has a `config.js` (columns, arcs, hints, FR translations) read by 
 ```
 node bleach/scripts/scrape.mjs
 node hunterxhunter/scripts/scrape.mjs
+node dragonball/scripts/scrape.mjs
+node naruto/scripts/scrape.mjs
 ```
 
 ## Adding a category

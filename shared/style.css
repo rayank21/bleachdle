@@ -675,3 +675,55 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
 }
 body[data-game="hunterxhunter"] .hero-title { font-size: 31px; white-space: nowrap; }
 @media (max-width: 720px) { body[data-game="hunterxhunter"] .hero-title { font-size: 27px; } }
+
+/* ── Live players bar ───────────────────────────────────────── */
+.presence {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 6px clamp(16px, 2vw, 24px);
+  background: rgba(14, 14, 17, 0.92);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.presence::-webkit-scrollbar { display: none; }
+.presence-status { display: flex; align-items: center; gap: 7px; flex: none; color: var(--muted); font-weight: 600; }
+.presence-dot { width: 8px; height: 8px; border-radius: 50%; background: #6b6b74; }
+.presence[data-status="live"] .presence-dot { background: #2fd067; box-shadow: 0 0 0 3px rgba(47, 208, 103, 0.2); animation: pulse 2s ease-in-out infinite; }
+.presence[data-status="offline"] .presence-dot { background: var(--wrong); }
+@keyframes pulse { 50% { box-shadow: 0 0 0 5px rgba(47, 208, 103, 0.05); } }
+.presence-list { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.presence-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 3px 10px 3px 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.presence-chip:not(:has(.presence-logo)) { padding-left: 10px; }
+.presence-chip.is-me { border-color: rgba(var(--accent-rgb), 0.55); background: rgba(var(--accent-rgb), 0.1); }
+.presence-logo { width: 22px; height: 22px; border-radius: 50%; background: #fff; object-fit: cover; object-position: 50% 40%; }
+.presence-you { color: var(--muted); font-weight: 500; }
+.presence-edit { display: grid; place-items: center; padding: 3px; border: 0; border-radius: 50%; background: none; color: var(--muted); }
+.presence-edit:hover { color: var(--text); background: rgba(255, 255, 255, 0.08); }
+.presence-form { display: flex; align-items: center; gap: 4px; }
+.presence-form input {
+  width: 130px;
+  padding: 4px 8px;
+  border: 1px solid rgba(var(--accent-rgb), 0.6);
+  border-radius: 999px;
+  background: #101013;
+  color: var(--text);
+  font: 600 13px var(--font);
+}
+.presence-form input:focus { outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25); }
+.presence-save { padding: 4px 10px; border: 0; border-radius: 999px; background: var(--accent); color: #141414; font-weight: 800; font-size: 12px; }
+.presence-chip.is-editing { padding: 3px; }

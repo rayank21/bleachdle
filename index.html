@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bleachdle & Hunterdle</title>
-  <meta name="description" content="Daily anime character guessing games: Bleach and Hunter × Hunter, spoiler-free for where you are in the anime." />
+  <title>Bleachdle</title>
+  <meta name="description" content="Daily anime character guessing games: Bleach, Hunter × Hunter, Dragon Ball and Naruto, spoiler-free for where you are in the anime." />
   <meta name="theme-color" content="#0b0b0d" />
   <link rel="icon" type="image/png" href="assets/logos/bleachdle.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,6 +24,7 @@
       </div>
     </div>
   </header>
+  <div class="presence" id="presence"></div>
 
   <main class="page">
     <section class="home-intro">
@@ -36,6 +37,7 @@
 
   <script src="shared/games.js"></script>
   <script src="shared/i18n.js"></script>
+  <script src="shared/presence.js"></script>
   <script>
     (() => {
       const GAMES = window.DLE_GAMES;
@@ -76,6 +78,7 @@
         lang = b.dataset.lang;
         window.DLE_LANG.set(lang);
         render();
+        window.dispatchEvent(new Event("dle:lang"));
       }));
       render();
     })();

@@ -628,6 +628,7 @@
       settings.lang = b.dataset.lang;
       window.DLE_LANG.set(settings.lang);
       applyLang();
+      window.dispatchEvent(new Event("dle:lang"));
       if ($("#arcModal").open) {
         renderArcGrid();
         $("#arcConfirm").textContent = settings.arc == null ? t("start") : t("save");
