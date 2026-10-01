@@ -460,6 +460,8 @@
       const item = el("div", `reel-item${c.isForm ? " is-form" : ""}`);
       const bg = el("img", "reel-bg");
       const fg = el("img", "reel-fg");
+      // Wide pictures fill the card; only tall portraits are shown whole over the blur.
+      fg.addEventListener("load", () => item.classList.toggle("is-wide", fg.naturalWidth / fg.naturalHeight > 0.8), { once: true });
       bg.src = fg.src = c.image;
       bg.alt = fg.alt = "";
       item.append(bg, fg);

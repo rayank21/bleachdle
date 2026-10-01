@@ -334,3 +334,4 @@
 .reel-name .reel-letter { color: #fff; }
 .tier-epic .reel-name .reel-letter { background: linear-gradient(180deg, #fff 40%, #ffb3a1); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .tier-legend .reel-name .reel-letter { background: linear-gradient(180deg, #fff3b0, #ffd34d 55%, #ff9d2e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.reel-item.is-wide .reel-fg { object-fit: cover; object-position: center 20%; }
