@@ -24,6 +24,11 @@ const T = {
     edit: "Change your name",
     save: "Save",
     pick: "Pick a name",
+    chat: "Live chat",
+    chatEmpty: "No messages yet. Say hi!",
+    say: (n) => `Message as ${n}…`,
+    send: "Send",
+    close: "Close",
   },
   fr: {
     online: (n) => `${n} en ligne`,
@@ -35,6 +40,11 @@ const T = {
     edit: "Modifier ton pseudo",
     save: "OK",
     pick: "Choisis un pseudo",
+    chat: "Chat en direct",
+    chatEmpty: "Aucun message pour l'instant. Dis bonjour !",
+    say: (n) => `Écrire en tant que ${n}…`,
+    send: "Envoyer",
+    close: "Fermer",
   },
 };
 const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -164,19 +174,208 @@ async function connect() {
       const g = GAMES.some((x) => x.id === data?.game) ? data.game : "home";
       peers.set(peerId, { name, game: g });
       render();
+      renderChat();
     };
-    room.onPeerJoin = (peerId) => info.send({ name: shownName(), game }, { target: peerId });
-    room.onPeerLeave = (peerId) => { peers.delete(peerId); render(); };
+    const chatMsg = room.makeAction("chat");
+    const chatLog = room.makeAction("chatlog");
+    sendChat = (m) => chatMsg.send(m);
+    chatMsg.onMessage = (data, { peerId }) => receive(data, peerId);
+    chatLog.onMessage = (data, { peerId }) => receiveHistory(data, peerId);
+    room.onPeerJoin = (peerId) => {
+      info.send({ name: shownName(), game }, { target: peerId });
+      if (chat.messages.length) chatLog.send(shareable(), { target: peerId });
+    };
+    room.onPeerLeave = (peerId) => { peers.delete(peerId); rate.delete(peerId); render(); renderChat(); };
     status = "live";
     render();
+    renderChat();
   } catch (e) {
     console.warn("Presence unavailable:", e);
     status = "offline";
     render();
+    renderChat();
   }
 }
 
-window.addEventListener("dle:lang", render);
+// ── Live chat (bottom left, every page) ──
+// Same peers as the presence bar. There is no server, so the history lives with the players:
+// each tab keeps the last messages and hands them to whoever arrives. Everything is plain text.
+const CHAT_MAX = 200;
+const CHAT_KEEP = 60;
+const chat = { open: false, unread: 0, messages: [], seen: new Set() };
+let sendChat = null;
+let lastSent = 0;
+const rate = new Map(); // peerId → recent receive times
+
+function cleanMessage(m) {
+  if (!m || typeof m !== "object") return null;
+  const text = String(m.text ?? "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, CHAT_MAX);
+  const id = String(m.id ?? "").slice(0, 40);
+  if (!text || !id) return null;
+  return {
+    id,
+    text,
+    name: cleanName(m.name) || "Player",
+    ts: Math.min(Number(m.ts) || Date.now(), Date.now()),
+    game: GAMES.some((x) => x.id === m.game) ? m.game : "home",
+    mine: !!m.mine,
+  };
+}
+
+function addMessage(raw, { quiet = false } = {}) {
+  const m = cleanMessage(raw);
+  if (!m || chat.seen.has(m.id)) return false;
+  chat.seen.add(m.id);
+  chat.messages.push(m);
+  chat.messages.sort((a, b) => a.ts - b.ts);
+  if (chat.messages.length > CHAT_KEEP) chat.messages.splice(0, chat.messages.length - CHAT_KEEP);
+  if (!quiet && !chat.open && !m.mine) chat.unread++;
+  try { sessionStorage.setItem("dle:chat", JSON.stringify(chat.messages)); } catch {}
+  return true;
+}
+
+// Ignore anyone sending more than 6 messages in 8 seconds.
+function allowed(peerId) {
+  const now = Date.now();
+  const times = (rate.get(peerId) || []).filter((x) => now - x < 8000);
+  times.push(now);
+  rate.set(peerId, times);
+  return times.length <= 6;
+}
+
+// The chat follows the player from page to page within the tab.
+try { chat.open = sessionStorage.getItem("dle:chatOpen") === "1"; } catch {}
+try {
+  const kept = JSON.parse(sessionStorage.getItem("dle:chat") || "[]");
+  if (Array.isArray(kept)) for (const m of kept) addMessage(m, { quiet: true });
+} catch {}
+
+const chatRoot = el("div", "chat");
+chatRoot.innerHTML = `
+  <section class="chat-panel" role="dialog" aria-labelledby="chatTitle" hidden>
+    <header class="chat-head">
+      <span class="presence-dot"></span>
+      <div class="chat-titles"><h2 id="chatTitle"></h2><span class="chat-count"></span></div>
+      <button class="chat-close" type="button"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+    </header>
+    <ol class="chat-list" aria-live="polite"></ol>
+    <form class="chat-form">
+      <input class="chat-input" autocomplete="off" maxlength="${CHAT_MAX}" />
+      <button class="chat-send" type="submit"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" fill="currentColor"/></svg></button>
+    </form>
+  </section>
+  <button class="chat-toggle" type="button">
+    <svg viewBox="0 0 24 24" width="24" height="24"><path d="M4 5h16v11H9l-5 4V5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+    <span class="chat-badge" hidden></span>
+  </button>`;
+document.body.append(chatRoot);
+
+const $c = (s) => chatRoot.querySelector(s);
+const chatList = $c(".chat-list");
+const chatInput = $c(".chat-input");
+const chatToggle = $c(".chat-toggle");
+
+function clock(ts) {
+  const d = new Date(ts);
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function renderChat({ scroll = false } = {}) {
+  const nearBottom = chatList.scrollHeight - chatList.scrollTop - chatList.clientHeight < 60;
+  chatRoot.dataset.status = status;
+  chatRoot.classList.toggle("is-open", chat.open);
+  $c(".chat-panel").hidden = !chat.open;
+  $c("#chatTitle").textContent = t("chat");
+  $c(".chat-count").textContent = status === "live" ? t("online")(peers.size + 1) : status === "connecting" ? t("connecting") : t("offline");
+  $c(".chat-close").setAttribute("aria-label", t("close"));
+  $c(".chat-send").setAttribute("aria-label", t("send"));
+  chatInput.placeholder = status === "offline" ? t("offline") : t("say")(shownName());
+  chatInput.disabled = status === "offline";
+  chatInput.setAttribute("aria-label", t("chat"));
+  chatToggle.setAttribute("aria-label", t("chat"));
+  chatToggle.setAttribute("aria-expanded", chat.open);
+  chatToggle.title = t("chat");
+  const badge = $c(".chat-badge");
+  badge.hidden = !chat.unread;
+  badge.textContent = chat.unread > 9 ? "9+" : String(chat.unread);
+
+  chatList.textContent = "";
+  if (!chat.messages.length) chatList.append(el("li", "chat-empty", t("chatEmpty")));
+  let prev = null;
+  for (const m of chat.messages) {
+    const grouped = prev && prev.name === m.name && prev.mine === m.mine && m.ts - prev.ts < 120000;
+    const li = el("li", `chat-msg${m.mine ? " is-mine" : ""}${grouped ? " is-grouped" : ""}`);
+    if (!grouped) {
+      const meta = el("div", "chat-meta");
+      const logo = gameLogo(m.game);
+      if (logo) meta.append(logo);
+      meta.append(el("b", null, m.mine ? `${m.name} (${t("you")})` : m.name), el("time", null, clock(m.ts)));
+      li.append(meta);
+    }
+    li.append(el("p", "chat-text", m.text));
+    chatList.append(li);
+    prev = m;
+  }
+  if (scroll || nearBottom) chatList.scrollTop = chatList.scrollHeight;
+}
+
+function setChatOpen(open) {
+  chat.open = open;
+  if (open) chat.unread = 0;
+  try { sessionStorage.setItem("dle:chatOpen", open ? "1" : "0"); } catch {}
+  renderChat({ scroll: true });
+  (open ? chatInput : chatToggle).focus();
+}
+
+chatToggle.addEventListener("click", () => setChatOpen(!chat.open));
+$c(".chat-close").addEventListener("click", () => setChatOpen(false));
+chatRoot.addEventListener("keydown", (e) => { if (e.key === "Escape" && chat.open) setChatOpen(false); });
+
+$c(".chat-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const text = chatInput.value.replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
+  const now = Date.now();
+  if (!text || !sendChat || now - lastSent < 800) return;
+  lastSent = now;
+  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: now };
+  sendChat(msg);
+  addMessage({ ...msg, mine: true });
+  chatInput.value = "";
+  renderChat({ scroll: true });
+});
+
+function receive(data, peerId) {
+  if (!allowed(peerId)) return;
+  // Use the name their presence announced when we know it.
+  if (!addMessage({ ...data, name: peers.get(peerId)?.name || data?.name, mine: false })) return;
+  renderChat();
+  if (!chat.open) {
+    chatToggle.classList.remove("bump");
+    void chatToggle.offsetWidth;
+    chatToggle.classList.add("bump");
+  }
+}
+
+function receiveHistory(data, peerId) {
+  if (!Array.isArray(data) || !allowed(peerId)) return;
+  let added = false;
+  for (const m of data.slice(-30)) added = addMessage({ ...m, mine: false }, { quiet: true }) || added;
+  if (added) renderChat();
+}
+
+// What a newcomer receives: the recent messages, without my "mine" flags.
+const shareable = () => chat.messages.slice(-30).map(({ mine, ...m }) => m);
+
+window.addEventListener("dle:lang", () => { render(); renderChat(); });
+// A name saved in a game lobby is the name here too.
+window.addEventListener("dle:name", () => {
+  myName = storedName() || myName;
+  editing = false;
+  sendInfo?.({ name: shownName(), game });
+  render();
+  renderChat();
+});
 render();
+renderChat({ scroll: true });
 connect();
 })();

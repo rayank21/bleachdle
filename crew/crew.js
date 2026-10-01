@@ -64,6 +64,13 @@
       aloneHere: "Nobody else is on this page yet. Send the link to your friends: they'll show up here with an Invite button.",
       copyLink: "Copy the link",
       linkCopied: "Link copied!",
+      copyInvite: "Copy the invite link",
+      inviteCopied: "Link copied! Send it to your friends.",
+      joiningLink: "Joining the room from your link…",
+      linkGone: "This room is full, already playing or closed.",
+      pickToJoin: "Pick a name to join the room.",
+      hostPicks: "You're the host: change the anime above, everyone follows.",
+      hostChooses: "The host picks the anime.",
       connecting: "Connecting to the lobby…",
       offline: "Online play is unavailable right now.",
       you: "you",
@@ -129,6 +136,13 @@
       aloneHere: "Personne d'autre sur cette page pour l'instant. Envoie le lien à tes potes : ils apparaîtront ici avec un bouton Inviter.",
       copyLink: "Copier le lien",
       linkCopied: "Lien copié !",
+      copyInvite: "Copier le lien d'invitation",
+      inviteCopied: "Lien copié ! Envoie-le à tes potes.",
+      joiningLink: "Connexion à la salle de ton lien…",
+      linkGone: "Cette salle est pleine, déjà en partie ou fermée.",
+      pickToJoin: "Choisis un pseudo pour rejoindre la salle.",
+      hostPicks: "Tu es l'hôte : change d'anime au-dessus, tout le monde suit.",
+      hostChooses: "L'hôte choisit l'anime.",
       connecting: "Connexion au lobby…",
       offline: "Le jeu en ligne est indisponible pour l'instant.",
       you: "toi",
@@ -432,6 +446,7 @@
   // ── Shared UI ──
   let currentGame = null; // a DLE_GAMES entry
   let mode = "solo";
+  let pendingJoin = null;
 
   function renderPicker() {
     const box = $("#animePicker");
@@ -441,8 +456,8 @@
       b.type = "button";
       b.dataset.game = g.id;
       b.setAttribute("aria-pressed", currentGame?.id === g.id);
-      // The anime can't change while waiting for or playing a match.
-      b.disabled = mode === "online" && !!(match || rooms?.myRoom);
+      // Online, only the host of a room picks the anime (not during a match); the others follow.
+      b.disabled = mode === "online" && !!((match && !match.done) || (rooms?.myRoom && !rooms.isHost()));
       const img = el("img");
       img.src = ROOT + g.logo;
       img.alt = "";
@@ -467,7 +482,13 @@
     await renderArcChip();
     if (quiet) return;
     if (mode === "solo") startSolo();
-    else { updateProfile(); renderLobby(); }
+    else {
+      // From the end-of-match screen, the host goes back to the room with the new anime.
+      if (match?.done) { if (rooms?.myRoom) backToRoom(); else match = null; }
+      updateProfile();
+      if (rooms?.isHost()) rooms.setGame(currentGame.id);
+      renderLobby();
+    }
   }
 
   // ════════════════════ SOLO ════════════════════
@@ -659,7 +680,7 @@
     rooms = window.DLE_Rooms.create({
       channel: "crew",
       startData: (room) => ({ arc: Math.min(...room.members.map((m) => m.arc)) }),
-      onChange: () => { if (!match) renderLobby(); else renderScoreboard(); },
+      onChange: () => { tryPendingJoin(); if (!match) renderLobby(); else renderScoreboard(); },
       onStart: (room, data) => startMatch(room, data),
       onMessage: onMatchMessage,
       onClosed: () => {
@@ -692,6 +713,12 @@
   // ── Lobby ──
   function renderLobby() {
     if (mode !== "online" || match) return;
+    // The host changed the anime: follow it (and send my spoiler limit for that anime).
+    const joined = rooms?.myRoom;
+    if (joined && !rooms.isHost() && joined.game !== currentGame.id && GAMES.some((g) => g.id === joined.game)) {
+      selectGame(joined.game, { quiet: true }).then(() => { updateProfile(); renderLobby(); });
+      return;
+    }
     $("#duel").hidden = true;
     const box = $("#lobby");
     box.hidden = false;
@@ -723,12 +750,19 @@
       const name = cleanName(input.value);
       if (!name) { input.placeholder = t("pickName"); input.focus(); return; }
       try { localStorage.setItem("dle:name", name); } catch {}
+      window.dispatchEvent(new Event("dle:name"));
       updateProfile();
       toast(t("nameSaved"));
+      tryPendingJoin();
     });
     box.append(form);
 
     const room = rooms.myRoom;
+    if (!room && pendingJoin) {
+      const w = el("p", "lobby-waiting");
+      w.append(el("span", "spinner"), t("joiningLink"));
+      box.append(w);
+    }
     if (room) box.append(roomCard(room));
     else {
       // Create a room
@@ -801,6 +835,8 @@
     if (match) { match = null; }
     if (mode !== "online") setMode("online");
     if (r.game !== currentGame.id) await selectGame(r.game, { quiet: true });
+    // Send my spoiler limit for this room's anime before joining, not the one of the previous anime.
+    await updateProfile();
     rooms.join(r.id);
   }
 
@@ -832,6 +868,24 @@
     return chip;
   }
 
+  // Invite links: crew/#join=<room id>. The room shows up once its host is found, then we join it.
+  const inviteLink = (room) => `${location.href.split("#")[0]}#join=${encodeURIComponent(room.id)}`;
+
+  function tryPendingJoin() {
+    if (!pendingJoin || !rooms || rooms.status !== "live") return;
+    if (rooms.myRoom?.id === pendingJoin) { pendingJoin = null; return; }
+    const r = rooms.rooms.get(pendingJoin);
+    if (!r) return;
+    if (r.started || r.members.length >= r.size) { pendingJoin = null; toast(t("linkGone")); renderLobby(); return; }
+    if (!myName()) {
+      if (!tryPendingJoin.asked) { tryPendingJoin.asked = true; toast(t("pickToJoin")); setTimeout(() => $("#lobbyName")?.focus(), 50); }
+      return;
+    }
+    pendingJoin = null;
+    history.replaceState(null, "", "#online");
+    joinRoom(r);
+  }
+
   function roomCard(room) {
     const card = el("div", "room-card");
     const g = GAMES.find((x) => x.id === room.game);
@@ -840,6 +894,10 @@
     const host = room.members.find((m) => m.id === room.host);
     head.append(el("b", null, t("roomOf")(host?.name ?? "Player")), el("span", "lobby-badge", `${room.members.length}/${room.size}`));
     card.append(head);
+    const hint = el("p", "room-hint");
+    if (g) hint.append(el("b", null, g.anime), " · ");
+    hint.append(rooms.isHost() ? t("hostPicks") : t("hostChooses"));
+    card.append(hint);
     const list = el("ul", "room-members");
     for (let i = 0; i < room.size; i++) {
       const m = room.members[i];
@@ -867,7 +925,14 @@
     leave.type = "button";
     leave.addEventListener("click", () => rooms.leave());
     actions.append(leave);
-    card.append(actions);
+    const link = el("button", "btn-ghost", t("copyInvite"));
+    link.type = "button";
+    link.addEventListener("click", async () => {
+      await copyText(inviteLink(room));
+      toast(t("inviteCopied"));
+    });
+    actions.append(link);
+    card.append(actions, rooms.chatBox());
     return card;
   }
 
@@ -1086,6 +1151,7 @@
       list.append(li);
     }
     panel.querySelector(".crew-result").insertBefore(list, panel.querySelector(".crew-result .roll-actions"));
+    if (!match.closedByHost) panel.append(rooms.chatBox());
   }
 
   function leaveMatch() {
@@ -1246,7 +1312,13 @@
   let saved = null;
   try { saved = localStorage.getItem("dle:crew-game"); } catch {}
   currentGame = GAMES.find((g) => g.id === saved) ?? GAMES.find((g) => g.id === "onepiece");
-  mode = location.hash === "#online" ? "online" : "solo";
+  const joinHash = location.hash.match(/^#join=(.+)$/);
+  if (joinHash) {
+    pendingJoin = decodeURIComponent(joinHash[1]).slice(0, 64);
+    // Give up after a while if the host is gone.
+    setTimeout(() => { if (pendingJoin && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderLobby(); } }, 25000);
+  }
+  mode = location.hash === "#online" || joinHash ? "online" : "solo";
   setMode(mode);
   selectGame(currentGame.id);
 })();

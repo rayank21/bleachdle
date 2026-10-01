@@ -686,6 +686,8 @@
       saveSettings();
       $("#arcModal").close();
       startGame();
+      updateRaceProfile();
+      tryPendingJoin();
       $("#searchInput").focus();
     });
     // The arc must be chosen before the first game.
@@ -779,7 +781,7 @@
     rooms = window.DLE_Rooms.create({
       channel: `race-${CFG.id}`,
       startData: raceStartData,
-      onChange: () => { if (isOnline()) renderRace(); },
+      onChange: () => { tryPendingJoin(); if (isOnline()) renderRace(); },
       onStart: startRace,
       onMessage: onRaceMessage,
       onClosed: () => {
@@ -954,7 +956,33 @@
       again.addEventListener("click", backToRoom);
       actions.append(leave, again);
       box.append(actions);
+      if (rooms.myRoom) box.append(rooms.chatBox());
     }
+  }
+
+  // Invite links: <game>/#join=<room id>. Wait for the room to be announced (and for an arc), then join.
+  const inviteLink = (room) => `${location.href.split("#")[0]}#join=${encodeURIComponent(room.id)}`;
+  let pendingJoin = null;
+  const joinHash = location.hash.match(/^#join=(.+)$/);
+  if (joinHash) {
+    pendingJoin = decodeURIComponent(joinHash[1]).slice(0, 64);
+    settings.mode = "online";
+    setTimeout(() => { if (pendingJoin && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderRace(); } }, 25000);
+  }
+
+  function tryPendingJoin() {
+    if (!pendingJoin || !rooms || rooms.status !== "live" || settings.arc == null) return;
+    if (rooms.myRoom?.id === pendingJoin) { pendingJoin = null; return; }
+    const r = rooms.rooms.get(pendingJoin);
+    if (!r) return;
+    if (r.started || r.members.length >= r.size) { pendingJoin = null; toast(t("linkGone")); renderRace(); return; }
+    if (!myName()) {
+      if (!tryPendingJoin.asked) { tryPendingJoin.asked = true; toast(t("pickToJoin")); setTimeout(() => $("#raceName")?.focus(), 50); }
+      return;
+    }
+    pendingJoin = null;
+    history.replaceState(null, "", location.pathname + location.search);
+    joinRaceRoom(r);
   }
 
   function joinRaceRoom(r) {
@@ -1019,6 +1047,12 @@
       return;
     }
     if (rooms.status === "offline") { box.append(el("p", "lobby-status is-error", esc(t("offline")))); return; }
+    if (pendingJoin && !rooms.myRoom) {
+      const w = el("p", "lobby-waiting");
+      w.append(el("span", "spinner"));
+      w.append(t("joiningLink"));
+      box.append(w);
+    }
 
     const form = el("form", "lobby-form");
     const input = el("input");
@@ -1035,8 +1069,10 @@
       const name = window.DLE_Rooms.cleanName(input.value);
       if (!name) { input.placeholder = t("pickName"); input.focus(); return; }
       try { localStorage.setItem("dle:name", name); } catch {}
+      window.dispatchEvent(new Event("dle:name"));
       updateRaceProfile();
       toast(t("nameSaved"));
+      tryPendingJoin();
     });
     box.append(form);
     const needName = () => { if (myName()) return false; input.placeholder = t("pickName"); input.focus(); return true; };
@@ -1080,7 +1116,14 @@
       leave.type = "button";
       leave.addEventListener("click", () => rooms.leave());
       actions.append(leave);
-      card.append(actions);
+      const link = el("button", "btn-ghost", esc(t("copyInvite")));
+      link.type = "button";
+      link.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(inviteLink(room)); } catch {}
+        toast(t("inviteCopied"));
+      });
+      actions.append(link);
+      card.append(actions, rooms.chatBox());
       box.append(card);
       racePeers(box);
       return;

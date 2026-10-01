@@ -6,6 +6,11 @@
   const TRYSTERO = "https://cdn.jsdelivr.net/npm/trystero@0.25.4/+esm";
   const APP_ID = "bleachdle.rayank21.v1";
   const MAX_NAME = 20;
+  const CHAT_MAX = 200;
+  const CHAT_T = {
+    en: { title: "Room chat", say: "Say something to the room…", send: "Send", empty: "Only the players of this room see these messages." },
+    fr: { title: "Chat de la salle", say: "Écris à la salle…", send: "Envoyer", empty: "Seuls les joueurs de cette salle voient ces messages." },
+  };
 
   const cleanName = (s) => String(s ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
@@ -89,6 +94,7 @@
         onInvite(room, from);
       } else if (type === "msg") {
         if (!api.myRoom || d.roomId !== api.myRoom.id || !api.myRoom.members.some((m) => m.id === from)) return;
+        if (d.type === "chat") { receiveChat(d.data, from); return; }
         onMessage(String(d.type), d.data ?? {}, from);
         return;
       }
@@ -194,6 +200,14 @@
       for (const id of members()) send.msg({ roomId: api.myRoom.id, type, data }, id);
     };
 
+    // Host only: change the room's game while waiting; members follow it.
+    api.setGame = (game) => {
+      if (!isHost() || api.myRoom.started || api.myRoom.game === game) return;
+      api.myRoom.game = String(game);
+      announce();
+      onChange();
+    };
+
     // A room that ended can be reopened by its host for another round with the same players.
     api.reopen = () => {
       if (!isHost()) return;
@@ -214,6 +228,101 @@
 
     // The open room a player is waiting in, if any (to join them directly).
     api.roomOf = (peerId) => [...api.rooms.values()].find((r) => !r.started && r.members.some((m) => m.id === peerId)) ?? null;
+
+    // ── Room chat: only the players of my room, in the room card and on the end-of-match screen ──
+    // The pages re-render often, so the draft and the focus survive a rebuild of the box.
+    const chat = { log: [], list: null, draft: "", focused: false, rate: new Map() };
+    const chatName = (id) => api.myRoom?.members.find((m) => m.id === id)?.name || api.peers.get(id)?.name || "Player";
+    const chatText = (s) => String(s ?? "").replace(/[\u0000-\u001f]/g, " ").replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
+
+    function chatItem(m) {
+      const li = document.createElement("li");
+      li.className = `room-chat-msg${m.mine ? " is-mine" : ""}`;
+      const who = document.createElement("b");
+      who.textContent = m.name;
+      const text = document.createElement("span");
+      text.textContent = m.text;
+      li.append(who, text);
+      return li;
+    }
+
+    function pushChat(m) {
+      chat.log.push(m);
+      if (chat.log.length > 80) chat.log.shift();
+      const list = chat.list;
+      if (!list?.isConnected || list.dataset.room !== m.roomId) return;
+      list.querySelector(".room-chat-empty")?.remove();
+      list.append(chatItem(m));
+      list.scrollTop = list.scrollHeight;
+    }
+
+    function receiveChat(d, from) {
+      const text = chatText(d?.text);
+      if (!text) return;
+      const now = Date.now();
+      const times = (chat.rate.get(from) || []).filter((x) => now - x < 8000);
+      times.push(now);
+      chat.rate.set(from, times);
+      if (times.length > 6) return;
+      pushChat({ roomId: api.myRoom.id, name: chatName(from), text, mine: false });
+    }
+
+    api.chatBox = () => {
+      const room = api.myRoom;
+      if (!room) return document.createDocumentFragment();
+      const L = CHAT_T[window.DLE_LANG?.get() === "fr" ? "fr" : "en"];
+      const box = document.createElement("div");
+      box.className = "room-chat";
+      const title = document.createElement("h3");
+      title.className = "room-title";
+      title.textContent = L.title;
+      const list = document.createElement("ol");
+      list.className = "room-chat-list";
+      list.dataset.room = room.id;
+      list.setAttribute("aria-live", "polite");
+      const mine = chat.log.filter((m) => m.roomId === room.id);
+      if (!mine.length) {
+        const empty = document.createElement("li");
+        empty.className = "room-chat-empty";
+        empty.textContent = L.empty;
+        list.append(empty);
+      }
+      for (const m of mine) list.append(chatItem(m));
+      const form = document.createElement("form");
+      form.className = "room-chat-form";
+      const input = document.createElement("input");
+      input.className = "room-chat-input";
+      input.maxLength = CHAT_MAX;
+      input.autocomplete = "off";
+      input.placeholder = L.say;
+      input.setAttribute("aria-label", L.title);
+      input.value = chat.draft;
+      const send = document.createElement("button");
+      send.type = "submit";
+      send.className = "btn-primary btn-small";
+      send.textContent = L.send;
+      form.append(input, send);
+      input.addEventListener("input", () => { chat.draft = input.value; });
+      input.addEventListener("focus", () => { chat.focused = true; });
+      // A blur caused by the page rebuilding the box keeps the focus for the new one.
+      input.addEventListener("blur", () => setTimeout(() => { if (input.isConnected) chat.focused = false; }));
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = chatText(input.value);
+        if (!text || !api.myRoom) return;
+        api.broadcast("chat", { text });
+        pushChat({ roomId: api.myRoom.id, name: api.profile.name, text, mine: true });
+        input.value = chat.draft = "";
+      });
+      box.append(title, list, form);
+      chat.list = list;
+      // The caller appends the box right away: restore the focus as soon as it is in the page.
+      queueMicrotask(() => {
+        list.scrollTop = list.scrollHeight;
+        if (chat.focused && input.isConnected) input.focus({ preventScroll: true });
+      });
+      return box;
+    };
 
     api.isHost = isHost;
     api.openRooms = () => [...api.rooms.values()].filter((r) => !r.started && r.members.length < r.size && r.id !== api.myRoom?.id);
