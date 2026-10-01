@@ -199,3 +199,52 @@
 }
 
 .crew-note { grid-column: 1 / -1; margin: 2px 0 0; font-size: 12.5px; color: var(--muted); text-align: center; }
+
+/* ── Gradients ── */
+/* Rays and glows stay inside the draw panel. */
+.roll-panel { overflow: hidden; }
+.crew-slot { --role2-rgb: var(--role-rgb); }
+/* A thin two-tone line along the top of every place */
+.crew-slot::after { content: ""; position: absolute; left: 14px; right: 14px; top: 0; height: 2px; border-radius: 0 0 2px 2px; background: linear-gradient(90deg, rgb(var(--role-rgb)), rgb(var(--role2-rgb))); opacity: 0.55; pointer-events: none; }
+.crew-slot.is-filled::after, .crew-slot.is-target::after { opacity: 1; box-shadow: 0 0 12px rgba(var(--role-rgb), 0.6); }
+.crew-icon { background: linear-gradient(135deg, rgba(var(--role-rgb), 0.32), rgba(var(--role2-rgb), 0.14)); }
+.crew-role { background: linear-gradient(90deg, rgba(var(--role-rgb), 0.34), rgba(var(--role2-rgb), 0.2)); }
+.crew-slot.is-filled {
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface)) padding-box, linear-gradient(150deg, rgba(var(--role-rgb), 0.75), rgba(var(--role2-rgb), 0.25) 55%, rgba(255, 255, 255, 0.06)) border-box;
+}
+.crew-slot.is-filled .crew-face {
+  border: 3px solid transparent;
+  background: linear-gradient(var(--surface-2), var(--surface-2)) padding-box, linear-gradient(135deg, rgb(var(--role-rgb)), rgb(var(--role2-rgb))) border-box;
+  box-shadow: 0 0 18px rgba(var(--role-rgb), 0.35);
+}
+.crew-slot.is-captain .crew-icon, .crew-captain-tag { background: linear-gradient(135deg, #ffe16b, #ff9d2e); }
+.score-ring-fill { stroke: url(#ringGrad); }
+.crew-pip.p8, .crew-pip.p9, .crew-pip.p10 { background: linear-gradient(90deg, #1f9d4c, #4be08a); }
+.crew-pip.p5, .crew-pip.p6, .crew-pip.p7 { background: linear-gradient(90deg, #e19a14, #ffd34d); }
+.crew-pip.p1, .crew-pip.p2, .crew-pip.p3, .crew-pip.p4 { background: linear-gradient(90deg, #c0121b, #ff5a5f); }
+.crew-points.p8, .crew-points.p9, .crew-points.p10 { background: linear-gradient(135deg, #1f9d4c, #3fcf7a); }
+.crew-points.p5, .crew-points.p6, .crew-points.p7 { background: linear-gradient(135deg, #e19a14, #ffc94d); }
+.crew-points.p1, .crew-points.p2, .crew-points.p3, .crew-points.p4 { background: linear-gradient(135deg, #c0121b, #ff4b52); }
+.crew-brand h1, .reel-name { background: linear-gradient(90deg, #fff 30%, #ffb3a1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tier-legend .reel-name { background: linear-gradient(90deg, #fff, #ffe16b, #ff9d2e); -webkit-background-clip: text; background-clip: text; }
+.reel-kicker { background: linear-gradient(90deg, #ff4b52, #ff9d2e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.roll-btn { background: linear-gradient(120deg, #ff3b4a, #e5262e 45%, #ff7a3d); background-size: 200% 100%; transition: transform 0.15s, box-shadow 0.15s, background-position 0.4s; }
+.roll-btn:hover:not(:disabled) { background-position: 100% 0; }
+.crew-brand-icon { background: linear-gradient(135deg, #ff4b52, #ff8a3d); }
+.power-fill { background: linear-gradient(90deg, #e5262e, #ff8a3d); }
+
+/* Reel frame: a gradient border that turns while the reel spins */
+@property --frame-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.reel-window {
+  --f1: #ff3b4a; --f2: #ff8a3d; --f3: #7a0d14;
+  border-color: transparent !important; /* the gradient shows through */
+  border-color: transparent;
+  background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.18), var(--surface-2) 70%) padding-box, conic-gradient(from var(--frame-a), var(--f1), var(--f2), var(--f3), var(--f1)) border-box;
+}
+.reel.is-spinning .reel-window, .reel.is-charging .reel-window { animation: frame-turn 0.6s linear infinite; }
+.reel.is-spinning .reel-window.tick { animation: frame-turn 0.6s linear infinite, tick 0.12s ease-out; }
+@keyframes frame-turn { to { --frame-a: 360deg; } }
+.reel.tier-epic .reel-window { --f1: #ff3b4a; --f2: #ff4bd0; --f3: #8a2cff; }
+.reel.tier-legend .reel-window { --f1: #ffe16b; --f2: #ff9d2e; --f3: #fff4c2; }
+.reel.is-landed .reel-window { animation: land 0.6s cubic-bezier(.3, 1.7, .5, 1), frame-turn 6s linear infinite; }
