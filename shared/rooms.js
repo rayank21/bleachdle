@@ -1,0 +1,204 @@
+// Online rooms shared by the multiplayer modes (Crew Roll, guessing race).
+// Players connect directly to each other with Trystero (WebRTC, Nostr relays for discovery).
+// A room is owned by the player who created it (the host): the host keeps the member list and
+// relays it to everyone; it closes when the host leaves. Everything received is untrusted input.
+(() => {
+  const TRYSTERO = "https://cdn.jsdelivr.net/npm/trystero@0.25.4/+esm";
+  const APP_ID = "bleachdle.rayank21.v1";
+  const MAX_NAME = 20;
+
+  const cleanName = (s) => String(s ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+  function create({ channel, onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {} }) {
+    const api = {
+      status: "connecting", // connecting | live | offline
+      selfId: null,
+      profile: { name: "", game: null, arc: 0 },
+      peers: new Map(), // peerId → { id, name, game, arc }
+      rooms: new Map(), // roomId → room (as last announced by its host)
+      myRoom: null,
+    };
+    const send = {};
+    let started = false;
+
+    // ── Room helpers ──
+    const isHost = () => api.myRoom && api.myRoom.host === api.selfId;
+    const sanitizeRoom = (r, from) => {
+      if (!r || typeof r !== "object" || typeof r.id !== "string" || r.host !== from) return null;
+      const members = Array.isArray(r.members) ? r.members.slice(0, 8).map((m) => ({ id: String(m.id), name: cleanName(m.name) || "Player", arc: Number.isInteger(m.arc) ? m.arc : 0 })) : [];
+      return { id: r.id.slice(0, 64), host: from, game: String(r.game), size: clamp(Number(r.size) || 2, 2, 8), members, started: !!r.started };
+    };
+    const announce = (target) => {
+      if (!isHost()) return;
+      send.roominfo?.(api.myRoom, target);
+      api.rooms.set(api.myRoom.id, api.myRoom);
+    };
+    const members = () => (api.myRoom ? api.myRoom.members.filter((m) => m.id !== api.selfId).map((m) => m.id) : []);
+
+    function handle(type, d, from) {
+      if (!d || typeof d !== "object") return;
+      if (type === "hello") {
+        api.peers.set(from, { id: from, name: cleanName(d.name) || "Player", game: String(d.game ?? ""), arc: Number.isInteger(d.arc) ? d.arc : 0 });
+        // Keep my name up to date in the room I host.
+        if (isHost()) {
+          const m = api.myRoom.members.find((x) => x.id === from);
+          if (m) { m.name = api.peers.get(from).name; m.arc = api.peers.get(from).arc; announce(); }
+        }
+      } else if (type === "roominfo") {
+        if (d.closed) {
+          api.rooms.delete(d.id);
+          if (api.myRoom?.id === d.id && !isHost()) { api.myRoom = null; onClosed("closed"); }
+        } else {
+          const room = sanitizeRoom(d, from);
+          if (!room) return;
+          api.rooms.set(room.id, room);
+          if (api.myRoom?.id === room.id) {
+            // The host may have removed me (room full or I left).
+            api.myRoom = room.members.some((m) => m.id === api.selfId) ? room : null;
+          }
+        }
+      } else if (type === "roomjoin") {
+        if (!isHost() || d.roomId !== api.myRoom.id || api.myRoom.started) return;
+        const room = api.myRoom;
+        if (!room.members.some((m) => m.id === from) && room.members.length < room.size) {
+          const p = api.peers.get(from);
+          room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0 });
+        }
+        announce();
+        if (room.members.length >= room.size) api.start();
+      } else if (type === "roomleave") {
+        if (isHost() && d.roomId === api.myRoom.id) {
+          api.myRoom.members = api.myRoom.members.filter((m) => m.id !== from);
+          announce();
+          if (api.myRoom.started) onMessage("left", { id: from }, from);
+        }
+      } else if (type === "roomstart") {
+        const room = sanitizeRoom(d.room, from);
+        if (!room || api.myRoom?.id !== room.id || !room.members.some((m) => m.id === api.selfId)) return;
+        api.myRoom = room;
+        onStart(room, d.data ?? {});
+      } else if (type === "msg") {
+        if (!api.myRoom || d.roomId !== api.myRoom.id || !api.myRoom.members.some((m) => m.id === from)) return;
+        onMessage(String(d.type), d.data ?? {}, from);
+        return;
+      }
+      onChange();
+    }
+
+    async function connect() {
+      try {
+        const { joinRoom, selfId } = await import(TRYSTERO);
+        api.selfId = selfId;
+        const room = joinRoom({ appId: APP_ID }, `${channel}-lobby`);
+        for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg"]) {
+          const action = room.makeAction(name);
+          send[name] = (data, target) => action.send(data, target ? { target } : undefined);
+          action.onMessage = (data, { peerId }) => handle(name, data, peerId);
+        }
+        room.onPeerJoin = (peerId) => {
+          send.hello(api.profile, peerId);
+          if (isHost() && !api.myRoom.started) announce(peerId);
+        };
+        room.onPeerLeave = (peerId) => {
+          api.peers.delete(peerId);
+          for (const [id, r] of api.rooms) if (r.host === peerId) api.rooms.delete(id);
+          if (api.myRoom) {
+            if (api.myRoom.host === peerId) { api.myRoom = null; onClosed("host-left"); }
+            else if (api.myRoom.members.some((m) => m.id === peerId)) {
+              if (isHost()) { api.myRoom.members = api.myRoom.members.filter((m) => m.id !== peerId); announce(); }
+              if (api.myRoom.started) onMessage("left", { id: peerId }, peerId);
+            }
+          }
+          onChange();
+        };
+        api.status = "live";
+        send.hello(api.profile);
+      } catch (e) {
+        console.warn("Online rooms unavailable:", e);
+        api.status = "offline";
+      }
+      onChange();
+    }
+
+    api.setProfile = (p) => {
+      api.profile = { name: cleanName(p.name) || "Player", game: p.game, arc: Number.isInteger(p.arc) ? p.arc : 0 };
+      send.hello?.(api.profile);
+      if (isHost()) {
+        const me = api.myRoom.members.find((m) => m.id === api.selfId);
+        if (me) { me.name = api.profile.name; me.arc = api.profile.arc; }
+        if (!api.myRoom.started) announce();
+      }
+    };
+
+    api.createRoom = ({ game, size }) => {
+      if (api.status !== "live") return;
+      api.leave();
+      api.myRoom = {
+        id: `${api.selfId}-${Date.now().toString(36)}`,
+        host: api.selfId,
+        game,
+        size: clamp(size, 2, 8),
+        members: [{ id: api.selfId, name: api.profile.name, arc: api.profile.arc }],
+        started: false,
+      };
+      announce();
+      onChange();
+    };
+
+    api.join = (roomId) => {
+      const room = api.rooms.get(roomId);
+      if (!room || room.started || api.status !== "live") return;
+      api.leave();
+      api.myRoom = { ...room, members: [...room.members] };
+      send.roomjoin({ roomId }, room.host);
+      onChange();
+    };
+
+    api.leave = () => {
+      if (!api.myRoom) return;
+      const room = api.myRoom;
+      if (room.host === api.selfId) {
+        send.roominfo?.({ id: room.id, closed: true });
+        api.rooms.delete(room.id);
+      } else {
+        send.roomleave?.({ roomId: room.id }, room.host);
+        send.msg?.({ roomId: room.id, type: "left", data: { id: api.selfId } });
+      }
+      api.myRoom = null;
+      onChange();
+    };
+
+    // Host only: lock the room and tell every member to start, with shared match data.
+    api.start = (data = {}) => {
+      if (!isHost() || api.myRoom.members.length < 2 || api.myRoom.started) return;
+      api.myRoom.started = true;
+      const payload = typeof data === "function" ? data(api.myRoom) : data;
+      for (const id of members()) send.roomstart({ room: api.myRoom, data: payload }, id);
+      announce();
+      onStart(api.myRoom, payload);
+    };
+
+    // Send to every other member of my room.
+    api.broadcast = (type, data) => {
+      if (!api.myRoom) return;
+      for (const id of members()) send.msg({ roomId: api.myRoom.id, type, data }, id);
+    };
+
+    // A room that ended can be reopened by its host for another round with the same players.
+    api.reopen = () => {
+      if (!isHost()) return;
+      api.myRoom.started = false;
+      announce();
+      onChange();
+    };
+
+    api.isHost = isHost;
+    api.openRooms = () => [...api.rooms.values()].filter((r) => !r.started && r.members.length < r.size && r.id !== api.myRoom?.id);
+
+    if (!started) { started = true; connect(); }
+    return api;
+  }
+
+  window.DLE_Rooms = { create, cleanName };
+})();
