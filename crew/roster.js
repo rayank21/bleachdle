@@ -1,6 +1,7 @@
 // Crew game: slots and power ratings per anime.
 // power: 1–10 (unlisted characters are worth DEFAULT_POWER).
 // A slot accepts a character when its `fits` test passes on the character's spoiler-free attributes.
+// `icon` names a role icon from crew.js.
 // One Piece slots are roles: anyone can fill them, but specialists score high in their own role.
 (() => {
   const DEFAULT_POWER = 3;
@@ -20,11 +21,11 @@
   window.CREW_GAMES = {
     bleach: {
       slots: [
-        { label: { en: "Shinigami", fr: "Shinigami" }, count: 3, fits: (c) => has(c.race, "Shinigami", "Hybrid") },
-        { label: { en: "Arrancar", fr: "Arrancar" }, count: 2, fits: (c) => has(c.race, "Arrancar", "Hollow") },
-        { label: { en: "Quincy", fr: "Quincy" }, count: 1, fits: (c) => has(c.race, "Quincy") },
-        { label: { en: "Visored", fr: "Visored" }, count: 1, fits: (c) => has(c.race, "Visored") },
-        { label: { en: "Human / Fullbringer", fr: "Humain / Fullbringer" }, count: 1, fits: (c) => has(c.race, "Human", "Fullbringer", "Mod Soul", "Soul", "Hybrid") },
+        { label: { en: "Shinigami", fr: "Shinigami" }, icon: "sword", count: 3, fits: (c) => has(c.race, "Shinigami", "Hybrid") },
+        { label: { en: "Arrancar", fr: "Arrancar" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Arrancar", "Hollow") },
+        { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 1, fits: (c) => has(c.race, "Quincy") },
+        { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") },
+        { label: { en: "Human / Fullbringer", fr: "Humain / Fullbringer" }, icon: "person", count: 1, fits: (c) => has(c.race, "Human", "Fullbringer", "Mod Soul", "Soul", "Hybrid") },
       ],
       power: parse(`ichigo-kurosaki:10 rukia-kuchiki:7 orihime-inoue:5 yasutora-sado:6 uryu-ishida:7 kon:2 kisuke-urahara:9 yoruichi-shihoin:9
         tessai-tsukabishi:6 isshin-kurosaki:8 masaki-kurosaki:5 karin-kurosaki:2 yuzu-kurosaki:1 tatsuki-arisawa:2 keigo-asano:1 mizuiro-kojima:1
@@ -43,11 +44,11 @@
 
     hunterxhunter: {
       slots: [
-        { label: { en: "Hunter", fr: "Hunter" }, count: 3, fits: (c) => has(c.aff, "Hunter Association") },
-        { label: { en: "Chimera Ant", fr: "Fourmi-Chimère" }, count: 2, fits: (c) => has(c.species, "Chimera Ant") },
-        { label: { en: "Phantom Troupe", fr: "Brigade Fantôme" }, count: 1, fits: (c) => has(c.aff, "Phantom Troupe") },
-        { label: { en: "Zoldyck", fr: "Zoldyck" }, count: 1, fits: (c) => has(c.aff, "Zoldyck Family") },
-        { label: { en: "Wildcard", fr: "Joker" }, count: 1, fits: () => true },
+        { label: { en: "Hunter", fr: "Hunter" }, icon: "card", count: 3, fits: (c) => has(c.aff, "Hunter Association") },
+        { label: { en: "Chimera Ant", fr: "Fourmi-Chimère" }, icon: "bug", count: 2, fits: (c) => has(c.species, "Chimera Ant") },
+        { label: { en: "Phantom Troupe", fr: "Brigade Fantôme" }, icon: "spider", count: 1, fits: (c) => has(c.aff, "Phantom Troupe") },
+        { label: { en: "Zoldyck", fr: "Zoldyck" }, icon: "bolt", count: 1, fits: (c) => has(c.aff, "Zoldyck Family") },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: () => true },
       ],
       power: parse(`gon-freecss:8 killua-zoldyck:8 kurapika:8 leorio-paradinight:4 hisoka:9 illumi-zoldyck:8 kite:7 mito-freecss:1 isaac-netero:10
         satotz:5 menchi:4 buhara:4 hanzo:5 pokkle:3 tonpa:1 bodoro:2 ponzu:3 lippo:4 beans:1 silva-zoldyck:9 zeno-zoldyck:9 kikyo-zoldyck:5
@@ -62,12 +63,12 @@
 
     dragonball: {
       slots: [
-        { label: { en: "Saiyan", fr: "Saïyen" }, count: 2, fits: (c) => has(c.race, "Saiyan", "Half-Saiyan") },
-        { label: { en: "Earthling", fr: "Terrien" }, count: 2, fits: (c) => has(c.race, "Human", "Animal") },
-        { label: { en: "Namekian", fr: "Namek" }, count: 1, fits: (c) => has(c.race, "Namekian") },
-        { label: { en: "Android", fr: "Cyborg" }, count: 1, fits: (c) => has(c.race, "Android", "Bio-Android") },
-        { label: { en: "God / Angel", fr: "Dieu / Ange" }, count: 1, fits: (c) => has(c.race, "God", "Angel") },
-        { label: { en: "Villain", fr: "Méchant" }, count: 1,
+        { label: { en: "Saiyan", fr: "Saïyen" }, icon: "flame", count: 2, fits: (c) => has(c.race, "Saiyan", "Half-Saiyan") },
+        { label: { en: "Earthling", fr: "Terrien" }, icon: "person", count: 2, fits: (c) => has(c.race, "Human", "Animal") },
+        { label: { en: "Namekian", fr: "Namek" }, icon: "leaf", count: 1, fits: (c) => has(c.race, "Namekian") },
+        { label: { en: "Android", fr: "Cyborg" }, icon: "bolt", count: 1, fits: (c) => has(c.race, "Android", "Bio-Android") },
+        { label: { en: "God / Angel", fr: "Dieu / Ange" }, icon: "star", count: 1, fits: (c) => has(c.race, "God", "Angel") },
+        { label: { en: "Villain", fr: "Méchant" }, icon: "skull", count: 1,
           fits: (c) => has(c.aff, "Frieza Force", "Red Ribbon Army", "Babidi's Army", "Demon Clan", "Pilaf Gang", "Team Zamasu") || has(c.race, "Majin", "Bio-Android", "Frieza Clan") },
       ],
       power: parse(`goku:10 bulma:2 oolong:1 yamcha:4 puar:1 chi-chi:3 ox-king:3 master-roshi:5 turtle:1 emperor-pilaf:1 mai:1 shu:1 krillin:6
@@ -81,11 +82,11 @@
 
     naruto: {
       slots: [
-        { label: { en: "Konoha", fr: "Konoha" }, count: 3, fits: (c) => has(c.village, "Konohagakure") },
-        { label: { en: "Akatsuki", fr: "Akatsuki" }, count: 2, fits: (c) => has(c.village, "Akatsuki") },
-        { label: { en: "Kage", fr: "Kage" }, count: 1, fits: (c) => c.rank === "Kage" },
-        { label: { en: "Uchiha", fr: "Uchiha" }, count: 1, fits: (c) => has(c.clan, "Uchiha") },
-        { label: { en: "Other village", fr: "Autre village" }, count: 1, fits: (c) => !has(c.village, "Konohagakure", "Akatsuki", "None") },
+        { label: { en: "Konoha", fr: "Konoha" }, icon: "leaf", count: 3, fits: (c) => has(c.village, "Konohagakure") },
+        { label: { en: "Akatsuki", fr: "Akatsuki" }, icon: "cloud", count: 2, fits: (c) => has(c.village, "Akatsuki") },
+        { label: { en: "Kage", fr: "Kage" }, icon: "hat", count: 1, fits: (c) => c.rank === "Kage" },
+        { label: { en: "Uchiha", fr: "Uchiha" }, icon: "eye", count: 1, fits: (c) => has(c.clan, "Uchiha") },
+        { label: { en: "Other village", fr: "Autre village" }, icon: "globe", count: 1, fits: (c) => !has(c.village, "Konohagakure", "Akatsuki", "None") },
       ],
       power: parse(`naruto-uzumaki:10 sasuke-uchiha:10 sakura-haruno:7 kakashi-hatake:9 iruka-umino:3 hiruzen-sarutobi:8 konohamaru-sarutobi:4
         mizuki:2 zabuza-momochi:6 haku:5 tazuna:1 inari:1 gato:1 minato-namikaze:9 rock-lee:7 neji-hyuga:7 tenten:5 might-guy:9
@@ -101,14 +102,14 @@
 
     onepiece: {
       slots: [
-        { label: { en: "Captain", fr: "Capitaine" }, role: "captain", count: 1, fits: () => true },
-        { label: { en: "First Mate", fr: "Second" }, role: "first-mate", count: 1, fits: () => true },
-        { label: { en: "Navigator", fr: "Navigateur" }, role: "navigator", count: 1, fits: () => true, score: specialist("navigator") },
-        { label: { en: "Cook", fr: "Cuisinier" }, role: "cook", count: 1, fits: () => true, score: specialist("cook") },
-        { label: { en: "Doctor", fr: "Médecin" }, role: "doctor", count: 1, fits: () => true, score: specialist("doctor") },
-        { label: { en: "Archaeologist", fr: "Archéologue" }, role: "archaeologist", count: 1, fits: () => true, score: specialist("archaeologist") },
-        { label: { en: "Shipwright", fr: "Charpentier" }, role: "shipwright", count: 1, fits: () => true, score: specialist("shipwright") },
-        { label: { en: "Combatant", fr: "Combattant" }, role: "combatant", count: 3, fits: () => true },
+        { label: { en: "Captain", fr: "Capitaine" }, icon: "crown", role: "captain", count: 1, fits: () => true },
+        { label: { en: "First Mate", fr: "Second" }, icon: "swords", role: "first-mate", count: 1, fits: () => true },
+        { label: { en: "Navigator", fr: "Navigateur" }, icon: "compass", role: "navigator", count: 1, fits: () => true, score: specialist("navigator") },
+        { label: { en: "Cook", fr: "Cuisinier" }, icon: "chef", role: "cook", count: 1, fits: () => true, score: specialist("cook") },
+        { label: { en: "Doctor", fr: "Médecin" }, icon: "cross", role: "doctor", count: 1, fits: () => true, score: specialist("doctor") },
+        { label: { en: "Archaeologist", fr: "Archéologue" }, icon: "book", role: "archaeologist", count: 1, fits: () => true, score: specialist("archaeologist") },
+        { label: { en: "Shipwright", fr: "Charpentier" }, icon: "hammer", role: "shipwright", count: 1, fits: () => true, score: specialist("shipwright") },
+        { label: { en: "Combatant", fr: "Combattant" }, icon: "shield", role: "combatant", count: 3, fits: () => true },
       ],
       power: parse(`monkey-d-luffy:10 roronoa-zoro:9 nami:4 usopp:5 sanji:9 tony-tony-chopper:6 nico-robin:7 franky:7 brook:7 jinbe:8 shanks:10
         buggy:4 alvida:2 koby:6 helmeppo:3 morgan:3 kuro:4 krieg:3 zeff:6 arlong:4 nojiko:1 bell-mere:3 smoker:7 tashigi:5
@@ -124,11 +125,11 @@
 
     jujutsukaisen: {
       slots: [
-        { label: { en: "Tokyo Jujutsu High", fr: "École de Tokyo" }, count: 3, fits: (c) => has(c.aff, "Tokyo Jujutsu High") },
-        { label: { en: "Kyoto Jujutsu High", fr: "École de Kyoto" }, count: 1, fits: (c) => has(c.aff, "Kyoto Jujutsu High") },
-        { label: { en: "Special Grade", fr: "Grade spécial" }, count: 1, fits: (c) => c.grade === "Special Grade" },
-        { label: { en: "Curse", fr: "Fléau" }, count: 2, fits: (c) => has(c.race, "Cursed Spirit", "Death Painting", "Incarnated") || has(c.aff, "Curse Users") },
-        { label: { en: "Great Clan", fr: "Grand clan" }, count: 1, fits: (c) => has(c.aff, "Zen'in Clan", "Gojo Clan", "Kamo Clan") },
+        { label: { en: "Tokyo Jujutsu High", fr: "École de Tokyo" }, icon: "shield", count: 3, fits: (c) => has(c.aff, "Tokyo Jujutsu High") },
+        { label: { en: "Kyoto Jujutsu High", fr: "École de Kyoto" }, icon: "book", count: 1, fits: (c) => has(c.aff, "Kyoto Jujutsu High") },
+        { label: { en: "Special Grade", fr: "Grade spécial" }, icon: "flame", count: 1, fits: (c) => c.grade === "Special Grade" },
+        { label: { en: "Curse", fr: "Fléau" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Cursed Spirit", "Death Painting", "Incarnated") || has(c.aff, "Curse Users") },
+        { label: { en: "Great Clan", fr: "Grand clan" }, icon: "eye", count: 1, fits: (c) => has(c.aff, "Zen'in Clan", "Gojo Clan", "Kamo Clan") },
       ],
       power: parse(`yuji-itadori:9 megumi-fushiguro:8 nobara-kugisaki:6 satoru-gojo:10 ryomen-sukuna:10 kento-nanami:8 maki-zen-in:9 toge-inumaki:7
         panda:6 yuta-okkotsu:10 masamichi-yaga:6 shoko-ieiri:3 kiyotaka-ijichi:2 aoi-todo:8 mai-zen-in:4 kasumi-miwa:3 noritoshi-kamo:6

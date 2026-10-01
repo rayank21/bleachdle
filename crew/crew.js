@@ -20,8 +20,14 @@
       sub: "Roll random characters and build the strongest crew. Every placement counts.",
       solo: "Solo",
       online: "Online",
-      pick: "Pick an anime",
-      roll: "Roll",
+      pick: "Anime",
+      modeLabel: "Mode",
+      arcLabel: "Arc",
+      allArcs: "All arcs",
+      roll: "Roll a character",
+      draw: "Draw",
+      waitingRoll: "Who joins the crew?",
+      captainTag: "Leader",
       rolling: "Rolling…",
       chooseSlot: "Choose a slot for this character",
       noSlot: "No free slot fits this character",
@@ -100,8 +106,14 @@
       sub: "Tire des personnages au hasard et construis l'équipage le plus fort. Chaque placement compte.",
       solo: "Solo",
       online: "En ligne",
-      pick: "Choisis un anime",
-      roll: "Lancer",
+      pick: "Anime",
+      modeLabel: "Mode",
+      arcLabel: "Arc",
+      allArcs: "Tous les arcs",
+      roll: "Tirer un personnage",
+      draw: "Tirage",
+      waitingRoll: "Qui rejoint l'équipage ?",
+      captainTag: "Chef",
       rolling: "Tirage…",
       chooseSlot: "Choisis une place pour ce personnage",
       noSlot: "Aucune place libre ne convient à ce personnage",
@@ -262,6 +274,45 @@
   const duelScore = (slots) => { const n = slots.filter((s) => !s.locked).length; return n ? filledOf(slots).reduce((a, s) => a + s.points, 0) / n : 0; };
   const rankOf = (avg) => (avg >= 9 ? "S" : avg >= 8 ? "A" : avg >= 6.5 ? "B" : avg >= 5 ? "C" : "D");
   const slotLabel = (slot) => slot.def.label[lang];
+  const isCaptain = (slot) => slot.def.role === "captain";
+
+  // Role icons (24×24 line drawings), named by `icon` in roster.js.
+  const ICONS = {
+    crown: "M3 18h18M4 18 3 7l5 4 4-6 4 6 5-4-1 11",
+    swords: "M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2",
+    sword: "M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2",
+    compass: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM16.2 7.8l-2.1 6.3-6.3 2.1 2.1-6.3z",
+    chef: "M6 13.9A4 4 0 1 1 8.2 6.3a4 4 0 0 1 7.6 0A4 4 0 1 1 18 13.9V20H6zM6 17h12",
+    cross: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
+    book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15A2.5 2.5 0 0 0 6.5 22H20v-5",
+    hammer: "m15 12-8.4 8.4a2.1 2.1 0 1 1-3-3L12 9M17.6 15 22 10.6M20.9 11.7l-1.2-1.2a2 2 0 0 1-.6-1.4V7.9l-2.3-2.3a6 6 0 0 0-4.2-1.8H9.4l.9.8a6.2 6.2 0 0 1 2 4.5V10l2 2h1.2a2 2 0 0 1 1.4.6l1.2 1.2",
+    shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+    skull: "M9 12h.01M15 12h.01M8 20v2h8v-2M12.5 17l-.5-1-.5 1zM16 20a2 2 0 0 0 1.6-3.2 8 8 0 1 0-11.2 0A2 2 0 0 0 8 20",
+    mask: "M3 5c3 1 15 1 18 0v6a9 9 0 0 1-18 0zM7 10.5h3M14 10.5h3M9 16c2 1 4 1 6 0",
+    star: "M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z",
+    person: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0",
+    card: "M3 5h18v14H3zM7 9h4v4H7zM14 10h4M14 14h4M7 16h11",
+    bug: "M8 2l1.9 1.9M16 2l-1.9 1.9M9 7.1V6a3 3 0 1 1 6 0v1.1M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6zM12 20v-9M6.5 13H3M21 13h-3.5M6 9.5 3 8M18 9.5 21 8M6 17l-3 2M18 17l3 2",
+    spider: "M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM9.5 11 5 7V3M9 13H3M9.5 15 5 19v2M14.5 11 19 7V3M15 13h6M14.5 15l4.5 4v2",
+    bolt: "M13 2 3 14h9l-1 8 10-12h-9z",
+    dice: "M4 4h16v16H4zM8.5 8.5h.01M15.5 15.5h.01M12 12h.01M15.5 8.5h.01M8.5 15.5h.01",
+    flame: "M12 22c4 0 7-3 7-7 0-5-5-7-5-13-3 2-5 5-5 8-1-1-2-2-2-4-2 2-2 5-2 9 0 4 3 7 7 7z",
+    leaf: "M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10zM2 21c0-3 1.9-5.4 5.2-6.1C9.5 14.4 12 13 13 12",
+    cloud: "M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z",
+    hat: "M2 18h20M5 18 12 5l7 13",
+    eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+    globe: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20",
+  };
+  function icon(name, cls = "icon") {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("class", cls);
+    svg.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", ICONS[name] ?? ICONS.star);
+    svg.append(path);
+    return svg;
+  }
 
   // ── Motion helpers ──
   function countUp(node, to, decimals = 1, ms = 650) {
@@ -339,7 +390,7 @@
     power.append(powerLabel, track, value);
     power.hidden = true;
     const hint = el("p", "reel-hint");
-    wrap.append(win, name, power, hint);
+    wrap.append(el("p", "reel-kicker", t("draw")), win, name, power, hint);
 
     const reset = () => {
       strip.style.transition = "none";
@@ -350,7 +401,7 @@
     const reel = {
       el: wrap,
       window: win,
-      idle(text = "") {
+      idle(text = t("waitingRoll")) {
         strip.textContent = "";
         reset();
         wrap.classList.remove("is-landed", "is-spinning");
@@ -416,10 +467,17 @@
   function renderBoard(container, slots, { rolled = null, onPlace = null, mini = false, stagger = false } = {}) {
     container.textContent = "";
     container.classList.toggle("is-mini", mini);
+    // Two rows: 10 roles make a 5 × 2 grid.
+    container.style.setProperty("--cols", Math.max(1, Math.ceil(slots.filter((s) => !s.locked).length / 2)));
     slots.forEach((slot, i) => {
       if (slot.locked) return;
       const card = el("button", "crew-slot");
       card.type = "button";
+      card.classList.toggle("is-captain", isCaptain(slot));
+      const ic = el("span", "crew-icon");
+      ic.append(icon(slot.def.icon));
+      card.append(ic);
+      if (isCaptain(slot) && !mini) card.append(el("span", "crew-captain-tag", t("captainTag")));
       if (stagger && !REDUCED) { card.classList.add("enter"); card.style.animationDelay = `${i * 45}ms`; }
       const canPlace = !!(onPlace && rolled && !slot.char && !slot.locked && slot.def.fits(rolled));
       card.classList.toggle("is-filled", !!slot.char);
@@ -469,12 +527,12 @@
     box.textContent = "";
     // Online, the lobby is the same for every anime: the anime is picked when creating a room.
     const online = mode === "online";
-    box.hidden = online;
-    $("#crewPickLabel").hidden = online;
-    $("#crewArcLink").hidden = online;
+    $("#crewPickWrap").hidden = online;
+    $("#crewArcWrap").hidden = online;
     for (const g of GAMES) {
       const b = el("button", `anime-pick${currentGame?.id === g.id ? " is-active" : ""}`);
       b.type = "button";
+      b.title = g.anime;
       b.dataset.game = g.id;
       b.setAttribute("aria-pressed", currentGame?.id === g.id);
       // Online, only the host of a room picks the anime (not during a match); the others follow.
@@ -491,7 +549,8 @@
   async function renderArcChip() {
     const data = await loadGame(currentGame);
     const arc = playerArc(data.config);
-    $("#crewArc").textContent = arc == null ? t("spoilerAll") : t("spoiler")(data.config.arcs[arc][lang]);
+    $("#crewArc").textContent = arc == null ? t("allArcs") : data.config.arcs[arc][lang];
+    $("#crewArcLink").title = arc == null ? t("spoilerAll") : t("spoiler")(data.config.arcs[arc][lang]);
     $("#crewArcLink").href = `${ROOT}${currentGame.path}`;
   }
 
@@ -624,7 +683,19 @@
     if (f) countUp(score, average(solo.slots));
     else { score.textContent = "–"; score.dataset.value = 0; }
     $("#crewFilled").textContent = t("filled")(f, total);
-    $("#crewProgress").style.width = `${total ? (f / total) * 100 : 0}%`;
+    // The ring shows the score out of 10; one pip per place, coloured by its points.
+    $("#crewRing").style.strokeDasharray = `${f ? average(solo.slots) * 10 : 0} 100`;
+    const rank = $("#crewLiveRank");
+    rank.hidden = !f;
+    if (f) { rank.textContent = rankOf(average(solo.slots)); rank.className = `crew-live-rank rank-${rank.textContent}`; }
+    const pips = $("#crewPips");
+    pips.textContent = "";
+    for (const s of solo.slots) {
+      if (s.locked) continue;
+      const pip = el("span", s.char ? `crew-pip is-filled p${Math.min(10, Math.round(s.points))}` : "crew-pip");
+      pip.title = slotLabel(s);
+      pips.append(pip);
+    }
   }
 
   function renderSoloActions() {
@@ -634,6 +705,7 @@
     if (solo.done) return;
     if (!solo.rolled) {
       const b = el("button", "btn-primary roll-btn", solo.rolling ? t("rolling") : t("roll"));
+      b.prepend(icon("dice"));
       b.type = "button";
       b.disabled = solo.rolling;
       b.addEventListener("click", () => soloRoll(false));
@@ -1177,6 +1249,7 @@
     if (match.done || match.starting || match.finished.has(rooms.selfId)) return;
     if (!match.rolled) {
       const b = el("button", "btn-primary roll-btn", match.rolling ? t("rolling") : t("roll"));
+      b.prepend(icon("dice"));
       b.type = "button";
       b.disabled = match.rolling;
       b.addEventListener("click", () => matchRoll(false));
@@ -1401,6 +1474,9 @@
     $("#crewTitle").textContent = t("title");
     $("#crewSub").textContent = t("sub");
     $("#crewPickLabel").textContent = t("pick");
+    $("#crewModeLabel").textContent = t("modeLabel");
+    $("#crewArcLabel").textContent = t("arcLabel");
+    $("#crewBrandIcon").replaceChildren(icon("dice"));
     $("#crewScoreLabel").textContent = t("score");
     document.querySelectorAll(".crew-mode [data-mode]").forEach((b) => (b.textContent = t(b.dataset.mode)));
     document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));

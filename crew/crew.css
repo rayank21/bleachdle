@@ -1,25 +1,20 @@
 /* Crew Roll: motion design and online 1v1 (loaded after shared/style.css) */
 
-.crew-mode { width: min(100%, 320px); margin-top: 6px; }
-.crew-status { position: relative; overflow: hidden; }
-.crew-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--surface-3); }
-.crew-progress span { display: block; height: 100%; width: 0; background: rgb(var(--accent-rgb)); transition: width 0.5s cubic-bezier(.2, .8, .2, 1); }
-
-/* ── Reel ── */
+/* ── Reel: a large portrait card ── */
 .reel-window {
   position: relative;
-  width: 132px;
-  height: 132px;
-  border-radius: 50%;
+  width: var(--reel-w, 132px);
+  height: var(--reel-h, 132px);
+  border-radius: 18px;
   overflow: hidden;
-  background: var(--surface-2);
+  background: radial-gradient(circle at 50% 35%, rgba(var(--accent-rgb), 0.18), var(--surface-2) 70%);
   border: 3px solid rgba(var(--accent-rgb), 0.8);
   box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.25), inset 0 0 0 1px rgba(0, 0, 0, 0.4);
   transition: box-shadow 0.3s;
 }
 .reel-strip { display: flex; flex-direction: column; will-change: transform; }
-.reel-strip img { width: 100%; height: 132px; flex: none; object-fit: cover; object-position: center 15%; }
-.reel-q { position: absolute; inset: 0; display: grid; place-items: center; font-size: 48px; font-weight: 900; color: var(--muted); }
+.reel-strip img { width: 100%; height: var(--reel-h, 132px); flex: none; object-fit: cover; object-position: center 15%; }
+.reel-q { position: absolute; inset: 0; display: grid; place-items: center; font-size: 96px; font-weight: 900; font-style: italic; color: rgba(var(--accent-rgb), 0.55); text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.5); }
 .reel-q[hidden] { display: none !important; }
 .reel.is-spinning .reel-window { box-shadow: 0 0 46px rgba(var(--accent-rgb), 0.55); }
 .reel.is-spinning .reel-strip img { filter: blur(1.2px) saturate(1.2); }
@@ -49,7 +44,7 @@
 .flyer {
   position: fixed;
   z-index: 95;
-  border-radius: 50%;
+  border-radius: 18px;
   object-fit: cover;
   object-position: center 15%;
   pointer-events: none;
@@ -79,7 +74,10 @@
 .duel-theirs { display: flex; flex-direction: column; gap: 8px; opacity: 0.92; }
 .duel-label { margin: 0; font-weight: 800; color: var(--muted); text-align: center; }
 .crew-board.is-mini { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
-.crew-board.is-mini .crew-slot { padding: 10px 6px 8px; }
+.crew-board.is-mini .crew-slot { padding: 26px 6px 8px; }
+.crew-board.is-mini .crew-icon { top: 5px; left: 5px; width: 20px; height: 20px; border-radius: 6px; }
+.crew-board.is-mini .crew-icon .icon { width: 12px; height: 12px; }
+.crew-board.is-mini .crew-points { top: 5px; right: 5px; font-size: 11px; }
 .crew-board.is-mini .crew-face { width: 50px; height: 50px; font-size: 18px; }
 .crew-board.is-mini .crew-name { font-size: 11.5px; }
 .crew-board.is-mini .crew-role { font-size: 10px; }
@@ -97,7 +95,8 @@
 .score-chip.has-left { opacity: 0.45; text-decoration: line-through; }
 .score-chip .duel-pname { font-size: 14px; }
 .score-chip .duel-score { font-size: 18px; }
-.duel-grid { grid-template-columns: 1fr 260px; }
+.duel-grid { grid-template-columns: minmax(0, 1fr) 320px; }
+.duel-grid .reel { --reel-w: 190px; --reel-h: 230px; }
 /* The solo layout names grid areas on these classes; the match grids place them in order instead. */
 .duel-grid .crew-board, .duel-grid .roll-panel, .others .crew-board { grid-area: auto; }
 .others { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px; }

@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="../shared/online.css" />
   <link rel="stylesheet" href="crew.css" />
 </head>
-<body data-game="crew">
+<body class="crew-page" data-game="crew">
   <div class="bg" aria-hidden="true"></div>
 
   <header class="topbar">
@@ -29,23 +29,47 @@
   <div class="presence" id="presence"></div>
 
   <main class="page">
-    <section class="card crew-hero">
-      <h1 id="crewTitle"></h1>
-      <p class="muted" id="crewSub"></p>
-      <div class="mode-tabs crew-mode" role="tablist">
-        <button type="button" role="tab" data-mode="solo"></button>
-        <button type="button" role="tab" data-mode="online"></button>
+    <section class="card crew-bar">
+      <div class="crew-brand">
+        <span class="crew-brand-icon" id="crewBrandIcon" aria-hidden="true"></span>
+        <div>
+          <h1 id="crewTitle"></h1>
+          <p class="muted" id="crewSub"></p>
+        </div>
       </div>
-      <p class="crew-pick-label" id="crewPickLabel"></p>
-      <div class="anime-picker" id="animePicker"></div>
-      <a class="arc-chip" id="crewArcLink" href="#"><span id="crewArc"></span></a>
+      <div class="crew-settings">
+        <div class="crew-setting" id="crewPickWrap">
+          <span class="crew-setting-label" id="crewPickLabel"></span>
+          <div class="anime-picker" id="animePicker"></div>
+        </div>
+        <div class="crew-setting">
+          <span class="crew-setting-label" id="crewModeLabel"></span>
+          <div class="mode-tabs crew-mode" role="tablist">
+            <button type="button" role="tab" data-mode="solo"></button>
+            <button type="button" role="tab" data-mode="online"></button>
+          </div>
+        </div>
+        <div class="crew-setting" id="crewArcWrap">
+          <span class="crew-setting-label" id="crewArcLabel"></span>
+          <a class="arc-chip" id="crewArcLink" href="#"><span id="crewArc"></span></a>
+        </div>
+      </div>
     </section>
 
     <section class="crew-layout" id="soloView">
       <div class="card crew-status">
-        <div><span class="crew-score-label" id="crewScoreLabel"></span> <b id="crewScore">–</b><span class="muted"> / 10</span></div>
-        <span class="muted" id="crewFilled"></span>
-        <span class="crew-progress"><span id="crewProgress"></span></span>
+        <div class="score-ring" aria-hidden="true">
+          <svg viewBox="0 0 44 44"><circle class="score-ring-track" cx="22" cy="22" r="19" /><circle class="score-ring-fill" id="crewRing" cx="22" cy="22" r="19" pathLength="100" /></svg>
+        </div>
+        <div class="crew-score">
+          <span class="crew-score-label" id="crewScoreLabel"></span>
+          <span><b id="crewScore">–</b><span class="muted"> / 10</span></span>
+        </div>
+        <span class="crew-live-rank" id="crewLiveRank" hidden></span>
+        <div class="crew-fill">
+          <span class="crew-fill-text" id="crewFilled"></span>
+          <div class="crew-pips" id="crewPips"></div>
+        </div>
       </div>
       <div class="crew-board" id="crewBoard"></div>
       <div class="card roll-panel" id="rollPanel" aria-live="polite"></div>
