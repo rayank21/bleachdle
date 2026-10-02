@@ -184,5 +184,46 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mountButton);
   else mountButton();
 
+  // ── New version check ──
+  // A tab opened before a deploy keeps running the old code. The site's own scripts are checked
+  // now and then (their ETag changes on deploy); if one changed, a banner offers to reload.
+  const own = () => [...document.scripts].map((x) => x.src).filter((u) => u && new URL(u).origin === location.origin);
+  async function fingerprint() {
+    const tags = await Promise.all(own().map((u) => fetch(u, { method: "HEAD", cache: "no-store" }).then((r) => r.headers.get("etag") || "", () => "")));
+    return tags.join("|");
+  }
+  let first = null;
+  let warned = false;
+  async function checkVersion() {
+    if (warned || location.protocol === "file:" || document.hidden) return;
+    const now = await fingerprint();
+    if (!now.replace(/|/g, "")) return;
+    if (first == null) { first = now; return; }
+    if (now === first) return;
+    warned = true;
+    const fr = (document.documentElement.lang || "").startsWith("fr");
+    const bar = document.createElement("div");
+    bar.className = "fx-update";
+    bar.setAttribute("role", "status");
+    const text = document.createElement("span");
+    text.textContent = fr ? "Une nouvelle version du site est disponible." : "A new version of the site is available.";
+    const go = document.createElement("button");
+    go.type = "button";
+    go.className = "btn-primary";
+    go.textContent = fr ? "Recharger" : "Reload";
+    go.addEventListener("click", () => location.reload());
+    const later = document.createElement("button");
+    later.type = "button";
+    later.className = "fx-update-close";
+    later.textContent = "✕";
+    later.setAttribute("aria-label", fr ? "Plus tard" : "Later");
+    later.addEventListener("click", () => bar.remove());
+    bar.append(text, go, later);
+    document.body.append(bar);
+  }
+  setTimeout(checkVersion, 4000);
+  setInterval(checkVersion, 120000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) checkVersion(); });
+
   window.DLE_FX = { play, flash, get muted() { return muted; } };
 })();
