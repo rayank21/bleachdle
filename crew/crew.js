@@ -870,7 +870,9 @@
   async function soloRoll(isReroll) {
     // No draw while a portrait is still flying to its slot: that slot is not filled yet.
     if (solo.rolling || solo.placing || solo.done) return;
-    const list = soloCandidates(solo.rolled?.id);
+    let list = soloCandidates(solo.rolled?.id);
+    // Rerolling the only character that still fits gives it back rather than ending the crew.
+    if (!list.length && solo.rolled) list = soloCandidates();
     if (!list.length) return soloFinish();
     if (isReroll) solo.rerolls--;
     const pick = list[Math.floor(Math.random() * list.length)];
@@ -1460,7 +1462,14 @@
   function matchCandidates(exclude) {
     const board = myBoard();
     const taken = takenIds();
-    return match.pool.filter((c) => !taken.has(c.id) && c.id !== exclude && fitsIn(board, c));
+    const free = match.pool.filter((c) => !taken.has(c.id) && c.id !== exclude && fitsIn(board, c));
+    if (free.length) return free;
+    // The others hold every character left for my places (e.g. the only god at this arc):
+    // share them rather than leave a place that can never be filled. Never twice on my board.
+    const mine = new Set(filledOf(board).map((x) => x.char.id));
+    const shared = match.pool.filter((c) => !mine.has(c.id) && c.id !== exclude && fitsIn(board, c));
+    shared.shared = true; // nobody "steals" a shared character
+    return shared;
   }
 
   // Two players rolled the same character at the same moment: the smaller id keeps it,
@@ -1482,7 +1491,8 @@
   async function matchRoll(isReroll, free = false) {
     const run = match;
     if (!run || run.rolling || run.placing || run.done || run.starting || run.finished.has(rooms.selfId)) return;
-    const list = matchCandidates(run.rolled?.id);
+    let list = matchCandidates(run.rolled?.id);
+    if (!list.length && run.rolled) list = matchCandidates();
     if (!list.length) return markDone();
     if (isReroll && !free) run.rerolls--;
     const pick = list[Math.floor(Math.random() * list.length)];
@@ -1494,11 +1504,12 @@
     renderBoard($("#duelMine"), myBoard());
     await matchReel.spin(list, pick, { game: match.g.id, arc: match.arc });
     if (match !== run || run.done) return;
-    const winner = lostClaim(pick);
+    run.rolledShared = !!list.shared;
+    const winner = !list.shared && lostClaim(pick);
     if (winner) return onStolen(winner);
     run.rolling = false;
     // Safety net: taken meanwhile, or no slot left for it: redraw for free.
-    if (!fitsIn(myBoard(), pick) || takenIds().has(pick.id) || filledOf(myBoard()).some((x) => x.char.id === pick.id)) {
+    if (!fitsIn(myBoard(), pick) || filledOf(myBoard()).some((x) => x.char.id === pick.id) || (!list.shared && !matchCandidates().some((x) => x.id === pick.id))) {
       run.claims.delete(rooms.selfId);
       return matchRoll(false, true);
     }
@@ -1583,7 +1594,7 @@
       match.claims.set(from, d.charId);
       // They rolled the character I'm holding at the same moment and they win the tie.
       const mine = match.rolled ?? null;
-      if (mine && mine.id === d.charId && from < rooms.selfId) onStolen(from);
+      if (mine && !match.rolledShared && mine.id === d.charId && from < rooms.selfId) onStolen(from);
       return;
     }
     if (type === "place") {
