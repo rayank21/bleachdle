@@ -27,6 +27,7 @@
       draw: "Draw",
       waitingRoll: "Who joins the crew?",
       captainTag: "Leader",
+      skip: "No slot left for this one: skip",
       tiers: { legend: "Legendary", epic: "Epic", common: "Common" },
       rolling: "Rolling…",
       chooseSlot: "Choose a slot for this character",
@@ -114,6 +115,7 @@
       draw: "Tirage",
       waitingRoll: "Qui rejoint l'équipage ?",
       captainTag: "Chef",
+      skip: "Plus de place pour lui : passer",
       tiers: { legend: "Légendaire", epic: "Épique", common: "Commun" },
       rolling: "Tirage…",
       chooseSlot: "Choisis une place pour ce personnage",
@@ -866,7 +868,8 @@
   }
 
   async function soloRoll(isReroll) {
-    if (solo.rolling || solo.done) return;
+    // No draw while a portrait is still flying to its slot: that slot is not filled yet.
+    if (solo.rolling || solo.placing || solo.done) return;
     const list = soloCandidates(solo.rolled?.id);
     if (!list.length) return soloFinish();
     if (isReroll) solo.rerolls--;
@@ -879,6 +882,8 @@
     await soloReel.spin(list, pick, { game: run.g.id, arc: run.arc });
     if (solo !== run) return; // a new crew was started meanwhile
     run.rolling = false;
+    // Safety net: a draw that no longer fits (or is already on the board) is redrawn for free.
+    if (!fitsIn(run.slots, pick) || filledOf(run.slots).some((x) => x.char.id === pick.id)) return soloRoll(false);
     run.rolled = pick;
     soloReel.hint(t("chooseSlot"));
     renderBoard($("#crewBoard"), run.slots, { rolled: pick, onPlace: soloPlace });
@@ -890,11 +895,13 @@
     const c = run.rolled;
     if (!c) return;
     run.rolled = null;
+    run.placing = true;
     soloReel.hint("");
     renderSoloActions();
     const target = slotFace($("#crewBoard"), i);
     renderBoard($("#crewBoard"), run.slots);
     await fly(soloReel.window, target, c.formImage || c.image);
+    run.placing = false;
     if (solo !== run) return;
     const slot = run.slots[i];
     slot.char = c;
@@ -1002,14 +1009,16 @@
       const b = el("button", "btn-primary roll-btn", solo.rolling ? t("rolling") : t("roll"));
       b.prepend(icon("dice"));
       b.type = "button";
-      b.disabled = solo.rolling;
+      b.disabled = solo.rolling || solo.placing;
       b.addEventListener("click", () => soloRoll(false));
       box.append(b);
     } else {
-      const b = el("button", "btn-ghost", t("reroll")(solo.rerolls));
+      // A drawn character with nowhere to go can always be skipped, so the crew never gets stuck.
+      const stuck = !fitsIn(solo.slots, solo.rolled);
+      const b = el("button", "btn-ghost", stuck ? t("skip") : t("reroll")(solo.rerolls));
       b.type = "button";
-      b.disabled = solo.rerolls <= 0;
-      b.addEventListener("click", () => soloRoll(true));
+      b.disabled = !stuck && solo.rerolls <= 0;
+      b.addEventListener("click", () => soloRoll(!stuck));
       box.append(b);
     }
   }
@@ -1472,7 +1481,7 @@
 
   async function matchRoll(isReroll, free = false) {
     const run = match;
-    if (!run || run.rolling || run.done || run.starting || run.finished.has(rooms.selfId)) return;
+    if (!run || run.rolling || run.placing || run.done || run.starting || run.finished.has(rooms.selfId)) return;
     const list = matchCandidates(run.rolled?.id);
     if (!list.length) return markDone();
     if (isReroll && !free) run.rerolls--;
@@ -1488,6 +1497,11 @@
     const winner = lostClaim(pick);
     if (winner) return onStolen(winner);
     run.rolling = false;
+    // Safety net: taken meanwhile, or no slot left for it: redraw for free.
+    if (!fitsIn(myBoard(), pick) || takenIds().has(pick.id) || filledOf(myBoard()).some((x) => x.char.id === pick.id)) {
+      run.claims.delete(rooms.selfId);
+      return matchRoll(false, true);
+    }
     run.rolled = pick;
     matchReel.hint(t("chooseSlot"));
     renderBoard($("#duelMine"), myBoard(), { rolled: pick, onPlace: matchPlace });
@@ -1499,11 +1513,13 @@
     const c = run?.rolled;
     if (!c) return;
     run.rolled = null;
+    run.placing = true;
     matchReel.hint("");
     renderMatchActions();
     const target = slotFace($("#duelMine"), i);
     renderBoard($("#duelMine"), myBoard());
     await fly(matchReel.window, target, c.formImage || c.image);
+    run.placing = false;
     if (match !== run) return;
     const slot = myBoard()[i];
     slot.char = c;
@@ -1547,14 +1563,15 @@
       const b = el("button", "btn-primary roll-btn", match.rolling ? t("rolling") : t("roll"));
       b.prepend(icon("dice"));
       b.type = "button";
-      b.disabled = match.rolling;
+      b.disabled = match.rolling || match.placing;
       b.addEventListener("click", () => matchRoll(false));
       box.append(b);
     } else {
-      const b = el("button", "btn-ghost", t("reroll")(match.rerolls));
+      const stuck = !fitsIn(myBoard(), match.rolled);
+      const b = el("button", "btn-ghost", stuck ? t("skip") : t("reroll")(match.rerolls));
       b.type = "button";
-      b.disabled = match.rerolls <= 0;
-      b.addEventListener("click", () => matchRoll(true));
+      b.disabled = !stuck && match.rerolls <= 0;
+      b.addEventListener("click", () => matchRoll(!stuck, stuck));
       box.append(b);
     }
   }
