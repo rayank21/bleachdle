@@ -75,8 +75,9 @@
   const anyone = () => true;
   const HEALER = { en: "Healer", fr: "Soigneur" };
   const STRATEGIST = { en: "Strategist", fr: "Stratège" };
-  // The captain and the first mate lead the crew: they score a little more than a combatant.
-  const leader = (c, power) => Math.min(10, Math.round(power * 1.1));
+  // The captain and the first mate lead the crew: the stronger they are, the bigger their bonus
+  // (+1 from 5, +2 from 8: a 10 is worth 12). It can lift the crew above 10.
+  const leader = (c, power) => power + Math.max(0, Math.round((power - 3) / 3));
 
   window.CREW_GAMES = {
     bleach: {
@@ -84,7 +85,9 @@
         { label: { en: "Shinigami", fr: "Shinigami" }, icon: "sword", count: 3, fits: (c) => has(c.race, "Shinigami", "Hybrid") },
         { label: { en: "Arrancar", fr: "Arrancar" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Arrancar", "Hollow") },
         { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 1, fits: (c) => has(c.race, "Quincy") },
-        { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") || c.id === "ichigo-kurosaki" },
+        { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored"),
+          // Shinji leads the Visored.
+          score: (c, power) => (c.id === "shinji-hirako" ? 10 : power) },
         { label: { en: "Human / Fullbringer", fr: "Humain / Fullbringer" }, icon: "person", count: 1, fits: (c) => has(c.race, "Human", "Fullbringer", "Mod Soul", "Soul", "Hybrid") },
         { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.bleach.healer) },
         { label: { en: "Engineer", fr: "Ingénieur" }, icon: "flask", role: "engineer", count: 1, fits: anyone, score: role(ROLES.bleach.engineer) },
@@ -186,7 +189,7 @@
         kalifa:5 spandam:1 monkey-d-garp:10 gecko-moria:7 perona:5 bartholomew-kuma:6 silvers-rayleigh:10 eustass-kid:9 trafalgar-law:9
         killer:7 basil-hawkins:6 x-drake:7 jewelry-bonney:7 boa-hancock:9 emporio-ivankov:7 magellan:8 edward-newgate:10 polo-marco:9
         sengoku:10 sakazuki:10 borsalino:10 hody-jones:5 shirahoshi:6 neptune:6 fisher-tiger:7 caesar-clown:6 monet:5 vergo:7 kin-emon:7
-        kouzuki-momonosuke:5 donquixote-doflamingo:9 issho:10 sabo:9 rebecca:5 kyros:5 bartolomeo:6 cavendish:7 carrot:6 pedro:7
+        kouzuki-momonosuke:5 donquixote-doflamingo:8 issho:10 sabo:9 rebecca:5 kyros:5 bartolomeo:6 cavendish:7 carrot:6 pedro:7
         inuarashi:8 nekomamushi:8 charlotte-linlin:10 charlotte-katakuri:9 charlotte-pudding:3 charlotte-cracker:8 vinsmoke-judge:6
         vinsmoke-reiju:6 kaidou:10 king:9 queen:9 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4
         tom:5 paulie:5 doc-q:5 imu:10 charlotte-brulee:4 jaygarcia-saturn:9 marcus-mars:9 topman-warcury:9

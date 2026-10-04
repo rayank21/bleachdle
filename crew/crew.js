@@ -46,7 +46,7 @@
       again: "New crew",
       empty: "Empty",
       lobbyTitle: "Lobby",
-      lobbyHelp: "Create a room for 2 to 8 players, or join an open one. Everyone builds a crew at the same time with their own rolls and 3 rerolls; the best crew wins.",
+      lobbyHelp: "Create a room for 2 to 8 players, or join an open one. Players take turns: roll, place, and watch the others' picks live (3 rerolls each); the best crew wins.",
       yourName: "Your name",
       saveName: "Save",
       nameSaved: "Name saved",
@@ -93,6 +93,9 @@
       arcUsed: (arc) => `Arc: ${arc} (the lowest in the room, so nobody is spoiled)`,
       lockedNote: (roles) => `Not reached yet at this arc: ${roles}`,
       waitOthers: "Waiting for the other players…",
+      yourTurn: "Your turn!",
+      turnOf: (n) => `${n}'s turn…`,
+      autoIn: (s) => `Auto-play in ${s} s`,
       skipped: "No free slot fits: skipped",
       finalRanking: "Final ranking",
       youPlace: (n) => (n === 1 ? "You win!" : `You finish #${n}`),
@@ -134,7 +137,7 @@
       again: "Nouvel équipage",
       empty: "Libre",
       lobbyTitle: "Lobby",
-      lobbyHelp: "Crée une salle de 2 à 8 joueurs, ou rejoins-en une. Chacun construit son équipage en même temps avec ses propres tirages et 3 relances : le meilleur équipage gagne.",
+      lobbyHelp: "Crée une salle de 2 à 8 joueurs, ou rejoins-en une. On joue chacun son tour : tire, place, et regarde les persos des autres en direct (3 relances chacun) : le meilleur équipage gagne.",
       yourName: "Ton pseudo",
       saveName: "OK",
       nameSaved: "Pseudo enregistré",
@@ -181,6 +184,9 @@
       arcUsed: (arc) => `Arc : ${arc} (le plus bas de la salle, pour ne spoiler personne)`,
       lockedNote: (roles) => `Pas encore atteint à cet arc : ${roles}`,
       waitOthers: "En attente des autres joueurs…",
+      yourTurn: "À ton tour !",
+      turnOf: (n) => `Tour de ${n}…`,
+      autoIn: (s) => `Jeu auto dans ${s} s`,
       skipped: "Aucune place libre ne convient : passé",
       finalRanking: "Classement final",
       youPlace: (n) => (n === 1 ? "Victoire !" : `Tu finis ${n}e`),
@@ -1413,8 +1419,9 @@
   }
 
   // ── Match ──
-  // Everyone plays at the same time with their own rolls and rerolls, like in solo. Each
-  // placement is shared so the other boards fill up live; the match ends when everyone is done.
+  // Turn by turn: one player rolls (with their own rerolls) and places, everyone watches the roll
+  // and the placement, then the next player goes. The match ends when every board is done.
+  const TURN_MS = 45000; // a player who doesn't move in time is played for automatically
   async function startMatch(room, data) {
     const g = GAMES.find((x) => x.id === room.game);
     if (!g) return;
@@ -1432,6 +1439,7 @@
       claims: new Map(), // playerId → character they have rolled and not placed yet
       rolled: null, rerolls: REROLLS, rolling: false, done: false, starting: true,
       key: String(data.key ?? ""), // tells this match's messages from the previous one's
+      order: ids, current: null, show: Promise.resolve(),
     };
     renderPicker();
     renderMatch();
@@ -1439,8 +1447,70 @@
     await vsSplash(memberName(rooms.selfId), others.join(" · "));
     if (!match || match.room.id !== room.id) return;
     match.starting = false;
+    // Everyone picks the same first player from the match key.
+    const seed = [...match.key].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
+    setTurn(ids[seed % ids.length]);
+  }
+
+  // ── Turns ──
+  const myTurn = () => !!match && match.current === rooms.selfId;
+  const stillPlaying = (id) => match.active.has(id) && !match.finished.has(id);
+  function nextAfter(id) {
+    const o = match.order;
+    const i = o.indexOf(id);
+    for (let k = 1; k <= o.length; k++) { const x = o[(i + k) % o.length]; if (stillPlaying(x)) return x; }
+    return null;
+  }
+  function setTurn(id) {
+    const run = match;
+    if (!run || run.done) return;
+    if (id && !stillPlaying(id)) id = nextAfter(id);
+    run.current = id;
+    clearInterval(run.timer);
+    renderScoreboard();
+    if (!id) { checkMatchEnd(); return; }
+    if (id !== rooms.selfId) {
+      if (!run.spectating) matchReel.idle(t("turnOf")(memberName(id)));
+      renderMatchActions();
+      return;
+    }
+    // My turn: maybe nothing fits anymore, then I'm done.
+    if (!matchCandidates().length) { markDone(); return; }
+    sfx("whoosh");
+    toast(t("yourTurn"));
+    matchReel.idle(t("yourTurn"));
+    run.deadline = Date.now() + TURN_MS;
+    run.timer = setInterval(() => {
+      if (match !== run || !myTurn()) { clearInterval(run.timer); return; }
+      const left = Math.ceil((run.deadline - Date.now()) / 1000);
+      const clock = $("#turnClock");
+      if (clock) clock.textContent = t("autoIn")(Math.max(0, left));
+      if (left <= 0) { clearInterval(run.timer); autoPlay(); }
+    }, 500);
     renderMatchActions();
-    if (!matchCandidates().length) markDone();
+  }
+
+  // Out of time: roll if needed, then take the place worth the most points.
+  async function autoPlay() {
+    const run = match;
+    if (!myTurn() || run.rolling || run.placing) return;
+    if (!run.rolled) await matchRoll(false);
+    if (match !== run || !run.rolled) return;
+    const board = myBoard();
+    let best = -1;
+    board.forEach((slot, i) => {
+      if (slot.char || slot.locked || !slot.def.fits(run.rolled)) return;
+      if (best < 0 || pointsFor(slot, run.rolled) > pointsFor(board[best], run.rolled)) best = i;
+    });
+    if (best >= 0) matchPlace(best);
+    else matchRoll(false, true);
+  }
+
+  // Another player's roll and placement play out in my reel, one after the other.
+  function spectate(task) {
+    const run = match;
+    run.show = run.show.then(() => (match === run ? task() : null)).catch(() => {});
+    return run.show;
   }
 
   function vsSplash(a, b) {
@@ -1493,7 +1563,7 @@
 
   async function matchRoll(isReroll, free = false) {
     const run = match;
-    if (!run || run.rolling || run.placing || run.done || run.starting || run.finished.has(rooms.selfId)) return;
+    if (!run || run.rolling || run.placing || run.done || run.starting || run.finished.has(rooms.selfId) || !myTurn()) return;
     let list = matchCandidates(run.rolled?.id);
     if (!list.length && run.rolled) list = matchCandidates();
     if (!list.length) return markDone();
@@ -1545,7 +1615,7 @@
     rooms.broadcast("place", { slot: i, charId: c.id });
     renderScoreboard();
     if (!openSlots(myBoard()).length || !matchCandidates().length) markDone();
-    else renderMatchActions();
+    else setTurn(nextAfter(rooms.selfId));
   }
 
   // "I'm done" with my whole board. A lost message would leave the others waiting forever, so it is
@@ -1559,6 +1629,8 @@
     let left = 20;
     const timer = setInterval(() => { if (match !== run || --left <= 0) clearInterval(timer); else sendDone(); }, 3000);
     matchReel.idle(t("waitOthers"));
+    clearInterval(run.timer);
+    if (run.current === rooms.selfId) setTurn(nextAfter(rooms.selfId));
     renderMatchActions();
     renderScoreboard();
     checkMatchEnd();
@@ -1573,6 +1645,15 @@
     if (!box || !match) return;
     box.textContent = "";
     if (match.done || match.starting || match.finished.has(rooms.selfId)) return;
+    if (!myTurn()) {
+      const w = el("p", "lobby-waiting");
+      w.append(el("span", "spinner"), match.current ? t("turnOf")(memberName(match.current)) : t("waitOthers"));
+      box.append(w);
+      return;
+    }
+    const clock = el("p", "turn-clock", t("autoIn")(Math.max(0, Math.ceil((match.deadline - Date.now()) / 1000))));
+    clock.id = "turnClock";
+    box.append(clock);
     if (!match.rolled) {
       const b = el("button", "btn-primary roll-btn", match.rolling ? t("rolling") : t("roll"));
       b.prepend(icon("dice"));
@@ -1598,6 +1679,18 @@
       // They rolled the character I'm holding at the same moment and they win the tie.
       const mine = match.rolled ?? null;
       if (mine && !match.rolledShared && mine.id === d.charId && from < rooms.selfId) onStolen(from);
+      // Their roll spins in my reel too.
+      const c = match.pool.find((x) => x.id === d.charId);
+      if (c && from === match.current && !myTurn()) {
+        const run = match;
+        spectate(async () => {
+          run.spectating = true;
+          const board = run.boards.get(from);
+          const list = run.pool.filter((x) => fitsIn(board, x));
+          await matchReel.spin(list.length ? list : [c], c, { game: run.g.id, arc: run.arc });
+          if (match === run) matchReel.hint(t("turnOf")(memberName(from)));
+        });
+      }
       return;
     }
     if (type === "place") {
@@ -1607,11 +1700,29 @@
       const i = Number(d.slot);
       const slot = board[i];
       if (c && slot && !slot.char && !slot.locked && slot.def.fits(c) && !board.some((s) => s.char?.id === c.id)) {
+        // Reserve the place now (so a late "done" doesn't fill it twice), show it after their roll.
         slot.char = c;
         slot.points = pointsFor(slot, c);
-        const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
-        if (box) { renderBoard(box, board, { mini: true }); popSlot(box, i); }
-        renderScoreboard();
+        slot.pending = true;
+        const run = match;
+        spectate(async () => {
+          const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
+          if (box) {
+            await fly(matchReel.window, slotFace(box, i) || box, c.formImage || c.image);
+          }
+          slot.pending = false;
+          run.spectating = false;
+          if (match !== run) return;
+          if (box) { renderBoard(box, board, { mini: true }); popSlot(box, i, slot.points); }
+          renderScoreboard();
+          if (!myTurn()) matchReel.idle(run.current ? t("turnOf")(memberName(run.current)) : t("waitOthers"));
+        });
+      }
+      // Their turn is over; the next one starts once their placement has been shown.
+      if (match.current === from) {
+        const next = nextAfter(from);
+        match.current = next;
+        spectate(() => { if (match.current === next) setTurn(next); });
       }
     } else if (type === "done") {
       if (d.key != null && String(d.key) !== match.key) return;
@@ -1633,10 +1744,12 @@
         if (box) renderBoard(box, board, { mini: true });
       }
       match.finished.add(from);
+      if (match.current === from) setTurn(nextAfter(from));
       renderScoreboard();
       checkMatchEnd();
     } else if (type === "left") {
       match.active.delete(from);
+      if (match.current === from) setTurn(nextAfter(from));
       renderScoreboard();
       checkMatchEnd();
     }
@@ -1649,6 +1762,7 @@
     if (!match || match.done) return;
     match.done = true;
     match.current = null;
+    clearInterval(match.timer);
     renderScoreboard();
     const mine = match.boards.get(rooms.selfId);
     renderBoard($("#duelMine"), mine);
@@ -1693,14 +1807,14 @@
     if (!box) return;
     box.textContent = "";
     for (const id of match.ids) {
-      const chip = el("div", `score-chip${id === rooms.selfId ? " is-me" : ""}${match.active.has(id) ? "" : " has-left"}`);
+      const chip = el("div", `score-chip${id === rooms.selfId ? " is-me" : ""}${match.active.has(id) ? "" : " has-left"}${id === match.current && !match.done ? " is-turn" : ""}`);
       const dot = el("span", `duel-state${match.finished.has(id) ? " is-done" : ""}`);
       const score = el("b", "duel-score");
       // Scores animate from the value shown last time.
       score.dataset.value = match.shown?.get(id) ?? 0;
       chip.append(dot, el("span", "duel-pname", memberName(id)), score);
       box.append(chip);
-      const value = duelScore(match.boards.get(id));
+      const value = duelScore(match.boards.get(id).map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)));
       countUp(score, value);
       (match.shown ??= new Map()).set(id, value);
     }
