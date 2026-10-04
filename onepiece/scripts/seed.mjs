@@ -59,11 +59,14 @@ export const seed = [
   { wiki: "Enel", gender: "M", aff: ["God's Army"] },
   { wiki: "Wyper", gender: "M" },
   { wiki: "Gan Fall", gender: "M" },
+  { wiki: "Doc Q", gender: "M", aff: { 2: ["Blackbeard Pirates"] } },
   { wiki: "Marshall D. Teach", gender: "M", fruit: { 2: ["Unknown"], 5: ["Logia", "Paramecia"] }, bounty: { 2: 0, 9: 3996000000 } },
 
   // ── Water 7 & Enies Lobby ──
   { wiki: "Kuzan", gender: "M", aff: { 3: ["Marines"], 9: ["Blackbeard Pirates"] } },
   { wiki: "Iceburg", gender: "M" },
+  { wiki: "Tom", gender: "M" },
+  { wiki: "Paulie", gender: "M" },
   { wiki: "Rob Lucci", gender: "M", aff: { 3: ["CP9"], 9: ["CP0"] } },
   { wiki: "Kaku", gender: "M", aff: { 3: ["CP9"], 9: ["CP0"] } },
   { wiki: "Kalifa", gender: "F", aff: ["CP9"] },
@@ -117,6 +120,7 @@ export const seed = [
   { wiki: "Pedro", gender: "M" },
   { wiki: "Inuarashi", gender: "M" },
   { wiki: "Nekomamushi", gender: "M" },
+  { wiki: "Imu", name: "Imu", gender: "Unknown" },
   { wiki: "Charlotte Linlin", gender: "F", bounty: { 6: null, 9: 4388000000 } },
   { wiki: "Charlotte Katakuri", gender: "M" },
   { wiki: "Charlotte Pudding", gender: "F" },

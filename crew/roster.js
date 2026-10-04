@@ -10,11 +10,16 @@
 
   // Specialist roles in One Piece: score in that role for the listed characters, everyone else gets a third of their power.
   const OP_SPECIALISTS = {
-    navigator: parse("nami:10 jinbe:9 vegapunk:6 nojiko:4 bell-mere:4"),
+    // Nami charts every sea; Jinbe is the helmsman; Enel piloted the Ark Maxim to the moon; Rayleigh, Roger's
+    // first mate, sailed to Laugh Tale; Vegapunk computes routes; Nojiko and Bell-mère raised a navigator.
+    navigator: parse("nami:10 jinbe:9 silvers-rayleigh:7 enel:7 vegapunk:6 nojiko:4 bell-mere:4"),
     cook: parse("sanji:10 zeff:10 charlotte-pudding:8"),
-    doctor: parse("tony-tony-chopper:10 trafalgar-law:10 kureha:10 hiriluk:7 polo-marco:8 emporio-ivankov:6 vegapunk:6 caesar-clown:4"),
-    archaeologist: parse("nico-robin:10 vegapunk:7 kouzuki-oden:6"),
-    shipwright: parse("franky:10 iceburg:10 kaku:6 rob-lucci:5 usopp:4"),
+    // Doc Q is Blackbeard's doctor; Reiju drew the poison out of Luffy; Marco heals with his flames.
+    doctor: parse("tony-tony-chopper:10 trafalgar-law:10 kureha:10 polo-marco:8 doc-q:8 hiriluk:7 emporio-ivankov:6 vegapunk:6 vinsmoke-reiju:5 caesar-clown:4"),
+    // Reading the poneglyphs or knowing the Void Century: the Kozuki family, Roger's crew, Imu, Blackbeard's hunt.
+    archaeologist: parse("nico-robin:10 imu:9 gol-d-roger:9 kouzuki-oden:8 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7 marshall-d-teach:7 kouzuki-hiyori:6 nefertari-vivi:4"),
+    // Tom built the Oro Jackson; Paulie, Kaku and Lucci worked at Galley-La; Rayleigh coats ships; Usopp patched the Merry.
+    shipwright: parse("franky:10 iceburg:10 tom:10 paulie:8 silvers-rayleigh:8 kaku:7 rob-lucci:6 usopp:5"),
   };
   const specialist = (role) => (c, power) => OP_SPECIALISTS[role][c.id] ?? Math.max(1, Math.round(power / 3));
 
@@ -66,18 +71,18 @@
         { label: { en: "Saiyan", fr: "Saïyen" }, icon: "flame", count: 2, fits: (c) => has(c.race, "Saiyan", "Half-Saiyan") },
         { label: { en: "Earthling", fr: "Terrien" }, icon: "person", count: 2, fits: (c) => has(c.race, "Human", "Animal") },
         { label: { en: "Namekian", fr: "Namek" }, icon: "leaf", count: 1, fits: (c) => has(c.race, "Namekian") },
-        { label: { en: "Android", fr: "Cyborg" }, icon: "bolt", count: 1, fits: (c) => has(c.race, "Android", "Bio-Android") },
-        { label: { en: "God / Angel", fr: "Dieu / Ange" }, icon: "star", count: 1, fits: (c) => has(c.race, "God", "Angel") },
+        { label: { en: "Android", fr: "Cyborg" }, icon: "bolt", count: 1, fits: (c) => has(c.race, "Android", "Bio-Android") || c.id === "dr-gero" },
+        { label: { en: "God / Angel", fr: "Dieu / Ange" }, icon: "star", count: 1, fits: (c) => has(c.race, "God", "Angel") || has(c.aff, "Gods") || c.id === "mr-popo" },
         { label: { en: "Villain", fr: "Méchant" }, icon: "skull", count: 1,
-          fits: (c) => has(c.aff, "Frieza Force", "Red Ribbon Army", "Babidi's Army", "Demon Clan", "Pilaf Gang", "Team Zamasu") || has(c.race, "Majin", "Bio-Android", "Frieza Clan") },
+          fits: (c) => has(c.aff, "Frieza Force", "Red Ribbon Army", "Babidi's Army", "Demon Clan", "Pilaf Gang", "Team Zamasu") || has(c.race, "Majin", "Bio-Android", "Frieza Clan") || ["hit", "jiren"].includes(c.id) },
       ],
-      power: parse(`goku:10 bulma:2 oolong:1 yamcha:4 puar:1 chi-chi:3 ox-king:3 master-roshi:5 turtle:1 emperor-pilaf:1 mai:1 shu:1 krillin:6
-        launch:2 upa:1 bora:3 general-blue:3 commander-red:1 mercenary-tao:4 arale-norimaki:6 korin:4 yajirobe:4 tien-shinhan:6 chiaotzu:4
-        king-piccolo:6 piccolo:8 kami:5 mr-popo:4 gohan:9 raditz:5 nappa:5 vegeta:10 king-kai:4 bardock:6 frieza:9 zarbon:5 dodoria:4
-        captain-ginyu:6 recoome:5 burter:5 jeice:5 guldo:4 dende:2 nail:5 grand-elder-guru:2 king-cold:7 future-trunks:8 android-17:8
-        android-18:7 android-16:7 android-19:5 dr-gero:5 cell:9 mr-satan:2 videl:3 goten:6 kid-trunks:7 majin-buu:9 babidi:3 dabura:7
-        shin-supreme-kai:5 kibito:4 uub:6 beerus:10 whis:10 champa:9 vados:10 hit:8 cabba:7 caulifla:7 kale:8 zeno:10 goku-black:9
-        zamasu:8 jiren:9 toppo:8 grand-priest:10`),
+      power: parse(`goku:10 bulma:3 oolong:2 yamcha:5 puar:2 chi-chi:4 ox-king:4 master-roshi:6 turtle:2 emperor-pilaf:2 mai:2 shu:2 krillin:7
+        launch:3 upa:2 bora:4 general-blue:4 commander-red:2 mercenary-tao:5 arale-norimaki:7 korin:5 yajirobe:5 tien-shinhan:7 chiaotzu:5
+        king-piccolo:7 piccolo:9 kami:6 mr-popo:5 gohan:10 raditz:6 nappa:6 vegeta:10 king-kai:5 bardock:7 frieza:10 zarbon:6 dodoria:5
+        captain-ginyu:7 recoome:6 burter:6 jeice:6 guldo:5 dende:3 nail:6 grand-elder-guru:3 king-cold:8 future-trunks:9 android-17:9
+        android-18:8 android-16:8 android-19:6 dr-gero:6 cell:10 mr-satan:3 videl:4 goten:7 kid-trunks:8 majin-buu:10 babidi:4 dabura:8
+        shin-supreme-kai:6 kibito:5 uub:7 beerus:10 whis:10 champa:10 vados:10 hit:9 cabba:8 caulifla:8 kale:9 zeno:10 goku-black:10
+        zamasu:9 jiren:10 toppo:9 grand-priest:10`),
     },
 
     naruto: {
@@ -86,7 +91,7 @@
         { label: { en: "Akatsuki", fr: "Akatsuki" }, icon: "cloud", count: 2, fits: (c) => has(c.village, "Akatsuki") },
         { label: { en: "Kage", fr: "Kage" }, icon: "hat", count: 1, fits: (c) => c.rank === "Kage" },
         { label: { en: "Uchiha", fr: "Uchiha" }, icon: "eye", count: 1, fits: (c) => has(c.clan, "Uchiha") },
-        { label: { en: "Other village", fr: "Autre village" }, icon: "globe", count: 1, fits: (c) => !has(c.village, "Konohagakure", "Akatsuki", "None") },
+        { label: { en: "Outside Konoha", fr: "Hors de Konoha" }, icon: "globe", count: 1, fits: (c) => !has(c.village, "Konohagakure", "Akatsuki") },
       ],
       power: parse(`naruto-uzumaki:10 sasuke-uchiha:10 sakura-haruno:7 kakashi-hatake:9 iruka-umino:3 hiruzen-sarutobi:8 konohamaru-sarutobi:4
         mizuki:2 zabuza-momochi:6 haku:5 tazuna:1 inari:1 gato:1 minato-namikaze:9 rock-lee:7 neji-hyuga:7 tenten:5 might-guy:9
@@ -120,16 +125,20 @@
         sengoku:10 sakazuki:10 borsalino:10 hody-jones:5 shirahoshi:6 neptune:6 fisher-tiger:7 caesar-clown:6 monet:5 vergo:7 kin-emon:7
         kouzuki-momonosuke:5 donquixote-doflamingo:9 issho:10 sabo:9 rebecca:5 kyros:7 bartolomeo:6 cavendish:7 carrot:6 pedro:7
         inuarashi:8 nekomamushi:8 charlotte-linlin:10 charlotte-katakuri:9 charlotte-pudding:3 charlotte-cracker:8 vinsmoke-judge:6
-        vinsmoke-reiju:6 kaidou:10 king:9 queen:9 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4`),
+        vinsmoke-reiju:6 kaidou:10 king:9 queen:9 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4
+        tom:5 paulie:5 doc-q:5 imu:10`),
     },
 
     jujutsukaisen: {
       slots: [
-        { label: { en: "Tokyo Jujutsu High", fr: "École de Tokyo" }, icon: "shield", count: 3, fits: (c) => has(c.aff, "Tokyo Jujutsu High") },
+        { label: { en: "Tokyo Jujutsu High", fr: "École de Tokyo" }, icon: "shield", count: 2, fits: (c) => has(c.aff, "Tokyo Jujutsu High") },
         { label: { en: "Kyoto Jujutsu High", fr: "École de Kyoto" }, icon: "book", count: 1, fits: (c) => has(c.aff, "Kyoto Jujutsu High") },
-        { label: { en: "Special Grade", fr: "Grade spécial" }, icon: "flame", count: 1, fits: (c) => c.grade === "Special Grade" },
-        { label: { en: "Curse", fr: "Fléau" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Cursed Spirit", "Death Painting", "Incarnated") || has(c.aff, "Curse Users") },
-        { label: { en: "Great Clan", fr: "Grand clan" }, icon: "eye", count: 1, fits: (c) => has(c.aff, "Zen'in Clan", "Gojo Clan", "Kamo Clan") },
+        // Naoya, Naobito and Ogi are "special grade 1", a rank below special grade.
+        { label: { en: "Special Grade", fr: "Grade spécial" }, icon: "flame", count: 1, fits: (c) => c.grade === "Special Grade" && !["naoya-zen-in", "naobito-zen-in", "ogi-zen-in"].includes(c.id) },
+        { label: { en: "Curse", fr: "Fléau" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Cursed Spirit", "Death Painting", "Incarnated") || has(c.aff, "Curse Users") || c.id === "larue" },
+        { label: { en: "Great Clan", fr: "Grand clan" }, icon: "eye", count: 1, fits: (c) => has(c.aff, "Zen'in Clan", "Gojo Clan", "Kamo Clan") || c.id === "megumi-fushiguro" },
+        // Sorcerers outside the schools: freelancers (Mei Mei) and Culling Game players (Higuruma, Takaba…).
+        { label: { en: "Freelance & Culling Game", fr: "Indépendants & Jeu d'extermination" }, icon: "dice", count: 1, fits: (c) => has(c.aff, "None") && has(c.race, "Human") && c.id !== "larue" },
       ],
       power: parse(`yuji-itadori:9 megumi-fushiguro:8 nobara-kugisaki:6 satoru-gojo:10 ryomen-sukuna:10 kento-nanami:8 maki-zen-in:9 toge-inumaki:7
         panda:6 yuta-okkotsu:10 masamichi-yaga:6 shoko-ieiri:3 kiyotaka-ijichi:2 aoi-todo:8 mai-zen-in:4 kasumi-miwa:3 noritoshi-kamo:6

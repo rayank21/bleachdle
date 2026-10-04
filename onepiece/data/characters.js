@@ -851,6 +851,26 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/gan-fall.webp"
  },
  {
+  "id": "doc-q",
+  "name": "Doc Q",
+  "gender": "M",
+  "aff": {
+   "2": [
+    "Blackbeard Pirates"
+   ]
+  },
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 72000000,
+  "height": 342,
+  "origin": "North Blue",
+  "age": 26,
+  "epithet": "Death God",
+  "arc": 2,
+  "image": "assets/characters/doc-q.webp"
+ },
+ {
   "id": "marshall-d-teach",
   "name": "Marshall D. Teach",
   "gender": "M",
@@ -917,6 +937,42 @@ window.DLE_CHARACTERS = [
   "epithet": null,
   "arc": 3,
   "image": "assets/characters/iceburg.webp"
+ },
+ {
+  "id": "tom",
+  "name": "Tom",
+  "gender": "M",
+  "aff": [
+   "Tom's Workers"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 296,
+  "origin": "Fish-Man Island",
+  "age": null,
+  "epithet": null,
+  "arc": 3,
+  "image": "assets/characters/tom.webp"
+ },
+ {
+  "id": "paulie",
+  "name": "Paulie",
+  "gender": "M",
+  "aff": [
+   "Galley-La Company"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 195,
+  "origin": "Grand Line",
+  "age": 24,
+  "epithet": null,
+  "arc": 3,
+  "image": "assets/characters/paulie.webp"
  },
  {
   "id": "rob-lucci",
@@ -1742,6 +1798,24 @@ window.DLE_CHARACTERS = [
   "epithet": "Master Nekomamushi",
   "arc": 8,
   "image": "assets/characters/nekomamushi.webp"
+ },
+ {
+  "id": "imu",
+  "name": "Imu",
+  "gender": "Unknown",
+  "aff": [
+   "World Government"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": 800,
+  "epithet": null,
+  "arc": 8,
+  "image": "assets/characters/imu.webp"
  },
  {
   "id": "charlotte-linlin",
