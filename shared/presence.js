@@ -171,7 +171,7 @@ function render() {
     btn.type = "button";
     btn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M16 3.1a4 4 0 0 1 0 7.8M18 14.5a7 7 0 0 1 4 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
     btn.append(el("span", null, n ? t("friendsOnline")(n) : t("friends")));
-    const asked = window.DLE_Profile.requests?.length || 0;
+    const asked = (window.DLE_Profile.requests?.length || 0) + (window.DLE_Profile.invites?.length || 0);
     if (asked) btn.append(el("span", "presence-badge", String(asked)));
     btn.addEventListener("click", () => window.DLE_Profile.open("friends"));
     bar.append(btn);
@@ -249,6 +249,13 @@ window.DLE_Presence = {
     return out;
   },
   myRoom: () => window.DLE_MY_ROOM ?? null,
+  // An invitation left while I was away (kept on my profile).
+  showInvite(name, room, onJoin) {
+    const r = cleanRoom(room);
+    if (!r) return;
+    window.DLE_FX?.play("message");
+    inviteBanner(t("invited")(name), () => { onJoin?.(); goToRoom(r); });
+  },
   invite(peerId) {
     const room = window.DLE_MY_ROOM;
     if (!room || !sendInvite || !peers.has(peerId)) return false;

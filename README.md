@@ -25,7 +25,7 @@ Open `index.html` (the category picker) in a browser; there is nothing to instal
 - Hints after 4 guesses (Bleach: affiliation, HxH: ability) and 8 guesses (blurred portrait).
 - Statistics, streaks, weekly average, copyable emoji result.
 - EN / FR toggle (shared across categories), responsive on mobile. Dragon Ball characters also have their French dub names.
-- **Friends**: with a profile, add friends by their profile name (they accept the request). The friends list shows who is online, where, and the open room they wait in: one click joins it, and a friend can be invited into your room (a banner shows up on their page, whatever page it is).
+- **Friends**: with a profile, add friends by their profile name (they accept the request). The friends list shows who is online, where, and the open room they wait in: one click joins it, and a friend can be invited into your room: a banner shows up on their page, whatever page it is, or, if they are offline, the invitation waits on their profile (30 minutes) and pops up when they come back.
 - **Player names and live “online” bar**: each player picks a name (kept in their browser); the bar under the header lists who is on the site right now and which game they are playing. Players connect directly to each other (WebRTC) with [Trystero](https://github.com/dmotz/trystero), using public Nostr relays to find each other: no server or account needed. As with any peer-to-peer connection, players’ IP addresses are visible to each other.
 
 ## Online play

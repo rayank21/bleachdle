@@ -27,6 +27,7 @@
       inRoom: (code) => `Waiting in room ${code}`, joinRoom: "Join", invite: "Invite", invitedOk: "Invited!",
       remove: "Remove", removeConfirm: (n) => `Remove ${n} from your friends?`, home: "home page", crewRoll: "Crew Roll",
       inviteHelp: "Open a room (Crew Roll or an online race) to invite your friends.",
+      invites: "Invitations", invitesYou: (g, code) => `invites you · ${g} · room ${code}`, invitedOffline: "Invited! They'll see it when they come back.",
     },
     fr: {
       profile: "Profil", create: "Crée ton profil", createSub: "Tes stats et ton meilleur équipage, sauvegardés en ligne et affichés au classement.",
@@ -44,6 +45,7 @@
       inRoom: (code) => `Attend dans la salle ${code}`, joinRoom: "Rejoindre", invite: "Inviter", invitedOk: "Invité !",
       remove: "Retirer", removeConfirm: (n) => `Retirer ${n} de tes amis ?`, home: "accueil", crewRoll: "Roll ton équipage",
       inviteHelp: "Ouvre une salle (Roll ton équipage ou une course en ligne) pour inviter tes amis.",
+      invites: "Invitations", invitesYou: (g, code) => `t'invite · ${g} · salle ${code}`, invitedOffline: "Invité ! Il le verra en revenant.",
     },
   };
   const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -151,7 +153,8 @@
     if (session?.profile?.avatar) { const img = el("img"); img.src = avatarSrc(session.profile.avatar); img.alt = ""; face.append(img); }
     else face.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
     button.append(face, el("span", "pf-btn-name", session?.profile?.name || t("profile")));
-    if (friendState.requests.length) button.append(el("span", "pf-btn-badge", String(friendState.requests.length)));
+    const pending = friendState.requests.length + friendState.invites.length;
+    if (pending) button.append(el("span", "pf-btn-badge", String(pending)));
     button.title = t("profile");
   }
 
@@ -399,12 +402,15 @@
 
   // ── Friends ──
   // The list lives on the server; who is online and in which room comes from the online bar (presence.js).
-  let friendState = { friends: [], requests: [] };
+  let friendState = { friends: [], requests: [], invites: [] };
   let friendNote = "";
   let friendDraft = "";
+  const invited = new Map(); // friend id → { code of the room they were invited to, button text }
   function setFriends(data) {
-    friendState = { friends: Array.isArray(data?.friends) ? data.friends : [], requests: Array.isArray(data?.requests) ? data.requests : [] };
+    const list = (x) => (Array.isArray(x) ? x : []);
+    friendState = { friends: list(data?.friends), requests: list(data?.requests), invites: list(data?.invites) };
     renderButton();
+    announceInvites();
     window.dispatchEvent(new Event("dle:friends"));
     if (dialog?.open && tab === "friends") render();
   }
@@ -413,6 +419,24 @@
     setFriends(data);
     return data;
   }
+  // Each invitation pops up once as a banner (on any page); it stays in the friends tab until used or dismissed.
+  function announceInvites() {
+    let seen = [];
+    try { seen = JSON.parse(localStorage.getItem("dle:invites-seen") || "[]"); } catch {}
+    for (const inv of friendState.invites) {
+      const key = `${inv.from}:${inv.at}`;
+      if (seen.includes(key)) continue;
+      seen.push(key);
+      window.DLE_Presence?.showInvite(inv.name, inv.room, () => clearInvite(inv.from));
+    }
+    try { localStorage.setItem("dle:invites-seen", JSON.stringify(seen.slice(-40))); } catch {}
+  }
+  async function clearInvite(from) {
+    if (!session) return;
+    try { await friendCall({ action: "invite-clear", from }); } catch {}
+  }
+  const roomPlace = (room) => (room.channel === "crew" ? t("crewRoll") : gameOf(room.game)?.brand ?? "");
+
   async function loadFriends() {
     if (!session) return;
     try { await friendCall({ action: "friends" }); } catch (e) { if (e.status === 401) logout(true); }
@@ -460,6 +484,26 @@
     });
     box.append(form, note);
 
+    // Invitations left by friends (also while I was offline).
+    if (friendState.invites.length) {
+      box.append(el("h3", "pf-h", t("invites")));
+      const ol = el("ol", "pf-list");
+      for (const inv of friendState.invites) {
+        const li = friendRow({ name: inv.name, avatar: inv.avatar });
+        li.querySelector(".pf-friend-who").append(el("span", "pf-friend-where", t("invitesYou")(roomPlace(inv.room), inv.room.code)));
+        const go = el("button", "btn-primary btn-small", t("joinRoom"));
+        go.type = "button";
+        go.addEventListener("click", async () => { go.disabled = true; await clearInvite(inv.from); dialog.close(); window.DLE_Presence?.goToRoom(inv.room); });
+        const no = el("button", "pf-remove", "✕");
+        no.type = "button";
+        no.title = no.ariaLabel = t("decline");
+        no.addEventListener("click", () => clearInvite(inv.from));
+        li.append(go, no);
+        ol.append(li);
+      }
+      box.append(ol);
+    }
+
     // Requests I received.
     if (friendState.requests.length) {
       box.append(el("h3", "pf-h", t("requests")));
@@ -486,17 +530,29 @@
     const list = [...friendState.friends].sort((a, b) => here.has(b.id) - here.has(a.id) || a.name.localeCompare(b.name));
     const ol = el("ol", "pf-list");
     for (const f of list) {
-      const on = here.get(f.id);
+      const on = here.get(f.id) ?? null;
       const li = friendRow(f, on);
       if (on?.room && on.room.code !== myRoom?.code) {
         const join = el("button", "btn-primary btn-small", t("joinRoom"));
         join.type = "button";
         join.addEventListener("click", () => { dialog.close(); window.DLE_Presence.goToRoom(on.room); });
         li.append(join);
-      } else if (on && myRoom) {
-        const inv = el("button", "btn-ghost btn-small", t("invite"));
+      } else if (myRoom && on?.room?.code !== myRoom.code) {
+        // Online: straight to their page. Offline: kept on their profile until they come back.
+        const done = invited.get(f.id);
+        const inv = el("button", "btn-ghost btn-small", done?.code === myRoom.code ? done.text : t("invite"));
         inv.type = "button";
-        inv.addEventListener("click", () => { if (window.DLE_Presence.invite(on.peerId)) { inv.textContent = t("invitedOk"); inv.disabled = true; } });
+        inv.disabled = done?.code === myRoom.code;
+        // The list may have been rebuilt meanwhile: draw it again with the new label.
+        const mark = (text) => { invited.set(f.id, { code: myRoom.code, text }); inv.textContent = text; if (dialog?.open && tab === "friends") render(); };
+        inv.addEventListener("click", async () => {
+          inv.disabled = true;
+          if (on && window.DLE_Presence.invite(on.peerId)) { mark(t("invitedOk")); return; }
+          try {
+            await api({ action: "friend-invite", id: session.id, token: session.token, other: f.id, room: myRoom });
+            mark(on ? t("invitedOk") : t("invitedOffline"));
+          } catch { inv.disabled = false; }
+        });
         li.append(inv);
       }
       const rm = el("button", "pf-remove", "✕");
@@ -567,7 +623,8 @@
     renderButton();
     if (session) { refresh(); syncStats(); loadFriends(); }
     // New requests and new friends show up without reloading.
-    setInterval(() => { if (session && !document.hidden) loadFriends(); }, 60000);
+    setInterval(() => { if (session && !document.hidden) loadFriends(); }, 45000);
+    document.addEventListener("visibilitychange", () => { if (session && !document.hidden) loadFriends(); });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
@@ -577,5 +634,6 @@
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get requests() { return friendState.requests; },
+    get invites() { return friendState.invites; },
   };
 })();

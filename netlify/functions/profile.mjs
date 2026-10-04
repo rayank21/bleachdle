@@ -10,6 +10,8 @@
 //   POST /api/profile {action: "friends", id, token}                  my friends and friend requests
 //   POST /api/profile {action: "friend-add", id, token, name}         send a request (or accept theirs)
 //   POST /api/profile {action: "friend-accept" | "friend-remove", id, token, other}
+//   POST /api/profile {action: "friend-invite", id, token, other, room}  invite a friend into my room, even offline
+//   POST /api/profile {action: "invite-clear", id, token, from}           drop an invitation I got
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
@@ -17,6 +19,7 @@ const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "j
 const MODES = ["daily", "endless"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
+const INVITE_TTL = 30 * 60 * 1000; // an invitation is kept 30 minutes (the room is probably gone after that)
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -162,7 +165,36 @@ async function friendsView(p) {
   const s = store();
   const load = async (list) => (await Promise.all(ids(list).map((id) => s.get(`p/${id}`, { type: "json" })))).filter(Boolean).map(mini);
   const [friends, requests] = await Promise.all([load(p.friends), load(p.requests)]);
-  return json({ friends, requests });
+  return json({ friends, requests, invites: freshInvites(p) });
+}
+
+const freshInvites = (p) => (Array.isArray(p.invites) ? p.invites : []).filter((i) => Date.now() - i.at < INVITE_TTL);
+function cleanRoom(r) {
+  const code = String(r?.code ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+  const channel = r?.channel === "crew" || r?.channel === "race" ? r.channel : null;
+  const game = GAMES.includes(r?.game) ? r.game : null;
+  return code && channel && (channel === "crew" || game) ? { code, channel, game } : null;
+}
+
+async function friendInvite(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const room = cleanRoom(body.room);
+  if (!room) return fail("room");
+  const other = ids(p.friends).includes(body.other) ? await readProfile(body.other) : null;
+  if (!other || !ids(other.friends).includes(p.id)) return fail("friend", 403);
+  // One invitation per friend: the newest replaces the previous one.
+  other.invites = [...freshInvites(other).filter((i) => i.from !== p.id), { from: p.id, name: p.name, avatar: p.avatar, room, at: Date.now() }].slice(-10);
+  await store().setJSON(`p/${other.id}`, other);
+  return json({ ok: true });
+}
+
+async function inviteClear(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  p.invites = freshInvites(p).filter((i) => i.from !== body.from);
+  await store().setJSON(`p/${p.id}`, p);
+  return friendsView(p);
 }
 
 async function befriend(a, b) {
@@ -241,6 +273,8 @@ export default async (req) => {
     if (body.action === "friend-add") return friendAdd(body);
     if (body.action === "friend-accept") return friendAccept(body);
     if (body.action === "friend-remove") return friendRemove(body);
+    if (body.action === "friend-invite") return friendInvite(body);
+    if (body.action === "invite-clear") return inviteClear(body);
     return fail("action");
   } catch (e) {
     console.error(e);
