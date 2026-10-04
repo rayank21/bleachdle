@@ -12,7 +12,7 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | **Jujutsudle** (Jujutsu Kaisen) | `jujutsukaisen/` | 60 |
 | **Blackcloverdle** (Black Clover) | `blackclover/` | 70 |
 
-Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions or One Piece roles); every character has a 1–10 rating and the crew's average is your score. Iconic characters transform when drawn (Super Saiyan, Bankai, Susanoo, domain expansions…), only from the arc where the form appears; the forms are listed in `crew/forms.js` and their portraits fetched by `node crew/scripts/forms.mjs`.
+Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions, plus roles such as healer, engineer or strategist that anyone can fill but specialists score high in; One Piece is all roles); every character has a 1–10 rating and the crew's average is your score. Iconic characters transform when drawn (Super Saiyan, Bankai, Susanoo, domain expansions…), only from the arc where the form appears; the forms are listed in `crew/forms.js` and their portraits fetched by `node crew/scripts/forms.mjs`.
 
 ## Play
 
@@ -25,6 +25,7 @@ Open `index.html` (the category picker) in a browser; there is nothing to instal
 - Hints after 4 guesses (Bleach: affiliation, HxH: ability) and 8 guesses (blurred portrait).
 - Statistics, streaks, weekly average, copyable emoji result.
 - EN / FR toggle (shared across categories), responsive on mobile. Dragon Ball characters also have their French dub names.
+- **Friends**: with a profile, add friends by their profile name (they accept the request). The friends list shows who is online, where, and the open room they wait in: one click joins it, and a friend can be invited into your room (a banner shows up on their page, whatever page it is).
 - **Player names and live “online” bar**: each player picks a name (kept in their browser); the bar under the header lists who is on the site right now and which game they are playing. Players connect directly to each other (WebRTC) with [Trystero](https://github.com/dmotz/trystero), using public Nostr relays to find each other: no server or account needed. As with any peer-to-peer connection, players’ IP addresses are visible to each other.
 
 ## Online play

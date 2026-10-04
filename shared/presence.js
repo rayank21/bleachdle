@@ -29,6 +29,11 @@ const T = {
     say: (n) => `Message as ${n}…`,
     send: "Send",
     close: "Close",
+    friends: "Friends",
+    friendsOnline: (n) => `${n} friend${n > 1 ? "s" : ""} online`,
+    invited: (n) => `${n} invites you to play!`,
+    join: "Join",
+    later: "Later",
   },
   fr: {
     online: (n) => `${n} en ligne`,
@@ -45,6 +50,11 @@ const T = {
     say: (n) => `Écrire en tant que ${n}…`,
     send: "Envoyer",
     close: "Fermer",
+    friends: "Amis",
+    friendsOnline: (n) => `${n} ami${n > 1 ? "s" : ""} en ligne`,
+    invited: (n) => `${n} t'invite à jouer !`,
+    join: "Rejoindre",
+    later: "Plus tard",
   },
 };
 const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -63,7 +73,7 @@ const fallbackName = `Player ${Math.floor(1000 + Math.random() * 9000)}`;
 const shownName = () => myName || fallbackName;
 
 // ── State ──
-const peers = new Map(); // peerId → { name, game }
+const peers = new Map(); // peerId → { name, game, pid (profile id), room (open room they wait in) }
 let status = "connecting"; // connecting | live | offline
 let editing = !myName;
 let sendInfo = null;
@@ -85,8 +95,9 @@ function gameLogo(id) {
   return img;
 }
 
-function chip(name, gameId, isMe) {
-  const li = el("li", `presence-chip${isMe ? " is-me" : ""}`);
+function chip(name, gameId, isMe, isFriend) {
+  const li = el("li", `presence-chip${isMe ? " is-me" : ""}${isFriend ? " is-friend" : ""}`);
+  if (isFriend) li.title = t("friends");
   const logo = gameLogo(gameId);
   if (logo) li.append(logo);
   li.append(el("span", "presence-name", name));
@@ -124,7 +135,7 @@ function myChip() {
     myName = name;
     saveName(name);
     editing = false;
-    sendInfo?.({ name, game });
+    announce();
     render();
   });
   li.append(form);
@@ -149,9 +160,22 @@ function render() {
 
   const list = el("ul", "presence-list");
   list.append(myChip());
-  const others = [...peers.values()].sort((a, b) => a.name.localeCompare(b.name));
-  for (const p of others) list.append(chip(p.name, p.game, false));
+  const others = [...peers.values()].sort((a, b) => isFriend(b) - isFriend(a) || a.name.localeCompare(b.name));
+  for (const p of others) list.append(chip(p.name, p.game, false, isFriend(p)));
   bar.append(list);
+
+  // Friends: how many are here, and a shortcut to the friends list (with join / invite buttons).
+  if (window.DLE_Profile) {
+    const n = new Set(others.filter(isFriend).map((p) => p.pid)).size;
+    const btn = el("button", `presence-friends${n ? " has-online" : ""}`);
+    btn.type = "button";
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M16 3.1a4 4 0 0 1 0 7.8M18 14.5a7 7 0 0 1 4 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+    btn.append(el("span", null, n ? t("friendsOnline")(n) : t("friends")));
+    const asked = window.DLE_Profile.requests?.length || 0;
+    if (asked) btn.append(el("span", "presence-badge", String(asked)));
+    btn.addEventListener("click", () => window.DLE_Profile.open("friends"));
+    bar.append(btn);
+  }
 
   if (draft != null) {
     const input = bar.querySelector("#presenceName");
@@ -161,6 +185,79 @@ function render() {
     }
   }
 }
+
+// ── Friends (profile.js keeps the list) ──
+const friendIds = () => window.DLE_Profile?.friendIds ?? [];
+const isFriend = (p) => !!p.pid && friendIds().includes(p.pid);
+const myInfo = () => ({ name: shownName(), game, pid: window.DLE_Profile?.current?.id ?? null, room: window.DLE_MY_ROOM ?? null });
+const cleanRoom = (r) => {
+  if (!r || typeof r !== "object") return null;
+  const code = String(r.code ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+  const channel = r.channel === "crew" ? "crew" : r.channel === "race" ? "race" : null;
+  const g = GAMES.find((x) => x.id === r.game);
+  return code && channel && (channel === "crew" || g) ? { code, channel, game: g?.id ?? null } : null;
+};
+// The page that opens a room: Crew Roll, or the guessing game of a race room.
+function roomUrl(room) {
+  const page = room.channel === "crew" ? "crew/" : GAMES.find((g) => g.id === room.game)?.path;
+  return page ? `${root}${page}index.html#join=${room.code}` : null;
+}
+function goToRoom(room) {
+  const url = roomUrl(room);
+  if (!url) return;
+  const target = new URL(url, location.href);
+  const samePage = target.pathname.replace(/index\.html$/, "") === location.pathname.replace(/index\.html$/, "");
+  location.href = target.href;
+  // Same page, only the hash changes: reload so the page reads the invite.
+  if (samePage) location.reload();
+}
+let sendInvite = null;
+function receiveInvite(data, peerId) {
+  const p = peers.get(peerId);
+  const room = cleanRoom(data?.room);
+  if (!p || !isFriend(p) || !room || !allowed(peerId)) return;
+  window.DLE_FX?.play("message");
+  inviteBanner(t("invited")(p.name), () => goToRoom(room));
+}
+function inviteBanner(text, onJoin) {
+  if (window.DLE_Rooms) { window.DLE_Rooms.inviteBanner({ text, join: t("join"), dismiss: t("later"), onJoin }); return; }
+  document.querySelector(".invite-banner")?.remove();
+  const box = el("div", "invite-banner");
+  box.setAttribute("role", "alert");
+  const yes = el("button", "btn-primary btn-small", t("join"));
+  const no = el("button", "btn-ghost btn-small", t("later"));
+  yes.type = no.type = "button";
+  const close = () => { box.classList.add("is-out"); setTimeout(() => box.remove(), 250); };
+  yes.addEventListener("click", () => { close(); onJoin(); });
+  no.addEventListener("click", close);
+  setTimeout(close, 20000);
+  box.append(el("span", "invite-text", text), yes, no);
+  document.body.append(box);
+}
+const announce = () => sendInfo?.(myInfo());
+window.addEventListener("dle:room", announce);
+window.addEventListener("dle:profile", () => { announce(); render(); });
+window.addEventListener("dle:friends", render);
+
+// For the friends list: who is here, where, and in which open room.
+window.DLE_Presence = {
+  get status() { return status; },
+  // profile id → { peerId, name, game, room }
+  online() {
+    const out = new Map();
+    for (const [peerId, p] of peers) if (p.pid) out.set(p.pid, { peerId, ...p });
+    return out;
+  },
+  myRoom: () => window.DLE_MY_ROOM ?? null,
+  invite(peerId) {
+    const room = window.DLE_MY_ROOM;
+    if (!room || !sendInvite || !peers.has(peerId)) return false;
+    sendInvite({ room }, peerId);
+    return true;
+  },
+  goToRoom,
+};
+const presenceChanged = () => window.dispatchEvent(new Event("dle:presence"));
 
 async function connect() {
   try {
@@ -172,20 +269,25 @@ async function connect() {
       const name = cleanName(data?.name);
       if (!name) return;
       const g = GAMES.some((x) => x.id === data?.game) ? data.game : "home";
-      peers.set(peerId, { name, game: g });
+      const pid = /^[a-z0-9]{10,20}$/.test(data?.pid ?? "") ? data.pid : null;
+      peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room) });
       render();
+      presenceChanged();
       renderChat();
     };
+    const invite = room.makeAction("finvite");
+    sendInvite = (data, peerId) => invite.send(data, { target: peerId });
+    invite.onMessage = (data, { peerId }) => receiveInvite(data, peerId);
     const chatMsg = room.makeAction("chat");
     const chatLog = room.makeAction("chatlog");
     sendChat = (m) => chatMsg.send(m);
     chatMsg.onMessage = (data, { peerId }) => receive(data, peerId);
     chatLog.onMessage = (data, { peerId }) => receiveHistory(data, peerId);
     room.onPeerJoin = (peerId) => {
-      info.send({ name: shownName(), game }, { target: peerId });
+      info.send(myInfo(), { target: peerId });
       if (chat.messages.length) chatLog.send(shareable(), { target: peerId });
     };
-    room.onPeerLeave = (peerId) => { peers.delete(peerId); rate.delete(peerId); render(); renderChat(); };
+    room.onPeerLeave = (peerId) => { peers.delete(peerId); rate.delete(peerId); render(); renderChat(); presenceChanged(); };
     status = "live";
     render();
     renderChat();
@@ -379,7 +481,7 @@ window.addEventListener("dle:lang", () => { render(); renderChat(); });
 window.addEventListener("dle:name", () => {
   myName = storedName() || myName;
   editing = false;
-  sendInfo?.({ name: shownName(), game });
+  announce();
   render();
   renderChat();
 });

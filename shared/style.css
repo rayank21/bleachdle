@@ -753,6 +753,12 @@ body[data-game="hunterxhunter"] .hero-title { font-size: 31px; white-space: nowr
 .presence-form input:focus { outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25); }
 .presence-save { padding: 4px 10px; border: 0; border-radius: 999px; background: var(--accent); color: #141414; font-weight: 800; font-size: 12px; }
 .presence-chip.is-editing { padding: 3px; }
+.presence-chip.is-friend { border-color: rgba(255, 210, 80, 0.6); background: linear-gradient(90deg, rgba(255, 210, 80, 0.16), var(--surface-2)); }
+.presence-chip.is-friend .presence-name::before { content: "★ "; color: #ffd250; }
+.presence-friends { position: relative; display: flex; align-items: center; gap: 6px; flex: none; margin-left: auto; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--muted); font: 700 12.5px var(--font); white-space: nowrap; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+.presence-friends:hover { color: var(--text); border-color: rgba(var(--accent-rgb), 0.6); }
+.presence-friends.has-online { color: #ffd250; border-color: rgba(255, 210, 80, 0.55); }
+.presence-badge, .pf-btn-badge { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--wrong, #e5262e); color: #fff; font-size: 11px; font-weight: 900; }
 
 /* ── Crew Roll ──────────────────────────────────────────────── */
 /* Black and red whatever the anime picked. */
@@ -1186,7 +1192,7 @@ body[data-game="home"] .cat .cat-name { display: none; }
 
 .pf-modal { width: min(100% - 32px, 680px); }
 .pf-inner { display: flex; flex-direction: column; gap: 14px; }
-.pf-tabs { width: 240px; margin: 0 auto; }
+.pf-tabs { width: min(100%, 360px); margin: 0 auto; grid-template-columns: repeat(3, 1fr); }
 .pf-tabs button.is-active { background: linear-gradient(135deg, #ff3b4a, #ff8a3d); color: #fff; }
 .pf-view { display: flex; flex-direction: column; gap: 12px; animation: rise 0.3s ease both; }
 .pf-title { margin: 4px 0 0 !important; }
@@ -1266,6 +1272,19 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .pf-li-face { width: 30px; height: 30px; flex: none; border-radius: 50%; overflow: hidden; background: var(--surface-3); }
 .pf-li-face img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .pf-li-name { flex: 1; min-width: 0; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-btn { position: relative; }
+.pf-btn-badge { position: absolute; top: -5px; right: -5px; box-shadow: 0 0 0 2px var(--bg, #0b0b0d); }
+.pf-friend { gap: 8px; }
+.pf-dot { width: 8px; height: 8px; flex: none; border-radius: 50%; background: #55555e; }
+.pf-friend.is-online .pf-dot { background: #2fd067; box-shadow: 0 0 0 3px rgba(47, 208, 103, 0.2); }
+.pf-friend-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pf-friend-who .pf-li-name { flex: none; }
+.pf-friend-where { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-friend.is-online .pf-friend-where { color: #6fe39a; }
+.pf-friend .btn-small { flex: none; }
+.pf-remove { flex: none; width: 26px; height: 26px; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+.pf-remove:hover { color: var(--text); background: rgba(255, 255, 255, 0.08); }
+.pf-note { min-height: 1em; margin: 6px 0 0; font-size: 13px; color: var(--muted); }
 .pf-val { display: flex; align-items: center; gap: 4px; font-weight: 900; font-variant-numeric: tabular-nums; }
 .pf-mini-rank { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; font-style: italic; font-size: 13px; color: #141414; }
 @media (max-width: 560px) {

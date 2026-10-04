@@ -33,6 +33,20 @@
     const send = {};
     let started = false;
 
+    // The open room I'm in is announced to my friends by the online bar (presence.js), so they can join it.
+    const pageOnChange = onChange;
+    let published = "null";
+    onChange = () => {
+      const r = api.myRoom;
+      const mine = r && !r.started && r.members.length < r.size ? { code: r.code, channel, game: r.game } : null;
+      if (JSON.stringify(mine) !== published) {
+        published = JSON.stringify(mine);
+        window.DLE_MY_ROOM = mine;
+        window.dispatchEvent(new Event("dle:room"));
+      }
+      pageOnChange();
+    };
+
     // ── Room helpers ──
     const isHost = () => api.myRoom && api.myRoom.host === api.selfId;
     const sanitizeRoom = (r, from) => {

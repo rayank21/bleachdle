@@ -20,6 +20,13 @@
       show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topCrews: "Best crews", topWins: "Most wins", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
       empty: "Nobody yet: be the first!", taken: "This name is taken.", badName: "2 to 20 characters.", badCode: "Unknown code.",
       offline: "Profiles are unavailable right now.", logoutConfirm: "Log out? Keep your recovery code to come back.",
+      friends: "Friends", addFriend: "Add a friend", friendName: "Their name", add: "Add", requests: "Friend requests",
+      accept: "Accept", decline: "Decline", noFriends: "No friends yet: add one by their profile name.",
+      needProfile: "Create a profile to add friends and join them in one click.", sent: (n) => `Request sent to ${n}.`,
+      nobody: "No profile with this name.", self: "That's you!", onlineIn: (g) => `Online · ${g}`, offlineNow: "Offline",
+      inRoom: (code) => `Waiting in room ${code}`, joinRoom: "Join", invite: "Invite", invitedOk: "Invited!",
+      remove: "Remove", removeConfirm: (n) => `Remove ${n} from your friends?`, home: "home page", crewRoll: "Crew Roll",
+      inviteHelp: "Open a room (Crew Roll or an online race) to invite your friends.",
     },
     fr: {
       profile: "Profil", create: "Crée ton profil", createSub: "Tes stats et ton meilleur équipage, sauvegardés en ligne et affichés au classement.",
@@ -30,6 +37,13 @@
       show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topCrews: "Meilleurs équipages", topWins: "Plus de victoires", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
       empty: "Personne pour l'instant : sois le premier !", taken: "Ce pseudo est déjà pris.", badName: "2 à 20 caractères.", badCode: "Code inconnu.",
       offline: "Les profils sont indisponibles pour l'instant.", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
+      friends: "Amis", addFriend: "Ajouter un ami", friendName: "Son pseudo", add: "Ajouter", requests: "Demandes d'ami",
+      accept: "Accepter", decline: "Refuser", noFriends: "Pas encore d'amis : ajoute-en un avec son pseudo de profil.",
+      needProfile: "Crée un profil pour ajouter des amis et les rejoindre en un clic.", sent: (n) => `Demande envoyée à ${n}.`,
+      nobody: "Aucun profil avec ce pseudo.", self: "C'est toi !", onlineIn: (g) => `En ligne · ${g}`, offlineNow: "Hors ligne",
+      inRoom: (code) => `Attend dans la salle ${code}`, joinRoom: "Rejoindre", invite: "Inviter", invitedOk: "Invité !",
+      remove: "Retirer", removeConfirm: (n) => `Retirer ${n} de tes amis ?`, home: "accueil", crewRoll: "Roll ton équipage",
+      inviteHelp: "Ouvre une salle (Roll ton équipage ou une course en ligne) pour inviter tes amis.",
     },
   };
   const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -81,6 +95,7 @@
       }
     } catch {}
     renderButton();
+    window.dispatchEvent(new Event("dle:profile"));
   }
 
   let syncTimer;
@@ -114,6 +129,8 @@
     if (!silent && !confirm(t("logoutConfirm"))) return;
     session = null;
     saveSession();
+    setFriends({ friends: [], requests: [] });
+    window.dispatchEvent(new Event("dle:profile"));
     renderButton();
     if (dialog?.open) render();
   }
@@ -134,6 +151,7 @@
     if (session?.profile?.avatar) { const img = el("img"); img.src = avatarSrc(session.profile.avatar); img.alt = ""; face.append(img); }
     else face.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
     button.append(face, el("span", "pf-btn-name", session?.profile?.name || t("profile")));
+    if (friendState.requests.length) button.append(el("span", "pf-btn-badge", String(friendState.requests.length)));
     button.title = t("profile");
   }
 
@@ -153,6 +171,7 @@
     render();
     if (!dialog.open) dialog.showModal();
     if (session) refresh();
+    if (session && which === "friends") loadFriends();
   }
 
   async function refresh() {
@@ -169,7 +188,7 @@
     close.setAttribute("aria-label", "Close");
     close.addEventListener("click", () => dialog.close());
     const tabs = el("div", "mode-tabs pf-tabs");
-    for (const [id, label] of [["profile", t("profile")], ["board", t("board")]]) {
+    for (const [id, label] of [["profile", t("profile")], ["friends", t("friends")], ["board", t("board")]]) {
       const b = el("button", tab === id ? "is-active" : "", label);
       b.type = "button";
       b.addEventListener("click", () => { tab = id; editing = false; render(); });
@@ -177,6 +196,7 @@
     }
     inner.append(close, tabs);
     if (tab === "board") inner.append(boardView());
+    else if (tab === "friends") inner.append(friendsView());
     else if (!session) inner.append(createView());
     else if (editing) inner.append(editView());
     else inner.append(profileView());
@@ -377,6 +397,138 @@
     return box;
   }
 
+  // ── Friends ──
+  // The list lives on the server; who is online and in which room comes from the online bar (presence.js).
+  let friendState = { friends: [], requests: [] };
+  let friendNote = "";
+  let friendDraft = "";
+  function setFriends(data) {
+    friendState = { friends: Array.isArray(data?.friends) ? data.friends : [], requests: Array.isArray(data?.requests) ? data.requests : [] };
+    renderButton();
+    window.dispatchEvent(new Event("dle:friends"));
+    if (dialog?.open && tab === "friends") render();
+  }
+  async function friendCall(body) {
+    const data = await api({ ...body, id: session.id, token: session.token });
+    setFriends(data);
+    return data;
+  }
+  async function loadFriends() {
+    if (!session) return;
+    try { await friendCall({ action: "friends" }); } catch (e) { if (e.status === 401) logout(true); }
+  }
+
+  function friendsView() {
+    const box = el("div", "pf-view pf-friends");
+    if (!session) {
+      box.append(el("p", "muted", t("needProfile")));
+      const go = el("button", "btn-primary", t("create"));
+      go.type = "button";
+      go.addEventListener("click", () => { tab = "profile"; render(); });
+      box.append(go);
+      return box;
+    }
+
+    // Add by profile name.
+    box.append(el("h3", "pf-h", t("addFriend")));
+    const form = el("form", "pf-row");
+    const input = el("input", "pf-input");
+    input.maxLength = 20;
+    input.placeholder = t("friendName");
+    // The tab re-renders when friends come and go: keep what is being typed.
+    input.value = friendDraft;
+    input.addEventListener("input", () => { friendDraft = input.value; });
+    input.classList.add("pf-friend-input");
+    if (document.activeElement?.classList.contains("pf-friend-input")) setTimeout(() => { input.focus(); input.setSelectionRange(input.value.length, input.value.length); });
+    const add = el("button", "btn-primary", t("add"));
+    add.type = "submit";
+    form.append(input, add);
+    const note = el("p", "pf-note", friendNote);
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) return;
+      add.disabled = true;
+      try {
+        const data = await friendCall({ action: "friend-add", name: input.value });
+        friendNote = data.sent ? t("sent")(data.sent.name) : "";
+        friendDraft = "";
+        window.DLE_FX?.play("place");
+      } catch (err) {
+        friendNote = err.code === "nobody" ? t("nobody") : err.code === "self" ? t("self") : t("offline");
+      }
+      render();
+    });
+    box.append(form, note);
+
+    // Requests I received.
+    if (friendState.requests.length) {
+      box.append(el("h3", "pf-h", t("requests")));
+      const ol = el("ol", "pf-list");
+      for (const f of friendState.requests) {
+        const li = friendRow(f);
+        const yes = el("button", "btn-primary btn-small", t("accept"));
+        const no = el("button", "btn-ghost btn-small", t("decline"));
+        yes.type = no.type = "button";
+        yes.addEventListener("click", async () => { yes.disabled = true; try { await friendCall({ action: "friend-accept", other: f.id }); window.DLE_FX?.play("win"); } catch {} });
+        no.addEventListener("click", async () => { no.disabled = true; try { await friendCall({ action: "friend-remove", other: f.id }); } catch {} });
+        li.append(yes, no);
+        ol.append(li);
+      }
+      box.append(ol);
+    }
+
+    // My friends, online first, with join / invite buttons.
+    box.append(el("h3", "pf-h", `${t("friends")} (${friendState.friends.length})`));
+    if (!friendState.friends.length) { box.append(el("p", "muted", t("noFriends"))); return box; }
+    const here = window.DLE_Presence?.online() ?? new Map();
+    const myRoom = window.DLE_Presence?.myRoom();
+    if (!myRoom) box.append(el("p", "muted pf-help", t("inviteHelp")));
+    const list = [...friendState.friends].sort((a, b) => here.has(b.id) - here.has(a.id) || a.name.localeCompare(b.name));
+    const ol = el("ol", "pf-list");
+    for (const f of list) {
+      const on = here.get(f.id);
+      const li = friendRow(f, on);
+      if (on?.room && on.room.code !== myRoom?.code) {
+        const join = el("button", "btn-primary btn-small", t("joinRoom"));
+        join.type = "button";
+        join.addEventListener("click", () => { dialog.close(); window.DLE_Presence.goToRoom(on.room); });
+        li.append(join);
+      } else if (on && myRoom) {
+        const inv = el("button", "btn-ghost btn-small", t("invite"));
+        inv.type = "button";
+        inv.addEventListener("click", () => { if (window.DLE_Presence.invite(on.peerId)) { inv.textContent = t("invitedOk"); inv.disabled = true; } });
+        li.append(inv);
+      }
+      const rm = el("button", "pf-remove", "✕");
+      rm.type = "button";
+      rm.title = rm.ariaLabel = t("remove");
+      rm.addEventListener("click", async () => { if (!confirm(t("removeConfirm")(f.name))) return; try { await friendCall({ action: "friend-remove", other: f.id }); } catch {} });
+      li.append(rm);
+      ol.append(li);
+    }
+    box.append(ol);
+    return box;
+  }
+
+  // A friend's line: avatar, name, and where they are when they're online.
+  function friendRow(f, on) {
+    const li = el("li", `pf-li pf-friend${on ? " is-online" : ""}`);
+    const face = el("span", "pf-li-face");
+    if (f.avatar) { const img = el("img"); img.src = avatarSrc(f.avatar); img.alt = ""; face.append(img); }
+    const who = el("span", "pf-friend-who");
+    who.append(el("span", "pf-li-name", f.name));
+    if (on !== undefined) {
+      const where = on?.room ? t("inRoom")(on.room.code)
+        : on ? t("onlineIn")(on.game === "home" ? t("home") : gameOf(on.game)?.brand ?? t("crewRoll")) : t("offlineNow");
+      who.append(el("span", "pf-friend-where", where));
+    }
+    li.append(el("span", "pf-dot"), face, who);
+    return li;
+  }
+  // Live updates while the friends tab is open (someone comes online, opens a room…).
+  window.addEventListener("dle:presence", () => { if (dialog?.open && tab === "friends") render(); });
+  window.addEventListener("dle:room", () => { if (dialog?.open && tab === "friends") render(); });
+
   function boardView() {
     const box = el("div", "pf-view");
     const status = el("p", "muted pf-players", "…");
@@ -413,10 +565,17 @@
 
   function init() {
     renderButton();
-    if (session) { refresh(); syncStats(); }
+    if (session) { refresh(); syncStats(); loadFriends(); }
+    // New requests and new friends show up without reloading.
+    setInterval(() => { if (session && !document.hidden) loadFriends(); }, 60000);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  window.DLE_Profile = { open, recordCrew, get current() { return session?.profile ?? null; } };
+  window.DLE_Profile = {
+    open, recordCrew,
+    get current() { return session?.profile ?? null; },
+    get friendIds() { return friendState.friends.map((f) => f.id); },
+    get requests() { return friendState.requests; },
+  };
 })();

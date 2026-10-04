@@ -7,12 +7,16 @@
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
 //   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?}
+//   POST /api/profile {action: "friends", id, token}                  my friends and friend requests
+//   POST /api/profile {action: "friend-add", id, token, name}         send a request (or accept theirs)
+//   POST /api/profile {action: "friend-accept" | "friend-remove", id, token, other}
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
 const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover"];
 const MODES = ["daily", "endless"];
 const RANKS = ["S", "A", "B", "C", "D"];
+const MAX_FRIENDS = 100;
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
@@ -150,6 +154,74 @@ async function leaderboard() {
   return json({ crews, wins, players: all.length });
 }
 
+// ── Friends: mutual, after a request. Each profile keeps `friends` and the `requests` it received. ──
+const mini = (p) => ({ id: p.id, name: p.name, avatar: p.avatar });
+const ids = (list) => (Array.isArray(list) ? list.filter((x) => typeof x === "string") : []);
+
+async function friendsView(p) {
+  const s = store();
+  const load = async (list) => (await Promise.all(ids(list).map((id) => s.get(`p/${id}`, { type: "json" })))).filter(Boolean).map(mini);
+  const [friends, requests] = await Promise.all([load(p.friends), load(p.requests)]);
+  return json({ friends, requests });
+}
+
+async function befriend(a, b) {
+  const s = store();
+  for (const [x, y] of [[a, b], [b, a]]) {
+    x.friends = [...new Set([...ids(x.friends), y.id])].slice(-MAX_FRIENDS);
+    x.requests = ids(x.requests).filter((id) => id !== y.id);
+    await s.setJSON(`p/${x.id}`, x);
+  }
+}
+
+async function friends(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  return friendsView(p);
+}
+
+async function friendAdd(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const name = cleanName(body.name);
+  const otherId = name && (await store().get(nameKey(name)));
+  const other = otherId && (await readProfile(otherId));
+  if (!other) return fail("nobody", 404);
+  if (other.id === p.id) return fail("self");
+  if (ids(p.friends).includes(other.id)) return friendsView(p);
+  // They already asked me: that's a yes.
+  if (ids(p.requests).includes(other.id)) { await befriend(p, other); return friendsView(p); }
+  if (ids(other.requests).length >= MAX_FRIENDS) return fail("full", 409);
+  other.requests = [...new Set([...ids(other.requests), p.id])];
+  await store().setJSON(`p/${other.id}`, other);
+  return json({ ...(await (await friendsView(p)).json()), sent: mini(other) });
+}
+
+async function friendAccept(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const other = ids(p.requests).includes(body.other) ? await readProfile(body.other) : null;
+  if (other) await befriend(p, other);
+  else { p.requests = ids(p.requests).filter((id) => id !== body.other); await store().setJSON(`p/${p.id}`, p); }
+  return friendsView(p);
+}
+
+// Removes a friend, or declines a request.
+async function friendRemove(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const s = store();
+  p.friends = ids(p.friends).filter((id) => id !== body.other);
+  p.requests = ids(p.requests).filter((id) => id !== body.other);
+  await s.setJSON(`p/${p.id}`, p);
+  const other = await readProfile(body.other);
+  if (other && ids(other.friends).includes(p.id)) {
+    other.friends = ids(other.friends).filter((id) => id !== p.id);
+    await s.setJSON(`p/${other.id}`, other);
+  }
+  return friendsView(p);
+}
+
 export default async (req) => {
   try {
     if (req.method === "GET") {
@@ -165,6 +237,10 @@ export default async (req) => {
     if (body.action === "create") return create(body);
     if (body.action === "login") return login(body);
     if (body.action === "update") return update(body);
+    if (body.action === "friends") return friends(body);
+    if (body.action === "friend-add") return friendAdd(body);
+    if (body.action === "friend-accept") return friendAccept(body);
+    if (body.action === "friend-remove") return friendRemove(body);
     return fail("action");
   } catch (e) {
     console.error(e);

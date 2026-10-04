@@ -22,13 +22,59 @@
     doctor: parse(`tony-tony-chopper:10 trafalgar-law:10 kureha:10 polo-marco:8 doc-q:8 hiriluk:7 queen:7 emporio-ivankov:6 vegapunk:6
       vinsmoke-judge:6 vinsmoke-reiju:5 caesar-clown:4`),
     // Reading the poneglyphs or knowing the Void Century: the Kozuki family, Roger's crew, Imu and the Five Elders, Blackbeard's hunt.
-    archaeologist: parse(`nico-robin:10 imu:9 gol-d-roger:9 kouzuki-oden:8 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7 marshall-d-teach:7
+    archaeologist: parse(`nico-robin:10 imu:9 charlotte-pudding:8 gol-d-roger:9 kouzuki-oden:8 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7 marshall-d-teach:7
       jaygarcia-saturn:6 marcus-mars:6 topman-warcury:6 ethanbaron-v-nusjuro:6 shepherd-ju-peter:6 kouzuki-hiyori:6 nefertari-vivi:4`),
     // Tom built the Oro Jackson; Paulie, Kaku and Lucci worked at Galley-La; Rayleigh coats ships; Queen builds
     // Kaidou's weapons and his own cyborg body; Usopp patched the Merry.
     shipwright: parse("franky:10 iceburg:10 tom:10 paulie:8 silvers-rayleigh:8 kaku:7 queen:6 rob-lucci:6 usopp:5"),
   };
   const specialist = (role) => (c, power) => OP_SPECIALISTS[role][c.id] ?? Math.max(1, Math.round(power / 3));
+  // Role slots of the other anime work the same way: anyone can fill them, the listed characters score high.
+  const role = (table) => (c, power) => table[c.id] ?? Math.max(1, Math.round(power / 3));
+  const ROLES = {
+    bleach: {
+      // Unohana and Orihime heal anything; Ryuken runs a hospital; Hikifune rebuilt Ichigo's body.
+      healer: parse(`retsu-unohana:10 orihime-inoue:10 isane-kotetsu:8 kirio-hikifune:8 ryuken-ishida:8 hanataro-yamada:7 hachigen-ushoda:7
+        isshin-kurosaki:6 tessai-tsukabishi:6 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3`),
+      // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge.
+      engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 senjumaru-shutara:7
+        nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 hiyori-sarugaki:5 tessai-tsukabishi:5 uryu-ishida:4`),
+    },
+    hunterxhunter: {
+      // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
+      healer: parse("leorio-paradinight:10 alluka-zoldyck:10 neferpitou:9 cheadle-yorkshire:8 biscuit-krueger:7 shaiapouf:4"),
+      strategist: parse(`pariston-hill:10 komugi:9 meruem:9 ging-freecss:9 shaiapouf:8 morel-mackernasey:8 genthru:8 shalnark:8 kurapika:8
+        chrollo-lucilfer:8 killua-zoldyck:7 knov:7 cheadle-yorkshire:7 isaac-netero:7 tsezguerra:6`),
+    },
+    dragonball: {
+      // Dende and Kibito heal with a touch; Korin grows the senzu beans; Whis rewinds time; Buu healed Bee.
+      healer: parse("dende:10 kibito:9 korin:8 whis:8 majin-buu:8 kami:7 vados:6 yajirobe:5 mr-popo:4"),
+      // Bulma builds the Dragon Radar and the time machine; Dr. Gero built the androids and Cell.
+      scientist: parse("bulma:10 dr-gero:10 babidi:6 emperor-pilaf:5 kami:4 android-16:4 commander-red:3"),
+    },
+    naruto: {
+      healer: parse(`tsunade:10 sakura-haruno:9 kabuto-yakushi:9 shizune:8 karin:7 chiyo:7 hashirama-senju:7 orochimaru:6 ino-yamanaka:5
+        naruto-uzumaki:4`),
+      strategist: parse(`shikamaru-nara:10 shikaku-nara:10 itachi-uchiha:8 minato-namikaze:8 tobirama-senju:8 kakashi-hatake:8 madara-uchiha:8
+        danzo-shimura:7 kabuto-yakushi:7 orochimaru:7 hiruzen-sarutobi:7 sasori:7 temari:6 ibiki-morino:6 nagato:6`),
+    },
+    jujutsukaisen: {
+      // Reverse cursed technique on others (Shoko, Yuta); Nitta's technique stops wounds from worsening.
+      healer: parse("shoko-ieiri:10 yuta-okkotsu:9 arata-nitta:8 ryomen-sukuna:6 satoru-gojo:5 kinji-hakari:5 hiromi-higuruma:4 uraume:4"),
+      strategist: parse(`kenjaku:10 suguru-geto:8 megumi-fushiguro:8 tengen:8 hiromi-higuruma:8 mechamaru:8 ryomen-sukuna:8 kento-nanami:7
+        mahito:7 mei-mei:7 aoi-todo:7 satoru-gojo:6 yoshinobu-gakuganji:6 atsuya-kusakabe:6 noritoshi-kamo:6 yuki-tsukumo:6 kiyotaka-ijichi:5`),
+    },
+    blackclover: {
+      // Mimosa's healing flowers; the Witch Queen healed Asta's arms; Charmy's food restores mana; Secre sealed the curse.
+      healer: parse("mimosa-vermillion:10 witch-queen:9 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7 sister-lily:6 kirsch-vermillion:3"),
+      // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps.
+      strategist: parse(`lucius-zogratis:10 patry:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8 zora-ideale:8 klaus-lunettes:7
+        william-vangeance:7 fuegoleon-vermillion:7 licht:7 gordon-agrippa:6 yami-sukehiro:6 nozel-silva:6 finral-roulacase:5`),
+    },
+  };
+  const anyone = () => true;
+  const HEALER = { en: "Healer", fr: "Soigneur" };
+  const STRATEGIST = { en: "Strategist", fr: "Stratège" };
   // The captain and the first mate lead the crew: they score a little more than a combatant.
   const leader = (c, power) => Math.min(10, Math.round(power * 1.1));
 
@@ -40,6 +86,8 @@
         { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 1, fits: (c) => has(c.race, "Quincy") },
         { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") || c.id === "ichigo-kurosaki" },
         { label: { en: "Human / Fullbringer", fr: "Humain / Fullbringer" }, icon: "person", count: 1, fits: (c) => has(c.race, "Human", "Fullbringer", "Mod Soul", "Soul", "Hybrid") },
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.bleach.healer) },
+        { label: { en: "Engineer", fr: "Ingénieur" }, icon: "flask", role: "engineer", count: 1, fits: anyone, score: role(ROLES.bleach.engineer) },
       ],
       power: parse(`ichigo-kurosaki:10 rukia-kuchiki:7 orihime-inoue:5 yasutora-sado:6 uryu-ishida:7 kon:2 kisuke-urahara:9 yoruichi-shihoin:9
         tessai-tsukabishi:6 isshin-kurosaki:8 masaki-kurosaki:5 karin-kurosaki:2 yuzu-kurosaki:1 tatsuki-arisawa:2 keigo-asano:1 mizuiro-kojima:1
@@ -63,6 +111,8 @@
         { label: { en: "Phantom Troupe", fr: "Brigade Fantôme" }, icon: "spider", count: 1, fits: (c) => has(c.aff, "Phantom Troupe") },
         { label: { en: "Zoldyck", fr: "Zoldyck" }, icon: "bolt", count: 1, fits: (c) => has(c.aff, "Zoldyck Family") },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: () => true },
+        { label: { en: "Doctor", fr: "Médecin" }, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.hunterxhunter.healer) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone, score: role(ROLES.hunterxhunter.strategist) },
       ],
       power: parse(`gon-freecss:8 killua-zoldyck:8 kurapika:8 leorio-paradinight:4 hisoka:9 illumi-zoldyck:8 kite:7 mito-freecss:1 isaac-netero:10
         satotz:5 menchi:4 buhara:4 hanzo:5 pokkle:3 tonpa:1 bodoro:2 ponzu:3 lippo:4 beans:1 silva-zoldyck:9 zeno-zoldyck:9 kikyo-zoldyck:5
@@ -84,6 +134,8 @@
         { label: { en: "God / Angel", fr: "Dieu / Ange" }, icon: "star", count: 1, fits: (c) => has(c.race, "God", "Angel") || has(c.aff, "Gods") || c.id === "mr-popo" },
         { label: { en: "Villain", fr: "Méchant" }, icon: "skull", count: 1,
           fits: (c) => has(c.aff, "Frieza Force", "Red Ribbon Army", "Babidi's Army", "Demon Clan", "Pilaf Gang", "Team Zamasu") || has(c.race, "Majin", "Bio-Android", "Frieza Clan") || ["hit", "jiren"].includes(c.id) },
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.dragonball.healer) },
+        { label: { en: "Scientist", fr: "Scientifique" }, icon: "flask", role: "scientist", count: 1, fits: anyone, score: role(ROLES.dragonball.scientist) },
       ],
       power: parse(`goku:10 bulma:3 oolong:2 yamcha:5 puar:2 chi-chi:4 ox-king:4 master-roshi:6 turtle:2 emperor-pilaf:2 mai:2 shu:2 krillin:7
         launch:3 upa:2 bora:4 general-blue:4 commander-red:2 mercenary-tao:5 arale-norimaki:7 korin:5 yajirobe:5 tien-shinhan:7 chiaotzu:5
@@ -101,6 +153,8 @@
         { label: { en: "Kage", fr: "Kage" }, icon: "hat", count: 1, fits: (c) => c.rank === "Kage" },
         { label: { en: "Uchiha", fr: "Uchiha" }, icon: "eye", count: 1, fits: (c) => has(c.clan, "Uchiha") },
         { label: { en: "Outside Konoha", fr: "Hors de Konoha" }, icon: "globe", count: 1, fits: (c) => !has(c.village, "Konohagakure", "Akatsuki") },
+        { label: { en: "Medical ninja", fr: "Ninja médecin" }, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.naruto.healer) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone, score: role(ROLES.naruto.strategist) },
       ],
       power: parse(`naruto-uzumaki:10 sasuke-uchiha:10 sakura-haruno:7 kakashi-hatake:9 iruka-umino:3 hiruzen-sarutobi:8 konohamaru-sarutobi:4
         mizuki:2 zabuza-momochi:6 haku:5 tazuna:1 inari:1 gato:1 minato-namikaze:9 rock-lee:7 neji-hyuga:7 tenten:5 might-guy:9
@@ -149,6 +203,8 @@
         { label: { en: "Great Clan", fr: "Grand clan" }, icon: "eye", count: 1, fits: (c) => has(c.aff, "Zen'in Clan", "Gojo Clan", "Kamo Clan") || c.id === "megumi-fushiguro" },
         // Sorcerers outside the schools: freelancers (Mei Mei) and Culling Game players (Higuruma, Takaba…).
         { label: { en: "Freelance & Culling Game", fr: "Indépendants & Jeu d'extermination" }, icon: "dice", count: 1, fits: (c) => has(c.aff, "None") && has(c.race, "Human") && c.id !== "larue" },
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.jujutsukaisen.healer) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone, score: role(ROLES.jujutsukaisen.strategist) },
       ],
       power: parse(`yuji-itadori:9 megumi-fushiguro:8 nobara-kugisaki:6 satoru-gojo:10 ryomen-sukuna:10 kento-nanami:8 maki-zen-in:9 toge-inumaki:7
         panda:6 yuta-okkotsu:10 masamichi-yaga:6 shoko-ieiri:3 kiyotaka-ijichi:2 aoi-todo:10 mai-zen-in:4 kasumi-miwa:3 noritoshi-kamo:6
@@ -173,6 +229,8 @@
         { label: { en: "Enemy", fr: "Ennemi" }, icon: "skull", count: 1,
           fits: (c) => has(c.aff, "Eye of the Midnight Sun", "Dark Triad", "Eight Shining Generals") || has(c.country, "Diamond Kingdom", "Spade Kingdom") || (has(c.race, "Devil") && c.id !== "liebe") },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: () => true },
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.blackclover.healer) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone, score: role(ROLES.blackclover.strategist) },
       ],
       power: parse(`asta:10 yami-sukehiro:9 noelle-silva:7 luck-voltia:6 magna-swing:5 vanessa-enoteca:6 finral-roulacase:5 gauche-adlai:6
         gordon-agrippa:5 grey:5 charmy-pappitson:6 zora-ideale:6 henry-legolant:5 secre-swallowtail:6 nacht-faust:9 sekke-bronzazza:3 liebe:8
