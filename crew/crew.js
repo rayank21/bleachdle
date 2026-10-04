@@ -1844,7 +1844,14 @@
     const actions = el("div", "roll-actions");
     actions.id = "matchActions";
     panel.append(matchReel.el, actions);
-    grid.append(mine, panel);
+    // 1v1: both boards side by side, the reel between them. More players: theirs below mine.
+    const duo = match.ids.length === 2;
+    grid.classList.toggle("is-1v1", duo);
+    if (duo) {
+      const wrap = el("div", "duel-mine");
+      wrap.append(el("p", "duel-label is-me", memberName(rooms.selfId)), mine);
+      grid.append(wrap, panel);
+    } else grid.append(mine, panel);
 
     const others = el("div", "others");
     for (const id of match.ids) {
@@ -1854,10 +1861,11 @@
       const b = el("div", "crew-board");
       b.dataset.board = id;
       wrap.append(b);
-      others.append(wrap);
+      (duo ? grid : others).append(wrap);
       renderBoard(b, match.boards.get(id), { mini: true, stagger: true });
     }
-    view.append(head, grid, others);
+    view.append(head, grid);
+    if (!duo) view.append(others);
     renderBoard(mine, match.boards.get(rooms.selfId), { stagger: true });
     renderScoreboard();
   }

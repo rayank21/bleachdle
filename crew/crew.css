@@ -199,6 +199,29 @@
   .duel-grid { grid-template-columns: 1fr; }
   .duel-grid .roll-panel { position: static; order: -1; }
 }
+
+/* 1v1: my board | reel | their board, both boards at the same compact size. */
+.duel-grid.is-1v1 { grid-template-columns: minmax(0, 1fr) 250px minmax(0, 1fr); }
+.duel-grid.is-1v1 .reel { --reel-w: 170px; --reel-h: 210px; }
+.duel-mine { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.duel-theirs { min-width: 0; }
+.duel-label.is-me { color: var(--accent); }
+.duel-grid.is-1v1 .crew-board { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.duel-grid.is-1v1 .crew-slot { padding: 26px 6px 8px; }
+.duel-grid.is-1v1 .crew-icon { top: 5px; left: 5px; width: 20px; height: 20px; border-radius: 6px; }
+.duel-grid.is-1v1 .crew-icon .icon { width: 12px; height: 12px; }
+.duel-grid.is-1v1 .crew-points { top: 5px; right: 5px; font-size: 11px; }
+.duel-grid.is-1v1 .crew-face { width: 50px; height: 50px; font-size: 18px; }
+.duel-grid.is-1v1 .crew-name { font-size: 11.5px; }
+.duel-grid.is-1v1 .crew-role { font-size: 10px; }
+.duel-grid.is-1v1 .crew-captain-tag { display: none; }
+@media (max-width: 1000px) {
+  .duel-grid.is-1v1 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .duel-grid.is-1v1 .roll-panel { grid-column: 1 / -1; order: -1; position: static; }
+}
+@media (max-width: 560px) {
+  .duel-grid.is-1v1 { grid-template-columns: minmax(0, 1fr); }
+}
 @media (max-width: 560px) {
   .duel-score { font-size: 22px; }
 }
