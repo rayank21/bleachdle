@@ -44,7 +44,7 @@
       // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
       healer: parse("leorio-paradinight:10 alluka-zoldyck:10 neferpitou:9 cheadle-yorkshire:8 biscuit-krueger:7 shaiapouf:4"),
       strategist: parse(`pariston-hill:10 komugi:9 meruem:9 ging-freecss:9 shaiapouf:8 morel-mackernasey:8 genthru:8 shalnark:8 kurapika:8
-        chrollo-lucilfer:8 killua-zoldyck:7 knov:7 cheadle-yorkshire:7 isaac-netero:7 tsezguerra:6`),
+        chrollo-lucilfer:8 killua-zoldyck:7 milluki-zoldyck:7 knov:7 cheadle-yorkshire:7 isaac-netero:7 tsezguerra:6`),
     },
     dragonball: {
       // Dende and Kibito heal with a touch; Korin grows the senzu beans; Whis rewinds time; Buu healed Bee.
@@ -56,25 +56,28 @@
       healer: parse(`tsunade:10 sakura-haruno:9 kabuto-yakushi:9 shizune:8 karin:7 chiyo:7 hashirama-senju:7 orochimaru:6 ino-yamanaka:5
         naruto-uzumaki:4`),
       strategist: parse(`shikamaru-nara:10 shikaku-nara:10 itachi-uchiha:8 minato-namikaze:8 tobirama-senju:8 kakashi-hatake:8 madara-uchiha:8
-        danzo-shimura:7 kabuto-yakushi:7 orochimaru:7 hiruzen-sarutobi:7 sasori:7 temari:6 ibiki-morino:6 nagato:6`),
+        sasori:9 orochimaru:8 danzo-shimura:7 kabuto-yakushi:7 hiruzen-sarutobi:7 kankuro:6 temari:6 ibiki-morino:6 nagato:6`),
     },
     jujutsukaisen: {
       // Reverse cursed technique on others (Shoko, Yuta); Nitta's technique stops wounds from worsening.
       healer: parse("shoko-ieiri:10 yuta-okkotsu:9 arata-nitta:8 ryomen-sukuna:6 satoru-gojo:5 kinji-hakari:5 hiromi-higuruma:4 uraume:4"),
-      strategist: parse(`kenjaku:10 suguru-geto:8 megumi-fushiguro:8 tengen:8 hiromi-higuruma:8 mechamaru:8 ryomen-sukuna:8 kento-nanami:7
+      strategist: parse(`kenjaku:10 suguru-geto:8 megumi-fushiguro:8 tengen:8 hiromi-higuruma:8 mechamaru:9 ryomen-sukuna:8 kento-nanami:7
         mahito:7 mei-mei:7 aoi-todo:7 satoru-gojo:6 yoshinobu-gakuganji:6 atsuya-kusakabe:6 noritoshi-kamo:6 yuki-tsukumo:6 kiyotaka-ijichi:5`),
     },
     blackclover: {
       // Mimosa's healing flowers; the Witch Queen healed Asta's arms; Charmy's food restores mana; Secre sealed the curse.
-      healer: parse("mimosa-vermillion:10 witch-queen:9 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7 sister-lily:6 kirsch-vermillion:3"),
-      // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps.
-      strategist: parse(`lucius-zogratis:10 patry:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8 zora-ideale:8 klaus-lunettes:7
-        william-vangeance:7 fuegoleon-vermillion:7 licht:7 gordon-agrippa:6 yami-sukehiro:6 nozel-silva:6 finral-roulacase:5`),
+      // Moris rebuilds the bodies he experiments on.
+      healer: parse("mimosa-vermillion:10 witch-queen:9 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7 sister-lily:6 moris-libardirt:5 kirsch-vermillion:3"),
+      // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps. Engineers: Moris, the
+      // Diamond Kingdom's mad scientist; Henry reshapes the Black Bulls' hideout; Rades reanimates corpses.
+      strategist: parse(`lucius-zogratis:10 moris-libardirt:9 patry:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8 zora-ideale:8
+        henry-legolant:8 klaus-lunettes:7 william-vangeance:7 fuegoleon-vermillion:7 licht:7 rades-spirito:6 gordon-agrippa:6 yami-sukehiro:6
+        nozel-silva:6 finral-roulacase:5 sekke-bronzazza:4`),
     },
   };
   const anyone = () => true;
   const HEALER = { en: "Healer", fr: "Soigneur" };
-  const STRATEGIST = { en: "Strategist", fr: "Stratège" };
+  const STRATEGIST = { en: "Strategist / Engineer", fr: "Stratège / Ingénieur" };
   // The captain and the first mate lead the crew: the stronger they are, the bigger their bonus
   // (+1 from 5, +2 from 8: a 10 is worth 12). It can lift the crew above 10.
   const leader = (c, power) => power + Math.max(0, Math.round((power - 3) / 3));
@@ -223,7 +226,7 @@
         { label: { en: "Black Bulls", fr: "Taureau Noir" }, icon: "flame", count: 2, fits: (c) => has(c.aff, "Black Bulls") },
         { label: { en: "Golden Dawn", fr: "Aube Dorée" }, icon: "star", count: 1, fits: (c) => has(c.aff, "Golden Dawn") },
         // Squad captains and the Wizard King (Mereoleona leads the Crimson Lions in Fuegoleon's place).
-        { label: { en: "Captain", fr: "Capitaine" }, role: "captain", icon: "crown", count: 1,
+        { label: { en: "Captain", fr: "Capitaine" }, role: "captain", icon: "crown", count: 1, score: leader,
           fits: (c) => ["yami-sukehiro", "william-vangeance", "nozel-silva", "fuegoleon-vermillion", "mereoleona-vermillion", "charlotte-roselei",
             "jack-the-ripper", "dorothy-unsworth", "kaiser-granvorka", "rill-boismortier", "julius-novachrono"].includes(c.id) },
         { label: { en: "Other squad", fr: "Autre escouade" }, icon: "shield", count: 1,
