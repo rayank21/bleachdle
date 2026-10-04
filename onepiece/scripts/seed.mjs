@@ -125,6 +125,7 @@ export const seed = [
   { wiki: "Charlotte Katakuri", gender: "M" },
   { wiki: "Charlotte Pudding", gender: "F" },
   { wiki: "Charlotte Cracker", gender: "M" },
+  { wiki: "Charlotte Brulee", name: "Charlotte Brûlée", gender: "F" },
   { wiki: "Vinsmoke Judge", gender: "M" },
   { wiki: "Vinsmoke Reiju", gender: "F" },
 
@@ -138,4 +139,10 @@ export const seed = [
 
   // ── Egghead ──
   { wiki: "Vegapunk", gender: "M" },
+  // The Five Elders appear early, but they are only named (and fight) in Egghead.
+  { wiki: "Jaygarcia Saturn", gender: "M", arc: 10 },
+  { wiki: "Marcus Mars", gender: "M", arc: 10 },
+  { wiki: "Topman Warcury", gender: "M", arc: 10 },
+  { wiki: "Ethanbaron V. Nusjuro", gender: "M", arc: 10 },
+  { wiki: "Shepherd Ju Peter", gender: "M", arc: 10 },
 ];

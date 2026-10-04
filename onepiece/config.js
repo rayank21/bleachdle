@@ -70,7 +70,7 @@
         "Blackbeard Pirates": "Équipage de Barbe Noire", "Big Mom Pirates": "Équipage de Big Mom",
         "Beasts Pirates": "Équipage aux Cent Bêtes", "Red Hair Pirates": "Équipage du Roux", "Roger Pirates": "Équipage de Roger",
         "Heart Pirates": "Équipage du Heart", "Kid Pirates": "Équipage de Kidd", "Kouzuki Family": "Famille Kozuki",
-        "Charlotte Family": "Famille Charlotte", "Vinsmoke Family": "Famille Vinsmoke", "Donquixote Pirates": "Famille Don Quichotte",
+        "Charlotte Family": "Famille Charlotte", "Five Elders": "Cinq Doyens", "Vinsmoke Family": "Famille Vinsmoke", "Donquixote Pirates": "Famille Don Quichotte",
         "Buggy Pirates": "Équipage de Baggy", "Arlong Pirates": "Équipage d'Arlong", "Sun Pirates": "Équipage du Soleil",
         "Franky Family": "Franky Family", "Drum Kingdom": "Royaume de Drum", "Arabasta Kingdom": "Royaume d'Alabasta",
         "God's Army": "Armée divine", "Cocoyasi Village": "Village de Cocoyashi", "Mokomo Dukedom": "Duché de Mokomo",

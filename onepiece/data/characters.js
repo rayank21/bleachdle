@@ -1893,6 +1893,24 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/charlotte-cracker.webp"
  },
  {
+  "id": "charlotte-brulee",
+  "name": "Charlotte Brûlée",
+  "gender": "F",
+  "aff": [
+   "Charlotte Family"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 0,
+  "height": 350,
+  "origin": "Grand Line",
+  "age": 43,
+  "epithet": null,
+  "arc": 8,
+  "image": "assets/characters/charlotte-brulee.webp"
+ },
+ {
   "id": "vinsmoke-judge",
   "name": "Vinsmoke Judge",
   "gender": "M",
@@ -2056,5 +2074,95 @@ window.DLE_CHARACTERS = [
   "epithet": "The Man With the Best Brain in the World",
   "arc": 7,
   "image": "assets/characters/vegapunk.webp"
+ },
+ {
+  "id": "jaygarcia-saturn",
+  "name": "Jaygarcia Saturn",
+  "gender": "M",
+  "aff": [
+   "Five Elders"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": null,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/jaygarcia-saturn.webp"
+ },
+ {
+  "id": "marcus-mars",
+  "name": "Marcus Mars",
+  "gender": "M",
+  "aff": [
+   "Five Elders"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": null,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/marcus-mars.webp"
+ },
+ {
+  "id": "topman-warcury",
+  "name": "Topman Warcury",
+  "gender": "M",
+  "aff": [
+   "Five Elders"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": null,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/topman-warcury.webp"
+ },
+ {
+  "id": "ethanbaron-v-nusjuro",
+  "name": "Ethanbaron V. Nusjuro",
+  "gender": "M",
+  "aff": [
+   "Five Elders"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": null,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/ethanbaron-v-nusjuro.webp"
+ },
+ {
+  "id": "shepherd-ju-peter",
+  "name": "Shepherd Ju Peter",
+  "gender": "M",
+  "aff": [
+   "Five Elders"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": null,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/shepherd-ju-peter.webp"
  }
 ];

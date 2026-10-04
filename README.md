@@ -8,7 +8,7 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | **Hunterdle** (Hunter × Hunter) | `hunterxhunter/` | 92 |
 | **Dragonballdle** (Dragon Ball, Z, Super) | `dragonball/` | 77 |
 | **Narutodle** (Naruto, Shippūden) | `naruto/` | 93 |
-| **Onepiecedle** (One Piece) | `onepiece/` | 99 |
+| **Onepiecedle** (One Piece) | `onepiece/` | 109 |
 | **Jujutsudle** (Jujutsu Kaisen) | `jujutsukaisen/` | 60 |
 | **Blackcloverdle** (Black Clover) | `blackclover/` | 70 |
 
