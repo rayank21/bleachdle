@@ -148,6 +148,31 @@
         tengen:7 tsumiki-fushiguro:4 hajime-kashimo:9 hiromi-higuruma:8 kinji-hakari:9 fumihiko-takaba:7 ryu-ishigori:8 takako-uro:7
         reggie-star:6 charles-bernard:6 hana-kurusu:7 kenjaku:9 ogi-zen-in:6 granny-ogami:4`),
     },
+
+    blackclover: {
+      slots: [
+        { label: { en: "Black Bulls", fr: "Taureau Noir" }, icon: "flame", count: 2, fits: (c) => has(c.aff, "Black Bulls") },
+        { label: { en: "Golden Dawn", fr: "Aube Dorée" }, icon: "star", count: 1, fits: (c) => has(c.aff, "Golden Dawn") },
+        // Squad captains and the Wizard King (Mereoleona leads the Crimson Lions in Fuegoleon's place).
+        { label: { en: "Captain", fr: "Capitaine" }, role: "captain", icon: "crown", count: 1,
+          fits: (c) => ["yami-sukehiro", "william-vangeance", "nozel-silva", "fuegoleon-vermillion", "mereoleona-vermillion", "charlotte-roselei",
+            "jack-the-ripper", "dorothy-unsworth", "kaiser-granvorka", "rill-boismortier", "julius-novachrono"].includes(c.id) },
+        { label: { en: "Other squad", fr: "Autre escouade" }, icon: "shield", count: 1,
+          fits: (c) => has(c.aff, "Silver Eagles", "Crimson Lion Kings", "Blue Rose", "Green Mantis", "Coral Peacock", "Purple Orca", "Aqua Deer") },
+        { label: { en: "Elf", fr: "Elfe" }, icon: "leaf", count: 1, fits: (c) => has(c.race, "Elf") },
+        { label: { en: "Enemy", fr: "Ennemi" }, icon: "skull", count: 1,
+          fits: (c) => has(c.aff, "Eye of the Midnight Sun", "Dark Triad", "Eight Shining Generals") || has(c.country, "Diamond Kingdom", "Spade Kingdom") || (has(c.race, "Devil") && c.id !== "liebe") },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: () => true },
+      ],
+      power: parse(`asta:9 yami-sukehiro:9 noelle-silva:7 luck-voltia:6 magna-swing:5 vanessa-enoteca:6 finral-roulacase:5 gauche-adlai:6
+        gordon-agrippa:5 grey:5 charmy-pappitson:6 zora-ideale:6 henry-legolant:5 secre-swallowtail:6 nacht-faust:9 sekke-bronzazza:3 liebe:8
+        yuno:9 william-vangeance:8 klaus-lunettes:5 mimosa-vermillion:5 alecdora-sandler:4 langris-vaude:7 nozel-silva:8 solid-silva:4
+        nebra-silva:4 fuegoleon-vermillion:8 leopold-vermillion:6 mereoleona-vermillion:9 charlotte-roselei:8 sol-marron:4 jack-the-ripper:8
+        dorothy-unsworth:7 kahono:5 kiato:5 kirsch-vermillion:5 kaiser-granvorka:7 rill-boismortier:7 rebecca-scarlet:1 julius-novachrono:10
+        marx-francois:4 damnatio-kira:6 sister-lily:2 patry:9 rhya:7 fana:7 vetto:8 sally:5 valtos:6 catherine:5 mars:7 lotus-whomalt:5
+        fanzell-kruger:6 ladros:6 rades-spirito:5 moris-libardirt:6 witch-queen:8 licht:10 lumiere-silvamillion-clover:9 tetia:5 lolopechka:7
+        gadjah:7 dante-zogratis:9 vanica-zogratis:9 zenon-zogratis:9 lucius-zogratis:10 morgen-faust:6 zagred:9 megicula:9 lucifero:10`),
+    },
   };
   window.CREW_DEFAULT_POWER = DEFAULT_POWER;
 })();

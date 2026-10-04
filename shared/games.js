@@ -12,6 +12,8 @@ window.DLE_GAMES = [
     featured: ["monkey-d-luffy", "roronoa-zoro", "nami", "sanji", "shanks", "trafalgar-law"] },
   { id: "jujutsukaisen", storage: "jujutsudle", brand: "Jujutsudle", anime: "Jujutsu Kaisen", path: "jujutsukaisen/", logo: "assets/logos/jujutsudle.jpg", count: 60, arcs: 7,
     featured: ["yuji-itadori", "megumi-fushiguro", "nobara-kugisaki", "satoru-gojo", "ryomen-sukuna", "kento-nanami"] },
+  { id: "blackclover", storage: "blackcloverdle", brand: "Blackcloverdle", anime: "Black Clover", path: "blackclover/", logo: "assets/logos/blackcloverdle.png", count: 70, arcs: 10,
+    featured: ["asta", "yuno", "yami-sukehiro", "noelle-silva", "julius-novachrono", "mereoleona-vermillion"] },
 ];
 
 // Link to the Crew Roll mini-game, shown after the categories in every header.

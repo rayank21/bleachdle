@@ -10,7 +10,7 @@
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
-const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen"];
+const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover"];
 const MODES = ["daily", "endless"];
 const RANKS = ["S", "A", "B", "C", "D"];
 
