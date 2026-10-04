@@ -6,7 +6,7 @@
 //   GET  /api/profile?leaderboard=1        best crews and most wins
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
-//   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?}
+//   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}}
 //   POST /api/profile {action: "friends", id, token}                  my friends and friend requests
 //   POST /api/profile {action: "friend-add", id, token, name}         send a request (or accept theirs)
 //   POST /api/profile {action: "friend-accept" | "friend-remove", id, token, other}
@@ -16,7 +16,7 @@ import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
 const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover"];
-const MODES = ["daily", "endless"];
+const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
 const INVITE_TTL = 30 * 60 * 1000; // an invitation is kept 30 minutes (the room is probably gone after that)
@@ -139,12 +139,18 @@ async function update(body) {
       if (!p.crew.best || c.score > p.crew.best.score) p.crew.best = c;
     }
   }
+  // A Crew Roll online match just ended.
+  if (body.duel != null) {
+    p.crew.duels = (p.crew.duels ?? 0) + 1;
+    if (body.duel.won === true) p.crew.duelWins = (p.crew.duelWins ?? 0) + 1;
+  }
   p.updated = Date.now();
   await s.setJSON(`p/${p.id}`, p);
   return json({ profile: publicView(p) });
 }
 
-const totalWins = (stats = {}) => Object.values(stats).reduce((a, modes) => a + Object.values(modes).reduce((b, x) => b + (x.wins || 0), 0), 0);
+// Every win: guessing games (daily, endless, online races) and Crew Roll online matches.
+const totalWins = (p) => Object.values(p.stats ?? {}).reduce((a, modes) => a + Object.values(modes).reduce((b, x) => b + (x.wins || 0), 0), 0) + (p.crew?.duelWins || 0);
 
 async function leaderboard() {
   const s = store();
@@ -153,7 +159,7 @@ async function leaderboard() {
   const row = (p) => ({ id: p.id, name: p.name, avatar: p.avatar });
   const crews = all.filter((p) => p.crew?.best).sort((a, b) => b.crew.best.score - a.crew.best.score).slice(0, 20)
     .map((p) => ({ ...row(p), score: p.crew.best.score, rank: p.crew.best.rank, anime: p.crew.best.anime }));
-  const wins = all.map((p) => ({ ...row(p), wins: totalWins(p.stats) })).filter((p) => p.wins > 0).sort((a, b) => b.wins - a.wins).slice(0, 20);
+  const wins = all.map((p) => ({ ...row(p), wins: totalWins(p) })).filter((p) => p.wins > 0).sort((a, b) => b.wins - a.wins).slice(0, 20);
   return json({ crews, wins, players: all.length });
 }
 

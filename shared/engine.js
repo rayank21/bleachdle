@@ -115,7 +115,7 @@
 
   // ── Stats ──
   const emptyStats = () => ({ played: 0, wins: 0, streak: 0, max: 0, last: null, dist: {} });
-  const stats = Object.assign({ daily: emptyStats(), endless: emptyStats(), history: {} }, store.get("stats", {}));
+  const stats = Object.assign({ daily: emptyStats(), endless: emptyStats(), online: emptyStats(), history: {} }, store.get("stats", {}));
   const saveStats = () => { store.set("stats", stats); window.dispatchEvent(new Event("dle:stats")); }; // the profile syncs on this event
 
   function currentStreak(mode) {
@@ -906,6 +906,11 @@
   function finishRace() {
     if (!race || race.done) return;
     race.done = true;
+    // Online races count in the stats (and on the profile): played, and won when I finished first.
+    const top = raceRanking()[0];
+    stats.online.played++;
+    if (top?.id === rooms?.selfId && top.found) stats.online.wins++;
+    saveStats();
     renderRace();
     if (game) renderResult();
   }

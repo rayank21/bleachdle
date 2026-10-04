@@ -1774,6 +1774,7 @@
     const panel = $("#duelPanel");
     panel.textContent = "";
     const kind = tiedTop ? "draw" : place === 1 ? "win" : place === ranking.length ? "lose" : "draw";
+    window.DLE_Profile?.recordDuel(kind === "win");
     const actions = [[t("leave"), "btn-ghost", leaveMatch]];
     if (!match.closedByHost) actions.push([t("backRoom"), "btn-primary", backToRoom]);
     panel.append(resultBlock(duelScore(mine), mine, { title: t("finalRanking"), outcome: { kind, text: tiedTop ? t("tie") : t("youPlace")(place) }, actions }));

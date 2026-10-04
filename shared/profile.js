@@ -19,6 +19,7 @@
       crews: (n) => `${n} crew${n > 1 ? "s" : ""} built`, recovery: "Recovery code", recoveryHelp: "Keep it secret: it logs into your profile on another device.",
       show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topCrews: "Best crews", topWins: "Most wins", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
       empty: "Nobody yet: be the first!", taken: "This name is taken.", badName: "2 to 20 characters.", badCode: "Unknown code.",
+      duels: (n, w) => `${n} online match${n > 1 ? "es" : ""} · ${w} won`,
       offline: "Profiles are unavailable right now.", logoutConfirm: "Log out? Keep your recovery code to come back.",
       friends: "Friends", addFriend: "Add a friend", friendName: "Their name", add: "Add", requests: "Friend requests",
       accept: "Accept", decline: "Decline", noFriends: "No friends yet: add one by their profile name.",
@@ -37,6 +38,7 @@
       crews: (n) => `${n} équipage${n > 1 ? "s" : ""} construit${n > 1 ? "s" : ""}`, recovery: "Code de récupération", recoveryHelp: "Garde-le secret : il connecte ton profil sur un autre appareil.",
       show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topCrews: "Meilleurs équipages", topWins: "Plus de victoires", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
       empty: "Personne pour l'instant : sois le premier !", taken: "Ce pseudo est déjà pris.", badName: "2 à 20 caractères.", badCode: "Code inconnu.",
+      duels: (n, w) => `${n} match${n > 1 ? "s" : ""} en ligne · ${w} gagné${w > 1 ? "s" : ""}`,
       offline: "Les profils sont indisponibles pour l'instant.", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
       friends: "Amis", addFriend: "Ajouter un ami", friendName: "Son pseudo", add: "Ajouter", requests: "Demandes d'ami",
       accept: "Accepter", decline: "Refuser", noFriends: "Pas encore d'amis : ajoute-en un avec son pseudo de profil.",
@@ -81,7 +83,7 @@
       try { s = JSON.parse(localStorage.getItem(`${g.storage}:stats`) || "null"); } catch {}
       if (!s) continue;
       out[g.id] = {};
-      for (const m of ["daily", "endless"]) out[g.id][m] = { played: s[m]?.played || 0, wins: s[m]?.wins || 0, max: s[m]?.max || 0 };
+      for (const m of ["daily", "endless", "online"]) out[g.id][m] = { played: s[m]?.played || 0, wins: s[m]?.wins || 0, max: s[m]?.max || 0 };
     }
     return out;
   }
@@ -125,6 +127,12 @@
       const { profile } = await api({ action: "update", id: session.id, token: session.token, crew });
       adopt(profile);
     } catch {}
+  }
+
+  // A Crew Roll online match: counted on the profile, and its wins on the leaderboard.
+  async function recordDuel(won) {
+    if (!session) return;
+    try { const { profile } = await api({ action: "update", id: session.id, token: session.token, duel: { won: !!won } }); adopt(profile); } catch {}
   }
 
   function logout(silent) {
@@ -343,8 +351,8 @@
     const grid = el("div", "pf-stats");
     for (const g of GAMES) {
       const s = p.stats?.[g.id] || {};
-      const wins = (s.daily?.wins || 0) + (s.endless?.wins || 0);
-      const played = (s.daily?.played || 0) + (s.endless?.played || 0);
+      const wins = (s.daily?.wins || 0) + (s.endless?.wins || 0) + (s.online?.wins || 0);
+      const played = (s.daily?.played || 0) + (s.endless?.played || 0) + (s.online?.played || 0);
       const max = Math.max(s.daily?.max || 0, s.endless?.max || 0);
       const tile = el("div", `pf-stat${played ? "" : " is-empty"}`);
       tile.dataset.game = g.id;
@@ -359,12 +367,13 @@
     // Best Crew Roll crew.
     box.append(el("h3", "pf-h", t("crew")));
     const best = p.crew?.best;
-    if (!best) box.append(el("p", "muted", t("crewNone")));
+    if (!best) box.append(el("p", "muted", p.crew?.duels ? t("duels")(p.crew.duels, p.crew.duelWins || 0) : t("crewNone")));
     else {
       const card = el("div", "pf-crew");
       const rank = el("div", `crew-rank rank-${best.rank} pf-rank`, best.rank);
       const info = el("div", "pf-crew-info");
       info.append(el("b", "pf-crew-score", `${best.score.toFixed(1)} / 10`), el("span", "muted", `${gameOf(best.anime)?.anime || ""} · ${t("crews")(p.crew.played || 1)}`));
+      if (p.crew.duels) info.append(el("span", "muted", t("duels")(p.crew.duels, p.crew.duelWins || 0)));
       const faces = el("div", "pf-crew-faces");
       for (const m of best.members) {
         const f = el("img");
@@ -630,7 +639,7 @@
   else init();
 
   window.DLE_Profile = {
-    open, recordCrew,
+    open, recordCrew, recordDuel,
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get requests() { return friendState.requests; },
