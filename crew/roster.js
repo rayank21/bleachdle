@@ -12,21 +12,26 @@
   const OP_SPECIALISTS = {
     // Nami charts every sea; Jinbe is the helmsman; Enel piloted the Ark Maxim to the moon; Rayleigh, Roger's
     // first mate, sailed to Laugh Tale; Vegapunk computes routes; Nojiko and Bell-mère raised a navigator.
-    // Fish-men and merfolk read the currents of every sea.
-    navigator: parse(`nami:10 jinbe:9 silvers-rayleigh:7 enel:7 fisher-tiger:7 arlong:6 neptune:6 vegapunk:6 hody-jones:5 tom:5
-      shirahoshi:5 nojiko:4 bell-mere:4`),
+    // Fish-men and merfolk read the currents of every sea; Dragon commands the winds; Wyper and Gan Fall sail the sky sea.
+    navigator: parse(`nami:10 jinbe:9 silvers-rayleigh:7 enel:7 fisher-tiger:7 arlong:6 neptune:6 vegapunk:6 monkey-d-dragon:6 hody-jones:5 tom:5
+      shirahoshi:5 nojiko:4 bell-mere:4 wyper:4 gan-fall:4`),
     // Cracker bakes his biscuits, Katakuri lives on doughnuts, Mihawk cooks for his guests at Kuraigana.
-    cook: parse("sanji:10 zeff:10 charlotte-pudding:8 dracule-mihawk:7 charlotte-katakuri:6 charlotte-cracker:6 charlotte-brulee:6"),
+    // Big Mom bakes for her tea parties; Oden boiled his namesake dish in Wano.
+    cook: parse("sanji:10 zeff:10 charlotte-pudding:8 dracule-mihawk:7 charlotte-katakuri:6 charlotte-cracker:6 charlotte-brulee:6 charlotte-linlin:5 kouzuki-oden:5"),
     // Doc Q is Blackbeard's doctor; Reiju drew the poison out of Luffy; Marco heals with his flames;
-    // Queen and Judge are MADS scientists (viruses, lineage factor).
+    // Queen and Judge are MADS scientists (viruses, lineage factor); Kuma pushed Luffy's pain out of his body.
     doctor: parse(`tony-tony-chopper:10 trafalgar-law:10 kureha:10 polo-marco:8 doc-q:8 hiriluk:7 queen:7 emporio-ivankov:6 vegapunk:6
-      vinsmoke-judge:6 vinsmoke-reiju:5 caesar-clown:4`),
-    // Reading the poneglyphs or knowing the Void Century: the Kozuki family, Roger's crew, Imu and the Five Elders, Blackbeard's hunt.
-    archaeologist: parse(`nico-robin:10 imu:9 charlotte-pudding:8 gol-d-roger:9 kouzuki-oden:8 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7 marshall-d-teach:7
-      jaygarcia-saturn:6 marcus-mars:6 topman-warcury:6 ethanbaron-v-nusjuro:6 shepherd-ju-peter:6 kouzuki-hiyori:6 nefertari-vivi:4`),
+      vinsmoke-judge:6 bartholomew-kuma:6 vinsmoke-reiju:5 caesar-clown:4`),
+    // Reading the poneglyphs or knowing the Void Century: the Kozuki family and their retainers (Zou's dukes keep a Road
+    // Poneglyph), Roger's crew, Imu and the Five Elders, Blackbeard's hunt, the Shandia guarding Skypiea's poneglyph,
+    // Crocodile's search for Pluton, Pedro's journey to read one.
+    archaeologist: parse(`nico-robin:10 imu:9 gol-d-roger:9 charlotte-pudding:8 kouzuki-oden:8 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7
+      marshall-d-teach:7 jaygarcia-saturn:6 marcus-mars:6 topman-warcury:6 ethanbaron-v-nusjuro:6 shepherd-ju-peter:6 kouzuki-hiyori:6
+      inuarashi:6 nekomamushi:6 wyper:6 shanks:5 crocodile:5 pedro:5 kin-emon:5 yamato:5 nefertari-vivi:4 buggy:4`),
     // Tom built the Oro Jackson; Paulie, Kaku and Lucci worked at Galley-La; Rayleigh coats ships; Queen builds
-    // Kaidou's weapons and his own cyborg body; Usopp patched the Merry.
-    shipwright: parse("franky:10 iceburg:10 tom:10 paulie:8 silvers-rayleigh:8 kaku:7 queen:6 rob-lucci:6 usopp:5"),
+    // Kaidou's weapons and his own cyborg body; Vegapunk builds Seraphim and Egghead; Kid forges his own arm; Usopp
+    // patched the Merry; Kalifa ran Galley-La's office.
+    shipwright: parse("franky:10 iceburg:10 tom:10 paulie:8 silvers-rayleigh:8 kaku:7 vegapunk:7 queen:6 eustass-kid:6 rob-lucci:6 usopp:5 kalifa:4"),
   };
   const specialist = (role) => (c, power) => OP_SPECIALISTS[role][c.id] ?? Math.max(1, Math.round(power / 3));
   // Role slots of the other anime work the same way: anyone can fill them, the listed characters score high.
@@ -35,43 +40,53 @@
     bleach: {
       // Unohana and Orihime heal anything; Ryuken runs a hospital; Hikifune rebuilt Ichigo's body.
       healer: parse(`retsu-unohana:10 orihime-inoue:10 isane-kotetsu:8 kirio-hikifune:8 ryuken-ishida:8 hanataro-yamada:7 hachigen-ushoda:7
-        isshin-kurosaki:6 tessai-tsukabishi:6 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3`),
-      // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge.
-      engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 senjumaru-shutara:7
-        nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 hiyori-sarugaki:5 tessai-tsukabishi:5 uryu-ishida:4`),
+        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:6 kisuke-urahara:5 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3`),
+      // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge, Hikifune (12th Division before
+      // Kisuke), Kukaku's fireworks cannon.
+      engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 kirio-hikifune:7
+        senjumaru-shutara:7 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 hiyori-sarugaki:5 tessai-tsukabishi:5 uryu-ishida:4`),
     },
     hunterxhunter: {
       // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
-      healer: parse("leorio-paradinight:10 alluka-zoldyck:10 neferpitou:9 cheadle-yorkshire:8 biscuit-krueger:7 shaiapouf:4"),
+      // Machi sews severed limbs back with Nen threads; Kurapika's Holy Chain heals.
+      healer: parse("leorio-paradinight:10 alluka-zoldyck:10 neferpitou:9 cheadle-yorkshire:8 machi-komacine:8 kurapika:8 biscuit-krueger:7 shaiapouf:4"),
       strategist: parse(`pariston-hill:10 komugi:9 meruem:9 ging-freecss:9 shaiapouf:8 morel-mackernasey:8 genthru:8 shalnark:8 kurapika:8
-        chrollo-lucilfer:8 killua-zoldyck:7 milluki-zoldyck:7 knov:7 cheadle-yorkshire:7 isaac-netero:7 tsezguerra:6`),
+        chrollo-lucilfer:8 killua-zoldyck:7 milluki-zoldyck:7 knov:7 cheadle-yorkshire:7 isaac-netero:7 mizaistom-nana:7 tsezguerra:6
+        welfin:6 kite:6 illumi-zoldyck:6 pakunoda:5`),
     },
     dragonball: {
       // Dende and Kibito heal with a touch; Korin grows the senzu beans; Whis rewinds time; Buu healed Bee.
-      healer: parse("dende:10 kibito:9 korin:8 whis:8 majin-buu:8 kami:7 vados:6 yajirobe:5 mr-popo:4"),
+      healer: parse("dende:10 kibito:9 korin:8 whis:8 majin-buu:8 grand-priest:7 kami:7 vados:6 yajirobe:5 grand-elder-guru:5 mr-popo:4"),
       // Bulma builds the Dragon Radar and the time machine; Dr. Gero built the androids and Cell.
-      scientist: parse("bulma:10 dr-gero:10 babidi:6 emperor-pilaf:5 kami:4 android-16:4 commander-red:3"),
+      // Future Trunks keeps the time machine running.
+      scientist: parse("bulma:10 dr-gero:10 babidi:6 emperor-pilaf:5 future-trunks:5 kami:4 android-16:4 commander-red:3"),
     },
     naruto: {
-      healer: parse(`tsunade:10 sakura-haruno:9 kabuto-yakushi:9 shizune:8 karin:7 chiyo:7 hashirama-senju:7 orochimaru:6 ino-yamanaka:5
-        naruto-uzumaki:4`),
+      // Nagato's Rinne Rebirth brought Konoha back to life; Rin was Team Minato's medic.
+      healer: parse(`tsunade:10 sakura-haruno:9 kabuto-yakushi:9 nagato:8 shizune:8 karin:7 chiyo:7 hashirama-senju:7 orochimaru:6
+        rin-nohara:6 hagoromo-otsutsuki:6 ino-yamanaka:5 naruto-uzumaki:4`),
       strategist: parse(`shikamaru-nara:10 shikaku-nara:10 itachi-uchiha:8 minato-namikaze:8 tobirama-senju:8 kakashi-hatake:8 madara-uchiha:8
-        sasori:9 orochimaru:8 danzo-shimura:7 kabuto-yakushi:7 hiruzen-sarutobi:7 kankuro:6 temari:6 ibiki-morino:6 nagato:6`),
+        sasori:9 orochimaru:8 obito-uchiha:8 danzo-shimura:7 kabuto-yakushi:7 hiruzen-sarutobi:7 jiraiya:7 yamato:7 kankuro:6 temari:6
+        ibiki-morino:6 nagato:6 shino-aburame:6 shisui-uchiha:6 deidara:5 inoichi-yamanaka:5`),
     },
     jujutsukaisen: {
       // Reverse cursed technique on others (Shoko, Yuta); Nitta's technique stops wounds from worsening.
-      healer: parse("shoko-ieiri:10 yuta-okkotsu:9 arata-nitta:8 ryomen-sukuna:6 satoru-gojo:5 kinji-hakari:5 hiromi-higuruma:4 uraume:4"),
+      healer: parse("shoko-ieiri:10 yuta-okkotsu:9 arata-nitta:8 ryomen-sukuna:6 satoru-gojo:5 kinji-hakari:5 hiromi-higuruma:4 uraume:4 choso:4"),
+      // Yaga builds cursed corpses like Panda.
       strategist: parse(`kenjaku:10 suguru-geto:8 megumi-fushiguro:8 tengen:8 hiromi-higuruma:8 mechamaru:9 ryomen-sukuna:8 kento-nanami:7
-        mahito:7 mei-mei:7 aoi-todo:7 satoru-gojo:6 yoshinobu-gakuganji:6 atsuya-kusakabe:6 noritoshi-kamo:6 yuki-tsukumo:6 kiyotaka-ijichi:5`),
+        masamichi-yaga:8 mahito:7 mei-mei:7 aoi-todo:7 satoru-gojo:6 toji-fushiguro:6 yoshinobu-gakuganji:6 atsuya-kusakabe:6 noritoshi-kamo:6
+        yuki-tsukumo:6 kiyotaka-ijichi:5 utahime-iori:5`),
     },
     blackclover: {
       // Mimosa's healing flowers; the Witch Queen healed Asta's arms; Charmy's food restores mana; Secre sealed the curse.
       // William's World Tree heals whole armies; Fana's flames mend; Moris rebuilds the bodies he experiments on.
       healer: parse(`mimosa-vermillion:10 witch-queen:9 william-vangeance:8 fana:7 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7
-        sister-lily:6 moris-libardirt:5 kirsch-vermillion:3`),
+        sister-lily:6 vanessa-enoteca:6 moris-libardirt:5 kirsch-vermillion:3`),
       // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps. Engineers: Moris, the
       // Diamond Kingdom's mad scientist; Henry reshapes the Black Bulls' hideout; Rades reanimates corpses.
-      strategist: parse(`lucius-zogratis:10 moris-libardirt:9 patry:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8 zora-ideale:8
+      // Kaiser plans the Purple Orcas' battles; Nacht is the Black Bulls' spy; Fanzell trained Asta and leads the resistance.
+      strategist: parse(`lucius-zogratis:10 moris-libardirt:9 patry:9 kaiser-granvorka:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8
+        nacht-faust:8 zora-ideale:8 fanzell-kruger:7
         henry-legolant:8 klaus-lunettes:7 william-vangeance:7 fuegoleon-vermillion:7 licht:7 rades-spirito:6 gordon-agrippa:6 yami-sukehiro:6
         nozel-silva:6 finral-roulacase:5 sekke-bronzazza:4`),
     },
