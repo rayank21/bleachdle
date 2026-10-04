@@ -66,8 +66,9 @@
     },
     blackclover: {
       // Mimosa's healing flowers; the Witch Queen healed Asta's arms; Charmy's food restores mana; Secre sealed the curse.
-      // Moris rebuilds the bodies he experiments on.
-      healer: parse("mimosa-vermillion:10 witch-queen:9 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7 sister-lily:6 moris-libardirt:5 kirsch-vermillion:3"),
+      // William's World Tree heals whole armies; Fana's flames mend; Moris rebuilds the bodies he experiments on.
+      healer: parse(`mimosa-vermillion:10 witch-queen:9 william-vangeance:8 fana:7 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7
+        sister-lily:6 moris-libardirt:5 kirsch-vermillion:3`),
       // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps. Engineers: Moris, the
       // Diamond Kingdom's mad scientist; Henry reshapes the Black Bulls' hideout; Rades reanimates corpses.
       strategist: parse(`lucius-zogratis:10 moris-libardirt:9 patry:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8 zora-ideale:8
@@ -225,10 +226,10 @@
       slots: [
         { label: { en: "Black Bulls", fr: "Taureau Noir" }, icon: "flame", count: 2, fits: (c) => has(c.aff, "Black Bulls") },
         { label: { en: "Golden Dawn", fr: "Aube Dorée" }, icon: "star", count: 1, fits: (c) => has(c.aff, "Golden Dawn") },
-        // Squad captains and the Wizard King (Mereoleona leads the Crimson Lions in Fuegoleon's place).
+        // Squad captains, the Wizard King (Mereoleona leads the Crimson Lions in Fuegoleon's place) and Lucius, who leads the Paladins.
         { label: { en: "Captain", fr: "Capitaine" }, role: "captain", icon: "crown", count: 1, score: leader,
           fits: (c) => ["yami-sukehiro", "william-vangeance", "nozel-silva", "fuegoleon-vermillion", "mereoleona-vermillion", "charlotte-roselei",
-            "jack-the-ripper", "dorothy-unsworth", "kaiser-granvorka", "rill-boismortier", "julius-novachrono"].includes(c.id) },
+            "jack-the-ripper", "dorothy-unsworth", "kaiser-granvorka", "rill-boismortier", "julius-novachrono", "lucius-zogratis"].includes(c.id) },
         { label: { en: "Other squad", fr: "Autre escouade" }, icon: "shield", count: 1,
           fits: (c) => has(c.aff, "Silver Eagles", "Crimson Lion Kings", "Blue Rose", "Green Mantis", "Coral Peacock", "Purple Orca", "Aqua Deer") },
         { label: { en: "Elf", fr: "Elfe" }, icon: "leaf", count: 1, fits: (c) => has(c.race, "Elf") },
