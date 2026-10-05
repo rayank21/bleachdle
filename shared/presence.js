@@ -266,45 +266,88 @@ window.DLE_Presence = {
 };
 const presenceChanged = () => window.dispatchEvent(new Event("dle:presence"));
 
+// A dropped peer-to-peer link usually comes back within seconds: keep the player in the bar meanwhile.
+const GRACE = 30000;
+const gone = new Map(); // peerId → timer
+let tries = 0;
+
+// The network library doesn't set a dropped link up again by itself: when someone vanishes and isn't back after a few
+// seconds, leave the lobby and join it again (a fresh handshake), at most every 20 seconds.
+let trystero = null;
+let lobby = null;
+let lastRelink = 0;
+function joinLobby() {
+  const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, "lobby");
+  lobby = room;
+  const mine = (fn) => (data, meta) => { if (lobby === room) fn(data, meta); };
+  const info = room.makeAction("info");
+  sendInfo = (data, opts) => info.send(data, opts);
+  info.onMessage = mine((data, { peerId }) => {
+    const name = cleanName(data?.name);
+    if (!name) return;
+    const g = GAMES.some((x) => x.id === data?.game) ? data.game : "home";
+    const pid = /^[a-z0-9]{10,20}$/.test(data?.pid ?? "") ? data.pid : null;
+    peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room) });
+    render();
+    presenceChanged();
+    renderChat();
+  });
+  const invite = room.makeAction("finvite");
+  sendInvite = (data, peerId) => invite.send(data, { target: peerId });
+  invite.onMessage = mine((data, { peerId }) => receiveInvite(data, peerId));
+  const chatMsg = room.makeAction("chat");
+  const chatLog = room.makeAction("chatlog");
+  sendChat = (m) => chatMsg.send(m);
+  chatMsg.onMessage = mine((data, { peerId }) => receive(data, peerId));
+  chatLog.onMessage = mine((data, { peerId }) => receiveHistory(data, peerId));
+  room.onPeerJoin = (peerId) => {
+    if (lobby !== room) return;
+    clearTimeout(gone.get(peerId));
+    gone.delete(peerId);
+    info.send(myInfo(), { target: peerId });
+    if (chat.messages.length) chatLog.send(shareable(), { target: peerId });
+  };
+  room.onPeerLeave = (peerId) => {
+    if (lobby !== room) return;
+    clearTimeout(gone.get(peerId));
+    gone.set(peerId, setTimeout(() => {
+      gone.delete(peerId);
+      peers.delete(peerId); rate.delete(peerId); render(); renderChat(); presenceChanged();
+    }, GRACE));
+    setTimeout(() => { if (gone.has(peerId)) relink(); }, 5000);
+  };
+}
+async function relink() {
+  if (!lobby || Date.now() - lastRelink < 20000) return;
+  lastRelink = Date.now();
+  const old = lobby;
+  lobby = null;
+  try { await old.leave(); } catch {}
+  joinLobby();
+}
+
 async function connect() {
   try {
-    const { joinRoom } = await import(TRYSTERO);
-    const room = joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, "lobby");
-    const info = room.makeAction("info");
-    sendInfo = (data, opts) => info.send(data, opts);
-    info.onMessage = (data, { peerId }) => {
-      const name = cleanName(data?.name);
-      if (!name) return;
-      const g = GAMES.some((x) => x.id === data?.game) ? data.game : "home";
-      const pid = /^[a-z0-9]{10,20}$/.test(data?.pid ?? "") ? data.pid : null;
-      peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room) });
-      render();
-      presenceChanged();
-      renderChat();
-    };
-    const invite = room.makeAction("finvite");
-    sendInvite = (data, peerId) => invite.send(data, { target: peerId });
-    invite.onMessage = (data, { peerId }) => receiveInvite(data, peerId);
-    const chatMsg = room.makeAction("chat");
-    const chatLog = room.makeAction("chatlog");
-    sendChat = (m) => chatMsg.send(m);
-    chatMsg.onMessage = (data, { peerId }) => receive(data, peerId);
-    chatLog.onMessage = (data, { peerId }) => receiveHistory(data, peerId);
-    room.onPeerJoin = (peerId) => {
-      info.send(myInfo(), { target: peerId });
-      if (chat.messages.length) chatLog.send(shareable(), { target: peerId });
-    };
-    room.onPeerLeave = (peerId) => { peers.delete(peerId); rate.delete(peerId); render(); renderChat(); presenceChanged(); };
+    trystero = await import(TRYSTERO);
+    joinLobby();
     status = "live";
+    tries = 0;
+    // Say who I am again now and then: someone who missed it (lost message, link back up) still sees me.
+    setInterval(announce, 25000);
     render();
     renderChat();
   } catch (e) {
-    console.warn("Presence unavailable:", e);
+    // The network library could not load: try again, forever, a bit slower each time.
+    console.warn("Presence unavailable, retrying:", e);
     status = "offline";
     render();
     renderChat();
+    setTimeout(connect, Math.min(30000, 2000 * 2 ** tries++));
   }
 }
+// Coming back to the tab or the network: tell everyone I'm here.
+document.addEventListener("visibilitychange", () => { if (!document.hidden) announce(); });
+window.addEventListener("online", announce);
 
 // ── Live chat (bottom left, every page) ──
 // Same peers as the presence bar. There is no server, so the history lives with the players:

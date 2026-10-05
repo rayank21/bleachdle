@@ -881,6 +881,11 @@
     checkRaceEnd();
   }
 
+  function raceProgressResend() {
+    const me = race.players.get(rooms.selfId);
+    rooms.broadcast("progress", { key: race.key, n: me.n, last: me.last, found: me.found, gaveUp: me.gaveUp, ms: me.ms });
+  }
+
   function onRaceMessage(type, d, from) {
     if (!race) return;
     const p = race.players.get(from);
@@ -894,6 +899,10 @@
       p.ms = p.found && Number.isFinite(d.ms) ? Math.max(0, d.ms) : null;
     } else if (type === "left") {
       p.left = true;
+    } else if (type === "rejoin") {
+      // Their link dropped for a moment: send my progress again, they may have missed some.
+      if (race.startedAt) raceProgressResend();
+      return;
     } else return;
     renderRace();
     checkRaceEnd();

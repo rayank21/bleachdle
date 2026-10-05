@@ -1671,8 +1671,47 @@
     }
   }
 
+  // Places filled on any board: tells who has seen the most of the match.
+  const movesSeen = () => [...match.boards.values()].reduce((a, b) => a + filledOf(b).length, 0);
+  // Fill in placements of a player that I missed (lost message, link dropped for a moment).
+  function fillBoard(from, pairs) {
+    const board = match.boards.get(from);
+    let changed = false;
+    for (const pair of pairs.slice(0, board.length)) {
+      const [i, charId] = Array.isArray(pair) ? pair : [];
+      const slot = board[i];
+      const c = match.pool.find((x) => x.id === charId);
+      if (c && slot && !slot.char && !slot.locked && slot.def.fits(c) && !board.some((s) => s.char?.id === c.id)) {
+        slot.char = c;
+        slot.points = pointsFor(slot, c);
+        changed = true;
+      }
+    }
+    if (changed) {
+      const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
+      if (box) renderBoard(box, board, { mini: true });
+    }
+  }
+  const myPairs = () => myBoard().map((s, i) => (s.char ? [i, s.char.id] : null)).filter(Boolean);
+
   function onMatchMessage(type, d, from) {
     if (!match || !match.boards.has(from)) return;
+    if (type === "rejoin") {
+      // Their link dropped for a moment: send them my board and whose turn it is.
+      rooms.broadcast("sync", { key: match.key, board: myPairs(), current: match.current, moves: movesSeen(), finished: match.finished.has(rooms.selfId) });
+      return;
+    }
+    if (type === "sync") {
+      if (d.key != null && String(d.key) !== match.key) return;
+      const before = movesSeen();
+      if (Array.isArray(d.board) && !match.done) fillBoard(from, d.board);
+      if (d.finished === true && !match.finished.has(from)) match.finished.add(from);
+      // They saw more of the match than I did: trust their idea of whose turn it is.
+      if (Number(d.moves) > before && match.boards.has(d.current) && !match.done) setTurn(d.current);
+      renderScoreboard();
+      checkMatchEnd();
+      return;
+    }
     if (type === "claim") {
       if (typeof d.charId !== "string") return;
       match.claims.set(from, d.charId);

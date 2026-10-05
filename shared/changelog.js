@@ -16,6 +16,7 @@
         { type: "improved", en: "Portraits now come from the anime instead of the manga (Attack on Titan, Black Clover), in the characters' early look.", fr: "Les portraits viennent maintenant de l'anime et plus du manga (SNK, Black Clover), dans le look du début." },
         { type: "balance", game: "bleach", en: "Bleach: Visored and Quincy ratings spread out, Tenjiro healer 10, Kenpachi 10, Uryu 8, Tsukishima and Sasakibe 7.", fr: "Bleach : notes des Visored et Quincy plus variées, Tenjirō soigneur 10, Kenpachi 10, Uryū 8, Tsukishima et Sasakibe 7." },
         { type: "balance", game: "blackclover", en: "Black Clover: Rades healer 9.", fr: "Black Clover : Rades soigneur 9." },
+        { type: "fix", en: "No more getting kicked offline: a connection that drops for a moment (phone in the background, network hiccup) now comes back by itself, and an online match carries on where it was.", fr: "Fini les déconnexions intempestives : une connexion qui saute un instant (téléphone en arrière-plan, réseau qui coupe) revient toute seule, et le match en ligne reprend où il en était." },
       ],
     },
     {

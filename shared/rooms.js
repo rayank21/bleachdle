@@ -32,6 +32,11 @@
     };
     const send = {};
     let started = false;
+    // A peer-to-peer link often drops for a few seconds (phone in the background, network hiccup) and comes back on
+    // its own. A player is only treated as gone after this grace period, unless they said goodbye themselves.
+    const GRACE = 30000;
+    const gone = new Map(); // peerId → timer
+    let tries = 0;
 
     // The open room I'm in is announced to my friends by the online bar (presence.js), so they can join it.
     const pageOnChange = onChange;
@@ -119,37 +124,77 @@
       onChange();
     }
 
+    // The lobby channel. A link that drops is not set up again by the network library on its own, so when a player
+    // of my room vanishes without saying goodbye, I leave the channel and join it again: a fresh handshake.
+    let trystero = null;
+    let lobby = null;
+    let relinking = false;
+    function joinLobby() {
+      const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, `${channel}-lobby`);
+      lobby = room;
+      for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
+        const action = room.makeAction(name);
+        send[name] = (data, target) => action.send(data, target ? { target } : undefined);
+        action.onMessage = (data, { peerId }) => { if (lobby === room) handle(name, data, peerId); };
+      }
+      room.onPeerJoin = (peerId) => {
+        if (lobby !== room) return;
+        // Back within the grace period: nothing is lost, the match catches up on what was missed.
+        if (gone.has(peerId)) {
+          clearTimeout(gone.get(peerId));
+          gone.delete(peerId);
+          if (api.myRoom?.started && api.myRoom.members.some((m) => m.id === peerId)) onMessage("rejoin", {}, peerId);
+        }
+        send.hello(api.profile, peerId);
+        if (isHost() && !api.myRoom.started) announce(peerId);
+      };
+      room.onPeerLeave = (peerId) => {
+        if (lobby !== room) return;
+        clearTimeout(gone.get(peerId));
+        gone.set(peerId, setTimeout(() => { gone.delete(peerId); peerGone(peerId); }, GRACE));
+        // Someone of my room dropped: reconnect a few times during the grace period to find them again.
+        if (api.myRoom?.members.some((m) => m.id === peerId)) {
+          for (const ms of [2500, 12000, 22000]) setTimeout(() => { if (gone.has(peerId)) relink(); }, ms);
+        }
+      };
+    }
+    async function relink() {
+      if (relinking || !lobby) return;
+      relinking = true;
+      const old = lobby;
+      lobby = null;
+      try { await old.leave(); } catch {}
+      joinLobby();
+      relinking = false;
+    }
+    const peerGone = (peerId) => {
+      api.peers.delete(peerId);
+      for (const [id, r] of api.rooms) if (r.host === peerId) api.rooms.delete(id);
+      if (api.myRoom) {
+        if (api.myRoom.host === peerId) { api.myRoom = null; onClosed("host-left"); }
+        else if (api.myRoom.members.some((m) => m.id === peerId)) {
+          if (isHost()) { api.myRoom.members = api.myRoom.members.filter((m) => m.id !== peerId); announce(); }
+          if (api.myRoom.started) onMessage("left", { id: peerId }, peerId);
+        }
+      }
+      onChange();
+    };
+
     async function connect() {
       try {
-        const { joinRoom, selfId } = await import(TRYSTERO);
-        api.selfId = selfId;
-        const room = joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, `${channel}-lobby`);
-        for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
-          const action = room.makeAction(name);
-          send[name] = (data, target) => action.send(data, target ? { target } : undefined);
-          action.onMessage = (data, { peerId }) => handle(name, data, peerId);
-        }
-        room.onPeerJoin = (peerId) => {
-          send.hello(api.profile, peerId);
-          if (isHost() && !api.myRoom.started) announce(peerId);
-        };
-        room.onPeerLeave = (peerId) => {
-          api.peers.delete(peerId);
-          for (const [id, r] of api.rooms) if (r.host === peerId) api.rooms.delete(id);
-          if (api.myRoom) {
-            if (api.myRoom.host === peerId) { api.myRoom = null; onClosed("host-left"); }
-            else if (api.myRoom.members.some((m) => m.id === peerId)) {
-              if (isHost()) { api.myRoom.members = api.myRoom.members.filter((m) => m.id !== peerId); announce(); }
-              if (api.myRoom.started) onMessage("left", { id: peerId }, peerId);
-            }
-          }
-          onChange();
-        };
+        trystero = await import(TRYSTERO);
+        api.selfId = trystero.selfId;
+        joinLobby();
         api.status = "live";
+        tries = 0;
         send.hello(api.profile);
+        // Closing or leaving the page says goodbye at once, so the others don't wait for the grace period.
+        window.addEventListener("pagehide", () => api.leave());
       } catch (e) {
-        console.warn("Online rooms unavailable:", e);
+        // The network library could not load (CDN or connection hiccup): try again, forever, a bit slower each time.
+        console.warn("Online rooms unavailable, retrying:", e);
         api.status = "offline";
+        setTimeout(connect, Math.min(30000, 2000 * 2 ** tries++));
       }
       onChange();
     }
