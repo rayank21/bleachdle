@@ -16,6 +16,8 @@
         { type: "improved", en: "Portraits now come from the anime instead of the manga (Attack on Titan, Black Clover), in the characters' early look.", fr: "Les portraits viennent maintenant de l'anime et plus du manga (SNK, Black Clover), dans le look du début." },
         { type: "balance", game: "bleach", en: "Bleach: Visored and Quincy ratings spread out, Tenjiro healer 10, Kenpachi 10, Uryu 8, Tsukishima and Sasakibe 7.", fr: "Bleach : notes des Visored et Quincy plus variées, Tenjirō soigneur 10, Kenpachi 10, Uryū 8, Tsukishima et Sasakibe 7." },
         { type: "balance", game: "blackclover", en: "Black Clover: Rades healer 9.", fr: "Black Clover : Rades soigneur 9." },
+        { type: "new", game: "crew", en: "Crew Roll index: every card of each anime with its rarity, its power and what it scores in every role. Search, filter by rarity and sort by role.", fr: "Index de Roll ton équipage : toutes les cartes de chaque animé avec leur rareté, leur puissance et ce qu'elles rapportent dans chaque rôle. Recherche, filtre par rareté et tri par rôle." },
+        { type: "new", en: "Leaderboard per anime: the best Bleach crews, One Piece crews and so on, with each crew's faces.", fr: "Classement par animé : les meilleurs équipages Bleach, One Piece, etc., avec les visages de chaque équipage." },
         { type: "fix", en: "No more getting kicked offline: a connection that drops for a moment (phone in the background, network hiccup) now comes back by itself, and an online match carries on where it was.", fr: "Fini les déconnexions intempestives : une connexion qui saute un instant (téléphone en arrière-plan, réseau qui coupe) revient toute seule, et le match en ligne reprend où il en était." },
       ],
     },
@@ -55,7 +57,8 @@
   const t = (k) => T[lang()][k];
   const ROOT = (document.currentScript?.src || "").replace(/shared\/changelog\.js.*$/, "");
   const GAMES = window.DLE_GAMES || [];
-  const latest = LOG[0].date;
+  // The day plus its number of items: news added later the same day opens the window again.
+  const latest = `${LOG[0].date}#${String(LOG[0].items.length).padStart(3, "0")}`;
 
   const el = (tag, cls, text) => {
     const e = document.createElement(tag);
@@ -146,7 +149,7 @@
     const body = el("div", "cl-body");
     LOG.forEach((entry, i) => {
       if (i === 1) body.append(el("p", "cl-older", t("older")));
-      body.append(day(entry, { open: i === 0, isNew: entry.date > lastSeen }));
+      body.append(day(entry, { open: i === 0, isNew: entry.date > lastSeen.slice(0, 10) || (i === 0 && latest > lastSeen) }));
     });
     const go = el("button", "btn-primary cl-go", t("close"));
     go.type = "button";

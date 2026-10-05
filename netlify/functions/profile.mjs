@@ -3,7 +3,7 @@
 // hash. The browser keeps the token; "id.token" is the recovery code used to log in elsewhere.
 //
 //   GET  /api/profile?id=…                 public profile
-//   GET  /api/profile?leaderboard=1        best crews and most wins
+//   GET  /api/profile?leaderboard=1        best crews (overall and per anime) and most wins
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
 //   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}}
@@ -137,6 +137,9 @@ async function update(body) {
     if (c) {
       p.crew.played = (p.crew.played ?? 0) + 1;
       if (!p.crew.best || c.score > p.crew.best.score) p.crew.best = c;
+      // Best crew of each anime too, for the per-anime leaderboards.
+      p.crew.bests = bestsOf(p);
+      if (!p.crew.bests[c.anime] || c.score > p.crew.bests[c.anime].score) p.crew.bests[c.anime] = c;
     }
   }
   // A Crew Roll online match just ended.
@@ -152,15 +155,29 @@ async function update(body) {
 // Every win: guessing games (daily, endless, online races) and Crew Roll online matches.
 const totalWins = (p) => Object.values(p.stats ?? {}).reduce((a, modes) => a + Object.values(modes).reduce((b, x) => b + (x.wins || 0), 0), 0) + (p.crew?.duelWins || 0);
 
+// Best crew per anime; profiles from before it existed only have their overall best.
+function bestsOf(p) {
+  const out = { ...(p.crew?.bests ?? {}) };
+  const best = p.crew?.best;
+  if (best && GAMES.includes(best.anime) && (!out[best.anime] || best.score > out[best.anime].score)) out[best.anime] = best;
+  return out;
+}
+
 async function leaderboard() {
   const s = store();
   const { blobs } = await s.list({ prefix: "p/" });
   const all = (await Promise.all(blobs.slice(0, 500).map((b) => s.get(b.key, { type: "json" })))).filter(Boolean);
   const row = (p) => ({ id: p.id, name: p.name, avatar: p.avatar });
-  const crews = all.filter((p) => p.crew?.best).sort((a, b) => b.crew.best.score - a.crew.best.score).slice(0, 20)
-    .map((p) => ({ ...row(p), score: p.crew.best.score, rank: p.crew.best.rank, anime: p.crew.best.anime }));
+  const crewRow = (p, c) => ({ ...row(p), score: c.score, rank: c.rank, anime: c.anime, members: (c.members ?? []).map((m) => ({ id: m.id, points: m.points })) });
+  // Ties: the crew made first stays ahead.
+  const byScore = (a, b) => b.c.score - a.c.score || (a.c.at ?? 0) - (b.c.at ?? 0);
+  const crews = all.filter((p) => p.crew?.best).map((p) => ({ p, c: p.crew.best })).sort(byScore).slice(0, 20).map(({ p, c }) => crewRow(p, c));
+  const byAnime = {};
+  for (const g of GAMES) {
+    byAnime[g] = all.map((p) => ({ p, c: bestsOf(p)[g] })).filter((x) => x.c).sort(byScore).slice(0, 20).map(({ p, c }) => crewRow(p, c));
+  }
   const wins = all.map((p) => ({ ...row(p), wins: totalWins(p) })).filter((p) => p.wins > 0).sort((a, b) => b.wins - a.wins).slice(0, 20);
-  return json({ crews, wins, players: all.length });
+  return json({ crews, byAnime, wins, players: all.length });
 }
 
 // ── Friends: mutual, after a request. Each profile keeps `friends` and the `requests` it received. ──

@@ -29,6 +29,21 @@
       captainTag: "Leader",
       skip: "No slot left for this one: skip",
       tiers: { legend: "Legendary", epic: "Epic", common: "Common" },
+      index: "Index",
+      indexTitle: (a) => `${a} index`,
+      indexSub: (n, arc) => `${n} cards${arc ? ` · spoiler-free up to ${arc}` : ""}. What each card scores in every role.`,
+      indexSearch: "Search a character…",
+      indexSort: "Sort",
+      sortPower: "Power",
+      sortName: "Name",
+      allTiers: "All",
+      bestRole: "Best role",
+      noFit: "Can't go in this role",
+      noCard: "No card matches.",
+      ixTop: "Best crews",
+      ixBoard: "Full leaderboard",
+      ixNone: "No crew yet for this anime: build one in Solo!",
+      ixTap: "Tap to see the transformation",
       rolling: "Rolling…",
       chooseSlot: "Choose a slot for this character",
       noSlot: "No free slot fits this character",
@@ -120,6 +135,21 @@
       captainTag: "Chef",
       skip: "Plus de place pour lui : passer",
       tiers: { legend: "Légendaire", epic: "Épique", common: "Commun" },
+      index: "Index",
+      indexTitle: (a) => `Index ${a}`,
+      indexSub: (n, arc) => `${n} cartes${arc ? ` · sans spoiler jusqu'à ${arc}` : ""}. Ce que chaque carte rapporte dans chaque rôle.`,
+      indexSearch: "Chercher un personnage…",
+      indexSort: "Trier",
+      sortPower: "Puissance",
+      sortName: "Nom",
+      allTiers: "Toutes",
+      bestRole: "Meilleur rôle",
+      noFit: "Ne peut pas aller à ce rôle",
+      noCard: "Aucune carte ne correspond.",
+      ixTop: "Meilleurs équipages",
+      ixBoard: "Classement complet",
+      ixNone: "Pas encore d'équipage pour cet animé : fais-en un en Solo !",
+      ixTap: "Touche pour voir la transformation",
       rolling: "Tirage…",
       chooseSlot: "Choisis une place pour ce personnage",
       noSlot: "Aucune place libre ne convient à ce personnage",
@@ -848,7 +878,8 @@
     renderPicker();
     await renderArcChip();
     if (quiet) return;
-    if (mode === "solo") startSolo();
+    if (mode === "index") renderIndex();
+    else if (mode === "solo") startSolo();
     else {
       // From the end-of-match screen, the host goes back to the room with the new anime.
       if (match?.done) { if (rooms?.myRoom) backToRoom(); else match = null; }
@@ -1918,6 +1949,180 @@
     toast.timer = setTimeout(() => (node.hidden = true), 2200);
   }
 
+  // ════════════════════ INDEX ════════════════════
+  // Every card of the anime at the player's arc: its rarity, its power and what it scores in each role.
+  const ix = { tier: "all", sort: "power", q: "" };
+  let ixToken = 0;
+
+  async function renderIndex() {
+    const g = currentGame;
+    const token = ++ixToken;
+    const data = await loadGame(g);
+    if (token !== ixToken || mode !== "index") return;
+    const last = data.config.arcs.length - 1;
+    const arc = playerArc(data.config) ?? last;
+    const roles = CREW[g.id].slots;
+    const cards = makePool(g, data, arc).map((c) => {
+      const scores = roles.map((def) => (def.fits(c) ? pointsFor({ def }, c) : null));
+      const top = Math.max(...scores.filter((x) => x != null));
+      return { c, tier: tierOf(c.power), scores, best: scores.indexOf(top), form: formFor(g.id, c, arc) };
+    });
+
+    const view = $("#indexView");
+    view.textContent = "";
+
+    // Header: the anime, the cards by rarity, and the anime's best crews.
+    const hero = el("section", "card ix-hero");
+    const head = el("div", "ix-head");
+    const logo = el("img", "ix-logo");
+    logo.src = ROOT + g.logo;
+    logo.alt = "";
+    const titles = el("div", "ix-titles");
+    titles.append(el("h2", "ix-title", t("indexTitle")(g.anime)), el("p", "muted ix-sub", t("indexSub")(cards.length, arc < last ? data.config.arcs[arc][lang] : null)));
+    head.append(logo, titles);
+    const tiers = el("div", "ix-tiers");
+    for (const tr of ["all", "legend", "epic", "common"]) {
+      const n = tr === "all" ? cards.length : cards.filter((x) => x.tier === tr).length;
+      const b = el("button", `ix-tier-pill tier-${tr}${ix.tier === tr ? " is-active" : ""}`);
+      b.type = "button";
+      b.append(el("span", null, tr === "all" ? t("allTiers") : t("tiers")[tr]), el("b", null, String(n)));
+      b.addEventListener("click", () => { ix.tier = tr; tiers.querySelectorAll("button").forEach((x) => x.classList.toggle("is-active", x === b)); drawGrid(); });
+      tiers.append(b);
+    }
+    const left = el("div", "ix-hero-main");
+    left.append(head, tiers);
+    hero.append(left, ixTopCrews(g, token));
+    view.append(hero);
+
+    // Tools: search and sort (by power, by name or by a role).
+    const tools = el("div", "card ix-tools");
+    const search = el("input", "ix-search");
+    search.type = "search";
+    search.placeholder = t("indexSearch");
+    search.value = ix.q;
+    search.addEventListener("input", () => { ix.q = search.value; drawGrid(); });
+    const sorts = el("div", "ix-sorts");
+    sorts.append(el("span", "crew-setting-label", t("indexSort")));
+    const sortBtn = (key, content, title, def) => {
+      const b = el("button", `ix-sort${ix.sort === key ? " is-active" : ""}`);
+      b.type = "button";
+      b.title = title;
+      b.dataset.sort = key;
+      if (def) setRoleColor(b, def);
+      b.append(content);
+      b.addEventListener("click", () => { ix.sort = key; sorts.querySelectorAll(".ix-sort").forEach((x) => x.classList.toggle("is-active", x === b)); drawGrid(); });
+      sorts.append(b);
+    };
+    sortBtn("power", t("sortPower"), t("sortPower"));
+    sortBtn("name", t("sortName"), t("sortName"));
+    roles.forEach((def, i) => {
+      const content = el("span", "ix-sort-role");
+      content.append(icon(def.icon), el("span", null, def.label[lang]));
+      sortBtn(`role${i}`, content, def.label[lang], def);
+    });
+    if (!/^(power|name)$/.test(ix.sort) && !roles[+ix.sort.slice(4)]) ix.sort = "power";
+    tools.append(search, sorts);
+    view.append(tools);
+
+    const grid = el("div", "ix-grid");
+    view.append(grid);
+
+    function drawGrid() {
+      const q = ix.q.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const r = ix.sort.startsWith("role") ? +ix.sort.slice(4) : -1;
+      const list = cards
+        .filter((x) => ix.tier === "all" || x.tier === ix.tier)
+        .filter((x) => !q || `${x.c.name} ${x.c.baseName}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q))
+        .sort((a, b) => (ix.sort === "name" ? a.c.name.localeCompare(b.c.name)
+          : r >= 0 ? (b.scores[r] ?? -1) - (a.scores[r] ?? -1) || b.c.power - a.c.power || a.c.name.localeCompare(b.c.name)
+          : b.c.power - a.c.power || a.c.name.localeCompare(b.c.name)));
+      grid.textContent = "";
+      if (!list.length) { grid.append(el("p", "muted ix-empty", t("noCard"))); return; }
+      list.forEach((x, n) => grid.append(ixCard(x, roles, r, n)));
+    }
+    drawGrid();
+  }
+
+  function setRoleColor(node, def) {
+    const rgb = ROLE_RGB[def.icon];
+    if (rgb) { node.style.setProperty("--role-rgb", rgb[0]); node.style.setProperty("--role2-rgb", rgb[1]); }
+  }
+
+  function ixCard({ c, tier, scores, best, form }, roles, sorted, n) {
+    const card = el("article", `ix-card tier-${tier}`);
+    if (n < 40) card.style.animationDelay = `${n * 18}ms`;
+    const top = el("div", "ix-top");
+    const img = el("img", "ix-face");
+    img.src = c.image;
+    img.alt = "";
+    img.loading = "lazy";
+    top.append(img, el("span", "ix-tier", t("tiers")[tier]), el("span", "ix-power", String(c.power)));
+    // A transformation: tap the portrait to see it.
+    if (form) {
+      const tag = el("button", "ix-form", `⚡ ${form.name[lang]}`);
+      tag.type = "button";
+      tag.title = t("ixTap");
+      tag.style.setProperty("--fx1", form.c1);
+      tag.style.setProperty("--fx2", form.c2);
+      tag.addEventListener("click", () => {
+        const on = card.classList.toggle("is-form");
+        img.src = on ? form.image : c.image;
+      });
+      top.append(tag);
+    }
+    card.append(top, el("h3", "ix-name", c.name));
+    const list = el("ul", "ix-roles");
+    roles.forEach((def, i) => {
+      const v = scores[i];
+      const li = el("li", `ix-role${v == null ? " is-no" : ""}${i === best ? " is-best" : ""}${i === sorted ? " is-sorted" : ""}`);
+      setRoleColor(li, def);
+      li.title = v == null ? `${def.label[lang]} · ${t("noFit")}` : `${def.label[lang]} · ${v}${i === best ? ` · ${t("bestRole")}` : ""}`;
+      const ic = el("span", "ix-ic");
+      ic.append(icon(def.icon));
+      const bar = el("span", "ix-bar");
+      const fill = el("i");
+      fill.style.width = `${v == null ? 0 : Math.min(100, v * 10)}%`;
+      bar.append(fill);
+      li.append(ic, el("span", "ix-label", def.label[lang]), bar, el("b", `ix-pts${v == null ? "" : ` p${Math.min(10, Math.round(v))}`}`, v == null ? "–" : String(v)));
+      list.append(li);
+    });
+    card.append(list);
+    return card;
+  }
+
+  // The anime's best crews from the online leaderboard.
+  function ixTopCrews(g, token) {
+    const box = el("div", "ix-top-crews");
+    box.append(el("h3", "ix-top-h", t("ixTop")));
+    const list = el("ol", "ix-top-list");
+    list.append(el("li", "muted ix-top-wait", "…"));
+    box.append(list);
+    const more = el("button", "btn-ghost ix-top-more", t("ixBoard"));
+    more.type = "button";
+    more.addEventListener("click", () => window.DLE_Profile?.open("board", { anime: g.id }));
+    box.append(more);
+    const profile = window.DLE_Profile;
+    if (!profile?.leaderboard) { box.hidden = true; return box; }
+    profile.leaderboard().then((data) => {
+      if (token !== ixToken) return;
+      const rows = (data.byAnime?.[g.id] ?? []).slice(0, 5);
+      list.textContent = "";
+      if (!rows.length) { list.append(el("li", "muted ix-top-wait", t("ixNone"))); return; }
+      rows.forEach((r, i) => {
+        const li = el("li", `ix-top-li top-${i + 1}`);
+        const who = el("span", "ix-top-who");
+        who.append(el("b", null, r.name));
+        const faces = profile.crewFaces(r);
+        if (faces) who.append(faces);
+        const val = el("span", "pf-val");
+        val.append(el("i", `pf-mini-rank rank-${r.rank}`, r.rank), ` ${r.score.toFixed(1)}`);
+        li.append(el("span", "ix-top-pos", String(i + 1)), who, val);
+        list.append(li);
+      });
+    }).catch(() => { box.hidden = true; });
+    return box;
+  }
+
   // ── Modes ──
   function setMode(m) {
     mode = m;
@@ -1928,10 +2133,12 @@
     });
     $("#soloView").hidden = m !== "solo";
     $("#duelView").hidden = m !== "online";
+    $("#indexView").hidden = m !== "index";
     if (m === "online") { ensureRooms(); if (match) renderMatch(); else renderLobby(); }
     else {
       if (rooms?.myRoom && !match) rooms.leave();
-      if (currentGame && !solo) startSolo();
+      if (m === "solo" && currentGame && !solo) startSolo();
+      if (m === "index" && currentGame) renderIndex();
     }
     renderPicker();
   }
@@ -1978,6 +2185,7 @@
     const { config } = await loadGame(currentGame);
     for (const pool of [solo?.pool, match?.pool]) for (const c of pool ?? []) c.name = displayName(config, c.baseName);
     if (mode === "solo" && solo && !solo.rolling) renderSolo(false);
+    if (mode === "index") renderIndex();
     if (mode === "online") { if (match) renderScoreboard(); else renderLobby(); }
   }
 
@@ -2003,7 +2211,7 @@
     // Give up after a while if the host is gone.
     setTimeout(() => { if (pendingJoin === key && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderLobby(); } }, 25000);
   }
-  mode = location.hash === "#online" || joinHash ? "online" : "solo";
+  mode = location.hash === "#online" || joinHash ? "online" : location.hash === "#index" ? "index" : "solo";
   setMode(mode);
   selectGame(currentGame.id);
 })();

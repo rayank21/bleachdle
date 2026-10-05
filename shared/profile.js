@@ -17,7 +17,7 @@
       login: "Log in", edit: "Edit", done: "Save", cancel: "Cancel", logout: "Log out", since: (d) => `Member since ${d}`,
       stats: "Stats", wins: "wins", played: "played", streak: "best streak", crew: "Best crew", crewNone: "No crew yet: play Crew Roll!",
       crews: (n) => `${n} crew${n > 1 ? "s" : ""} built`, recovery: "Recovery code", recoveryHelp: "Keep it secret: it logs into your profile on another device.",
-      show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topCrews: "Best crews", topWins: "Most wins", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
+      show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
       empty: "Nobody yet: be the first!", taken: "This name is taken.", badName: "2 to 20 characters.", badCode: "Unknown code.",
       duels: (n, w) => `${n} online match${n > 1 ? "es" : ""} · ${w} won`,
       offline: "Profiles are unavailable right now.", logoutConfirm: "Log out? Keep your recovery code to come back.",
@@ -36,7 +36,7 @@
       login: "Se connecter", edit: "Modifier", done: "Enregistrer", cancel: "Annuler", logout: "Se déconnecter", since: (d) => `Membre depuis le ${d}`,
       stats: "Stats", wins: "victoires", played: "parties", streak: "meilleure série", crew: "Meilleur équipage", crewNone: "Pas encore d'équipage : joue à Roll ton équipage !",
       crews: (n) => `${n} équipage${n > 1 ? "s" : ""} construit${n > 1 ? "s" : ""}`, recovery: "Code de récupération", recoveryHelp: "Garde-le secret : il connecte ton profil sur un autre appareil.",
-      show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topCrews: "Meilleurs équipages", topWins: "Plus de victoires", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
+      show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
       empty: "Personne pour l'instant : sois le premier !", taken: "Ce pseudo est déjà pris.", badName: "2 à 20 caractères.", badCode: "Code inconnu.",
       duels: (n, w) => `${n} match${n > 1 ? "s" : ""} en ligne · ${w} gagné${w > 1 ? "s" : ""}`,
       offline: "Les profils sont indisponibles pour l'instant.", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
@@ -171,7 +171,9 @@
   let tab = "profile";
   let editing = false;
 
-  function open(which = "profile") {
+  // `anime` opens the leaderboard on that anime's best crews.
+  function open(which = "profile", { anime } = {}) {
+    if (anime) boardAnime = anime;
     if (!dialog) {
       dialog = el("dialog", "modal pf-modal");
       dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
@@ -594,22 +596,73 @@
   window.addEventListener("dle:presence", () => { if (dialog?.open && tab === "friends") render(); });
   window.addEventListener("dle:room", () => { if (dialog?.open && tab === "friends") render(); });
 
+  // One fetch shared by the profile window and the Crew Roll index, kept for a minute.
+  let boardCache = null;
+  function leaderboard() {
+    if (!boardCache || Date.now() - boardCache.at > 60000) {
+      const at = Date.now();
+      boardCache = { at, data: fetch(`${API}?leaderboard=1`).then((r) => (r.ok ? r.json() : Promise.reject())) };
+      boardCache.data.catch(() => { if (boardCache?.at === at) boardCache = null; });
+    }
+    return boardCache.data;
+  }
+
+  let boardAnime = "all";
   function boardView() {
     const box = el("div", "pf-view");
     const status = el("p", "muted pf-players", "…");
+    // Best crews of every anime together, or of one anime.
+    const chips = el("div", "pf-board-anime");
     const cols = el("div", "pf-board");
-    box.append(status, cols);
-    fetch(`${API}?leaderboard=1`).then((r) => (r.ok ? r.json() : Promise.reject())).then((data) => {
+    box.append(status, chips, cols);
+    leaderboard().then((data) => {
       status.textContent = t("players")(data.players);
-      cols.append(
-        boardList(t("topCrews"), data.crews, (r) => { const v = el("span", "pf-val"); v.append(el("i", `pf-mini-rank rank-${r.rank}`, r.rank), ` ${r.score.toFixed(1)}`); return v; }),
-        boardList(t("topWins"), data.wins, (r) => el("span", "pf-val", `${r.wins}`)),
-      );
+      const crewsCol = el("div", "pf-col");
+      const draw = () => {
+        const rows = boardAnime === "all" ? data.crews : data.byAnime?.[boardAnime] ?? [];
+        crewsCol.textContent = "";
+        crewsCol.append(...boardList(boardAnime === "all" ? t("topCrews") : `${t("topCrews")} · ${gameOf(boardAnime)?.anime ?? ""}`, rows, crewValue, crewFaces).childNodes);
+        chips.querySelectorAll("button").forEach((b) => b.classList.toggle("is-active", b.dataset.anime === boardAnime));
+      };
+      const chip = (id, content, title) => {
+        const b = el("button", "pf-board-chip");
+        b.type = "button";
+        b.dataset.anime = id;
+        b.title = title;
+        b.append(content);
+        b.addEventListener("click", () => { boardAnime = id; draw(); });
+        return b;
+      };
+      chips.append(chip("all", t("allAnime"), t("allAnime")));
+      for (const g of GAMES) {
+        const img = el("img");
+        img.src = ROOT + g.logo;
+        img.alt = g.anime;
+        chips.append(chip(g.id, img, g.anime));
+      }
+      cols.append(crewsCol, boardList(t("topWins"), data.wins, (r) => el("span", "pf-val", `${r.wins}`)));
+      draw();
     }).catch(() => { status.textContent = t("offline"); });
     return box;
   }
+  const crewValue = (r) => { const v = el("span", "pf-val"); v.append(el("i", `pf-mini-rank rank-${r.rank}`, r.rank), ` ${r.score.toFixed(1)}`); return v; };
+  // The crew's faces under the player's name.
+  function crewFaces(r) {
+    if (!r.members?.length) return null;
+    const faces = el("span", "pf-li-crew");
+    for (const m of r.members) {
+      const img = el("img");
+      img.src = portrait(r.anime, m.id);
+      img.alt = "";
+      img.loading = "lazy";
+      img.onerror = () => img.remove();
+      img.title = `${m.id.replace(/-/g, " ")} (${m.points})`;
+      faces.append(img);
+    }
+    return faces;
+  }
 
-  function boardList(title, rows, value) {
+  function boardList(title, rows, value, extra = null) {
     const col = el("div", "pf-col");
     col.append(el("h3", "pf-h", title));
     if (!rows.length) { col.append(el("p", "muted", t("empty"))); return col; }
@@ -619,7 +672,11 @@
       li.style.animationDelay = `${i * 40}ms`;
       const face = el("span", "pf-li-face");
       if (r.avatar) { const img = el("img"); img.src = avatarSrc(r.avatar); img.alt = ""; face.append(img); }
-      li.append(el("span", "pf-pos", String(i + 1)), face, el("span", "pf-li-name", r.name), value(r));
+      const who = el("span", "pf-li-who");
+      who.append(el("span", "pf-li-name", r.name));
+      const more = extra?.(r);
+      if (more) who.append(more);
+      li.append(el("span", "pf-pos", String(i + 1)), face, who, value(r));
       ol.append(li);
     });
     col.append(ol);
@@ -639,7 +696,7 @@
   else init();
 
   window.DLE_Profile = {
-    open, recordCrew, recordDuel,
+    open, recordCrew, recordDuel, leaderboard, crewFaces,
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get requests() { return friendState.requests; },
