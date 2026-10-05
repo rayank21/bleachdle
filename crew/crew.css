@@ -501,45 +501,70 @@
 .ix-card.is-locked .ix-name { color: var(--muted); }
 .ix-lock { position: absolute; z-index: 2; left: 50%; bottom: 10px; transform: translateX(-50%); padding: 4px 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.75); color: #ddd; font-size: 11.5px; font-weight: 800; white-space: nowrap; }
 
-/* ── Transformation cinematic (cinema.js) ── */
-.cine { --in: 0; position: fixed; inset: 0; z-index: 3000; overflow: hidden; cursor: pointer; contain: strict; transition: opacity 0.45s ease; }
-.cine::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(var(--c2), 0.55), #000 75%), #000; opacity: var(--in); }
-.cine.is-leaving { opacity: 0; }
-.cine.is-out { opacity: 0; transition-duration: 0.25s; }
-.cine-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
-.cine-cam { position: absolute; inset: 0; z-index: 2; will-change: transform; }
-.cine-stage { position: absolute; inset: 0; display: grid; place-items: center; opacity: var(--in); will-change: transform; transition: opacity 0.12s; }
-.cine-base { height: min(74vh, 130vw); max-width: 88vw; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 20%; border-radius: 22px; box-shadow: 0 0 0 2px rgba(var(--c1), 0.6), 0 0 60px rgba(var(--c1), 0.45); }
-.cine-clip { width: min(94vw, calc(76vh * 16 / 9)); aspect-ratio: 16 / 9; object-fit: cover; border-radius: 14px; background: #000; box-shadow: 0 0 0 2px rgba(var(--c1), 0.55), 0 0 80px rgba(var(--c1), 0.4); }
-.cine.is-cut .cine-stage { opacity: 0; }
-.cine-bar { position: absolute; left: 0; right: 0; z-index: 5; height: 11vh; background: #000; }
-.cine-bar.is-top { top: 0; transform: translateY(calc(-100% + var(--in) * 100%)); box-shadow: 0 1px 0 rgba(var(--c1), 0.5); }
-.cine-bar.is-bottom { bottom: 0; transform: translateY(calc(100% - var(--in) * 100%)); box-shadow: 0 -1px 0 rgba(var(--c1), 0.5); }
-.cine-skip { position: absolute; z-index: 6; right: 18px; bottom: calc(11vh + 10px); font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
-/* The cut: a blade of light across the screen, then a white flash. */
-.cine-slash { position: absolute; z-index: 6; top: -30%; bottom: -30%; left: 0; width: 46%; transform: translateX(-160%) skewX(-24deg); background: linear-gradient(90deg, transparent, rgba(var(--c1), 0.9) 40%, #fff 50%, rgba(var(--c1), 0.9) 60%, transparent); pointer-events: none; }
-.cine.is-cut .cine-slash { animation: cine-slash 0.34s cubic-bezier(.6, 0, .3, 1) both; }
-@keyframes cine-slash { to { transform: translateX(330%) skewX(-24deg); } }
-.cine-flash { position: absolute; inset: 0; z-index: 7; background: #fff; opacity: 0; pointer-events: none; }
-.cine.is-cut .cine-flash { animation: cine-flash 0.55s 0.16s ease-out both; }
-@keyframes cine-flash { 0% { opacity: 0.95; } 100% { opacity: 0; } }
-/* The reveal. */
-.cine-reveal { position: absolute; inset: 0; display: grid; place-items: center; visibility: hidden; }
-.cine.is-cut .cine-reveal { visibility: visible; }
-.cine-aura { position: absolute; width: min(120vw, 120vh); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--c1), 0.75), rgba(var(--c1), 0.25) 45%, rgba(var(--c2), 0.2) 70%, transparent); opacity: 0; }
-.cine.is-cut .cine-aura { animation: cine-aura-in 0.5s 0.2s ease-out both, cine-aura 0.9s 0.7s ease-in-out infinite alternate; }
-@keyframes cine-aura-in { from { opacity: 0; transform: scale(0.3); } to { opacity: 1; transform: scale(1); } }
-@keyframes cine-aura { from { opacity: 1; transform: scale(1); } to { transform: scale(1.08); opacity: 0.8; } }
-.cine-form { position: relative; height: min(70vh, 120vw); max-width: 86vw; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 20%; border-radius: 22px; box-shadow: 0 0 0 3px rgba(var(--c1), 0.85), 0 0 90px rgba(var(--c1), 0.7); opacity: 0; }
-.cine.is-cut .cine-form { animation: cine-slam 0.55s 0.18s cubic-bezier(.2, 1.4, .4, 1) both, cine-float 2.4s 0.8s ease-in-out infinite alternate; }
-@keyframes cine-slam { from { opacity: 0; transform: scale(1.45) rotate(-3deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
-@keyframes cine-float { from { opacity: 1; transform: scale(1); } to { opacity: 1; transform: scale(1.03); } }
-.cine-kanji { position: absolute; z-index: 2; top: 50%; left: 50%; font-size: min(24vw, 22vh); font-weight: 900; line-height: 1; white-space: nowrap; color: #fff; -webkit-text-stroke: 3px rgb(var(--c1)); text-shadow: 0 0 30px rgb(var(--c1)), 0 0 80px rgb(var(--c1)), 0 10px 0 rgba(0, 0, 0, 0.7); font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif; opacity: 0; transform: translate(-50%, -50%); pointer-events: none; }
-.cine.is-cut .cine-kanji { animation: cine-kanji 1.7s 0.42s cubic-bezier(.2, .9, .2, 1) both; }
-@keyframes cine-kanji { 0% { opacity: 0; transform: translate(-50%, -50%) scale(3.2); } 18% { opacity: 1; transform: translate(-50%, -50%) scale(0.92); } 26% { transform: translate(-50%, -50%) scale(1); } 70% { opacity: 0.95; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); } }
-.cine-title { position: absolute; z-index: 3; left: 0; right: 0; bottom: calc(11vh + 4vh); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 16px; text-align: center; }
-.cine-who { font-size: 15px; font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); opacity: 0; }
-.cine-form-name { font-size: clamp(26px, 5.4vw, 58px); font-weight: 900; font-style: italic; line-height: 1.05; letter-spacing: -0.01em; color: #fff; text-shadow: 0 0 24px rgba(var(--c1), 0.9), 0 4px 0 rgba(0, 0, 0, 0.6); opacity: 0; text-wrap: balance; }
-.cine.is-cut .cine-who { animation: cine-up 0.5s 0.55s ease-out both; }
-.cine.is-cut .cine-form-name { animation: cine-up 0.55s 0.65s cubic-bezier(.2, 1.3, .4, 1) both; }
-@keyframes cine-up { from { opacity: 0; transform: translateY(26px); letter-spacing: 0.2em; } to { opacity: 1; transform: none; } }
+/* ── Transformation cinematic (cinema.js) ──
+   Planes, back to front: background and glows, particles (canvas), diagonal bands and the kanji, the character,
+   the type, foreground lines and particles, then the exit panels. Desktop: character right, type left. Mobile:
+   character centred, type below. */
+.cine { --cy: 120, 225, 255; position: fixed; inset: 0; z-index: 3000; overflow: hidden; contain: strict; cursor: pointer; isolation: isolate; color: #fff; }
+.cine-bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 62% 55%, #0d1a33 0%, #070c1a 45%, #03050b 100%); opacity: 0; }
+.cine-glow { position: absolute; left: 62%; top: 52%; width: 90vmax; height: 90vmax; margin: -45vmax 0 0 -45vmax; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--cy), 0.32), rgba(var(--cy), 0.08) 45%, transparent 70%); opacity: 0; pointer-events: none; }
+.cine-glow.is-char { left: 66%; top: 40%; width: 55vmax; height: 55vmax; margin: -27.5vmax 0 0 -27.5vmax; background: radial-gradient(closest-side, rgba(var(--c1), 0.35), transparent 70%); }
+.cine-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.cine-fx.is-front { z-index: 3; }
+.cine-world { position: absolute; inset: 0; z-index: 2; transform-origin: 62% 55%; }
+/* Graphic shapes: three diagonal bands and the kanji in outline. */
+.cine-shapes { position: absolute; inset: 0; }
+.cine-band { position: absolute; top: -20%; bottom: -20%; opacity: 0; }
+.cine-band.is-a { left: 44%; width: 15vw; background: linear-gradient(180deg, transparent, rgba(var(--cy), 0.10) 35%, rgba(var(--cy), 0.04)); border-left: 1px solid rgba(var(--cy), 0.35); }
+.cine-band.is-b { left: 63%; width: 26vw; background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 70%); border-left: 1px solid rgba(255, 255, 255, 0.12); }
+.cine-band.is-c { left: 84%; width: 4vw; background: rgba(var(--c1), 0.22); }
+.cine-kanji { position: absolute; left: 63%; top: 46%; font: 900 min(46vh, 34vw) / 1 "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(var(--cy), 0.22); opacity: 0; transform: translate(-50%, -50%); pointer-events: none; }
+/* The character: a cut-out standing on the bottom edge, or a feathered diagonal frame for close-ups. */
+.cine-hero { position: absolute; inset: 0; clip-path: polygon(-30% 0, -30% 0, -60% 100%, -60% 100%); }
+.cine-hero img { position: absolute; display: block; }
+.cine-hero.is-cut img { left: 62%; bottom: 0; height: 86vh; width: auto; max-width: 48vw; object-fit: contain; object-position: bottom; translate: -50% 0; filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)); }
+.cine-hero.is-framed img { left: 61%; top: 50%; height: 78vh; aspect-ratio: 4 / 5; width: auto; max-width: 52vw; object-fit: cover; object-position: center 25%; translate: -50% -50%; clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 85%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent), linear-gradient(180deg, transparent, #000 12%, #000 85%, transparent); mask-composite: intersect; }
+/* The anime clip, in a diagonal panel. */
+.cine-clip { position: absolute; left: 50%; top: 50%; width: min(86vw, calc(70vh * 16 / 9)); aspect-ratio: 16 / 9; translate: -50% -50%; clip-path: polygon(0 0, 0 0, -12% 100%, -12% 100%); overflow: hidden; }
+.cine-clip video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cine-clip::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(var(--cy), 0.45), inset 0 0 60px rgba(3, 5, 11, 0.7); }
+/* Type. */
+.cine-type { position: absolute; left: 7vw; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; max-width: 40vw; }
+.cine-kicker { font-size: 13px; font-weight: 800; letter-spacing: 0.42em; text-transform: uppercase; color: rgb(var(--cy)); opacity: 0; }
+.cine-name { margin: 0; font-size: clamp(40px, 6.4vw, 104px); font-weight: 900; font-style: italic; line-height: 0.92; letter-spacing: -0.02em; text-transform: uppercase; color: #fff; text-wrap: balance; clip-path: inset(-10% 100% -10% 0); }
+.cine-form { position: relative; margin-top: 6px; padding: 5px 14px 5px 12px; font-size: clamp(14px, 1.5vw, 22px); font-weight: 800; color: #fff; background: linear-gradient(90deg, rgba(var(--c1), 0.85), rgba(var(--c1), 0.15)); clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%); opacity: 0; }
+.cine-sub { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); opacity: 0; }
+.cine-streak { position: absolute; left: 0; top: 30%; width: 70%; height: 3px; background: linear-gradient(90deg, transparent, #fff 45%, rgb(var(--cy)) 55%, transparent); opacity: 0; pointer-events: none; }
+/* Foreground lines. */
+.cine-front { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+.cine-line { position: absolute; top: -10%; bottom: -10%; width: 1px; background: linear-gradient(180deg, transparent, rgba(var(--cy), 0.6), transparent); transform: skewX(-18deg); }
+.cine-line.is-a { left: 30%; }
+.cine-line.is-b { left: 92%; opacity: 0.5; }
+/* Exit panels. */
+.cine-wipe { position: absolute; z-index: 5; top: -10%; bottom: -10%; left: -30%; width: 160%; transform: translateX(-140%) skewX(-18deg); pointer-events: none; }
+.cine-wipe.is-a { background: linear-gradient(90deg, rgb(var(--cy)), #e9fbff); }
+.cine-wipe.is-b { background: #05080f; box-shadow: -2px 0 0 rgba(var(--c1), 0.9); }
+/* Skip. */
+.cine-skip { position: absolute; z-index: 6; right: 22px; bottom: 22px; padding: 10px 18px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 999px; background: rgba(3, 5, 11, 0.55); color: #fff; font: 800 14px var(--font); letter-spacing: 0.04em; cursor: pointer; }
+.cine-skip:hover { background: rgba(var(--cy), 0.2); border-color: rgb(var(--cy)); }
+.cine-skip:focus-visible { outline: 2px solid rgb(var(--cy)); outline-offset: 3px; }
+/* Mobile: the character centred and smaller, the type at the bottom, face and name always visible. */
+.cine.is-mobile .cine-world { transform-origin: 50% 45%; }
+.cine.is-mobile .cine-glow { left: 50%; top: 40%; }
+.cine.is-mobile .cine-glow.is-char { left: 50%; top: 34%; }
+.cine.is-mobile .cine-hero.is-cut img { left: 50%; bottom: 30vh; height: 58vh; max-width: 92vw; }
+.cine.is-mobile .cine-hero.is-framed img { left: 50%; top: 36%; height: 50vh; max-width: 88vw; }
+.cine.is-mobile .cine-kanji { left: 50%; top: 34%; font-size: 58vw; }
+.cine.is-mobile .cine-band.is-a { left: 12%; width: 22vw; }
+.cine.is-mobile .cine-band.is-b { left: 52%; width: 40vw; }
+.cine.is-mobile .cine-band.is-c { left: 90%; width: 6vw; }
+.cine.is-mobile .cine-type { left: 6vw; right: 6vw; top: auto; bottom: 9vh; translate: none; max-width: none; }
+.cine.is-mobile .cine-name { font-size: clamp(34px, 11vw, 64px); }
+.cine.is-mobile .cine-clip { width: 94vw; }
+.cine.is-mobile .cine-skip { right: 14px; bottom: auto; top: 14px; }
+/* Reduced motion: no moving pieces, everything simply shown. */
+.cine.is-quiet .cine-bg, .cine.is-quiet .cine-glow, .cine.is-quiet .cine-band, .cine.is-quiet .cine-kanji, .cine.is-quiet .cine-kicker,
+.cine.is-quiet .cine-form, .cine.is-quiet .cine-sub { opacity: 1; }
+.cine.is-quiet .cine-glow { opacity: 0.7; }
+.cine.is-quiet .cine-band { transform: skewX(-18deg); }
+.cine.is-quiet .cine-hero, .cine.is-quiet .cine-name { clip-path: none; }

@@ -54,8 +54,8 @@ const imagesStarting = async (prefix) =>
   (await api({ action: "query", list: "allimages", aiprefix: prefix.replace(/ /g, "_"), ailimit: "200" })).query.allimages.map((i) => i.name);
 
 // Portraits from the anime, not the manga: "<name> (Anime) character image", where the wiki often keeps the old
-// spellings (Jaeger, Ackermann, Pyxis). The look from the first seasons (year 850, then the undated one) comes first, so the
-// final-season designs (often the undated one) don't spoil anything; childhood pictures (845) only as a last resort.
+// spellings (Jaeger, Ackermann, Pyxis). The most recent look comes first: the final season (year 854, then the undated
+// picture, usually the final-season design), then older years; childhood pictures (845) only as a last resort.
 const SPELLINGS = [["Yeager", "Jaeger"], ["Ackerman", "Ackermann"], ["Pixis", "Pyxis"], ["Kirstein", "Kirschtein"], ["Zoë", "Zoe"], ["Dok", "Dawk"],
   ["Arlert", "Arlelt"], ["Blouse", "Braus"], ["Ral", "Rall"], ["Eld Jinn", "Eld Gin"], ["Bott", "Bodt"], ["Shadis", "Sadies"],
   ["Connie", "Conny"], ["Mike Zacharias", "Miche Zacharius"], ["Oluo Bozado", "Oruo Bozad"]];
@@ -71,7 +71,7 @@ async function animeImage(title, extra = []) {
       if (m && wanted.has(m[1].toLowerCase())) found.push({ file: hit.title.slice(5), year: m[2] ? Number(m[2]) : null });
     }
   }
-  const rank = (x) => (x.year === 850 ? 0 : x.year === null ? 1 : x.year > 845 ? 2 + Math.abs(x.year - 850) : 100);
+  const rank = (x) => (x.year === null ? 1 : x.year >= 854 ? 0 : x.year > 845 ? 2 + (854 - x.year) : 100);
   found.sort((a, b) => rank(a) - rank(b));
   return found[0] ? fileUrl(found[0].file) : null;
 }

@@ -1321,6 +1321,26 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/szayelaporro-granz.webp"
  },
  {
+  "id": "zommari-rureaux",
+  "name": "Zommari Rureaux",
+  "gender": "M",
+  "race": [
+   "Arrancar"
+  ],
+  "age": "Unknown",
+  "hair": [
+   "Bald"
+  ],
+  "height": 196,
+  "residence": [
+   "Las Noches",
+   "Hueco Mundo"
+  ],
+  "arc": 2,
+  "affiliation": "Espada",
+  "image": "assets/characters/zommari-rureaux.webp"
+ },
+ {
   "id": "aaroniero-arruruerie",
   "name": "Aaroniero Arruruerie",
   "gender": "M",

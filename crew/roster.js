@@ -147,7 +147,7 @@
         rangiku-matsumoto:5 kenpachi-zaraki:10 yachiru-kusajishi:7 ikkaku-madarame:6 yumichika-ayasegawa:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5
         jushiro-ukitake:8 ryuken-ishida:7 shinji-hirako:9 hiyori-sarugaki:5 love-aikawa:7 rojuro-otoribashi:6 kensei-muguruma:8 mashiro-kuna:5
         lisa-yadomaru:6 hachigen-ushoda:7 ulquiorra-cifer:10 yammy-llargo:7 grimmjow-jaegerjaquez:8 coyote-starrk:9 barragan-louisenbairn:8
-        tier-harribel:8 nnoitra-gilga:7 szayelaporro-granz:7 aaroniero-arruruerie:6 luppi-antenor:4 nelliel-tu-odelschwanck:7 loly-aivirrne:2
+        tier-harribel:8 nnoitra-gilga:7 szayelaporro-granz:7 zommari-rureaux:7 aaroniero-arruruerie:6 luppi-antenor:4 nelliel-tu-odelschwanck:7 loly-aivirrne:2
         wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:9 shukuro-tsukishima:8 riruka-dokugamine:4
         yukio-hans-vorarlberna:5 jackie-tristan:4 giriko-kutsuzawa:5 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
         bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:8 quilge-opie:6

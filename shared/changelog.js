@@ -7,6 +7,16 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-05T23:56",
+      title: { en: "New cinematics, latest looks, admirals and Espada", fr: "Nouvelles cinématiques, looks récents, amiraux et Espada" },
+      items: [
+        { type: "improved", game: "crew", en: "Transformation cinematics redone: a deep blue night scene in layers, the character cut out cleanly and uncovered by a diagonal mask, the name in big letters with the form and the group, a slow camera push-in, then diagonal panels that hand back to the site. A Skip button (or Escape) ends it at once.", fr: "Cinématiques de transformation refaites : une scène bleu nuit en plusieurs plans, le perso proprement détouré et dévoilé par un masque diagonal, son nom en grand avec la forme et son groupe, un lent travelling avant, puis des panneaux en diagonale qui ramènent au site. Un bouton Passer (ou Échap) l'arrête tout de suite." },
+        { type: "improved", en: "Portraits in their most recent look: Naruto characters in Shippuden, Attack on Titan in the final season.", fr: "Portraits dans leur look le plus récent : les persos de Naruto en Shippuden, ceux de L'Attaque des Titans dans la saison finale." },
+        { type: "new", game: "crew", en: "New transformations: the admirals' Logia (Akainu's magma, Aokiji's ice, Kizaru's light), Magellan's Venom Demon and Barragan's Arrogante.", fr: "Nouvelles transformations : les Logia des amiraux (magma d'Akainu, glace d'Aokiji, lumière de Kizaru), le Démon du venin de Magellan et l'Arrogante de Barragan." },
+        { type: "new", game: "bleach", en: "Zommari Rureaux joins Bleach (Arrancar 7).", fr: "Zommari Rureaux rejoint Bleach (Arrancar 7)." },
+      ],
+    },
+    {
       at: "2026-10-05T23:40",
       title: { en: "Black Clover devils", fr: "Les démons de Black Clover" },
       items: [

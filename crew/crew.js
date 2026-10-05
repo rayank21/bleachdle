@@ -458,6 +458,15 @@
     return anim.finished.then(() => { img.remove(); ghosts.forEach((g) => g.remove()); }, () => img.remove());
   }
 
+  // The cinematic's small line under the name: the character's group (affiliation, village, crew…), if known.
+  function subtitleOf(c) {
+    for (const k of ["affiliation", "aff", "village", "team", "squad", "org", "grade", "rank"]) {
+      const v = Array.isArray(c[k]) ? c[k][0] : c[k];
+      if (typeof v === "string" && v && !/^(none|unknown)$/i.test(v)) return v;
+    }
+    return "";
+  }
+
   // Transformation of a character at this arc (crew/forms.js), with its portrait.
   function formFor(game, c, arc) {
     const f = window.CREW_FORMS?.[game]?.[c.id];
@@ -667,6 +676,8 @@
         }
       },
       async spin(list, pick, { game = null, arc = 99 } = {}) {
+        // A card that will transform: its cinematic's pictures load while the reel turns.
+        if (game) window.CREW_CINEMA?.preload?.(formFor(game, pick, arc));
         wrap.classList.remove("is-landed");
         clearTier();
         tier.hidden = true;
@@ -746,7 +757,7 @@
         hint.textContent = "";
         sfx("powerup");
         // The full-screen cinematic (cinema.js), or the short charge on the card alone.
-        await (window.CREW_CINEMA?.play({ form, char: c, base: c.image }) ?? new Promise((r) => setTimeout(r, 1500)));
+        await (window.CREW_CINEMA?.play({ form, char: c, sub: subtitleOf(c) }) ?? new Promise((r) => setTimeout(r, 1500)));
         c.form = form;
         c.formImage = form.image;
         strip.textContent = "";

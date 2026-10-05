@@ -80,6 +80,7 @@ export const seed = [
   { name: "Tier Harribel", wiki: "Tier Harribel", gender: "F", race: ["Arrancar"], age: "Unknown", hair: ["Blonde"], height: 175, residence: ["Las Noches", "Hueco Mundo"], arc: 2, affiliation: "Espada" },
   { name: "Nnoitra Gilga", wiki: "Nnoitra Gilga", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Black"], height: 215, residence: ["Las Noches", "Hueco Mundo"], arc: 2, affiliation: "Espada" },
   { name: "Szayelaporro Granz", wiki: "Szayelaporro Granz", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Pink"], height: 184, residence: ["Las Noches", "Hueco Mundo"], arc: 2, affiliation: "Espada" },
+  { name: "Zommari Rureaux", wiki: "Zommari Rureaux", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Bald"], height: 202, residence: ["Las Noches", "Hueco Mundo"], arc: 2, affiliation: "Espada" },
   { name: "Aaroniero Arruruerie", wiki: "Aaroniero Arruruerie", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Black"], height: 172, residence: ["Las Noches", "Hueco Mundo"], arc: 2, affiliation: "Espada" },
   { name: "Luppi Antenor", wiki: "Luppi Antenor", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Black"], height: 160, residence: ["Las Noches", "Hueco Mundo"], arc: 2, affiliation: "Espada" },
 
