@@ -2099,9 +2099,10 @@
     if (n < 40) card.style.animationDelay = `${n * 18}ms`;
     const top = el("div", "ix-top");
     const img = el("img", "ix-face");
+    img.loading = "lazy";
+    img.decoding = "async";
     img.src = c.image;
     img.alt = "";
-    img.loading = "lazy";
     top.append(img, el("span", "ix-tier", t("tiers")[tier]), el("span", "ix-power", String(c.power)));
     // A transformation: tap the portrait to see it.
     if (form) {

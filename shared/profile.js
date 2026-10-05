@@ -486,6 +486,8 @@
       const faces = el("div", "pf-crew-faces");
       for (const m of best.members) {
         const f = el("img");
+        f.loading = "lazy";
+        f.decoding = "async";
         f.src = portrait(best.anime, m.id);
         f.alt = m.name;
         f.title = `${m.role}: ${m.name} (${m.points})`;
@@ -759,6 +761,8 @@
     const faces = el("span", "pf-li-crew");
     for (const m of r.members) {
       const img = el("img");
+      img.loading = "lazy";
+      img.decoding = "async";
       img.src = portrait(r.anime, m.id);
       img.alt = "";
       img.loading = "lazy";

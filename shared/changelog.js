@@ -1,27 +1,41 @@
-// Patch notes: a big "What's new" window that opens by itself when a player arrives and something changed since
-// their last visit (newest day first, expanded), and a header button to open it again. Add the newest day on top.
+// Patch notes, one entry per update (date and time), newest first, shown a few per page. The window opens by
+// itself only for updates the player has not seen yet, showing just those; the header button shows them all.
 (() => {
   "use strict";
 
-  // type: new | improved | balance | fix. game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
+  // at: local date and time of the update. type: new | improved | balance | fix.
+  // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
-      date: "2026-10-05",
-      title: { en: "Blurred and Description games, team vs team, Attack on Titan", fr: "Jeux Flou et Description, équipe contre équipe, L'Attaque des Titans" },
+      at: "2026-10-05T20:50",
+      title: { en: "Lighter patch notes, faster on phones", fr: "Nouveautés plus légères, plus rapide sur téléphone" },
+      items: [
+        { type: "improved", en: "Faster on phones and PC: pictures stay in your browser between visits, leaderboard and index faces load only when you scroll to them, taps react at once and typing no longer zooms the page on iPhone.", fr: "Plus rapide sur téléphone et PC : les images restent dans ton navigateur d'une visite à l'autre, les visages du classement et de l'index ne chargent que quand tu descends jusqu'à eux, les appuis réagissent tout de suite et écrire ne zoome plus la page sur iPhone." },
+        { type: "improved", en: "What's new is split by update (date and time) and into pages, and only opens by itself for what you have not seen yet. Everything else stays behind the What's new button.", fr: "Les Nouveautés sont rangées par mise à jour (date et heure) et en pages, et ne s'ouvrent toutes seules que pour ce que tu n'as pas encore vu. Le reste est derrière le bouton Nouveautés." },
+      ],
+    },
+    {
+      at: "2026-10-05T20:32",
+      title: { en: "Smoother site and My stats", fr: "Site plus fluide et Mes stats" },
       items: [
         { type: "improved", en: "Smoother everywhere (60 fps): no more blur behind menus and the top bar, animations that no longer redraw the page, a much lighter Crew Roll index and draw, a background that loads only what fits on screen.", fr: "Plus fluide partout (60 fps) : plus de flou derrière les menus et la barre du haut, des animations qui ne redessinent plus la page, un index et un tirage de Roll ton équipage beaucoup plus légers, un fond qui ne charge que ce qui tient à l'écran." },
         { type: "new", en: "Profile: a My stats section with your games played, wins and win rate, rolls and rerolls, guesses, best streak, crews built, online matches, time played and favourite anime.", fr: "Profil : une section Mes stats avec tes parties jouées, victoires et taux de victoire, rolls et relances, essais, meilleure série, équipages construits, matchs en ligne, temps de jeu et animé préféré." },
+      ],
+    },
+    {
+      at: "2026-10-05T20:12",
+      title: { en: "Blurred and Description games, team vs team", fr: "Jeux Flou et Description, équipe contre équipe" },
+      items: [
         { type: "new", en: "Blurred game: guess the character from a blurred picture that gets sharper with every guess.", fr: "Jeu Flou : trouve le perso à partir d'une image floue qui se précise à chaque essai." },
         { type: "new", en: "Description game: a description of the character; after 3 guesses a technique or a place, after 5 a nickname or the first letter. 687 descriptions, spoiler-free.", fr: "Jeu Description : une description du perso ; après 3 essais une technique ou un lieu, après 5 un surnom ou la première lettre. 687 descriptions, sans spoiler." },
         { type: "new", en: "Team vs team online: red against blue in the guessing races (all three games) and in Crew Roll. The host turns it on in the room.", fr: "Équipe contre équipe en ligne : rouges contre bleus dans les courses (les trois jeux) et dans Roll ton équipage. L'hôte l'active dans la salle." },
         { type: "improved", en: "The strongest characters glow: a gold aura for power 10, violet for 9, in suggestions, guesses and results.", fr: "Les persos les plus forts brillent : aura dorée pour la puissance 10, violette pour 9, dans les suggestions, les essais et les résultats." },
-        { type: "new", game: "attackontitan", en: "Snkdle: 57 Attack on Titan characters over 7 anime arcs, spoiler-free (Titan shifters are only revealed with the anime).", fr: "Snkdle : 57 persos de L'Attaque des Titans sur 7 arcs, sans spoiler (les Titans Shifters ne sont révélés qu'avec l'anime)." },
-        { type: "new", game: "crew", en: "Crew Roll Attack on Titan: Titans, Survey Corps, Strategist, Garrison, Marley, Commander and Wildcard, with 11 Titan transformations.", fr: "Roll ton équipage SNK : Titans, Bataillon, Stratège, Garnison, Mahr, Commandant et Joker, avec 11 transformations en Titan." },
-        { type: "new", game: "onepiece", en: "19 new One Piece characters: Bepo, Laffitte, Crocus, Nico Olvia, Streusen, Sukiyaki, Benn Beckman, Lucky Roux, Yasopp, Oven, Perospero…", fr: "19 nouveaux persos One Piece : Bépo, Laffitte, Crocus, Nico Olvia, Streusen, Sukiyaki, Ben Beckman, Lucky Roux, Yasopp, Oven, Perospero…" },
-        { type: "new", game: "bleach", en: "Akon joins Bleach, as an engineer.", fr: "Akon rejoint Bleach, en ingénieur." },
-        { type: "improved", en: "Portraits now come from the anime instead of the manga (Attack on Titan, Black Clover), in the characters' early look.", fr: "Les portraits viennent maintenant de l'anime et plus du manga (SNK, Black Clover), dans le look du début." },
-        { type: "balance", game: "bleach", en: "Bleach: Visored and Quincy ratings spread out, Tenjiro healer 10, Kenpachi 10, Uryu 8, Tsukishima and Sasakibe 7.", fr: "Bleach : notes des Visored et Quincy plus variées, Tenjirō soigneur 10, Kenpachi 10, Uryū 8, Tsukishima et Sasakibe 7." },
-        { type: "balance", game: "blackclover", en: "Black Clover: Rades healer 9.", fr: "Black Clover : Rades soigneur 9." },
+      ],
+    },
+    {
+      at: "2026-10-05T19:48",
+      title: { en: "New characters and ratings for every anime", fr: "Nouveaux persos et notes pour chaque animé" },
+      items: [
         { type: "new", game: "onepiece", en: "One Piece: Scopper Gaban, Den, Peepley Lulu, Gaimon, Charlos, Figarland Garling and Shamrock.", fr: "One Piece : Scopper Gaban, Den, Peepley Lulu, Gaimon, Charlos, Figarland Garling et Shamrock." },
         { type: "new", game: "dragonball", en: "Dragon Ball: Dr. Brief, Gamma 1 and 2, Saonel and Pirina.", fr: "Dragon Ball : Dr Brief, Gamma 1 et 2, Saonel et Pirina." },
         { type: "new", game: "attackontitan", en: "Attack on Titan: Marlo and Traute; the Garrison slot becomes Garrison / Military Police.", fr: "SNK : Marlo et Traute ; la case Garnison devient Garnison / Brigades spéciales." },
@@ -33,13 +47,44 @@
         { type: "balance", game: "jujutsukaisen", en: "Jujutsu Kaisen: Kamo and Mechamaru 8 and Mai 7 at Kyoto, Higuruma 9 and Hana 8 as Freelance; Sukuna healer 9; Tengen and Kenjaku strategists 9.", fr: "Jujutsu Kaisen : Kamo et Mechamaru 8 et Mai 7 à Kyoto, Higuruma 9 et Hana 8 en Indépendants ; Sukuna soigneur 9 ; Tengen et Kenjaku stratèges 9." },
         { type: "balance", game: "blackclover", en: "Black Clover: Yami 10, Nozel 9 (11 as captain); William 9, Langris 8 and Klaus 7 in the Golden Dawn.", fr: "Black Clover : Yami 10, Nozel 9 (11 en capitaine) ; William 9, Langris 8 et Klaus 7 dans l'Aube Dorée." },
         { type: "balance", game: "attackontitan", en: "Attack on Titan: Hange 7 and Connie 6 in the Survey Corps; Rico 8 and Ian 6 in the Garrison.", fr: "SNK : Hange 7 et Connie 6 au Bataillon ; Rico 8 et Ian 6 à la Garnison." },
+      ],
+    },
+    {
+      at: "2026-10-05T17:46",
+      title: { en: "Crew Roll index and leaderboard per anime", fr: "Index de Roll ton équipage et classement par animé" },
+      items: [
         { type: "new", game: "crew", en: "Crew Roll index: every card of each anime with its rarity, its power and what it scores in every role. Search, filter by rarity and sort by role.", fr: "Index de Roll ton équipage : toutes les cartes de chaque animé avec leur rareté, leur puissance et ce qu'elles rapportent dans chaque rôle. Recherche, filtre par rareté et tri par rôle." },
         { type: "new", en: "Leaderboard per anime: the best Bleach crews, One Piece crews and so on, with each crew's faces.", fr: "Classement par animé : les meilleurs équipages Bleach, One Piece, etc., avec les visages de chaque équipage." },
+      ],
+    },
+    {
+      at: "2026-10-05T14:43",
+      title: { en: "Steadier online play", fr: "Jeu en ligne plus stable" },
+      items: [
         { type: "fix", en: "No more getting kicked offline: a connection that drops for a moment (phone in the background, network hiccup) now comes back by itself, and an online match carries on where it was.", fr: "Fini les déconnexions intempestives : une connexion qui saute un instant (téléphone en arrière-plan, réseau qui coupe) revient toute seule, et le match en ligne reprend où il en était." },
       ],
     },
     {
-      date: "2026-10-04",
+      at: "2026-10-05T14:02",
+      title: { en: "Bleach and Black Clover ratings", fr: "Notes Bleach et Black Clover" },
+      items: [
+        { type: "new", game: "bleach", en: "Akon joins Bleach, as an engineer.", fr: "Akon rejoint Bleach, en ingénieur." },
+        { type: "balance", game: "bleach", en: "Bleach: Visored and Quincy ratings spread out, Tenjiro healer 10, Kenpachi 10, Uryu 8, Tsukishima and Sasakibe 7.", fr: "Bleach : notes des Visored et Quincy plus variées, Tenjirō soigneur 10, Kenpachi 10, Uryū 8, Tsukishima et Sasakibe 7." },
+        { type: "balance", game: "blackclover", en: "Black Clover: Rades healer 9.", fr: "Black Clover : Rades soigneur 9." },
+      ],
+    },
+    {
+      at: "2026-10-05T13:42",
+      title: { en: "Attack on Titan", fr: "L'Attaque des Titans" },
+      items: [
+        { type: "new", game: "attackontitan", en: "Snkdle: 57 Attack on Titan characters over 7 anime arcs, spoiler-free (Titan shifters are only revealed with the anime).", fr: "Snkdle : 57 persos de L'Attaque des Titans sur 7 arcs, sans spoiler (les Titans Shifters ne sont révélés qu'avec l'anime)." },
+        { type: "new", game: "crew", en: "Crew Roll Attack on Titan: Titans, Survey Corps, Strategist, Garrison, Marley, Commander and Wildcard, with 11 Titan transformations.", fr: "Roll ton équipage SNK : Titans, Bataillon, Stratège, Garnison, Mahr, Commandant et Joker, avec 11 transformations en Titan." },
+        { type: "new", game: "onepiece", en: "19 new One Piece characters: Bepo, Laffitte, Crocus, Nico Olvia, Streusen, Sukiyaki, Benn Beckman, Lucky Roux, Yasopp, Oven, Perospero…", fr: "19 nouveaux persos One Piece : Bépo, Laffitte, Crocus, Nico Olvia, Streusen, Sukiyaki, Ben Beckman, Lucky Roux, Yasopp, Oven, Perospero…" },
+        { type: "improved", en: "Portraits now come from the anime instead of the manga (Attack on Titan, Black Clover), in the characters' early look.", fr: "Les portraits viennent maintenant de l'anime et plus du manga (SNK, Black Clover), dans le look du début." },
+      ],
+    },
+    {
+      at: "2026-10-04T22:48",
       title: { en: "Black Clover, friends and turn-based duels", fr: "Black Clover, amis et duels au tour par tour" },
       items: [
         { type: "new", game: "blackclover", en: "Blackcloverdle: 70 Black Clover characters over 10 arcs, also in Crew Roll.", fr: "Blackcloverdle : 70 persos de Black Clover sur 10 arcs, aussi dans Roll ton équipage." },
@@ -53,7 +98,7 @@
       ],
     },
     {
-      date: "2026-10-02",
+      at: "2026-10-02T17:35",
       title: { en: "Smoother Crew Roll", fr: "Roll ton équipage plus fluide" },
       items: [
         { type: "fix", game: "crew", en: "No more getting stuck with a character that fits nowhere: a free skip appears.", fr: "Plus de blocage avec un perso qui ne rentre nulle part : un bouton passer apparaît." },
@@ -63,10 +108,13 @@
     },
   ];
 
+  const PAGE = 3;
   const T = {
-    en: { title: "What's new", today: "Today", button: "What's new", close: "Let's go!", older: "Earlier updates",
+    en: { title: "What's new", today: "Today", button: "What's new", close: "Let's go!", unseen: (n) => `${n} new update${n > 1 ? "s" : ""}`,
+      prev: "Newer", next: "Older", page: (a, b) => `Page ${a} / ${b}`,
       types: { new: "New", improved: "Improved", balance: "Balance", fix: "Fix" }, crew: "Crew Roll" },
-    fr: { title: "Nouveautés", today: "Aujourd'hui", button: "Nouveautés", close: "C'est parti !", older: "Mises à jour précédentes",
+    fr: { title: "Nouveautés", today: "Aujourd'hui", button: "Nouveautés", close: "C'est parti !", unseen: (n) => `${n} nouvelle${n > 1 ? "s" : ""} mise${n > 1 ? "s" : ""} à jour`,
+      prev: "Plus récent", next: "Plus ancien", page: (a, b) => `Page ${a} / ${b}`,
       types: { new: "Nouveau", improved: "Amélioré", balance: "Équilibrage", fix: "Correctif" }, crew: "Roll ton équipage" },
   };
   const KEY = "dle:changelog-seen";
@@ -74,8 +122,7 @@
   const t = (k) => T[lang()][k];
   const ROOT = (document.currentScript?.src || "").replace(/shared\/changelog\.js.*$/, "");
   const GAMES = window.DLE_GAMES || [];
-  // The day plus its number of items: news added later the same day opens the window again.
-  const latest = `${LOG[0].date}#${String(LOG[0].items.length).padStart(3, "0")}`;
+  const latest = LOG[0].at;
 
   const el = (tag, cls, text) => {
     const e = document.createElement(tag);
@@ -85,7 +132,22 @@
   };
   const todayKey = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
   const longDate = (key) => new Date(`${key}T12:00:00`).toLocaleDateString(lang(), { weekday: "long", day: "numeric", month: "long" });
-  const seen = () => { try { return localStorage.getItem(KEY) || ""; } catch { return ""; } };
+  const clock = (at) => (lang() === "fr" ? at.slice(11).replace(":", "h") : at.slice(11));
+  // The last update seen. Older saves were "day#item count": that day's updates are seen up to that many items.
+  const seen = () => {
+    let v = "";
+    try { v = localStorage.getItem(KEY) || ""; } catch {}
+    const old = /^(\d{4}-\d{2}-\d{2})#(\d+)$/.exec(v);
+    if (!old) return v;
+    let mark = `${old[1]}T00:00`;
+    let count = 0;
+    for (const u of LOG.filter((x) => x.at.startsWith(old[1])).reverse()) {
+      count += u.items.length;
+      if (count > Number(old[2])) break;
+      mark = u.at;
+    }
+    return LOG.some((x) => x.at.startsWith(old[1])) ? mark : `${old[1]}T23:59`;
+  };
   const markSeen = () => { try { localStorage.setItem(KEY, latest); } catch {} renderButton(); };
 
   const ICONS = {
@@ -119,22 +181,22 @@
     return img;
   }
 
-  function day(entry, { open, isNew }) {
+  function update(entry, { open, isNew }) {
     const box = el("details", `cl-day${isNew ? " is-new" : ""}`);
     box.open = open;
     const head = el("summary", "cl-day-head");
-    const when = el("span", "cl-date", entry.date === todayKey() ? `${t("today")} · ${longDate(entry.date)}` : longDate(entry.date));
-    head.append(when, el("span", "cl-day-title", entry.title[lang()]));
+    const date = entry.at.slice(0, 10);
+    const when = `${date === todayKey() ? `${t("today")} · ` : ""}${longDate(date)} · ${clock(entry.at)}`;
+    head.append(el("span", "cl-date", when), el("span", "cl-day-title", entry.title[lang()]));
     box.append(head);
     const list = el("ul", "cl-list");
     entry.items.forEach((item, i) => {
       const li = el("li", "cl-item");
-      li.style.animationDelay = `${120 + i * 60}ms`;
+      li.style.animationDelay = `${60 + i * 40}ms`;
       const mark = gameMark(item.game);
-      const text = el("p", "cl-text", item[lang()]);
       li.append(badge(item));
       if (mark) li.append(mark);
-      li.append(text);
+      li.append(el("p", "cl-text", item[lang()]));
       list.append(li);
     });
     box.append(list);
@@ -142,21 +204,22 @@
   }
 
   let dialog = null;
-  function open() {
-    const lastSeen = seen();
-    if (!dialog) {
-      dialog = el("dialog", "cl-modal");
-      dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
-      dialog.addEventListener("close", markSeen);
-      document.body.append(dialog);
-    }
+  let view = { onlyNew: false, page: 0, lastSeen: "" };
+
+  function render() {
+    // A first visit only gets the latest update; the rest is behind the button.
+    const entries = !view.onlyNew ? LOG : view.lastSeen ? LOG.filter((u) => u.at > view.lastSeen) : LOG.slice(0, 1);
+    const pages = Math.max(1, Math.ceil(entries.length / PAGE));
+    view.page = Math.min(Math.max(0, view.page), pages - 1);
+    const shown = entries.slice(view.page * PAGE, view.page * PAGE + PAGE);
+
     const card = el("div", "cl-card");
     const glow = el("div", "cl-glow");
     const head = el("header", "cl-head");
     const spark = el("span", "cl-spark");
     spark.innerHTML = svg(ICONS.new, 28);
     const titles = el("div", "cl-titles");
-    titles.append(el("h2", "cl-title", t("title")), el("p", "cl-sub", LOG[0].title[lang()]));
+    titles.append(el("h2", "cl-title", t("title")), el("p", "cl-sub", view.onlyNew ? t("unseen")(entries.length) : LOG[0].title[lang()]));
     const x = el("button", "cl-x", "✕");
     x.type = "button";
     x.setAttribute("aria-label", "Close");
@@ -164,15 +227,48 @@
     head.append(spark, titles, x);
 
     const body = el("div", "cl-body");
-    LOG.forEach((entry, i) => {
-      if (i === 1) body.append(el("p", "cl-older", t("older")));
-      body.append(day(entry, { open: i === 0, isNew: entry.date > lastSeen.slice(0, 10) || (i === 0 && latest > lastSeen) }));
-    });
-    const go = el("button", "btn-primary cl-go", t("close"));
-    go.type = "button";
-    go.addEventListener("click", () => dialog.close());
-    card.append(glow, head, body, go);
+    shown.forEach((entry, i) => body.append(update(entry, { open: view.page === 0 && i === 0 || view.onlyNew || entry.items.length <= 4, isNew: entry.at > view.lastSeen })));
+
+    card.append(glow, head, body);
+    if (pages > 1) {
+      const pager = el("nav", "cl-pager");
+      const go = (p) => { view.page = p; render(); dialog.querySelector(".cl-body")?.scrollTo(0, 0); };
+      const prev = el("button", "cl-page-btn", `‹ ${t("prev")}`);
+      prev.type = "button";
+      prev.disabled = view.page === 0;
+      prev.addEventListener("click", () => go(view.page - 1));
+      const dots = el("div", "cl-dots");
+      for (let p = 0; p < pages; p++) {
+        const d = el("button", `cl-dot${p === view.page ? " is-on" : ""}`, String(p + 1));
+        d.type = "button";
+        d.setAttribute("aria-label", t("page")(p + 1, pages));
+        d.addEventListener("click", () => go(p));
+        dots.append(d);
+      }
+      const next = el("button", "cl-page-btn", `${t("next")} ›`);
+      next.type = "button";
+      next.disabled = view.page === pages - 1;
+      next.addEventListener("click", () => go(view.page + 1));
+      pager.append(prev, dots, next);
+      card.append(pager);
+    }
+    const close = el("button", "btn-primary cl-go", t("close"));
+    close.type = "button";
+    close.addEventListener("click", () => dialog.close());
+    card.append(close);
     dialog.replaceChildren(card);
+  }
+
+  // onlyNew: just the updates not seen yet (the automatic opening); otherwise the whole history.
+  function open({ onlyNew = false } = {}) {
+    if (!dialog) {
+      dialog = el("dialog", "cl-modal");
+      dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+      dialog.addEventListener("close", markSeen);
+      document.body.append(dialog);
+    }
+    view = { onlyNew, page: 0, lastSeen: seen() };
+    render();
     if (!dialog.open) dialog.showModal();
   }
 
@@ -184,7 +280,7 @@
     if (!button) {
       button = el("button", "cl-btn");
       button.type = "button";
-      button.addEventListener("click", open);
+      button.addEventListener("click", () => open());
       bar.prepend(button);
     }
     button.innerHTML = svg(ICONS.new, 18);
@@ -193,12 +289,12 @@
     button.classList.toggle("has-news", seen() < latest);
   }
 
-  // Opens by itself once there is something new, after any other window (name, arc picker…) is closed.
+  // Opens by itself only when an update was never seen, after any other window (name, arc picker…) is closed.
   function autoOpen() {
     if (seen() >= latest) return;
     const tryOpen = (left) => {
       if (document.querySelector("dialog[open]") && left > 0) { setTimeout(() => tryOpen(left - 1), 1000); return; }
-      open();
+      open({ onlyNew: true });
       window.DLE_FX?.play("win");
     };
     setTimeout(() => tryOpen(120), 900);
@@ -208,7 +304,7 @@
     renderButton();
     autoOpen();
   }
-  window.addEventListener("dle:lang", () => { renderButton(); if (dialog?.open) open(); });
+  window.addEventListener("dle:lang", () => { renderButton(); if (dialog?.open) render(); });
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 

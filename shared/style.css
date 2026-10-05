@@ -1328,6 +1328,12 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .fx-update-close { border: 0; background: none; color: var(--muted); font-size: 15px; padding: 6px; }
 
 /* ── What's new (shared/changelog.js) ───────────────────────── */
+/* Phones: taps fire at once (no double-tap zoom on buttons), no grey flash, and fields never zoom the page in. */
+button, a, summary, label, input, select, .tile, .reel, .slot { touch-action: manipulation; }
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (hover: none) and (pointer: coarse) {
+  input, select, textarea { font-size: max(16px, 1em) !important; }
+}
 .cl-btn { position: relative; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 800 13px var(--font); cursor: pointer; transition: border-color 0.15s, transform 0.15s; }
 .cl-btn:hover { border-color: rgba(var(--accent-rgb), 0.7); transform: translateY(-1px); }
 .cl-btn svg { color: var(--accent); }
@@ -1377,6 +1383,13 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .cl-game { width: 26px; height: 26px; flex: none; border-radius: 50%; object-fit: cover; background: #fff; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08); }
 .cl-game-crew { display: grid; place-items: center; background: linear-gradient(135deg, #ff3b4a, #ff8a3d); color: #fff; }
 .cl-go { margin: 14px 28px 24px; padding: 14px; font-size: 16px; }
+.cl-pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 12px 28px 0; }
+.cl-page-btn { height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 800 13px var(--font); cursor: pointer; transition: border-color 0.15s; }
+.cl-page-btn:hover:not(:disabled) { border-color: rgba(var(--accent-rgb), 0.7); }
+.cl-page-btn:disabled { opacity: 0.35; cursor: default; }
+.cl-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.cl-dot { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--muted); font: 800 13px var(--font); cursor: pointer; }
+.cl-dot.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
 @media (max-width: 560px) {
   .cl-head { padding: 20px 18px 14px; gap: 12px; }
   .cl-spark { width: 46px; height: 46px; border-radius: 14px; }
@@ -1384,6 +1397,8 @@ body[data-game="home"] .cat .cat-name { display: none; }
   .cl-item { flex-wrap: wrap; }
   .cl-text { flex-basis: 100%; }
   .cl-go { margin: 12px 14px 18px; }
+  .cl-pager { margin: 10px 14px 0; }
+  .cl-page-btn { padding: 0 11px; }
 }
 
 /* ── Game variants: Classic / Blurred / Description (shared/engine.js) ── */
