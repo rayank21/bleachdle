@@ -28,6 +28,8 @@ const MAX_COLLECTION = 400; // cards kept per anime
 const SEASONS_KEPT = 6; // months of season results kept on a profile
 // The current season: "2026-10", the month in Paris.
 const seasonId = (d = new Date()) => new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit" }).format(d).slice(0, 7);
+// Profiles kept out of the leaderboards (their profile itself still works): na3na3, brybry, Nam.
+const HIDDEN = new Set(["e18fe181d75c", "fbcf10b48ab5", "f9cae1589a3f"]);
 const INVITE_TTL = 30 * 60 * 1000; // an invitation is kept 30 minutes (the room is probably gone after that)
 
 const json = (data, status = 200) =>
@@ -213,7 +215,7 @@ function bestsOf(p) {
 async function leaderboard() {
   const s = store();
   const { blobs } = await s.list({ prefix: "p/" });
-  const all = (await Promise.all(blobs.slice(0, 500).map((b) => s.get(b.key, { type: "json" })))).filter(Boolean);
+  const all = (await Promise.all(blobs.slice(0, 500).map((b) => s.get(b.key, { type: "json" })))).filter((p) => p && !HIDDEN.has(p.id));
   const row = (p) => ({ id: p.id, name: p.name, avatar: p.avatar });
   const crewRow = (p, c) => ({ ...row(p), score: c.score, rank: c.rank, anime: c.anime, members: (c.members ?? []).map((m) => ({ id: m.id, points: m.points })) });
   // Ties: the crew made first stays ahead.
