@@ -2058,6 +2058,363 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/kouzuki-hiyori.webp"
  },
  {
+  "id": "crocus",
+  "name": "Crocus",
+  "gender": "M",
+  "aff": [
+   "Roger Pirates , Laboon"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 203,
+  "origin": "Grand Line",
+  "age": 71,
+  "epithet": null,
+  "arc": 1,
+  "image": "assets/characters/crocus.webp"
+ },
+ {
+  "id": "nico-olvia",
+  "name": "Nico Olvia",
+  "gender": "F",
+  "aff": [
+   "Ohara Archaeologists"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 79000000,
+  "height": 186,
+  "origin": "West Blue",
+  "age": null,
+  "epithet": null,
+  "arc": 3,
+  "image": "assets/characters/nico-olvia.webp"
+ },
+ {
+  "id": "dorry",
+  "name": "Dorry",
+  "gender": "M",
+  "aff": [
+   "Giant Warrior Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": {
+   "1": 100000000,
+   "9": 1800000000
+  },
+  "height": 2260,
+  "origin": "Grand Line",
+  "age": 158,
+  "epithet": null,
+  "arc": 1,
+  "image": "assets/characters/dorry.webp"
+ },
+ {
+  "id": "brogy",
+  "name": "Brogy",
+  "gender": "M",
+  "aff": [
+   "Giant Warrior Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": {
+   "1": 100000000,
+   "9": 1800000000
+  },
+  "height": 2130,
+  "origin": "Grand Line",
+  "age": 158,
+  "epithet": null,
+  "arc": 1,
+  "image": "assets/characters/brogy.webp"
+ },
+ {
+  "id": "bellamy",
+  "name": "Bellamy",
+  "gender": "M",
+  "aff": [
+   "Donquixote Pirates"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": {
+   "2": 55000000,
+   "9": 195000000
+  },
+  "height": 240,
+  "origin": "North Blue",
+  "age": 25,
+  "epithet": "Bellamy the Hyena",
+  "arc": 2,
+  "image": "assets/characters/bellamy.webp"
+ },
+ {
+  "id": "gin",
+  "name": "Gin",
+  "gender": "M",
+  "aff": [
+   "Krieg Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 12000000,
+  "height": 186,
+  "origin": "East Blue",
+  "age": 25,
+  "epithet": "Man-Demon",
+  "arc": 0,
+  "image": "assets/characters/gin.webp"
+ },
+ {
+  "id": "laffitte",
+  "name": "Laffitte",
+  "gender": "M",
+  "aff": [
+   "Blackbeard Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 42200000,
+  "height": 340,
+  "origin": "West Blue",
+  "age": 39,
+  "epithet": "Demon Sheriff",
+  "arc": 2,
+  "image": "assets/characters/laffitte.webp"
+ },
+ {
+  "id": "tsuru",
+  "name": "Tsuru",
+  "gender": "F",
+  "aff": [
+   "Marines"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 0,
+  "height": 204,
+  "origin": "North Blue",
+  "age": 74,
+  "epithet": "Great Staff Officer",
+  "arc": 2,
+  "image": "assets/characters/tsuru.webp"
+ },
+ {
+  "id": "jozu",
+  "name": "Jozu",
+  "gender": "M",
+  "aff": [
+   "Whitebeard Pirates"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 0,
+  "height": 503,
+  "origin": "West Blue",
+  "age": 40,
+  "epithet": "Diamond",
+  "arc": 2,
+  "image": "assets/characters/jozu.webp"
+ },
+ {
+  "id": "bepo",
+  "name": "Bepo",
+  "gender": "M",
+  "aff": [
+   "Heart Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": {
+   "5": 500,
+   "9": 1500
+  },
+  "height": 240,
+  "origin": "Grand Line",
+  "age": 20,
+  "epithet": null,
+  "arc": 5,
+  "image": "assets/characters/bepo.webp"
+ },
+ {
+  "id": "urouge",
+  "name": "Urouge",
+  "gender": "M",
+  "aff": [
+   "Fallen Monk Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 108000000,
+  "height": 388,
+  "origin": "Sky Island",
+  "age": 45,
+  "epithet": "Mad Monk",
+  "arc": 5,
+  "image": "assets/characters/urouge.webp"
+ },
+ {
+  "id": "scratchmen-apoo",
+  "name": "Scratchmen Apoo",
+  "gender": "M",
+  "aff": [
+   "On Air Pirates"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": {
+   "5": 198000000,
+   "9": 350000000
+  },
+  "height": 256,
+  "origin": "Grand Line",
+  "age": 29,
+  "epithet": "Roar of the Sea",
+  "arc": 5,
+  "image": "assets/characters/scratchmen-apoo.webp"
+ },
+ {
+  "id": "benn-beckman",
+  "name": "Benn Beckman",
+  "gender": "M",
+  "aff": [
+   "Red Hair Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 206,
+  "origin": "North Blue",
+  "age": 38,
+  "epithet": null,
+  "arc": 0,
+  "image": "assets/characters/benn-beckman.webp"
+ },
+ {
+  "id": "lucky-roux",
+  "name": "Lucky Roux",
+  "gender": "M",
+  "aff": [
+   "Red Hair Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 241,
+  "origin": "South Blue",
+  "age": 23,
+  "epithet": null,
+  "arc": 0,
+  "image": "assets/characters/lucky-roux.webp"
+ },
+ {
+  "id": "yasopp",
+  "name": "Yasopp",
+  "gender": "M",
+  "aff": [
+   "Red Hair Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 183,
+  "origin": "East Blue",
+  "age": 35,
+  "epithet": "Chaser",
+  "arc": 0,
+  "image": "assets/characters/yasopp.webp"
+ },
+ {
+  "id": "streusen",
+  "name": "Streusen",
+  "gender": "M",
+  "aff": [
+   "Big Mom Pirates"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 0,
+  "height": 140,
+  "origin": "Grand Line",
+  "age": 92,
+  "epithet": "Gourmet Knight",
+  "arc": 8,
+  "image": "assets/characters/streusen.webp"
+ },
+ {
+  "id": "charlotte-perospero",
+  "name": "Charlotte Perospero",
+  "gender": "M",
+  "aff": [
+   "Charlotte Family"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 700000000,
+  "height": 333,
+  "origin": "Grand Line",
+  "age": 50,
+  "epithet": null,
+  "arc": 8,
+  "image": "assets/characters/charlotte-perospero.webp"
+ },
+ {
+  "id": "charlotte-oven",
+  "name": "Charlotte Oven",
+  "gender": "M",
+  "aff": [
+   "Charlotte Family"
+  ],
+  "fruit": [
+   "Paramecia"
+  ],
+  "bounty": 300000000,
+  "height": 492,
+  "origin": "Grand Line",
+  "age": 48,
+  "epithet": null,
+  "arc": 8,
+  "image": "assets/characters/charlotte-oven.webp"
+ },
+ {
+  "id": "kouzuki-sukiyaki",
+  "name": "Kouzuki Sukiyaki",
+  "gender": "M",
+  "aff": [
+   "Kouzuki Family"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 214,
+  "origin": "Grand Line",
+  "age": 81,
+  "epithet": null,
+  "arc": 9,
+  "image": "assets/characters/kouzuki-sukiyaki.webp"
+ },
+ {
   "id": "vegapunk",
   "name": "Vegapunk",
   "gender": "M",

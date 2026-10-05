@@ -13,19 +13,23 @@
     // Nami charts every sea; Jinbe is the helmsman; Enel piloted the Ark Maxim to the moon; Rayleigh, Roger's
     // first mate, sailed to Laugh Tale; Vegapunk computes routes; Nojiko and Bell-mère raised a navigator.
     // Fish-men and merfolk read the currents of every sea; Dragon commands the winds; Wyper and Gan Fall sail the sky sea.
-    navigator: parse(`nami:10 jinbe:9 silvers-rayleigh:7 enel:7 fisher-tiger:7 arlong:6 neptune:6 vegapunk:6 monkey-d-dragon:6 hody-jones:5 tom:5
+    // Laffitte charts Blackbeard's course; Bepo navigates the Polar Tang.
+    navigator: parse(`nami:10 jinbe:9 laffitte:9 bepo:8 silvers-rayleigh:7 enel:7 fisher-tiger:7 arlong:6 neptune:6 vegapunk:6 monkey-d-dragon:6 hody-jones:5 tom:5
       shirahoshi:5 nojiko:4 bell-mere:4 wyper:4 gan-fall:4`),
     // Cracker bakes his biscuits, Katakuri lives on doughnuts, Mihawk cooks for his guests at Kuraigana.
     // Big Mom bakes for her tea parties; Oden boiled his namesake dish in Wano.
-    cook: parse("sanji:10 zeff:10 charlotte-pudding:8 dracule-mihawk:7 charlotte-katakuri:6 charlotte-cracker:6 charlotte-brulee:6 charlotte-linlin:5 kouzuki-oden:5"),
+    // Streusen bakes Big Mom's cakes; Lucky Roux is the Red Hair Pirates' cook; Oven bakes with his heat, Perospero makes candy.
+    cook: parse("sanji:10 zeff:10 streusen:9 charlotte-pudding:8 lucky-roux:8 dracule-mihawk:7 charlotte-oven:7 charlotte-perospero:7 charlotte-katakuri:6 charlotte-cracker:6 charlotte-brulee:6 charlotte-linlin:5 kouzuki-oden:5"),
     // Doc Q is Blackbeard's doctor; Reiju drew the poison out of Luffy; Marco heals with his flames;
     // Queen and Judge are MADS scientists (viruses, lineage factor); Kuma pushed Luffy's pain out of his body.
-    doctor: parse(`tony-tony-chopper:10 trafalgar-law:10 kureha:10 polo-marco:8 doc-q:8 hiriluk:7 queen:7 emporio-ivankov:6 vegapunk:6
+    // Crocus was the Roger Pirates' doctor.
+    doctor: parse(`tony-tony-chopper:10 trafalgar-law:10 kureha:10 crocus:9 polo-marco:8 doc-q:8 hiriluk:7 queen:7 emporio-ivankov:6 vegapunk:6
       vinsmoke-judge:6 bartholomew-kuma:6 vinsmoke-reiju:5 caesar-clown:4`),
     // Reading the poneglyphs or knowing the Void Century: the Kozuki family and their retainers (Zou's dukes keep a Road
     // Poneglyph), Roger's crew, Imu and the Five Elders, Blackbeard's hunt, the Shandia guarding Skypiea's poneglyph,
     // Crocodile's search for Pluton, Pedro's journey to read one.
-    archaeologist: parse(`nico-robin:10 imu:9 gol-d-roger:9 charlotte-pudding:8 kouzuki-oden:8 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7
+    // Olvia, Robin's mother, studied the poneglyphs at Ohara; Sukiyaki was shogun with the Kozuki's secret; Crocus sailed to Laugh Tale.
+    archaeologist: parse(`nico-robin:10 nico-olvia:9 imu:9 gol-d-roger:9 kouzuki-sukiyaki:8 charlotte-pudding:8 kouzuki-oden:8 crocus:5 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7
       marshall-d-teach:7 jaygarcia-saturn:6 marcus-mars:6 topman-warcury:6 ethanbaron-v-nusjuro:6 shepherd-ju-peter:6 kouzuki-hiyori:6
       inuarashi:6 nekomamushi:6 wyper:6 shanks:5 crocodile:5 pedro:5 kin-emon:5 yamato:5 nefertari-vivi:4 buggy:4`),
     // Tom built the Oro Jackson; Paulie, Kaku and Lucci worked at Galley-La; Rayleigh coats ships; Queen builds
@@ -38,8 +42,8 @@
   const role = (table) => (c, power) => table[c.id] ?? Math.max(1, Math.round(power / 3));
   const ROLES = {
     bleach: {
-      // Unohana and Orihime heal anything; Ryuken runs a hospital; Hikifune rebuilt Ichigo's body.
-      healer: parse(`retsu-unohana:10 orihime-inoue:10 isane-kotetsu:8 kirio-hikifune:8 ryuken-ishida:8 hanataro-yamada:7 hachigen-ushoda:7
+      // Unohana and Orihime heal anything; Hikifune rebuilt Ichigo's body.
+      healer: parse(`retsu-unohana:10 orihime-inoue:10 isane-kotetsu:8 kirio-hikifune:8 hanataro-yamada:7 hachigen-ushoda:7
         nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:6 kisuke-urahara:5 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3`),
       // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge, Hikifune (12th Division before
       // Kisuke), Kukaku's fireworks cannon.
@@ -79,9 +83,9 @@
     },
     blackclover: {
       // Mimosa's healing flowers; the Witch Queen healed Asta's arms; Charmy's food restores mana; Secre sealed the curse.
-      // William's World Tree heals whole armies; Fana's flames mend; Moris rebuilds the bodies he experiments on.
+      // Rades's soul magic puts bodies back together; William's World Tree heals whole armies; Fana's flames mend; Moris rebuilds the bodies he experiments on.
       healer: parse(`mimosa-vermillion:10 witch-queen:9 william-vangeance:8 fana:7 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7
-        sister-lily:6 vanessa-enoteca:6 moris-libardirt:5 kirsch-vermillion:3`),
+        sister-lily:6 vanessa-enoteca:6 moris-libardirt:5 kirsch-vermillion:3 rades-spirito:9`),
       // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps. Engineers: Moris, the
       // Diamond Kingdom's mad scientist; Henry reshapes the Black Bulls' hideout; Rades reanimates corpses.
       // Kaiser plans the Purple Orcas' battles; Nacht is the Black Bulls' spy; Fanzell trained Asta and leads the resistance.
@@ -90,6 +94,14 @@
         henry-legolant:8 klaus-lunettes:7 william-vangeance:7 fuegoleon-vermillion:7 licht:7 rades-spirito:6 gordon-agrippa:6 yami-sukehiro:6
         nozel-silva:6 finral-roulacase:5 sekke-bronzazza:4`),
     },
+  };
+  // Attack on Titan: Armin and Erwin plan every battle, Hange builds the thunder spears, Zeke and Willy play Marley,
+  // Pixis bluffs a whole Garrison into holding Trost, Onyankopon flies the airship.
+  ROLES.attackontitan = {
+    strategist: parse(`armin-arlert:10 erwin-smith:10 zeke-yeager:9 hange-zoe:9 eren-yeager:8 pieck-finger:8 dot-pixis:8 willy-tybur:8
+      eren-kruger:7 theo-magath:7 darius-zackly:7 yelena:7 jean-kirstein:7 onyankopon:7 kiyomi-azumabito:6 levi:6 kenny-ackerman:6
+      grisha-yeager:6 floch-forster:6 reiner-braun:5 annie-leonhart:5 historia-reiss:5 rod-reiss:5 keith-shadis:5 marcel-galliard:5
+      mikasa-ackerman:4 bertholdt-hoover:4 porco-galliard:4 nile-dok:4`),
   };
   const anyone = () => true;
   const HEALER = { en: "Healer", fr: "Soigneur" };
@@ -113,7 +125,7 @@
       ],
       power: parse(`ichigo-kurosaki:10 rukia-kuchiki:7 orihime-inoue:5 yasutora-sado:6 uryu-ishida:7 kon:2 kisuke-urahara:9 yoruichi-shihoin:9
         tessai-tsukabishi:6 isshin-kurosaki:8 masaki-kurosaki:5 karin-kurosaki:2 yuzu-kurosaki:1 tatsuki-arisawa:2 keigo-asano:1 mizuiro-kojima:1
-        don-kanonji:2 renji-abarai:7 byakuya-kuchiki:9 ganju-shiba:3 kukaku-shiba:4 kaien-shiba:6 hanataro-yamada:2 genryusai-yamamoto:10
+        don-kanonji:2 renji-abarai:7 byakuya-kuchiki:8 ganju-shiba:3 kukaku-shiba:4 kaien-shiba:6 hanataro-yamada:2 genryusai-yamamoto:10
         chojiro-sasakibe:6 sui-feng:8 marechiyo-omaeda:4 gin-ichimaru:9 izuru-kira:5 retsu-unohana:9 isane-kotetsu:5 sosuke-aizen:10
         momo-hinamori:5 sajin-komamura:7 tetsuzaemon-iba:4 shunsui-kyoraku:9 nanao-ise:4 kaname-tosen:7 shuhei-hisagi:6 toshiro-hitsugaya:8
         rangiku-matsumoto:6 kenpachi-zaraki:9 yachiru-kusajishi:7 ikkaku-madarame:6 yumichika-ayasegawa:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5
@@ -122,7 +134,7 @@
         tier-harribel:8 nnoitra-gilga:7 szayelaporro-granz:7 aaroniero-arruruerie:6 luppi-antenor:4 nelliel-tu-odelschwanck:7 loly-aivirrne:2
         wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:7 shukuro-tsukishima:6 riruka-dokugamine:4
         yukio-hans-vorarlberna:4 jackie-tristan:4 giriko-kutsuzawa:4 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
-        bambietta-basterbine:6 candice-catnipp:6 liltotto-lamperd:6 meninas-mcallon:5 giselle-gewelle:6 as-nodt:6 quilge-opie:6
+        bambietta-basterbine:6 candice-catnipp:6 liltotto-lamperd:6 meninas-mcallon:5 giselle-gewelle:6 as-nodt:8 quilge-opie:6
         gremmy-thoumeaux:8 lille-barro:8 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:8 oetsu-nimaiya:8 kirio-hikifune:8`),
     },
 
@@ -211,7 +223,8 @@
         kouzuki-momonosuke:5 donquixote-doflamingo:8 issho:10 sabo:9 rebecca:5 kyros:5 bartolomeo:6 cavendish:7 carrot:6 pedro:7
         inuarashi:8 nekomamushi:8 charlotte-linlin:10 charlotte-katakuri:9 charlotte-pudding:3 charlotte-cracker:8 vinsmoke-judge:6
         vinsmoke-reiju:6 kaidou:10 king:9 queen:9 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4
-        tom:5 paulie:5 doc-q:5 imu:10 charlotte-brulee:4 jaygarcia-saturn:9 marcus-mars:9 topman-warcury:9
+        tom:5 paulie:5 doc-q:5 imu:10 crocus:4 nico-olvia:3 dorry:7 brogy:7 bellamy:5 gin:5 laffitte:7 tsuru:8 jozu:8 bepo:6 urouge:7
+        scratchmen-apoo:7 benn-beckman:9 lucky-roux:8 yasopp:8 streusen:5 charlotte-perospero:7 charlotte-oven:8 kouzuki-sukiyaki:3 charlotte-brulee:4 jaygarcia-saturn:9 marcus-mars:9 topman-warcury:9
         ethanbaron-v-nusjuro:9 shepherd-ju-peter:9`),
     },
 
@@ -262,6 +275,25 @@
         marx-francois:4 damnatio-kira:6 sister-lily:2 patry:9 rhya:7 fana:7 vetto:8 sally:5 valtos:6 catherine:5 mars:7 lotus-whomalt:5
         fanzell-kruger:6 ladros:6 rades-spirito:5 moris-libardirt:6 witch-queen:8 licht:10 lumiere-silvamillion-clover:9 tetia:5 lolopechka:7
         gadjah:7 dante-zogratis:9 vanica-zogratis:9 zenon-zogratis:9 lucius-zogratis:10 morgen-faust:6 zagred:9 megicula:9 lucifero:10`),
+    },
+
+    attackontitan: {
+      slots: [
+        // Titan shifters (and the Smiling Titan): only once the anime has revealed them.
+        { label: { en: "Titan", fr: "Titan" }, icon: "flame", count: 2, fits: (c) => has(c.race, "Titan Shifter", "Titan") },
+        { label: { en: "Survey Corps", fr: "Bataillon d'exploration" }, icon: "swords", count: 2, fits: (c) => has(c.aff, "Survey Corps") },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone, score: role(ROLES.attackontitan.strategist) },
+        // Pixis commands the Garrison.
+        { label: { en: "Garrison", fr: "Garnison" }, icon: "shield", count: 1, fits: (c) => has(c.aff, "Garrison"),
+          score: (c, power) => (c.id === "dot-pixis" ? 10 : power) },
+      ],
+      power: parse(`eren-yeager:10 mikasa-ackerman:9 armin-arlert:8 levi:10 erwin-smith:7 hange-zoe:6 jean-kirstein:6 connie-springer:5
+        sasha-blouse:5 historia-reiss:4 ymir:7 mike-zacharias:7 petra-ral:5 oluo-bozado:5 eld-jinn:5 gunther-schultz:4 moblit-berner:3
+        floch-forster:4 reiner-braun:9 bertholdt-hoover:9 annie-leonhart:9 marco-bott:3 keith-shadis:4 dot-pixis:5 hannes:3
+        rico-brzenska:4 ian-dietrich:4 anka-rheinberger:3 nile-dok:3 hitch-dreyse:2 darius-zackly:3 kenny-ackerman:8 djel-sannes:3
+        rod-reiss:6 frieda-reiss:8 kaya:1 grisha-yeager:7 carla-yeager:1 dina-fritz:4 eren-kruger:7 zeke-yeager:10 marcel-galliard:7
+        pieck-finger:7 porco-galliard:8 gabi-braun:4 falco-grice:6 colt-grice:3 theo-magath:4 willy-tybur:3 lara-tybur:8 niccolo:2
+        yelena:5 onyankopon:3 kiyomi-azumabito:2 ymir-fritz:10`),
     },
   };
   window.CREW_DEFAULT_POWER = DEFAULT_POWER;

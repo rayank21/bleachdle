@@ -8,9 +8,10 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | **Hunterdle** (Hunter × Hunter) | `hunterxhunter/` | 92 |
 | **Dragonballdle** (Dragon Ball, Z, Super) | `dragonball/` | 77 |
 | **Narutodle** (Naruto, Shippūden) | `naruto/` | 93 |
-| **Onepiecedle** (One Piece) | `onepiece/` | 109 |
+| **Onepiecedle** (One Piece) | `onepiece/` | 128 |
 | **Jujutsudle** (Jujutsu Kaisen) | `jujutsukaisen/` | 60 |
 | **Blackcloverdle** (Black Clover) | `blackclover/` | 70 |
+| **Snkdle** (Attack on Titan) | `attackontitan/` | 55 |
 
 Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions, plus roles such as healer, engineer or strategist that anyone can fill but specialists score high in; One Piece is all roles); every character has a 1–10 rating and the crew's average is your score. Iconic characters transform when drawn (Super Saiyan, Bankai, Susanoo, domain expansions…), only from the arc where the form appears; the forms are listed in `crew/forms.js` and their portraits fetched by `node crew/scripts/forms.mjs`.
 
@@ -58,6 +59,7 @@ node naruto/scripts/scrape.mjs
 node onepiece/scripts/scrape.mjs
 node jujutsukaisen/scripts/scrape.mjs
 node blackclover/scripts/scrape.mjs
+node attackontitan/scripts/scrape.mjs
 ```
 
 ## Adding a category

@@ -8,6 +8,8 @@
   const BANKAI = { fx: "pillar", c1: "255, 42, 42", c2: "30, 6, 8", kanji: "卍解" };
   const RESURRECCION = { fx: "pillar", c1: "60, 220, 140", c2: "10, 40, 25", kanji: "帰刃" };
   const DOMAIN = { fx: "domain", c1: "150, 90, 255", c2: "8, 4, 20", kanji: "領域展開" };
+  // A Titan shifter's transformation: a lightning strike and a column of steam.
+  const TITAN = { fx: "pillar", c1: "255, 196, 110", c2: "40, 14, 4", kanji: "巨人", lightning: true };
 
   window.CREW_FORMS = {
     dragonball: {
@@ -47,6 +49,20 @@
     hunterxhunter: {
       "killua-zoldyck": { arc: 5, name: { en: "Godspeed", fr: "Vitesse divine" }, fx: "aura", c1: "140, 220, 255", c2: "255, 255, 255", kanji: "神速", lightning: true },
       kurapika: { arc: 3, name: { en: "Emperor Time", fr: "Emperor Time" }, fx: "domain", c1: "255, 40, 50", c2: "20, 0, 0", kanji: "絶対時間" },
+    },
+    // Each shifter transforms only from the arc where the anime reveals who they are.
+    attackontitan: {
+      "eren-yeager": { arc: 0, name: { en: "Attack Titan", fr: "Titan Assaillant" }, ...TITAN },
+      "annie-leonhart": { arc: 1, name: { en: "Female Titan", fr: "Titan Féminin" }, ...TITAN, c1: "170, 220, 255" },
+      "reiner-braun": { arc: 2, name: { en: "Armored Titan", fr: "Titan Cuirassé" }, ...TITAN, c1: "255, 230, 170" },
+      "bertholdt-hoover": { arc: 2, name: { en: "Colossal Titan", fr: "Titan Colossal" }, ...TITAN, c1: "255, 90, 40" },
+      ymir: { arc: 2, name: { en: "Jaw Titan", fr: "Titan Mâchoire" }, ...TITAN },
+      "armin-arlert": { arc: 4, name: { en: "Colossal Titan", fr: "Titan Colossal" }, ...TITAN, c1: "255, 90, 40" },
+      "zeke-yeager": { arc: 4, name: { en: "Beast Titan", fr: "Titan Bestial" }, ...TITAN, c1: "230, 200, 140" },
+      "porco-galliard": { arc: 5, name: { en: "Jaw Titan", fr: "Titan Mâchoire" }, ...TITAN },
+      "pieck-finger": { arc: 5, name: { en: "Cart Titan", fr: "Titan Charrette" }, ...TITAN },
+      "lara-tybur": { arc: 5, name: { en: "War Hammer Titan", fr: "Titan Marteau d'armes" }, ...TITAN, c1: "255, 240, 220" },
+      "falco-grice": { arc: 6, name: { en: "Jaw Titan", fr: "Titan Mâchoire" }, ...TITAN },
     },
   };
 })();

@@ -33,6 +33,17 @@ const FILES = [
   ["jujutsu-kaisen", "jujutsukaisen", "mahito", "File:Self-Embodiment of Perfection (SpecialZ).png"],
   ["hunterxhunter", "hunterxhunter", "killua-zoldyck", "File:129 - Godspeed Killua.png"],
   ["hunterxhunter", "hunterxhunter", "kurapika", "File:Kurapika emperor time HXH 99 EP69.png"],
+  ["attackontitan", "attackontitan", "eren-yeager", "File:Attack Titan character image (Eren Yeager).png"],
+  ["attackontitan", "attackontitan", "annie-leonhart", "File:Female Titan character image (Annie Leonhart).png"],
+  ["attackontitan", "attackontitan", "reiner-braun", "File:Armored Titan character image (Reiner Braun).png"],
+  ["attackontitan", "attackontitan", "bertholdt-hoover", "File:Colossal Titan (Anime) character image (Bertholdt Hoover).png"],
+  ["attackontitan", "attackontitan", "ymir", "File:Jaw Titan (Anime) character image (Ymir).png"],
+  ["attackontitan", "attackontitan", "armin-arlert", "File:Colossal Titan (Anime) character image (Armin Arlelt).png"],
+  ["attackontitan", "attackontitan", "zeke-yeager", "File:Beast Titan character image (Zeke Yeager).png"],
+  ["attackontitan", "attackontitan", "porco-galliard", "File:Jaw Titan (Anime) character image (Porco Galliard).png"],
+  ["attackontitan", "attackontitan", "pieck-finger", "File:Cart Titan character image (Pieck Finger).png"],
+  ["attackontitan", "attackontitan", "lara-tybur", "File:War Hammer Titan character image (Lara Tybur).png"],
+  ["attackontitan", "attackontitan", "falco-grice", "File:Jaw Titan (Anime) character image (Falco Grice).png"],
 ];
 // The image CDN only serves files requested from the wiki itself.
 const headers = (wiki) => ({ "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36", Referer: `https://${wiki}.fandom.com/` });

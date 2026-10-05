@@ -137,6 +137,28 @@ export const seed = [
   { wiki: "Kozuki Oden", gender: "M" },
   { wiki: "Kozuki Hiyori", gender: "F" },
 
+  // ── Navigators, cooks, doctors and crews added later (their first arc comes from the wiki) ──
+  { wiki: "Crocus", gender: "M" },
+  { wiki: "Nico Olivia", gender: "F" },
+  { wiki: "Dorry", gender: "M" },
+  { wiki: "Brogy", gender: "M" },
+  { wiki: "Bellamy", gender: "M" },
+  { wiki: "Gin", gender: "M" },
+  { wiki: "Laffitte", gender: "M" },
+  { wiki: "Tsuru", gender: "F" },
+  { wiki: "Jozu", gender: "M" },
+  { wiki: "Bepo", gender: "M" },
+  { wiki: "Urouge", gender: "M" },
+  { wiki: "Scratchmen Apoo", gender: "M" },
+  { wiki: "Benn Beckman", gender: "M" },
+  { wiki: "Lucky Roux", gender: "M" },
+  { wiki: "Yasopp", gender: "M" },
+  { wiki: "Streusen", gender: "M" },
+  { wiki: "Charlotte Perospero", gender: "M" },
+  { wiki: "Charlotte Oven", gender: "M" },
+  // Oden's father hides as Hitetsu for most of Wano.
+  { wiki: "Kozuki Sukiyaki", gender: "M", arc: 9 },
+
   // ── Egghead ──
   { wiki: "Vegapunk", gender: "M" },
   // The Five Elders appear early, but they are only named (and fight) in Egghead.

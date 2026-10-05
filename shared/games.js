@@ -8,12 +8,14 @@ window.DLE_GAMES = [
     featured: ["goku", "vegeta", "piccolo", "frieza", "cell", "majin-buu"] },
   { id: "naruto", storage: "narutodle", brand: "Narutodle", anime: "Naruto", path: "naruto/", logo: "assets/logos/narutodle.jpg", count: 93, arcs: 9,
     featured: ["naruto-uzumaki", "sasuke-uchiha", "sakura-haruno", "kakashi-hatake", "itachi-uchiha", "gaara"] },
-  { id: "onepiece", storage: "onepiecedle", brand: "Onepiecedle", anime: "One Piece", path: "onepiece/", logo: "assets/logos/onepiecedle.jpg", count: 109, arcs: 11,
+  { id: "onepiece", storage: "onepiecedle", brand: "Onepiecedle", anime: "One Piece", path: "onepiece/", logo: "assets/logos/onepiecedle.jpg", count: 128, arcs: 11,
     featured: ["monkey-d-luffy", "roronoa-zoro", "nami", "sanji", "shanks", "trafalgar-law"] },
   { id: "jujutsukaisen", storage: "jujutsudle", brand: "Jujutsudle", anime: "Jujutsu Kaisen", path: "jujutsukaisen/", logo: "assets/logos/jujutsudle.jpg", count: 60, arcs: 7,
     featured: ["yuji-itadori", "megumi-fushiguro", "nobara-kugisaki", "satoru-gojo", "ryomen-sukuna", "kento-nanami"] },
   { id: "blackclover", storage: "blackcloverdle", brand: "Blackcloverdle", anime: "Black Clover", path: "blackclover/", logo: "assets/logos/blackcloverdle.png", count: 70, arcs: 10,
     featured: ["asta", "yuno", "yami-sukehiro", "noelle-silva", "julius-novachrono", "mereoleona-vermillion"] },
+  { id: "attackontitan", storage: "snkdle", brand: "Snkdle", anime: "Attack on Titan", path: "attackontitan/", logo: "assets/logos/snkdle.png", count: 55, arcs: 7,
+    featured: ["eren-yeager", "mikasa-ackerman", "armin-arlert", "levi", "erwin-smith", "hange-zoe"] },
 ];
 
 // Link to the Crew Roll mini-game, shown after the categories in every header.
