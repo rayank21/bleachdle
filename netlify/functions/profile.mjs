@@ -6,7 +6,10 @@
 //   GET  /api/profile?leaderboard=1        best crews (overall and per anime) and most wins
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
-//   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}, add?: {rolls, rerolls, guesses, seconds}}
+//   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}, add?: {rolls, rerolls, guesses, seconds, …},
+//                      collect?: {anime: [character ids drawn in Crew Roll]}}
+//
+// Seasons: every month (Paris time) has its own leaderboard: the wins earned and the best crews built that month.
 //   POST /api/profile {action: "friends", id, token}                  my friends and friend requests
 //   POST /api/profile {action: "friend-add", id, token, name}         send a request (or accept theirs)
 //   POST /api/profile {action: "friend-accept" | "friend-remove", id, token, other}
@@ -20,7 +23,11 @@ const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
 // Activity counters sent as increments (rolls, rerolls, guesses, seconds played), capped per request.
-const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600 };
+const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500 };
+const MAX_COLLECTION = 400; // cards kept per anime
+const SEASONS_KEPT = 6; // months of season results kept on a profile
+// The current season: "2026-10", the month in Paris.
+const seasonId = (d = new Date()) => new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit" }).format(d).slice(0, 7);
 const INVITE_TTL = 30 * 60 * 1000; // an invitation is kept 30 minutes (the room is probably gone after that)
 
 const json = (data, status = 200) =>
@@ -80,7 +87,30 @@ function cleanCrew(c) {
   return { anime: c.anime, rank: c.rank, score, members, at: Date.now() };
 }
 
-const publicView = (p) => ({ id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew, counters: p.counters ?? {} });
+const publicView = (p) => ({
+  id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew, counters: p.counters ?? {},
+  collection: p.collection ?? {}, seasons: p.seasons ?? {},
+});
+
+// Crew Roll collection: the ids drawn, added to what the profile already has.
+function addCollection(p, add) {
+  p.collection ??= {};
+  for (const g of GAMES) {
+    const list = Array.isArray(add?.[g]) ? add[g] : [];
+    const ok = list.map((x) => String(x)).filter((x) => /^[a-z0-9-]{1,60}$/.test(x));
+    if (!ok.length) continue;
+    p.collection[g] = [...new Set([...(p.collection[g] ?? []), ...ok])].slice(0, MAX_COLLECTION);
+  }
+}
+
+// This month's entry; older months beyond SEASONS_KEPT are dropped.
+function seasonOf(p) {
+  const id = seasonId();
+  p.seasons ??= {};
+  p.seasons[id] ??= { wins: 0, best: null, bests: {} };
+  for (const k of Object.keys(p.seasons).sort().slice(0, -SEASONS_KEPT)) delete p.seasons[k];
+  return p.seasons[id];
+}
 
 async function readProfile(id) {
   if (!/^[a-z0-9]{10,20}$/.test(id ?? "")) return null;
@@ -121,6 +151,7 @@ async function update(body) {
   const p = await authed(body.id, body.token);
   if (!p) return fail("auth", 401);
   const s = store();
+  const winsBefore = totalWins(p);
   if (body.name != null) {
     const name = cleanName(body.name);
     if (!name) return fail("name");
@@ -142,8 +173,12 @@ async function update(body) {
       // Best crew of each anime too, for the per-anime leaderboards.
       p.crew.bests = bestsOf(p);
       if (!p.crew.bests[c.anime] || c.score > p.crew.bests[c.anime].score) p.crew.bests[c.anime] = c;
+      const season = seasonOf(p);
+      if (!season.best || c.score > season.best.score) season.best = c;
+      if (!season.bests[c.anime] || c.score > season.bests[c.anime].score) season.bests[c.anime] = c;
     }
   }
+  if (body.collect && typeof body.collect === "object") addCollection(p, body.collect);
   if (body.add && typeof body.add === "object") {
     p.counters ??= {};
     for (const [k, cap] of Object.entries(COUNTERS)) {
@@ -156,6 +191,9 @@ async function update(body) {
     p.crew.duels = (p.crew.duels ?? 0) + 1;
     if (body.duel.won === true) p.crew.duelWins = (p.crew.duelWins ?? 0) + 1;
   }
+  // Wins earned by this update count for the month's season.
+  const gained = totalWins(p) - winsBefore;
+  if (gained > 0) seasonOf(p).wins += Math.min(gained, 50);
   p.updated = Date.now();
   await s.setJSON(`p/${p.id}`, p);
   return json({ profile: publicView(p) });
@@ -186,7 +224,22 @@ async function leaderboard() {
     byAnime[g] = all.map((p) => ({ p, c: bestsOf(p)[g] })).filter((x) => x.c).sort(byScore).slice(0, 20).map(({ p, c }) => crewRow(p, c));
   }
   const wins = all.map((p) => ({ ...row(p), wins: totalWins(p) })).filter((p) => p.wins > 0).sort((a, b) => b.wins - a.wins).slice(0, 20);
-  return json({ crews, byAnime, wins, players: all.length });
+
+  // A season's boards: best crews (overall and per anime) and most wins that month.
+  const seasonBoard = (id, size) => {
+    const of = (p) => p.seasons?.[id];
+    const seasonCrews = all.filter((p) => of(p)?.best).map((p) => ({ p, c: of(p).best })).sort(byScore).slice(0, size).map(({ p, c }) => crewRow(p, c));
+    const seasonByAnime = {};
+    for (const g of GAMES) seasonByAnime[g] = all.map((p) => ({ p, c: of(p)?.bests?.[g] })).filter((x) => x.c).sort(byScore).slice(0, size).map(({ p, c }) => crewRow(p, c));
+    const seasonWins = all.map((p) => ({ ...row(p), wins: of(p)?.wins || 0 })).filter((p) => p.wins > 0).sort((a, b) => b.wins - a.wins).slice(0, size);
+    return { id, crews: seasonCrews, byAnime: seasonByAnime, wins: seasonWins };
+  };
+  const now = seasonId();
+  const season = seasonBoard(now, 20);
+  // The podiums of the last finished seasons.
+  const past = [...new Set(all.flatMap((p) => Object.keys(p.seasons ?? {})))].filter((id) => id < now).sort().reverse().slice(0, 3);
+  const podiums = past.map((id) => { const b = seasonBoard(id, 3); return { id, crews: b.crews, wins: b.wins }; });
+  return json({ crews, byAnime, wins, players: all.length, season, podiums });
 }
 
 // ── Friends: mutual, after a request. Each profile keeps `friends` and the `requests` it received. ──

@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-05T22:25",
+      title: { en: "Achievements, collection and monthly seasons", fr: "Succès, collection et saisons mensuelles" },
+      items: [
+        { type: "new", en: "Achievements: 18 badges on your profile (bronze, silver, gold), from your first win to a season podium, with your progress on each. A banner pops up when you unlock one.", fr: "Succès : 18 badges sur ton profil (bronze, argent, or), de ta première victoire au podium de saison, avec ta progression pour chacun. Un bandeau s'affiche quand tu en débloques un." },
+        { type: "new", game: "crew", en: "Collection: every card you draw in Crew Roll is kept (« ✨ New card! » the first time). The index shows which ones you have and which are left to find, and your profile shows your progress for each anime.", fr: "Collection : chaque carte tirée dans Roll ton équipage est gardée (« ✨ Nouvelle carte ! » la première fois). L'index montre celles que tu as et celles qui restent à trouver, et ton profil ta progression pour chaque animé." },
+        { type: "new", en: "Monthly seasons: the leaderboard has a season of its own every month (best crews and most wins of the month), and last month's top 3 are shown as champions. The all-time leaderboard is still there.", fr: "Saisons mensuelles : le classement a sa propre saison chaque mois (meilleurs équipages et plus de victoires du mois), et le top 3 du mois précédent est affiché en champions. Le classement de tous les temps est toujours là." },
+      ],
+    },
+    {
       at: "2026-10-05T22:15",
       title: { en: "42 new transformations", fr: "42 nouvelles transformations" },
       items: [

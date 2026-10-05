@@ -42,6 +42,7 @@
       bestRole: "Best role",
       noFit: "Can't go in this role",
       noCard: "No card matches.",
+      newCard: "✨ New card!", collection: (a, b) => `Collection · ${a} / ${b}`, ownAll: "All", ownYes: "Drawn", ownNo: "To find", notDrawn: "Not drawn yet",
       ixTop: "Best crews",
       ixBoard: "Full leaderboard",
       ixNone: "No crew yet for this anime: build one in Solo!",
@@ -150,6 +151,7 @@
       bestRole: "Meilleur rôle",
       noFit: "Ne peut pas aller à ce rôle",
       noCard: "Aucune carte ne correspond.",
+      newCard: "✨ Nouvelle carte !", collection: (a, b) => `Collection · ${a} / ${b}`, ownAll: "Toutes", ownYes: "Tirées", ownNo: "À trouver", notDrawn: "Pas encore tirée",
       ixTop: "Meilleurs équipages",
       ixBoard: "Classement complet",
       ixNone: "Pas encore d'équipage pour cet animé : fais-en un en Solo !",
@@ -932,7 +934,8 @@
     // Safety net: a draw that no longer fits (or is already on the board) is redrawn for free.
     if (!fitsIn(run.slots, pick) || filledOf(run.slots).some((x) => x.char.id === pick.id)) return soloRoll(false);
     run.rolled = pick;
-    soloReel.hint(t("chooseSlot"));
+    const fresh = window.DLE_Profile?.collect(run.g.id, pick.id);
+    soloReel.hint(fresh ? `${t("newCard")} ${t("chooseSlot")}` : t("chooseSlot"));
     renderBoard($("#crewBoard"), run.slots, { rolled: pick, onPlace: soloPlace });
     renderSoloActions();
   }
@@ -1630,7 +1633,8 @@
       return matchRoll(false, true);
     }
     run.rolled = pick;
-    matchReel.hint(t("chooseSlot"));
+    const fresh = window.DLE_Profile?.collect(run.g.id, pick.id);
+    matchReel.hint(fresh ? `${t("newCard")} ${t("chooseSlot")}` : t("chooseSlot"));
     renderBoard($("#duelMine"), myBoard(), { rolled: pick, onPlace: matchPlace });
     renderMatchActions();
   }
@@ -1997,7 +2001,7 @@
 
   // ════════════════════ INDEX ════════════════════
   // Every card of the anime at the player's arc: its rarity, its power and what it scores in each role.
-  const ix = { tier: "all", sort: "power", q: "" };
+  const ix = { tier: "all", sort: "power", q: "", own: "all" };
   let ixToken = 0;
 
   async function renderIndex() {
@@ -2035,8 +2039,25 @@
       b.addEventListener("click", () => { ix.tier = tr; tiers.querySelectorAll("button").forEach((x) => x.classList.toggle("is-active", x === b)); drawGrid(); });
       tiers.append(b);
     }
+    // Collection: the cards this player has drawn.
+    const owned = window.DLE_Profile?.collectionOf?.(g.id) ?? new Set();
+    const have = cards.filter((x) => owned.has(x.c.id)).length;
+    const coll = el("div", "ix-coll");
+    const collBar = el("span", "ix-coll-bar");
+    const collFill = el("i");
+    collFill.style.width = `${(have / Math.max(1, cards.length)) * 100}%`;
+    collBar.append(collFill);
+    coll.append(el("b", null, t("collection")(have, cards.length)), collBar);
+    const own = el("div", "ix-own");
+    for (const k of ["all", "yes", "no"]) {
+      const b = el("button", `ix-own-btn${ix.own === k ? " is-active" : ""}`, t(k === "all" ? "ownAll" : k === "yes" ? "ownYes" : "ownNo"));
+      b.type = "button";
+      b.addEventListener("click", () => { ix.own = k; own.querySelectorAll("button").forEach((x) => x.classList.toggle("is-active", x === b)); drawGrid(); });
+      own.append(b);
+    }
+    coll.append(own);
     const left = el("div", "ix-hero-main");
-    left.append(head, tiers);
+    left.append(head, tiers, coll);
     hero.append(left, ixTopCrews(g, token));
     view.append(hero);
 
@@ -2078,13 +2099,14 @@
       const r = ix.sort.startsWith("role") ? +ix.sort.slice(4) : -1;
       const list = cards
         .filter((x) => ix.tier === "all" || x.tier === ix.tier)
+        .filter((x) => ix.own === "all" || owned.has(x.c.id) === (ix.own === "yes"))
         .filter((x) => !q || `${x.c.name} ${x.c.baseName}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q))
         .sort((a, b) => (ix.sort === "name" ? a.c.name.localeCompare(b.c.name)
           : r >= 0 ? (b.scores[r] ?? -1) - (a.scores[r] ?? -1) || b.c.power - a.c.power || a.c.name.localeCompare(b.c.name)
           : b.c.power - a.c.power || a.c.name.localeCompare(b.c.name)));
       grid.textContent = "";
       if (!list.length) { grid.append(el("p", "muted ix-empty", t("noCard"))); return; }
-      list.forEach((x, n) => grid.append(ixCard(x, roles, r, n)));
+      list.forEach((x, n) => grid.append(ixCard(x, roles, r, n, owned.has(x.c.id))));
     }
     drawGrid();
   }
@@ -2094,8 +2116,8 @@
     if (rgb) { node.style.setProperty("--role-rgb", rgb[0]); node.style.setProperty("--role2-rgb", rgb[1]); }
   }
 
-  function ixCard({ c, tier, scores, best, form }, roles, sorted, n) {
-    const card = el("article", `ix-card tier-${tier}`);
+  function ixCard({ c, tier, scores, best, form }, roles, sorted, n, mine = true) {
+    const card = el("article", `ix-card tier-${tier}${mine ? "" : " is-locked"}`);
     if (n < 40) card.style.animationDelay = `${n * 18}ms`;
     const top = el("div", "ix-top");
     const img = el("img", "ix-face");
@@ -2104,6 +2126,7 @@
     img.src = c.image;
     img.alt = "";
     top.append(img, el("span", "ix-tier", t("tiers")[tier]), el("span", "ix-power", String(c.power)));
+    if (!mine) top.append(el("span", "ix-lock", `🔒 ${t("notDrawn")}`));
     // A transformation: tap the portrait to see it.
     if (form) {
       const tag = el("button", "ix-form", `⚡ ${form.name[lang]}`);

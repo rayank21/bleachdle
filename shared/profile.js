@@ -33,6 +33,9 @@
       remove: "Remove", removeConfirm: (n) => `Remove ${n} from your friends?`, home: "home page", crewRoll: "Crew Roll",
       inviteHelp: "Open a room (Crew Roll or an online race) to invite your friends.",
       invites: "Invitations", invitesYou: (g, code) => `invites you · ${g} · room ${code}`, invitedOffline: "Invited! They'll see it when they come back.",
+      achievements: (a, b) => `Achievements · ${a} / ${b}`, unlocked: "Achievement unlocked!", collection: "Crew Roll collection",
+      collectionSub: (a, b) => `${a} / ${b} cards drawn`, season: (m) => `Season · ${m}`, allTime: "All time", seasonEnds: (d) => `ends in ${d} day${d > 1 ? "s" : ""}`,
+      champions: (m) => `Champions of ${m}`, seasonCrews: "Best crews this month", seasonWins: "Most wins this month",
     },
     fr: {
       profile: "Profil", create: "Crée ton profil", createSub: "Tes stats et ton meilleur équipage, sauvegardés en ligne et affichés au classement.",
@@ -56,6 +59,9 @@
       remove: "Retirer", removeConfirm: (n) => `Retirer ${n} de tes amis ?`, home: "accueil", crewRoll: "Roll ton équipage",
       inviteHelp: "Ouvre une salle (Roll ton équipage ou une course en ligne) pour inviter tes amis.",
       invites: "Invitations", invitesYou: (g, code) => `t'invite · ${g} · salle ${code}`, invitedOffline: "Invité ! Il le verra en revenant.",
+      achievements: (a, b) => `Succès · ${a} / ${b}`, unlocked: "Succès débloqué !", collection: "Collection Roll ton équipage",
+      collectionSub: (a, b) => `${a} / ${b} cartes tirées`, season: (m) => `Saison · ${m}`, allTime: "Tout temps", seasonEnds: (d) => `fin dans ${d} jour${d > 1 ? "s" : ""}`,
+      champions: (m) => `Champions de ${m}`, seasonCrews: "Meilleurs équipages du mois", seasonWins: "Plus de victoires du mois",
     },
   };
   const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -97,7 +103,9 @@
   }
 
   function adopt(profile, token) {
-    session = { id: profile.id, token: token ?? session?.token, profile };
+    const sent = token ? false : !!session?.collectionSent;
+    session = { id: profile.id, token: token ?? session?.token, profile, collectionSent: sent };
+    if (!sent) { clearTimeout(countTimer); countTimer = setTimeout(flushCounters, 1500); }
     saveSession();
     // The profile name is the name in the online bar and the lobbies too.
     try {
@@ -108,6 +116,7 @@
     } catch {}
     renderButton();
     window.dispatchEvent(new Event("dle:profile"));
+    checkAchievements();
   }
 
   let syncTimer;
@@ -142,19 +151,53 @@
   }
   async function flushCounters(keepalive = false) {
     const add = pending();
-    if (!session || !Object.keys(add).length) return;
-    try { localStorage.removeItem(PENDING); } catch {}
+    // A profile made after some rolls gets this browser's whole collection.
+    const collectNow = session && !session.collectionSent ? readJSON(COLLECTION) : readJSON(PENDING_COLLECT);
+    if (!session || (!Object.keys(add).length && !Object.keys(collectNow).length)) return;
+    try { localStorage.removeItem(PENDING); localStorage.removeItem(PENDING_COLLECT); } catch {}
     try {
-      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add }) });
+      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add, collect: collectNow }) });
       if (!res.ok) throw new Error();
+      session.collectionSent = true;
+      saveSession();
       if (!keepalive) adopt((await res.json()).profile);
     } catch {
       // Not sent: put them back for next time.
       const back = pending();
       for (const [k, v] of Object.entries(add)) back[k] = (back[k] || 0) + v;
       try { localStorage.setItem(PENDING, JSON.stringify(back)); } catch {}
+      const pend = readJSON(PENDING_COLLECT);
+      for (const [g, ids] of Object.entries(collectNow)) pend[g] = [...new Set([...(pend[g] ?? []), ...ids])];
+      writeJSON(PENDING_COLLECT, pend);
     }
   }
+  // Crew Roll collection: every character drawn, per anime. This browser keeps its own copy (it works without a
+  // profile); new cards wait in PENDING_COLLECT until the profile has them.
+  const COLLECTION = "dle:collection";
+  const PENDING_COLLECT = "dle:pending-collect";
+  const readJSON = (k) => { try { return JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch { return {}; } };
+  const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  function collectionOf(game) {
+    return new Set([...(readJSON(COLLECTION)[game] ?? []), ...(session?.profile?.collection?.[game] ?? [])]);
+  }
+  // Returns true the first time this card is drawn.
+  function collect(game, id) {
+    if (!game || !id) return false;
+    const isNew = !collectionOf(game).has(id);
+    const local = readJSON(COLLECTION);
+    local[game] = [...new Set([...(local[game] ?? []), id])];
+    writeJSON(COLLECTION, local);
+    if (isNew) {
+      const pend = readJSON(PENDING_COLLECT);
+      pend[game] = [...new Set([...(pend[game] ?? []), id])];
+      writeJSON(PENDING_COLLECT, pend);
+      clearTimeout(countTimer);
+      countTimer = setTimeout(flushCounters, 4000);
+      checkAchievements();
+    }
+    return isNew;
+  }
+
   // Time played: every half minute the page is in front.
   setInterval(() => { if (!document.hidden) count("seconds", 30); }, 30000);
   window.addEventListener("pagehide", () => flushCounters(true));
@@ -371,6 +414,147 @@
     return box;
   }
 
+  // ── Achievements: worked out from the profile (stats, counters, crews, collection, friends, seasons) ──
+  const ACH_ICONS = {
+    trophy: "M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3",
+    flame: "M12 22c4 0 7-3 7-7 0-5-5-7-5-13-3 2-5 5-5 8-1-1-2-2-2-4-2 2-2 5-2 9 0 4 3 7 7 7z",
+    eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+    globe: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20",
+    dice: "M4 4h16v16H4zM8.5 8.5h.01M15.5 15.5h.01M12 12h.01M15.5 8.5h.01M8.5 15.5h.01",
+    shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+    star: "M12 2l3 6.5 7 1-5 5 1.2 7L12 18l-6.2 3.5L7 14.5l-5-5 7-1z",
+    swords: "M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4",
+    cards: "M4 6h12v14H4zM8 2h12v14",
+    heart: "M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-3 4.5 4.5 0 0 1 8 3c0 6-8 11-8 11z",
+    clock: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2",
+    crown: "M3 18h18M4 8l4 4 4-7 4 7 4-4-2 10H6z",
+  };
+  // [id, icon, tier, goal, value(ctx), name en, name fr, how en, how fr]
+  const ACHIEVEMENTS = [
+    ["win1", "trophy", "bronze", 1, (c) => c.wins, "First win", "Première victoire", "Win a game", "Gagne une partie"],
+    ["win50", "trophy", "silver", 50, (c) => c.wins, "Regular", "Habitué", "Win 50 games", "Gagne 50 parties"],
+    ["win250", "trophy", "gold", 250, (c) => c.wins, "Legend", "Légende", "Win 250 games", "Gagne 250 parties"],
+    ["streak5", "flame", "bronze", 5, (c) => c.streak, "On fire", "En feu", "A streak of 5 wins", "Une série de 5 victoires"],
+    ["streak15", "flame", "gold", 15, (c) => c.streak, "Unstoppable", "Inarrêtable", "A streak of 15 wins", "Une série de 15 victoires"],
+    ["oneshot", "eye", "silver", 1, (c) => c.oneShot, "At first sight", "Du premier coup", "Find a character on the first guess", "Trouve un perso au premier essai"],
+    ["modes", "eye", "bronze", 2, (c) => c.modes, "Sharp eye", "Œil de lynx", "Win a Blurred game and a Description game", "Gagne une partie Flou et une Description"],
+    ["world", "globe", "silver", 8, (c) => c.animePlayed, "World tour", "Tour du monde", "Play all 8 anime", "Joue aux 8 animes"],
+    ["roll100", "dice", "bronze", 100, (c) => c.rolls, "Roller", "Rouleur", "Roll 100 times", "Fais 100 rolls"],
+    ["roll1000", "dice", "gold", 1000, (c) => c.rolls, "Roll addict", "Accro au roll", "Roll 1,000 times", "Fais 1 000 rolls"],
+    ["crew25", "shield", "silver", 25, (c) => c.crews, "Builder", "Bâtisseur", "Build 25 crews", "Construis 25 équipages"],
+    ["rankS", "star", "gold", 1, (c) => c.rankS, "S rank", "Rang S", "Build an S-rank crew", "Construis un équipage de rang S"],
+    ["duel10", "swords", "silver", 10, (c) => c.onlineWins, "Duelist", "Duelliste", "Win 10 online games", "Gagne 10 parties en ligne"],
+    ["coll100", "cards", "silver", 100, (c) => c.cards, "Collector", "Collectionneur", "Draw 100 different cards", "Tire 100 cartes différentes"],
+    ["collfull", "cards", "gold", 1, (c) => c.fullAnime, "Completionist", "Complétiste", "Complete an anime's collection", "Complète la collection d'un animé"],
+    ["friend", "heart", "bronze", 1, (c) => c.friends, "Not alone", "Pas tout seul", "Add a friend", "Ajoute un ami"],
+    ["time10", "clock", "silver", 10, (c) => c.hours, "Marathon", "Marathon", "Play for 10 hours", "Joue 10 heures"],
+    ["podium", "crown", "gold", 1, (c) => c.podium, "Season podium", "Podium de saison", "Finish in a season's top 3", "Finis dans le top 3 d'une saison"],
+  ];
+  let lastBoard = null; // the latest leaderboard, for the season podium
+  function achContext(p) {
+    const stats = Object.values(p.stats ?? {});
+    const modes = (m) => stats.reduce((a, x) => a + (x?.[m]?.wins || 0), 0);
+    const c = p.counters ?? {};
+    let cards = 0;
+    let fullAnime = 0;
+    for (const g of GAMES) {
+      const n = collectionOf(g.id).size;
+      cards += n;
+      if (g.count && n >= g.count) fullAnime++;
+    }
+    const podium = (lastBoard?.podiums ?? []).some((s) => [...(s.crews ?? []), ...(s.wins ?? [])].some((r) => r.id === p.id)) ? 1 : 0;
+    return {
+      wins: modes("daily") + modes("endless") + modes("online") + (p.crew?.duelWins || 0),
+      streak: Math.max(0, ...stats.flatMap((x) => Object.values(x ?? {}).map((m) => m?.max || 0))),
+      oneShot: c.oneShot || 0,
+      modes: (c.blurWins ? 1 : 0) + (c.descWins ? 1 : 0),
+      animePlayed: Object.values(p.stats ?? {}).filter((x) => Object.values(x ?? {}).some((m) => m?.played)).length,
+      rolls: c.rolls || 0,
+      crews: p.crew?.played || 0,
+      rankS: p.crew?.best?.rank === "S" ? 1 : 0,
+      onlineWins: modes("online") + (p.crew?.duelWins || 0),
+      cards, fullAnime,
+      friends: friendState.friends.length,
+      hours: Math.floor((c.seconds || 0) / 3600),
+      podium,
+    };
+  }
+  function achievements(p) {
+    const ctx = achContext(p);
+    return ACHIEVEMENTS.map(([id, icon, tier, goal, value, en, fr, howEn, howFr]) => {
+      const v = Math.min(goal, value(ctx) || 0);
+      return { id, icon, tier, goal, value: v, done: v >= goal, name: lang() === "fr" ? fr : en, how: lang() === "fr" ? howFr : howEn };
+    });
+  }
+  // A toast for each achievement unlocked since last time. The first time, the ones already earned are just noted.
+  const ACH_SEEN = "dle:ach-seen";
+  function checkAchievements() {
+    if (!session?.profile) return;
+    const done = achievements(session.profile).filter((a) => a.done);
+    let seen = null;
+    try { seen = JSON.parse(localStorage.getItem(ACH_SEEN) || "null"); } catch {}
+    const fresh = seen ? done.filter((a) => !seen.includes(a.id)) : [];
+    try { localStorage.setItem(ACH_SEEN, JSON.stringify(done.map((a) => a.id).concat(seen ?? []).filter((x, i, l) => l.indexOf(x) === i))); } catch {}
+    fresh.forEach((a, i) => setTimeout(() => achToast(a), i * 4800));
+  }
+  function achBadge(a) {
+    const b = el("span", `ach-badge tier-${a.tier}${a.done ? " is-done" : ""}`);
+    b.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22"><path d="${ACH_ICONS[a.icon]}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    return b;
+  }
+  function achToast(a) {
+    const box = el("div", `ach-toast tier-${a.tier}`);
+    const text = el("div", "ach-toast-text");
+    text.append(el("span", "ach-toast-kicker", t("unlocked")), el("b", null, a.name), el("span", "ach-toast-how", a.how));
+    box.append(achBadge(a), text);
+    box.addEventListener("click", () => { box.remove(); open("profile"); });
+    document.body.append(box);
+    window.DLE_FX?.play("win");
+    setTimeout(() => box.classList.add("is-out"), 4200);
+    setTimeout(() => box.remove(), 4700);
+  }
+  function achievementsView(p) {
+    const list = achievements(p);
+    const box = el("div", "ach-grid");
+    for (const a of list.sort((x, y) => y.done - x.done)) {
+      const tile = el("div", `ach-tile tier-${a.tier}${a.done ? " is-done" : ""}`);
+      const text = el("div", "ach-text");
+      text.append(el("b", "ach-name", a.name), el("span", "ach-how", a.how));
+      if (!a.done && a.goal > 1) {
+        const bar = el("span", "ach-bar");
+        const fill = el("i");
+        fill.style.width = `${(a.value / a.goal) * 100}%`;
+        bar.append(fill);
+        text.append(bar, el("span", "ach-count", `${fmt(a.value)} / ${fmt(a.goal)}`));
+      }
+      tile.append(achBadge(a), text);
+      box.append(tile);
+    }
+    return [el("h3", "pf-h", t("achievements")(list.filter((a) => a.done).length, list.length)), box];
+  }
+  // Collection: one bar per anime.
+  function collectionView() {
+    const box = el("div", "pf-coll");
+    let all = 0;
+    let total = 0;
+    for (const g of GAMES) {
+      const n = collectionOf(g.id).size;
+      all += n;
+      total += g.count || 0;
+      const row = el("div", `pf-coll-row${n >= g.count ? " is-full" : ""}`);
+      const logo = el("img");
+      logo.src = ROOT + g.logo;
+      logo.alt = "";
+      const bar = el("span", "pf-coll-bar");
+      const fill = el("i");
+      fill.style.width = `${Math.min(100, (n / Math.max(1, g.count)) * 100)}%`;
+      bar.append(fill);
+      row.append(logo, el("span", "pf-coll-name", g.anime), bar, el("span", "pf-coll-n", `${n} / ${g.count}`));
+      box.append(row);
+    }
+    return [el("h3", "pf-h", t("collection")), el("p", "muted pf-coll-sub", t("collectionSub")(all, total)), box];
+  }
+
   // Overview: totals over every game, with the counters kept by the profile.
   const OV_ICONS = {
     games: "M6 11h4M8 9v4M15 12h.01M18 10h.01M17.3 5H6.7a4 4 0 0 0-4 3.6L2 15a3 3 0 0 0 5.5 2l1.2-2h6.6l1.2 2A3 3 0 0 0 22 15l-.7-6.4A4 4 0 0 0 17.3 5z",
@@ -454,6 +638,10 @@
     box.append(hero);
 
     box.append(el("h3", "pf-h", t("myStats")), overview(p));
+    box.append(...achievementsView(p));
+    box.append(...collectionView());
+    // The season podium needs the leaderboard: fetched once, then the achievements are drawn again.
+    if (!lastBoard) leaderboard().then(() => { if (dialog?.open && tab === "profile" && !editing) render(); }).catch(() => {});
 
     // One tile per anime: wins, games and best streak (daily and endless together).
     box.append(el("h3", "pf-h", t("stats")));
@@ -710,29 +898,75 @@
   function leaderboard() {
     if (!boardCache || Date.now() - boardCache.at > 60000) {
       const at = Date.now();
-      boardCache = { at, data: fetch(`${API}?leaderboard=1`).then((r) => (r.ok ? r.json() : Promise.reject())) };
+      boardCache = { at, data: fetch(`${API}?leaderboard=1`).then((r) => (r.ok ? r.json() : Promise.reject())).then((d) => { lastBoard = d; checkAchievements(); return d; }) };
       boardCache.data.catch(() => { if (boardCache?.at === at) boardCache = null; });
     }
     return boardCache.data;
   }
 
   let boardAnime = "all";
+  let boardScope = "season";
+  const monthName = (id) => { const m = new Date(`${id}-15T12:00:00`).toLocaleDateString(lang(), { month: "long", year: "numeric" }); return m[0].toUpperCase() + m.slice(1); };
+  const daysLeft = () => { const n = new Date(); return Math.max(1, Math.ceil((new Date(n.getFullYear(), n.getMonth() + 1, 1) - n) / 86400000)); };
   function boardView() {
     const box = el("div", "pf-view");
     const status = el("p", "muted pf-players", "…");
+    // This month's season, or all time.
+    const scopes = el("div", "pf-scope");
     // Best crews of every anime together, or of one anime.
     const chips = el("div", "pf-board-anime");
+    const podium = el("div", "pf-podiums");
     const cols = el("div", "pf-board");
-    box.append(status, chips, cols);
+    box.append(status, scopes, podium, chips, cols);
     leaderboard().then((data) => {
+      const season = data.season;
+      if (!season) boardScope = "all";
       status.textContent = t("players")(data.players);
       const crewsCol = el("div", "pf-col");
+      const winsCol = el("div", "pf-col");
       const draw = () => {
-        const rows = boardAnime === "all" ? data.crews : data.byAnime?.[boardAnime] ?? [];
+        const src = boardScope === "season" ? season : data;
+        const rows = boardAnime === "all" ? src.crews : src.byAnime?.[boardAnime] ?? [];
+        const crewTitle = boardScope === "season" ? t("seasonCrews") : t("topCrews");
         crewsCol.textContent = "";
-        crewsCol.append(...boardList(boardAnime === "all" ? t("topCrews") : `${t("topCrews")} · ${gameOf(boardAnime)?.anime ?? ""}`, rows, crewValue, crewFaces).childNodes);
+        crewsCol.append(...boardList(boardAnime === "all" ? crewTitle : `${crewTitle} · ${gameOf(boardAnime)?.anime ?? ""}`, rows, crewValue, crewFaces).childNodes);
+        winsCol.textContent = "";
+        winsCol.append(...boardList(boardScope === "season" ? t("seasonWins") : t("topWins"), src.wins, (r) => el("span", "pf-val", `${r.wins}`)).childNodes);
         chips.querySelectorAll("button").forEach((b) => b.classList.toggle("is-active", b.dataset.anime === boardAnime));
+        scopes.querySelectorAll("button").forEach((b) => b.classList.toggle("is-active", b.dataset.scope === boardScope));
+        podium.hidden = boardScope !== "season";
       };
+      if (season) {
+        for (const [id, label] of [["season", t("season")(monthName(season.id))], ["all", t("allTime")]]) {
+          const b = el("button", "pf-scope-btn");
+          b.type = "button";
+          b.dataset.scope = id;
+          b.append(el("span", null, label));
+          if (id === "season") b.append(el("small", null, t("seasonEnds")(daysLeft())));
+          b.addEventListener("click", () => { boardScope = id; draw(); });
+          scopes.append(b);
+        }
+        // Last season's top 3, crews and wins.
+        const last = data.podiums?.[0];
+        if (last && (last.crews?.length || last.wins?.length)) {
+          const card = el("div", "pf-podium");
+          card.append(el("h3", "pf-podium-h", `👑 ${t("champions")(monthName(last.id))}`));
+          const row = el("div", "pf-podium-cols");
+          for (const [list, value] of [[last.crews ?? [], (r) => `${r.rank} ${r.score.toFixed(1)}`], [last.wins ?? [], (r) => `${r.wins}`]]) {
+            const ol = el("ol", "pf-podium-list");
+            list.forEach((r, i) => {
+              const li = el("li", `top-${i + 1}`);
+              const face = el("span", "pf-li-face");
+              if (r.avatar) { const img = el("img"); img.src = avatarSrc(r.avatar); img.alt = ""; face.append(img); }
+              li.append(el("span", "pf-pos", ["🥇", "🥈", "🥉"][i]), face, el("span", "pf-li-name", r.name), el("span", "pf-val", value(r)));
+              ol.append(li);
+            });
+            if (list.length) row.append(ol);
+          }
+          card.append(row);
+          podium.append(card);
+        }
+      }
       const chip = (id, content, title) => {
         const b = el("button", "pf-board-chip");
         b.type = "button";
@@ -749,7 +983,7 @@
         img.alt = g.anime;
         chips.append(chip(g.id, img, g.anime));
       }
-      cols.append(crewsCol, boardList(t("topWins"), data.wins, (r) => el("span", "pf-val", `${r.wins}`)));
+      cols.append(crewsCol, winsCol);
       draw();
     }).catch(() => { status.textContent = t("offline"); });
     return box;
@@ -807,7 +1041,7 @@
   else init();
 
   window.DLE_Profile = {
-    open, recordCrew, recordDuel, leaderboard, crewFaces, count,
+    open, recordCrew, recordDuel, leaderboard, crewFaces, count, collect, collectionOf,
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get requests() { return friendState.requests; },

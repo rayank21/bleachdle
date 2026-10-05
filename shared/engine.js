@@ -512,6 +512,10 @@
     if (won) {
       game.status = "won";
       if (!isOnline()) recordWin(game.guesses.length);
+      // For the profile's achievements.
+      if (game.guesses.length === 1) window.DLE_Profile?.count("oneShot");
+      if (play() === "blur") window.DLE_Profile?.count("blurWins");
+      if (play() === "desc") window.DLE_Profile?.count("descWins");
     }
     saveGame();
     if (isOnline()) raceProgress();
