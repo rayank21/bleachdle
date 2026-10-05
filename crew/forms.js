@@ -59,6 +59,8 @@
       "roronoa-zoro": { arc: 3, name: { en: "Asura", fr: "Asura" }, fx: "domain", c1: "90, 255, 150", c2: "4, 20, 10", kanji: "阿修羅" },
       "tony-tony-chopper": { arc: 3, name: { en: "Monster Point", fr: "Monster Point" }, fx: "pillar", c1: "255, 120, 160", c2: "40, 10, 10", kanji: "怪物" },
       "polo-marco": { arc: 5, name: { en: "Phoenix", fr: "Phénix" }, fx: "aura", c1: "80, 200, 255", c2: "255, 220, 80", kanji: "不死鳥" },
+      "rob-lucci": { arc: 3, name: { en: "Leopard Human-Beast form", fr: "Forme hybride du Léopard" }, fx: "aura", c1: "255, 200, 60", c2: "60, 30, 0", kanji: "豹", lightning: true },
+      king: { arc: 9, name: { en: "Pteranodon", fr: "Ptéranodon" }, fx: "pillar", c1: "255, 110, 30", c2: "30, 6, 20", kanji: "火災" },
       sanji: { arc: 8, name: { en: "Raid Suit · Stealth Black", fr: "Raid Suit · Stealth Black" }, fx: "aura", c1: "255, 120, 40", c2: "255, 40, 40", kanji: "黒足" },
       "charlotte-katakuri": { arc: 8, name: { en: "Future Sight", fr: "Haki de l'observation · Futur" }, fx: "domain", c1: "255, 90, 140", c2: "20, 4, 12", kanji: "見聞色" },
       kaidou: { arc: 9, name: { en: "Azure Dragon", fr: "Dragon azur" }, fx: "pillar", c1: "90, 160, 255", c2: "6, 12, 40", kanji: "龍", lightning: true },

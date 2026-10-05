@@ -134,6 +134,7 @@ export const seed = [
   { wiki: "Kaidou", gender: "M", bounty: { 7: null, 9: 4611100000 } },
   { wiki: "King", gender: "M" },
   { wiki: "Queen", gender: "M" },
+  { wiki: "Jack", gender: "M" },
   { wiki: "Yamato", gender: "M", aff: ["Beasts Pirates"] },
   { wiki: "Kozuki Oden", gender: "M" },
   { wiki: "Kozuki Hiyori", gender: "F" },

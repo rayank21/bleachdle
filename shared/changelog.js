@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-05T22:54",
+      title: { en: "Jack, Lucci and King", fr: "Jack, Lucci et King" },
+      items: [
+        { type: "new", game: "onepiece", en: "Jack the Drought joins One Piece (power 8 in Crew Roll).", fr: "Jack la Sécheresse rejoint One Piece (puissance 8 dans Roll ton équipage)." },
+        { type: "new", game: "crew", en: "Crew Roll: Rob Lucci turns into his leopard form, King into his Pteranodon.", fr: "Roll ton équipage : Rob Lucci se transforme en léopard, King en Ptéranodon." },
+      ],
+    },
+    {
       at: "2026-10-05T22:25",
       title: { en: "Achievements, collection and monthly seasons", fr: "Succès, collection et saisons mensuelles" },
       items: [

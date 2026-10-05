@@ -241,7 +241,7 @@
         sengoku:10 sakazuki:10 borsalino:10 hody-jones:5 shirahoshi:2 neptune:6 fisher-tiger:7 caesar-clown:6 monet:5 vergo:7 kin-emon:6
         kouzuki-momonosuke:5 donquixote-doflamingo:8 issho:10 sabo:9 rebecca:5 kyros:5 bartolomeo:6 cavendish:6 carrot:6 pedro:6
         inuarashi:7 nekomamushi:7 charlotte-linlin:10 charlotte-katakuri:9 charlotte-pudding:3 charlotte-cracker:8 vinsmoke-judge:6
-        vinsmoke-reiju:6 kaidou:10 king:9 queen:9 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4
+        vinsmoke-reiju:6 kaidou:10 king:9 queen:9 jack:8 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4
         tom:5 paulie:5 doc-q:3 imu:10 crocus:4 nico-olvia:3 dorry:5 brogy:5 bellamy:5 gin:3 laffitte:7 tsuru:8 jozu:8 bepo:6 urouge:7
         scratchmen-apoo:7 benn-beckman:9 lucky-roux:8 yasopp:8 streusen:5 charlotte-perospero:7 charlotte-oven:8 kouzuki-sukiyaki:3 charlotte-brulee:4 jaygarcia-saturn:9 marcus-mars:9 topman-warcury:9
         ethanbaron-v-nusjuro:9 shepherd-ju-peter:9 scopper-gaban:10 den:5 charlos:1 gaimon:1 peepley-lulu:5 figarland-garling:10 figarland-shamrock:9`),

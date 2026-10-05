@@ -2004,6 +2004,24 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/queen.webp"
  },
  {
+  "id": "jack",
+  "name": "Jack",
+  "gender": "M",
+  "aff": [
+   "Beasts Pirates"
+  ],
+  "fruit": [
+   "Zoan"
+  ],
+  "bounty": 1000000000,
+  "height": 830,
+  "origin": "Grand Line",
+  "age": 28,
+  "epithet": "Jack the Drought",
+  "arc": 7,
+  "image": "assets/characters/jack.webp"
+ },
+ {
   "id": "yamato",
   "name": "Yamato",
   "gender": "M",
