@@ -7,8 +7,12 @@
   const LOG = [
     {
       date: "2026-10-05",
-      title: { en: "Attack on Titan joins the roster", fr: "L'Attaque des Titans débarque" },
+      title: { en: "Blurred and Description games, team vs team, Attack on Titan", fr: "Jeux Flou et Description, équipe contre équipe, L'Attaque des Titans" },
       items: [
+        { type: "new", en: "Blurred game: guess the character from a blurred picture that gets sharper with every guess.", fr: "Jeu Flou : trouve le perso à partir d'une image floue qui se précise à chaque essai." },
+        { type: "new", en: "Description game: a description of the character; after 3 guesses a technique or a place, after 5 a nickname or the first letter. 687 descriptions, spoiler-free.", fr: "Jeu Description : une description du perso ; après 3 essais une technique ou un lieu, après 5 un surnom ou la première lettre. 687 descriptions, sans spoiler." },
+        { type: "new", en: "Team vs team online: red against blue in the guessing races (all three games) and in Crew Roll. The host turns it on in the room.", fr: "Équipe contre équipe en ligne : rouges contre bleus dans les courses (les trois jeux) et dans Roll ton équipage. L'hôte l'active dans la salle." },
+        { type: "improved", en: "The strongest characters glow: a gold aura for power 10, violet for 9, in suggestions, guesses and results.", fr: "Les persos les plus forts brillent : aura dorée pour la puissance 10, violette pour 9, dans les suggestions, les essais et les résultats." },
         { type: "new", game: "attackontitan", en: "Snkdle: 57 Attack on Titan characters over 7 anime arcs, spoiler-free (Titan shifters are only revealed with the anime).", fr: "Snkdle : 57 persos de L'Attaque des Titans sur 7 arcs, sans spoiler (les Titans Shifters ne sont révélés qu'avec l'anime)." },
         { type: "new", game: "crew", en: "Crew Roll Attack on Titan: Titans, Survey Corps, Strategist, Garrison, Marley, Commander and Wildcard, with 11 Titan transformations.", fr: "Roll ton équipage SNK : Titans, Bataillon, Stratège, Garnison, Mahr, Commandant et Joker, avec 11 transformations en Titan." },
         { type: "new", game: "onepiece", en: "19 new One Piece characters: Bepo, Laffitte, Crocus, Nico Olvia, Streusen, Sukiyaki, Benn Beckman, Lucky Roux, Yasopp, Oven, Perospero…", fr: "19 nouveaux persos One Piece : Bépo, Laffitte, Crocus, Nico Olvia, Streusen, Sukiyaki, Ben Beckman, Lucky Roux, Yasopp, Oven, Perospero…" },

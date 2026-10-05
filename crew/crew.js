@@ -29,6 +29,8 @@
       captainTag: "Leader",
       skip: "No slot left for this one: skip",
       tiers: { legend: "Legendary", epic: "Epic", common: "Common" },
+      teamWins: (n) => `${n} wins!`,
+      teamDraw: "Draw between the teams!",
       index: "Index",
       indexTitle: (a) => `${a} index`,
       indexSub: (n, arc) => `${n} cards${arc ? ` · spoiler-free up to ${arc}` : ""}. What each card scores in every role.`,
@@ -135,6 +137,8 @@
       captainTag: "Chef",
       skip: "Plus de place pour lui : passer",
       tiers: { legend: "Légendaire", epic: "Épique", common: "Commun" },
+      teamWins: (n) => `${n} gagne !`,
+      teamDraw: "Égalité entre les équipes !",
       index: "Index",
       indexTitle: (a) => `Index ${a}`,
       indexSub: (n, arc) => `${n} cartes${arc ? ` · sans spoiler jusqu'à ${arc}` : ""}. Ce que chaque carte rapporte dans chaque rôle.`,
@@ -1118,7 +1122,11 @@
     if (rooms) return;
     rooms = window.DLE_Rooms.create({
       channel: "crew",
-      startData: (room) => ({ arc: Math.min(...room.members.map((m) => m.arc)), key: Math.random().toString(36).slice(2, 10) }),
+      startData: (room) => ({
+        arc: Math.min(...room.members.map((m) => m.arc)),
+        key: Math.random().toString(36).slice(2, 10),
+        teams: room.meta?.teams ? Object.fromEntries(room.members.map((m) => [m.id, rooms.teamOf(m.id, room) ?? 0])) : null,
+      }),
       onChange: () => { tryPendingJoin(); if (!match) renderLobby(); else renderScoreboard(); },
       onStart: (room, data) => startMatch(room, data),
       onMessage: onMatchMessage,
@@ -1420,7 +1428,7 @@
       if (m && m.id === room.host) li.append(el("span", "lobby-badge", t("host")));
       list.append(li);
     }
-    card.append(list);
+    card.append(list, rooms.teamsBox());
     const actions = el("div", "roll-actions");
     if (rooms.isHost()) {
       const start = el("button", "btn-primary", t("start"));
@@ -1471,6 +1479,8 @@
       rolled: null, rerolls: REROLLS, rolling: false, done: false, starting: true,
       key: String(data.key ?? ""), // tells this match's messages from the previous one's
       order: ids, current: null, show: Promise.resolve(),
+      // Team vs team: each player's team (0 red, 1 blue); a team scores the average of its crews.
+      teams: data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null,
     };
     renderPicker();
     renderMatch();
@@ -1828,6 +1838,18 @@
   const scores = () => match.ids.map((id) => ({ id, name: memberName(id), score: duelScore(match.boards.get(id)), left: !match.active.has(id) }))
     .sort((a, b) => b.score - a.score);
 
+  function teamScores(live = false) {
+    const sum = [0, 0];
+    const count = [0, 0];
+    for (const id of match.ids) {
+      const k = match.teams[id] ?? 0;
+      const board = match.boards.get(id);
+      sum[k] += duelScore(live ? board.map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)) : board);
+      count[k]++;
+    }
+    return [0, 1].map((k) => (count[k] ? sum[k] / count[k] : 0));
+  }
+
   function finishMatch() {
     if (!match || match.done) return;
     match.done = true;
@@ -1843,14 +1865,23 @@
     const tiedTop = place === 1 && ranking.filter((r) => Math.abs(r.score - myScore) < 1e-9).length > 1;
     const panel = $("#duelPanel");
     panel.textContent = "";
-    const kind = tiedTop ? "draw" : place === 1 ? "win" : place === ranking.length ? "lose" : "draw";
+    let kind = tiedTop ? "draw" : place === 1 ? "win" : place === ranking.length ? "lose" : "draw";
+    let text = tiedTop ? t("tie") : t("youPlace")(place);
+    // Team vs team: my team's average decides.
+    if (match.teams) {
+      const sc = teamScores();
+      const mineK = match.teams[rooms.selfId] ?? 0;
+      const draw = Math.abs(sc[0] - sc[1]) < 1e-9;
+      kind = draw ? "draw" : sc[mineK] > sc[1 - mineK] ? "win" : "lose";
+      text = draw ? t("teamDraw") : t("teamWins")(rooms.teamNames()[sc[0] > sc[1] ? 0 : 1]);
+    }
     window.DLE_Profile?.recordDuel(kind === "win");
     const actions = [[t("leave"), "btn-ghost", leaveMatch]];
     if (!match.closedByHost) actions.push([t("backRoom"), "btn-primary", backToRoom]);
-    panel.append(resultBlock(duelScore(mine), mine, { title: t("finalRanking"), outcome: { kind, text: tiedTop ? t("tie") : t("youPlace")(place) }, actions }));
+    panel.append(resultBlock(duelScore(mine), mine, { title: t("finalRanking"), outcome: { kind, text }, actions }));
     const list = el("ol", "ranking");
     for (const r of ranking) {
-      const li = el("li", r.id === rooms.selfId ? "is-me" : "");
+      const li = el("li", `${r.id === rooms.selfId ? "is-me" : ""}${match.teams ? ` team-${match.teams[r.id] ?? 0}` : ""}`);
       li.append(el("span", "ranking-name", r.left ? `${r.name} (${t("left")})` : r.name), el("b", null, r.score.toFixed(1)));
       list.append(li);
     }
@@ -1877,8 +1908,21 @@
     const box = $("#scoreboard");
     if (!box) return;
     box.textContent = "";
+    // Team vs team: the two team averages, live.
+    if (match.teams) {
+      const sc = teamScores(true);
+      const names = rooms.teamNames();
+      const bar = el("div", "team-bar crew-team-bar");
+      for (const k of [0, 1]) {
+        const side = el("div", `team-side team-${k}${match.done && sc[k] > sc[1 - k] + 1e-9 ? " is-winner" : ""}`);
+        side.append(el("span", "team-side-name", names[k]), el("b", "team-side-pts", sc[k].toFixed(1)));
+        bar.append(side);
+        if (k === 0) bar.append(el("span", "team-vs", "VS"));
+      }
+      box.append(bar);
+    }
     for (const id of match.ids) {
-      const chip = el("div", `score-chip${id === rooms.selfId ? " is-me" : ""}${match.active.has(id) ? "" : " has-left"}${id === match.current && !match.done ? " is-turn" : ""}`);
+      const chip = el("div", `score-chip${id === rooms.selfId ? " is-me" : ""}${match.active.has(id) ? "" : " has-left"}${id === match.current && !match.done ? " is-turn" : ""}${match.teams ? ` team-${match.teams[id] ?? 0}` : ""}`);
       const dot = el("span", `duel-state${match.finished.has(id) ? " is-done" : ""}`);
       const score = el("b", "duel-score");
       // Scores animate from the value shown last time.

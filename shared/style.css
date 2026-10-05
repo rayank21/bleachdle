@@ -1383,3 +1383,92 @@ body[data-game="home"] .cat .cat-name { display: none; }
   .cl-text { flex-basis: 100%; }
   .cl-go { margin: 12px 14px 18px; }
 }
+
+/* ── Game variants: Classic / Blurred / Description (shared/engine.js) ── */
+.play-tabs { display: flex; justify-content: center; gap: 6px; margin: 10px auto 0; flex-wrap: wrap; }
+.play-tab { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 13px 0 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-weight: 800; font-size: 13px; transition: transform 0.15s, border-color 0.15s, background 0.15s, color 0.15s; }
+.play-tab svg { width: 17px; height: 17px; flex: none; }
+.play-tab:hover:not(:disabled) { transform: translateY(-1px); color: var(--text); border-color: rgba(var(--accent-rgb), 0.5); }
+.play-tab.is-active { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--accent), var(--accent-strong)); box-shadow: 0 6px 18px rgba(var(--accent-rgb), 0.35); }
+.play-tab:disabled:not(.is-active) { opacity: 0.45; cursor: not-allowed; }
+
+.play-box { width: min(100%, 560px); display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 20px 18px; text-align: center; background: radial-gradient(120% 90% at 50% 0%, rgba(var(--accent-rgb), 0.16), transparent 60%), var(--surface); animation: rise 0.35s ease both; }
+.play-box[hidden] { display: none; }
+.play-kicker { margin: 0; font-size: 13px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-strong); }
+.play-help { margin: -4px 0 0; font-size: 13px; }
+.play-help:empty { display: none; }
+
+/* Blurred portrait: sharper, less zoomed and less grey with each guess */
+.blur-frame { position: relative; width: min(280px, 72vw); aspect-ratio: 1; border-radius: 22px; overflow: hidden; background: #0d0d10; border: 3px solid rgba(var(--accent-rgb), 0.7); box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.12), 0 18px 50px rgba(0, 0, 0, 0.55); }
+.blur-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; filter: blur(var(--blur, 30px)) grayscale(var(--gray, 1)); transform: scale(var(--zoom, 2)); transition: filter 0.9s cubic-bezier(.2, .8, .2, 1), transform 0.9s cubic-bezier(.2, .8, .2, 1); user-select: none; -webkit-user-drag: none; }
+.blur-frame::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 120px; font-weight: 900; font-style: italic; color: rgba(255, 255, 255, 0.1); pointer-events: none; transition: opacity 0.5s; }
+.blur-frame.is-clear { border-color: var(--correct); box-shadow: 0 0 0 6px rgba(31, 157, 76, 0.2), 0 0 50px rgba(31, 157, 76, 0.45); }
+.blur-frame.is-clear::after { opacity: 0; }
+.blur-frame.is-wrong { animation: play-shake 0.45s; }
+@keyframes play-shake { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+.blur-meter { display: flex; gap: 5px; }
+.blur-meter i { width: 18px; height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); transition: background 0.4s; }
+.blur-meter i.is-on { background: linear-gradient(90deg, var(--accent), var(--accent-strong)); }
+
+/* Description: a quote card and two clues */
+.desc-quote { position: relative; width: 100%; margin: 0; padding: 22px 22px 18px 52px; border-radius: 16px; text-align: left; background: linear-gradient(135deg, var(--surface-2), #121215); border: 1px solid rgba(var(--accent-rgb), 0.3); box-shadow: inset 4px 0 0 var(--accent); }
+.desc-quote p { margin: 0; font-size: 17px; line-height: 1.55; font-weight: 600; text-wrap: pretty; }
+.desc-mark { position: absolute; left: 14px; top: 2px; font-size: 64px; line-height: 1; font-weight: 900; color: rgba(var(--accent-rgb), 0.6); font-family: Georgia, serif; }
+.desc-quote.is-wrong { animation: play-shake 0.45s; }
+.desc-clues { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.desc-clue { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px; border-radius: 14px; border: 1px dashed rgba(255, 255, 255, 0.16); background: rgba(255, 255, 255, 0.02); color: var(--muted); }
+.desc-clue svg { width: 20px; height: 20px; }
+.desc-clue-label { font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+.desc-clue small { font-size: 12.5px; }
+.desc-clue.is-open { border-style: solid; border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.12); color: var(--text); animation: clue-in 0.5s cubic-bezier(.3, 1.5, .5, 1) both; }
+.desc-clue.is-open svg { color: var(--accent-strong); }
+.desc-clue strong { font-size: 15.5px; line-height: 1.3; }
+.desc-clue.is-letter strong { font-size: 34px; font-style: italic; color: var(--accent-strong); }
+@keyframes clue-in { from { transform: scale(0.85) rotateX(40deg); opacity: 0; } }
+
+/* Wrong guesses */
+.tried { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
+.tried-label { width: 100%; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.tried-chip { display: inline-flex; align-items: center; gap: 7px; padding: 3px 11px 3px 3px; border-radius: 999px; background: rgba(229, 38, 46, 0.14); border: 1px solid rgba(229, 38, 46, 0.45); font-size: 13px; font-weight: 700; }
+.tried-chip.is-new { animation: tried-pop 0.45s cubic-bezier(.3, 1.6, .5, 1) both; }
+.tried-face { position: relative; width: 28px; height: 28px; flex: none; border-radius: 50%; overflow: hidden; }
+.tried-face img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
+@keyframes tried-pop { from { transform: scale(0.4); opacity: 0; } }
+@media (max-width: 560px) {
+  .desc-clues { grid-template-columns: 1fr; }
+  .desc-quote { padding: 18px 16px 14px 40px; }
+  .desc-quote p { font-size: 15.5px; }
+  .desc-mark { left: 8px; font-size: 52px; }
+}
+
+/* ── The strongest characters: an animated aura (power 10: gold, power 9: violet) ── */
+.sug-face { position: relative; display: block; flex: none; line-height: 0; border-radius: 3px; }
+.aura-10 { animation: aura-10 2.4s ease-in-out infinite; }
+.aura-9 { animation: aura-9 2.8s ease-in-out infinite; }
+@keyframes aura-10 {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255, 211, 77, 0.95), 0 0 12px 2px rgba(255, 170, 40, 0.55); }
+  50% { box-shadow: 0 0 0 2px rgba(255, 244, 194, 1), 0 0 26px 7px rgba(255, 140, 30, 0.75); }
+}
+@keyframes aura-9 {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(200, 120, 255, 0.85), 0 0 10px 1px rgba(170, 80, 255, 0.45); }
+  50% { box-shadow: 0 0 0 2px rgba(255, 140, 230, 0.95), 0 0 20px 5px rgba(190, 90, 255, 0.6); }
+}
+/* A light sweep across the portrait */
+.sug-face.aura-10::before, .tried-face.aura-10::before, .result-portrait.aura-10::before, .blur-frame.aura-10::before,
+.sug-face.aura-9::before, .tried-face.aura-9::before, .result-portrait.aura-9::before, .blur-frame.aura-9::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 245, 200, 0.45) 50%, transparent 65%); background-size: 260% 100%;
+  animation: aura-sheen 2.8s ease-in-out infinite; mix-blend-mode: screen;
+}
+.aura-9::before { background-image: linear-gradient(115deg, transparent 35%, rgba(230, 180, 255, 0.4) 50%, transparent 65%) !important; animation-duration: 3.4s !important; }
+@keyframes aura-sheen { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+.result-portrait { position: relative; }
+.result-portrait.aura-10 { border-color: #ffd34d; }
+.result-portrait.aura-9 { border-color: #c878ff; }
+.blur-frame.is-clear.aura-10 { border-color: #ffd34d; animation: aura-10 2.4s ease-in-out infinite; }
+.blur-frame.is-clear.aura-9 { border-color: #c878ff; animation: aura-9 2.8s ease-in-out infinite; }
+.tile-name.aura-10 img, .tile-name.aura-9 img { animation: aura-breathe 2.4s ease-in-out infinite; }
+@keyframes aura-breathe { 50% { filter: brightness(1.15) saturate(1.2); } }
+@media (prefers-reduced-motion: reduce) {
+  .aura-10, .aura-9, .aura-10::before, .aura-9::before, .tile-name.aura-10 img, .tile-name.aura-9 img { animation: none !important; }
+}

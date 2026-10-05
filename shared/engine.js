@@ -32,12 +32,24 @@
     },
   };
 
-  const settings = Object.assign({ arc: null, mode: "daily" }, store.get("settings", {}));
+  const settings = Object.assign({ arc: null, mode: "daily", play: "classic" }, store.get("settings", {}));
   delete settings.lang;
   settings.lang = window.DLE_LANG.get();
-  const saveSettings = () => store.set("settings", { arc: settings.arc, mode: settings.mode });
+  const saveSettings = () => store.set("settings", { arc: settings.arc, mode: settings.mode, play: settings.play });
   const isOnline = () => settings.mode === "online";
   let race = null; // online race in progress (see "Online race" below)
+
+  // Game variants: classic (attributes), blur (a blurred portrait that sharpens with each guess) and
+  // desc (a description, then a clue after 3 guesses and a nickname or first letter after 5).
+  const PLAYS = ["classic", "blur", "desc"];
+  const DESC = window.DLE_DESCRIPTIONS || {};
+  if (!PLAYS.includes(settings.play) || (settings.play === "desc" && !Object.keys(DESC).length)) settings.play = "classic";
+  const play = () => (isOnline() && race ? race.play : settings.play);
+  const CLUE_AT = 3;
+  const NICK_AT = 5;
+  // The strongest characters (Crew Roll power) get an animated aura wherever their portrait shows.
+  const POWER = window.CREW_GAMES?.[CFG.id]?.power ?? {};
+  const auraOf = (id) => (POWER[id] >= 10 ? " aura-10" : POWER[id] >= 9 ? " aura-9" : "");
   const arcCap = () => (isOnline() && race ? race.arc : settings.arc);
   // Online games don't count in the daily / endless statistics.
   const statsMode = () => (settings.mode === "endless" ? "endless" : "daily");
@@ -88,24 +100,28 @@
     return CFG.derive ? CFG.derive(out, arcCap()) : out;
   };
   const pool = () => CHARS.filter((c) => c.arc <= arcCap());
+  // The description game only draws characters that have one.
+  const targetPool = (p = play()) => pool().filter((c) => p !== "desc" || DESC[c.id]);
 
   // ── Game state ──
   let game = null;
-  const gameKey = () => (settings.mode === "daily" ? `daily:${dateKey()}:${settings.arc}` : `endless:${settings.arc}`);
+  const playKey = () => (play() === "classic" ? "" : `${play()}:`);
+  const gameKey = () => (settings.mode === "daily" ? `daily:${playKey()}${dateKey()}:${settings.arc}` : `endless:${playKey()}${settings.arc}`);
 
+  // Each variant has its own character of the day.
   function dailyTarget() {
-    const p = pool();
-    return p[hash(`${dateKey()}|${settings.arc}|${CFG.storage}`) % p.length].id;
+    const p = targetPool();
+    return p[hash(`${dateKey()}|${settings.arc}|${CFG.storage}${play() === "classic" ? "" : `|${play()}`}`) % p.length].id;
   }
   function randomTarget(exclude) {
-    const p = pool().filter((c) => c.id !== exclude);
+    const p = targetPool().filter((c) => c.id !== exclude);
     return p[Math.floor(Math.random() * p.length)].id;
   }
 
   function loadGame() {
     if (isOnline()) { game = race ? race.game : null; return; }
     const saved = store.get(gameKey(), null);
-    const valid = saved && byId.has(saved.target) && byId.get(saved.target).arc <= settings.arc;
+    const valid = saved && byId.has(saved.target) && byId.get(saved.target).arc <= settings.arc && (play() !== "desc" || DESC[saved.target]);
     game = valid
       ? saved
       : { target: settings.mode === "daily" ? dailyTarget() : randomTarget(), guesses: [], status: "playing", revealed: {} };
@@ -140,7 +156,7 @@
         s.streak = s.last === dateKey(addDays(new Date(), -1)) ? s.streak + 1 : 1;
         s.last = today;
       }
-      if (!(today in stats.history)) stats.history[today] = n;
+      if (!(today in stats.history) && play() === "classic") stats.history[today] = n;
     } else {
       s.streak++;
     }
@@ -241,7 +257,7 @@
     const row = el("div", "row");
     COLS.forEach((col, i) => {
       const { status, dir } = res[col.key];
-      const tile = el("div", `tile tile-${col.type === "name" ? "name" : col.key} is-${status}`);
+      const tile = el("div", `tile tile-${col.type === "name" ? `name${auraOf(id)}` : col.key} is-${status}`);
       const dirWord = dir ? (dir === "up" ? " ▲" : " ▼") : "";
       tile.setAttribute("aria-label", `${colLabel(col.key)}: ${cellText(col, g)}${dirWord} (${t(status)})`);
       tile.innerHTML = col.type === "name"
@@ -270,7 +286,8 @@
     box.innerHTML = "";
     const n = game.guesses.length;
     const tg = view(game.target);
-    CFG.hints.forEach((h, i) => {
+    box.hidden = play() !== "classic";
+    (play() === "classic" ? CFG.hints : []).forEach((h, i) => {
       const id = h.key ?? h.type;
       const unlocked = n >= h.at || game.status !== "playing";
       const revealed = game.revealed[id];
@@ -306,7 +323,8 @@
 
   function renderHero() {
     $("#heroTitle").textContent = CFG.heroTitle;
-    $("#heroSub").textContent = t(isOnline() ? "subOnline" : settings.mode === "daily" ? "subDaily" : "subEndless");
+    $("#heroSub").textContent = t(isOnline() ? "subOnline" : play() === "blur" ? "subBlur" : play() === "desc" ? "subDesc" : settings.mode === "daily" ? "subDaily" : "subEndless");
+    renderPlayTabs();
     $("#arcChipName").textContent = settings.arc == null ? "-" : arcName(settings.arc);
     $$(".mode-tabs [data-mode]").forEach((b) => {
       const on = b.dataset.mode === settings.mode;
@@ -335,6 +353,12 @@
   function shareText() {
     const emoji = { correct: "🟩", partial: "🟧", wrong: "🟥" };
     const tg = view(game.target);
+    if (play() !== "classic") {
+      const variant = t(play() === "blur" ? "playBlur" : "playDesc");
+      const head = isOnline() ? `${CFG.brand} · ${t("modeOnline")}` : settings.mode === "daily" ? `${CFG.brand} #${dayNumber()}` : `${CFG.brand} ∞`;
+      const line = game.guesses.map((id) => (id === game.target ? "🟩" : "🟥")).join("");
+      return `${head} · ${variant} · ${arcName(settings.arc)} · ${game.status === "won" ? t("guesses")(game.guesses.length) : "X"}\n${line}`;
+    }
     const lines = game.guesses.map((id) => {
       const r = compare(view(id), tg);
       return COLS.map((c) => emoji[r[c.key].status]).join("");
@@ -365,7 +389,7 @@
       ? `<p class="countdown-label">${t("nextIn")}</p><p class="countdown" id="countdown">--:--:--</p>`
       : `<button class="btn-primary" type="button" id="nextBtn">${t("nextChar")}</button>`;
     banner.innerHTML = `
-      <div class="result-portrait ${won ? "is-won" : ""}"><img src="${esc(tg.image)}" alt="${esc(tg.name)}" /></div>
+      <div class="result-portrait ${won ? "is-won" : ""}${auraOf(tg.id)}"><img src="${esc(tg.image)}" alt="${esc(tg.name)}" /></div>
       <div class="result-body">
         <p class="result-kicker">${won ? t("winTitle") : t("giveUpTitle")}</p>
         <h2 class="result-name">${esc(tg.name)}</h2>
@@ -405,11 +429,12 @@
     const me = race.players.get(rooms.selfId);
     const place = raceRanking().filter((p) => p.found).findIndex((p) => p.id === me.id) + 1;
     banner.innerHTML = `
-      <div class="result-portrait ${won ? "is-won" : ""}"><img src="${esc(tg.image)}" alt="${esc(tg.name)}" /></div>
+      <div class="result-portrait ${won ? "is-won" : ""}${auraOf(tg.id)}"><img src="${esc(tg.image)}" alt="${esc(tg.name)}" /></div>
       <div class="result-body">
         <p class="result-kicker">${won ? t("winTitle") : t("giveUpTitle")}</p>
         <h2 class="result-name">${esc(tg.name)}</h2>
         ${won ? `<p class="muted">${t("raceWon")(place, game.guesses.length, clock(me.ms ?? 0))}</p>` : ""}
+        ${race.teams && race.done ? teamOutcomeHtml() : ""}
         <p class="muted">${race.done ? "" : esc(t("raceWait"))}</p>
       </div>`;
     banner.hidden = false;
@@ -426,6 +451,7 @@
     b.addEventListener("click", () => {
       game.status = "lost";
       window.DLE_FX?.play("lose");
+      renderPlay();
       if (isOnline()) { renderAll(); raceProgress(); return; }
       saveGame();
       recordGiveUp();
@@ -489,6 +515,33 @@
     saveGame();
     if (isOnline()) raceProgress();
 
+    // Blur and description: no attribute row, the panel updates (sharper picture, new clue, wrong-guess shake).
+    if (play() !== "classic") {
+      renderPlay(won ? "won" : "wrong");
+      renderHints();
+      renderGiveUp();
+      renderStatsBar();
+      closeSuggestions();
+      const box = $("#searchInput");
+      box.value = "";
+      $("#clearBtn").hidden = true;
+      if (won) {
+        $("#searchForm").hidden = true;
+        setTimeout(() => {
+          burst();
+          window.DLE_FX?.play("win");
+          window.DLE_FX?.flash("rgba(var(--accent-rgb), 0.35)");
+          renderResult();
+          renderWeekly();
+          $("#resultBanner").scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 900);
+      } else {
+        window.DLE_FX?.play("wrong");
+        box.focus();
+      }
+      return;
+    }
+
     renderHead();
     const row = renderRow(id, true);
     $("#boardRows").prepend(row);
@@ -547,7 +600,7 @@
       list.innerHTML = `<li class="empty">${esc(t("noMatch"))}</li>`;
     } else {
       matches.forEach((c, i) => {
-        const li = el("li", i === active ? "is-active" : "", `<img src="${esc(c.image)}" alt="" loading="lazy" /><span>${esc(nameOf(c))}</span>`);
+        const li = el("li", i === active ? "is-active" : "", `<span class="sug-face${auraOf(c.id)}"><img src="${esc(c.image)}" alt="" loading="lazy" /></span><span>${esc(nameOf(c))}</span>`);
         li.id = `sug-${c.id}`;
         li.setAttribute("role", "option");
         li.setAttribute("aria-selected", i === active);
@@ -731,7 +784,8 @@
     // Online without a race in progress: only the lobby is shown.
     const active = !!game;
     $(".guess-box").hidden = !active;
-    $(".board-wrap").hidden = !active;
+    $(".board-wrap").hidden = !active || play() !== "classic";
+    renderPlay();
     if (!active) { $("#resultBanner").hidden = true; renderWeekly(); return; }
     renderBoard();
     renderHints();
@@ -787,7 +841,7 @@
     rooms = window.DLE_Rooms.create({
       channel: "race",
       startData: raceStartData,
-      onChange: () => { tryPendingJoin(); if (isOnline()) renderRace(); },
+      onChange: () => { tryPendingJoin(); if (isOnline()) { renderRace(); renderPlayTabs(); } },
       onStart: startRace,
       onMessage: onRaceMessage,
       onClosed: () => {
@@ -811,8 +865,10 @@
   // Host: the race uses the lowest arc among the players, and a character from that pool.
   function raceStartData(room) {
     const arc = Math.min(...room.members.map((m) => m.arc), CFG.arcs.length - 1);
-    const candidates = CHARS.filter((c) => c.arc <= arc);
-    return { arc, target: candidates[Math.floor(Math.random() * candidates.length)].id, key: Math.random().toString(36).slice(2, 10) };
+    const p = PLAYS.includes(room.meta?.play) && (room.meta.play !== "desc" || Object.keys(DESC).length) ? room.meta.play : "classic";
+    const candidates = CHARS.filter((c) => c.arc <= arc && (p !== "desc" || DESC[c.id]));
+    const teams = room.meta?.teams ? Object.fromEntries(room.members.map((m) => [m.id, rooms.teamOf(m.id, room) ?? 0])) : null;
+    return { arc, play: p, teams, target: candidates[Math.floor(Math.random() * candidates.length)].id, key: Math.random().toString(36).slice(2, 10) };
   }
 
   function updateRaceProfile() {
@@ -822,9 +878,14 @@
   function startRace(room, data) {
     const target = byId.get(data.target);
     if (!target || !Number.isInteger(data.arc) || target.arc > data.arc) return;
+    const teams = data.teams && typeof data.teams === "object"
+      ? Object.fromEntries(room.members.map((m) => [m.id, data.teams[m.id] === 1 ? 1 : 0]))
+      : null;
     race = {
       room,
       key: String(data.key ?? ""), // tells this race's messages from the previous one's
+      play: PLAYS.includes(data.play) ? data.play : "classic",
+      teams,
       arc: data.arc,
       startedAt: 0,
       done: false,
@@ -864,7 +925,8 @@
     const tg = view(game.target);
     const lastId = game.guesses[game.guesses.length - 1];
     me.n = game.guesses.length;
-    me.last = lastId ? (() => { const r = compare(view(lastId), tg); return COLS.map((c) => r[c.key].status); })() : [];
+    me.last = !lastId ? [] : race.play !== "classic" ? [lastId === game.target ? "correct" : "wrong"]
+      : (() => { const r = compare(view(lastId), tg); return COLS.map((c) => r[c.key].status); })();
     me.found = game.status === "won";
     me.gaveUp = game.status === "lost";
     if (me.found && me.ms == null) me.ms = Date.now() - race.startedAt;
@@ -918,7 +980,8 @@
     // Online races count in the stats (and on the profile): played, and won when I finished first.
     const top = raceRanking()[0];
     stats.online.played++;
-    if (top?.id === rooms?.selfId && top.found) stats.online.wins++;
+    if (race.teams) { const sc = teamScores(); const mine = race.teams[rooms?.selfId] ?? 0; if (sc[mine] > sc[1 - mine]) stats.online.wins++; }
+    else if (top?.id === rooms?.selfId && top.found) stats.online.wins++;
     saveStats();
     renderRace();
     if (game) renderResult();
@@ -927,6 +990,37 @@
   // Found first (fastest, then fewest guesses), then the others.
   const raceRanking = () => [...race.players.values()].sort((a, b) =>
     Number(b.found) - Number(a.found) || (a.ms ?? Infinity) - (b.ms ?? Infinity) || a.n - b.n);
+
+  // Teams: every player earns points for their place (finding it first is worth the most), averaged per team.
+  function teamScores() {
+    const ranked = raceRanking();
+    const pts = [0, 0];
+    const count = [0, 0];
+    ranked.forEach((p, i) => {
+      const k = race.teams[p.id] ?? 0;
+      count[k]++;
+      if (p.found) pts[k] += ranked.length - i;
+    });
+    return [0, 1].map((k) => (count[k] ? Math.round((pts[k] / count[k]) * 10) / 10 : 0));
+  }
+  function teamOutcomeHtml() {
+    const sc = teamScores();
+    const names = rooms.teamNames();
+    const text = sc[0] === sc[1] ? t("teamDraw") : t("teamWins")(names[sc[0] > sc[1] ? 0 : 1]);
+    return `<p class="team-outcome team-${sc[0] === sc[1] ? "draw" : sc[0] > sc[1] ? 0 : 1}">${esc(text)}</p>`;
+  }
+  function teamBar() {
+    const sc = teamScores();
+    const names = rooms.teamNames();
+    const bar = el("div", "team-bar");
+    for (const k of [0, 1]) {
+      const side = el("div", `team-side team-${k}${race.done && sc[k] > sc[1 - k] ? " is-winner" : ""}`);
+      side.append(el("span", "team-side-name", esc(names[k])), el("b", "team-side-pts", esc(t("teamPts")(sc[k]))));
+      bar.append(side);
+      if (k === 0) bar.append(el("span", "team-vs", "VS"));
+    }
+    return bar;
+  }
 
   function leaveRace() {
     race = null;
@@ -963,9 +1057,10 @@
       }, 1000);
     }
     box.append(head);
+    if (race.teams) box.append(teamBar());
     const list = el("ol", "ranking race-list");
     for (const p of raceRanking()) {
-      const li = el("li", `${p.id === rooms.selfId ? "is-me" : ""}${p.found ? " is-found" : ""}${p.left ? " has-left" : ""}`);
+      const li = el("li", `${p.id === rooms.selfId ? "is-me" : ""}${p.found ? " is-found" : ""}${p.left ? " has-left" : ""}${race.teams ? ` team-${race.teams[p.id] ?? 0}` : ""}`);
       const name = el("span", "ranking-name");
       name.textContent = p.id === rooms.selfId ? `${p.name} (${t("you")})` : p.name;
       const status = p.found ? t("foundIn")(p.n, clock(p.ms)) : p.gaveUp ? t("gaveUpShort") : p.left ? t("left") : t("looking")(p.n);
@@ -1175,6 +1270,11 @@
         seats.append(li);
       }
       card.append(seats);
+      // The game variant (the host picks it with the tabs above) and the teams.
+      const variant = el("p", "room-play");
+      variant.append(el("span", null, esc(t("playLabel"))), el("b", null, esc(t(PLAY_LABEL[room.meta?.play ?? "classic"]))));
+      if (!rooms.isHost()) variant.append(el("small", "muted", esc(t("hostPicks"))));
+      card.append(variant, rooms.teamsBox());
       const actions = el("div", "result-actions");
       if (rooms.isHost()) {
         const start = el("button", "btn-primary", esc(t("startRace")));
@@ -1218,7 +1318,7 @@
     }
     const go = el("button", "btn-primary", esc(t("createRoom")));
     go.type = "button";
-    go.addEventListener("click", () => { if (!needName()) rooms.createRoom({ game: CFG.id, size: raceSize }); });
+    go.addEventListener("click", () => { if (!needName()) rooms.createRoom({ game: CFG.id, size: raceSize, play: settings.play }); });
     create.append(sizes, go);
     box.append(create);
 
@@ -1246,7 +1346,122 @@
     racePeers(box);
   }
 
+  // ── Game variants: tabs under the modes, and the panel of the blur and description games ──
+  const PLAY_LABEL = { classic: "playClassic", blur: "playBlur", desc: "playDesc" };
+  const PLAY_ICON = {
+    classic: `<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
+    blur: `<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="2 2"/></svg>`,
+    desc: `<svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  };
+  function setupPlay() {
+    const tabs = el("div", "play-tabs");
+    tabs.id = "playTabs";
+    tabs.setAttribute("role", "tablist");
+    $(".mode-tabs").after(tabs);
+    const box = el("section", "card play-box");
+    box.id = "playBox";
+    box.hidden = true;
+    box.setAttribute("aria-live", "polite");
+    $(".guess-box").before(box);
+  }
+  function renderPlayTabs() {
+    const tabs = $("#playTabs");
+    if (!tabs) return;
+    tabs.innerHTML = "";
+    const inRoom = isOnline() && rooms?.myRoom;
+    const current = isOnline() ? (race ? race.play : rooms?.myRoom?.meta?.play ?? settings.play) : settings.play;
+    for (const p of PLAYS) {
+      if (p === "desc" && !Object.keys(DESC).length) continue;
+      const b = el("button", `play-tab${p === current ? " is-active" : ""}`, `${PLAY_ICON[p]}<span>${esc(t(PLAY_LABEL[p]))}</span>`);
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", p === current);
+      // In a room, only the host picks the game, and not during a race.
+      b.disabled = !!(race && isOnline()) || !!(inRoom && !rooms.isHost());
+      b.addEventListener("click", () => {
+        if (p === current) return;
+        settings.play = p;
+        saveSettings();
+        if (inRoom) rooms.setMeta({ play: p });
+        startGame();
+      });
+      tabs.append(b);
+    }
+  }
+
+  const BLUR = [30, 22, 16, 12, 9, 6, 4, 2.5, 1.5, 0.8];
+  const ZOOM = [2.1, 1.8, 1.6, 1.45, 1.3, 1.2, 1.12, 1.06, 1.02, 1];
+  function renderPlay(feedback) {
+    const box = $("#playBox");
+    if (!box) return;
+    const p = play();
+    box.hidden = !game || p === "classic";
+    if (box.hidden) return;
+    const tg = view(game.target);
+    const n = game.guesses.length;
+    const over = game.status !== "playing";
+    box.innerHTML = "";
+    box.dataset.play = p;
+    if (p === "blur") {
+      const step = Math.min(n, BLUR.length - 1);
+      const frame = el("div", `blur-frame${over ? ` is-clear${auraOf(tg.id)}` : ""}${feedback === "wrong" ? " is-wrong" : ""}`);
+      frame.style.setProperty("--blur", `${over ? 0 : BLUR[step]}px`);
+      frame.style.setProperty("--zoom", over ? 1 : ZOOM[step]);
+      frame.style.setProperty("--gray", over ? 0 : Math.max(0, 1 - n * 0.2));
+      const img = el("img");
+      img.src = tg.image;
+      img.alt = "";
+      img.draggable = false;
+      frame.append(img);
+      const meter = el("div", "blur-meter");
+      for (let i = 0; i < BLUR.length; i++) meter.append(el("i", i <= step || over ? "is-on" : ""));
+      box.append(el("p", "play-kicker", esc(t("blurKicker"))), frame, meter, el("p", "muted play-help", esc(over ? "" : t("blurHelp"))));
+    } else {
+      const d = DESC[game.target] ?? ["", "", null, null];
+      const quote = el("blockquote", "desc-quote");
+      quote.append(el("span", "desc-mark", "“"), el("p", null, esc(settings.lang === "fr" ? d[1] : d[0])));
+      const clues = el("div", "desc-clues");
+      clues.append(clueCard(clueOf(d[2]), CLUE_AT, n, over), clueCard(nickOf(d[3], tg), NICK_AT, n, over));
+      box.append(el("p", "play-kicker", esc(t("descKicker"))), quote, clues);
+      if (feedback === "wrong") { quote.classList.add("is-wrong"); }
+    }
+    // The wrong guesses so far, newest first.
+    const tried = game.guesses.filter((id) => id !== game.target).reverse();
+    if (tried.length) {
+      const list = el("div", "tried");
+      list.append(el("span", "tried-label", esc(t("tried"))));
+      tried.forEach((id, i) => {
+        const c = view(id);
+        const chip = el("span", `tried-chip${i === 0 && feedback === "wrong" ? " is-new" : ""}`, `<span class="tried-face${auraOf(id)}"><img src="${esc(c.image)}" alt="" loading="lazy" /></span><span>${esc(c.name)}</span>`);
+        list.append(chip);
+      });
+      box.append(list);
+    }
+  }
+  // Clue after 3 guesses: a technique ("a:"), a place ("p:") or another fact ([en, fr]).
+  function clueOf(raw) {
+    if (Array.isArray(raw)) return { label: t("clueInfo"), value: settings.lang === "fr" ? raw[1] : raw[0], icon: "spark" };
+    const m = /^([ap]):(.+)$/.exec(raw ?? "");
+    if (!m) return null;
+    return m[1] === "a" ? { label: t("clueAtk"), value: m[2], icon: "spark" } : { label: t("cluePlace"), value: m[2], icon: "shield" };
+  }
+  // After 5 guesses: a nickname (or One Piece epithet), else the first letter of the name.
+  function nickOf(raw, tg) {
+    const nick = Array.isArray(raw) ? (settings.lang === "fr" ? raw[1] : raw[0]) : raw;
+    if (nick) return { label: t("clueNick"), value: settings.lang === "fr" ? `« ${nick} »` : `“${nick}”`, icon: "person" };
+    return { label: t("clueLetter"), value: tg.name.trim()[0].toUpperCase(), icon: "person", letter: true };
+  }
+  function clueCard(clue, at, n, over) {
+    const open = !!clue && (n >= at || over);
+    const card = el("div", `desc-clue${open ? " is-open" : ""}${clue?.letter ? " is-letter" : ""}`);
+    card.innerHTML = `${ICONS[clue?.icon ?? "spark"] ?? ""}<span class="desc-clue-label">${esc(clue ? clue.label : t("clueInfo"))}</span>`;
+    if (open) card.append(el("strong", null, esc(clue.value)));
+    else card.append(el("small", null, esc(clue ? t("hintIn")(at - n) : "—")));
+    return card;
+  }
+
   // ── Boot ──
+  setupPlay();
   setupLayout();
   renderCategories();
   renderBackground();

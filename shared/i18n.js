@@ -17,6 +17,25 @@ window.DLE_UI = {
     modeEndless: "Endless",
     modeOnline: "Online",
     subOnline: "Race other players to find the character",
+    playLabel: "Game",
+    playClassic: "Classic",
+    playBlur: "Blurred",
+    playDesc: "Description",
+    subBlur: "Who is hiding behind the blur?",
+    subDesc: "Find the character from their description",
+    blurKicker: "Who is it?",
+    blurHelp: "The picture gets sharper with every guess.",
+    descKicker: "Who is this?",
+    clueAtk: "Technique",
+    cluePlace: "Place",
+    clueInfo: "Clue",
+    clueNick: "Nickname",
+    clueLetter: "First letter",
+    tried: "Not them",
+    hostPicks: "the host picks it",
+    teamWins: (n) => `${n} wins!`,
+    teamDraw: "Draw between the teams!",
+    teamPts: (n) => `${n} pts`,
     raceTitle: "Online race",
     raceHelp: "Create a room for 2 to 8 players or join one. Everyone gets the same mystery character: the first to find it wins.",
     raceLive: "Live race",
@@ -121,6 +140,8 @@ window.DLE_UI = {
         <li><strong>${g.arcCol}</strong>: the anime arc where the character first appears.</li>
         <li><strong>Hints</strong> unlock after a few guesses: ${g.hintNames}.</li>
         <li><strong>Daily</strong>: one character a day, the same for everyone who picked the same arc. <strong>Endless</strong>: play as much as you like.</li>
+        <li><strong>Three games</strong>: <strong>Classic</strong> (the clues above), <strong>Blurred</strong> (a blurred picture that gets sharper with every guess) and <strong>Description</strong> (a technique or a place after 3 guesses, a nickname or the first letter after 5).</li>
+        <li><strong>Online</strong>: race your friends in any of the three games, alone or <strong>team vs team</strong> (red vs blue).</li>
         <li>Set <strong>how far you've watched</strong> so no future characters or reveals slip through.</li>
       </ul>`,
     crew: "Crew Roll",
@@ -144,6 +165,25 @@ window.DLE_UI = {
     wins: "Victoires",
     subDaily: "Devine le personnage du jour",
     subEndless: "Enchaîne les personnages",
+    playLabel: "Jeu",
+    playClassic: "Classique",
+    playBlur: "Flou",
+    playDesc: "Description",
+    subBlur: "Qui se cache derrière le flou ?",
+    subDesc: "Trouve le personnage grâce à sa description",
+    blurKicker: "Qui est-ce ?",
+    blurHelp: "L'image se précise à chaque essai.",
+    descKicker: "Qui suis-je ?",
+    clueAtk: "Technique",
+    cluePlace: "Lieu",
+    clueInfo: "Indice",
+    clueNick: "Surnom",
+    clueLetter: "Première lettre",
+    tried: "Pas eux",
+    hostPicks: "c'est l'hôte qui choisit",
+    teamWins: (n) => `${n} gagne !`,
+    teamDraw: "Égalité entre les équipes !",
+    teamPts: (n) => `${n} pts`,
     modeDaily: "Du jour",
     modeEndless: "Infini",
     modeOnline: "En ligne",
@@ -252,6 +292,8 @@ window.DLE_UI = {
         <li><strong>${g.arcCol}</strong> : l'arc de l'anime où le personnage apparaît pour la première fois.</li>
         <li><strong>Indices</strong> débloqués après quelques essais : ${g.hintNames}.</li>
         <li><strong>Du jour</strong> : un personnage par jour, le même pour tous ceux qui ont choisi le même arc. <strong>Infini</strong> : joue autant que tu veux.</li>
+        <li><strong>Trois jeux</strong> : <strong>Classique</strong> (les indices ci-dessus), <strong>Flou</strong> (une image floue qui se précise à chaque essai) et <strong>Description</strong> (une technique ou un lieu après 3 essais, un surnom ou la première lettre après 5).</li>
+        <li><strong>En ligne</strong> : affronte tes amis dans les trois jeux, chacun pour soi ou <strong>équipe contre équipe</strong> (rouges contre bleus).</li>
         <li>Indique <strong>jusqu'où tu as regardé</strong> pour éviter tout spoiler.</li>
       </ul>`,
     crew: "Équipage",
