@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-05T22:15",
+      title: { en: "42 new transformations", fr: "42 nouvelles transformations" },
+      items: [
+        { type: "new", game: "crew", en: "Crew Roll: 42 new transformations across every anime, with their own effects. Black Clover gets its first ones (Black Asta, Spirit Dive, Valkyrie Dress, Salamander, Dante's Devil Union); also Aizen, Kenpachi, Yhwach, Starrk, Komamura, Mayuri, Perfect Cell, Super Buu, Orange Piccolo, Jiren, Zamasu, Kale, Shukaku, Jiraiya, Minato, Obito, Madara, Kabuto, Monster Point Chopper, Marco, Sanji's Raid Suit, Katakuri, Kaidou, Megumi, Jogo, Maki, Hakari, Higuruma, Netero, Biscuit, Pitou, Youpi and five more Titans.", fr: "Roll ton équipage : 42 nouvelles transformations dans tous les animes, avec leurs propres effets. Black Clover a ses premières (Asta noir, Spirit Dive, Armure de Valkyrie, Salamandre, Dante en fusion démoniaque) ; et aussi Aizen, Kenpachi, Yhwach, Starrk, Komamura, Mayuri, Cell Super Parfait, Super Boo, Piccolo Orange, Jiren, Zamasu, Kale, Shukaku, Jiraiya, Minato, Obito, Madara, Kabuto, Chopper Monster Point, Marco, le Raid Suit de Sanji, Katakuri, Kaidou, Megumi, Jogo, Maki, Hakari, Higuruma, Netero, Biscuit, Pitou, Youpi et cinq Titans de plus." },
+        { type: "balance", game: "onepiece", en: "One Piece: Saint Figarland Garling 10.", fr: "One Piece : Saint Figarland Garling 10." },
+        { type: "balance", game: "hunterxhunter", en: "Hunter × Hunter: Biscuit 8.", fr: "Hunter × Hunter : Biscuit 8." },
+      ],
+    },
+    {
       at: "2026-10-05T20:50",
       title: { en: "Lighter patch notes, faster on phones", fr: "Nouveautés plus légères, plus rapide sur téléphone" },
       items: [

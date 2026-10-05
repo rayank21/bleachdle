@@ -168,7 +168,7 @@
         satotz:5 menchi:4 buhara:4 hanzo:5 pokkle:3 tonpa:1 bodoro:2 ponzu:3 lippo:4 beans:1 silva-zoldyck:9 zeno-zoldyck:10 kikyo-zoldyck:5
         milluki-zoldyck:3 kalluto-zoldyck:6 gotoh:5 canary:3 wing:6 zushi:3 gido:3 riehlvelt:3 sadaso:2 kastro:4 chrollo-lucilfer:10 uvogin:8
         nobunaga-hazama:7 feitan-portor:8 phinks-magcub:7 shalnark:6 franklin-bordeau:7 machi-komacine:6 pakunoda:5 shizuku-murasaki:6
-        bonolenov-ndongo:5 kortopi:4 neon-nostrade:2 light-nostrade:1 senritsu:5 basho:5 squala:3 dalzollene:3 zepile:2 biscuit-krueger:7
+        bonolenov-ndongo:5 kortopi:4 neon-nostrade:2 light-nostrade:1 senritsu:5 basho:5 squala:3 dalzollene:3 zepile:2 biscuit-krueger:8
         genthru:6 razor:7 tsezguerra:6 goreinu:4 abengane:4 binolt:3 meruem:10 neferpitou:9 shaiapouf:9 menthuthuyoupi:9 chimera-ant-queen:4
         komugi:2 knuckle-bine:6 shoot-mcmahon:6 morel-mackernasey:7 knov:6 palm-siberia:7 colt:5 meleoron:5 ikalgo:4 welfin:6 zazan:6
         cheetu:5 leol:6 bloster:5 ging-freecss:10 pariston-hill:8 cheadle-yorkshire:6 mizaistom-nana:6 botobai-gigante:7 cluck:4 ginta:4
@@ -244,7 +244,7 @@
         vinsmoke-reiju:6 kaidou:10 king:9 queen:9 yamato:9 kouzuki-oden:10 kouzuki-hiyori:3 vegapunk:4
         tom:5 paulie:5 doc-q:3 imu:10 crocus:4 nico-olvia:3 dorry:5 brogy:5 bellamy:5 gin:3 laffitte:7 tsuru:8 jozu:8 bepo:6 urouge:7
         scratchmen-apoo:7 benn-beckman:9 lucky-roux:8 yasopp:8 streusen:5 charlotte-perospero:7 charlotte-oven:8 kouzuki-sukiyaki:3 charlotte-brulee:4 jaygarcia-saturn:9 marcus-mars:9 topman-warcury:9
-        ethanbaron-v-nusjuro:9 shepherd-ju-peter:9 scopper-gaban:10 den:5 charlos:1 gaimon:1 peepley-lulu:5 figarland-garling:9 figarland-shamrock:9`),
+        ethanbaron-v-nusjuro:9 shepherd-ju-peter:9 scopper-gaban:10 den:5 charlos:1 gaimon:1 peepley-lulu:5 figarland-garling:10 figarland-shamrock:9`),
     },
 
     jujutsukaisen: {

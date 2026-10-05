@@ -45,13 +45,58 @@ const FILES = [
   ["attackontitan", "attackontitan", "pieck-finger", "File:Cart Titan character image (Pieck Finger).png"],
   ["attackontitan", "attackontitan", "lara-tybur", "File:War Hammer Titan character image (Lara Tybur).png"],
   ["attackontitan", "attackontitan", "falco-grice", "File:Jaw Titan (Anime) character image (Falco Grice).png"],
+  ["bleach", "bleach", "sosuke-aizen", "File:Ep295AizenFirstFusion.png"],
+  ["bleach", "bleach", "kenpachi-zaraki", "File:Ep410KenpachiBankaiFace.png"],
+  ["bleach", "bleach", "sajin-komamura", "File:248Kokujo Tengen Myo'o stands.png"],
+  ["bleach", "bleach", "coyote-starrk", "File:BBSResurreccion Starrk.png"],
+  ["bleach", "bleach", "mayuri-kurotsuchi", "File:303Mayuri's Bankai, Konjiki Ashisogi Jizo.png"],
+  ["bleach", "bleach", "yhwach", "File:Ep396TheAlmighty.png"],
+  ["dragonball", "dragonball", "cell", "File:Cell-Super-Perfect.png"],
+  ["dragonball", "dragonball", "majin-buu", "File:Super Buu.PNG"],
+  ["dragonball", "dragonball", "piccolo", "File:Orange Piccolo full.PNG"],
+  ["dragonball", "dragonball", "jiren", "File:Super Full Power Jiren (manga).png"],
+  ["dragonball", "dragonball", "zamasu", "File:Fusion-Zamasu.jpg"],
+  ["dragonball", "dragonball", "kale", "File:Kale True Legendary Super Saiyan.png"],
+  ["naruto", "naruto", "gaara", "File:Full Shukaku Gaara.png"],
+  ["naruto", "naruto", "jiraiya", "File:Sage mode.png"],
+  ["naruto", "naruto", "madara-uchiha", "File:Madara Jinchuriki anime.png"],
+  ["naruto", "naruto", "obito-uchiha", "File:Obito Juubi Jinchuriki.png"],
+  ["naruto", "naruto", "minato-namikaze", "File:Minato's nine-tails chakra mode.png"],
+  ["naruto", "naruto", "kabuto-yakushi", "File:Kabuto's Sage Mode.png"],
+  ["onepiece", "onepiece", "sanji", "File:Sanji's Raid Suit.png"],
+  ["onepiece", "onepiece", "tony-tony-chopper", "File:Post Timeskip Monster Point.png"],
+  ["onepiece", "onepiece", "polo-marco", "File:Marco Phoenix Thousand Storm.png"],
+  ["onepiece", "onepiece", "kaidou", "File:Kaidou Dragon Color Scheme.png"],
+  ["onepiece", "onepiece", "charlotte-katakuri", "File:Katakuri's Flame Haki.png"],
+  ["jujutsu-kaisen", "jujutsukaisen", "megumi-fushiguro", "File:Chimera Shadow Garden inside Horizon of the Captivating Skandha (Anime).png"],
+  ["jujutsu-kaisen", "jujutsukaisen", "jogo", "File:Coffin of the Iron Mountain (Anime).png"],
+  ["jujutsu-kaisen", "jujutsukaisen", "maki-zen-in", "File:Maki Zenin vs. Ogi Zenin (Anime).png"],
+  ["jujutsu-kaisen", "jujutsukaisen", "kinji-hakari", "File:Kinji Hakari's cursed energy (Anime).png"],
+  ["jujutsu-kaisen", "jujutsukaisen", "hiromi-higuruma", "File:Deadly Sentencing (Anime).png"],
+  ["hunterxhunter", "hunterxhunter", "isaac-netero", "File:2011 EP122 ED Card Netero Guanyin Bodhisattva.png"],
+  ["hunterxhunter", "hunterxhunter", "biscuit-krueger", "File:2011 EP73 Biscuit True Form full appearance.png"],
+  ["hunterxhunter", "hunterxhunter", "neferpitou", "File:Terpsichora 2011.png"],
+  ["hunterxhunter", "hunterxhunter", "menthuthuyoupi", "File:118 - Knuckle vs. Youpi 1.png"],
+  ["blackclover", "blackclover", "asta", "File:Black Asta.png"],
+  ["blackclover", "blackclover", "yuno", "File:Spirit Dive Yuno - BCM.png"],
+  ["blackclover", "blackclover", "noelle-silva", "File:Valkyrie Dress.png"],
+  ["blackclover", "blackclover", "fuegoleon-vermillion", "File:Fuegoleon emerges with Salamander.png"],
+  ["blackclover", "blackclover", "dante-zogratis", "File:Dante forms multiple arms.png"],
+  ["attackontitan", "attackontitan", "rod-reiss", "File:Rod Reiss (Anime) character image (Titan).png"],
+  ["attackontitan", "attackontitan", "dina-fritz", "File:Dina Fritz (Anime) character image (Titan).png"],
+  ["attackontitan", "attackontitan", "ymir-fritz", "File:Founding Titan (Anime) character image (Ymir Fritz).png"],
+  ["attackontitan", "attackontitan", "grisha-yeager", "File:Attack Titan (Anime) character image (Grisha Jaeger).png"],
+  ["attackontitan", "attackontitan", "marcel-galliard", "File:Jaw Titan (Anime) character image (Marcel Galliard).png"],
 ];
+// node crew/scripts/forms.mjs <game/id> … downloads only those.
+const only = process.argv.slice(2);
 // The image CDN only serves files requested from the wiki itself.
 const headers = (wiki) => ({ "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36", Referer: `https://${wiki}.fandom.com/` });
 
 await mkdir(OUT, { recursive: true });
 const paths = {};
 for (const [wiki, game, id, file] of FILES) {
+  if (only.length && !only.includes(`${game}/${id}`)) continue;
   try {
     const url = `https://${wiki}.fandom.com/api.php?` + new URLSearchParams({ action: "query", titles: file, prop: "imageinfo", iiprop: "url", iiurlwidth: "640", format: "json" });
     const info = await (await fetch(url, { headers: headers(wiki) })).json();
