@@ -49,6 +49,7 @@ Each category has a `config.js` (columns, arcs, hints, FR translations) read by 
 ## Data
 
 - `<category>/scripts/seed.mjs`: the character list and the hand-curated attributes.
+- Portraits come from the anime (in the character's early look, so later designs don't spoil anything); the manga is only used for characters the anime never showed.
 - `<category>/scripts/scrape.mjs`: fetches portraits (and heights for Bleach, or gender/age/hair/Nen/abilities/first arc for HxH) from the Fandom wikis, then generates `data/characters.js` and `assets/characters/`.
 
 ```

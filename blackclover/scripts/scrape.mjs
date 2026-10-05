@@ -79,6 +79,29 @@ function affiliationsOf(f) {
   return out.length ? out.slice(0, 2) : ["None"];
 }
 
+
+// URL of a wiki file, scaled down like the page images.
+async function fileUrl(file) {
+  const q = await api({ action: "query", titles: `File:${file}`, prop: "imageinfo", iiprop: "url", iiurlwidth: "320" });
+  return Object.values(q.query.pages)[0]?.imageinfo?.[0]?.thumburl ?? null;
+}
+const imagesStarting = async (prefix) =>
+  (await api({ action: "query", list: "allimages", aiprefix: prefix.replace(/ /g, "_"), ailimit: "200" })).query.allimages.map((i) => i.name);
+
+// Portraits from the anime, not the manga: "<name>_anime_profile", else "<name>_square" (an anime screenshot for
+// whoever appeared in the anime), else the movie concept art. Characters who never appeared in the anime keep the wiki's picture.
+async function animeImage(title) {
+  const first = title.split(" ")[0];
+  const names = [...new Set([...(await imagesStarting(first)), ...(await imagesStarting(title))])];
+  const esc = (s) => s.replace(/ /g, "_").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const who = `(${esc(first)}|${esc(title)})`;
+  for (const re of [new RegExp(`^${who}_anime_profile\\.`, "i"), new RegExp(`^${who}_square\\.`, "i"), new RegExp(`^${who}_movie_concept\\.`, "i")]) {
+    const hit = names.find((n) => re.test(n));
+    if (hit) return fileUrl(hit);
+  }
+  return null;
+}
+
 async function download(url, id) {
   const res = await fetch(url, { headers: IMG_HEADERS });
   if (!res.ok) throw new Error(`image ${res.status}`);
@@ -98,7 +121,7 @@ for (const s of seed) {
     const html = p.parse.text["*"];
     const f = infobox(html);
     const q = await api({ action: "query", titles: title, prop: "pageimages", pithumbsize: "320" });
-    const img = Object.values(q.query.pages)[0]?.thumbnail?.source;
+    const img = (s.img ? await fileUrl(s.img) : null) ?? (await animeImage(title)) ?? Object.values(q.query.pages)[0]?.thumbnail?.source;
 
     let arc = s.arc;
     if (arc == null) {
@@ -123,10 +146,10 @@ for (const s of seed) {
       arc,
       image: img ? await download(img, id) : null,
     };
-    for (const k of Object.keys(s)) if (!["wiki", "name"].includes(k)) entry[k] = s[k];
+    for (const k of Object.keys(s)) if (!["wiki", "name", "img"].includes(k)) entry[k] = s[k];
     out.push(entry);
     const fmt = (v) => (v && typeof v === "object" && !Array.isArray(v) ? JSON.stringify(v) : [].concat(v).join("/"));
-    console.log(`✓ ${name.padEnd(26)} arc${arc} ${entry.gender} ${fmt(entry.race).padEnd(12)} ${String(entry.age).padEnd(4)} ${fmt(entry.hair).padEnd(10)} ${fmt(entry.magic).padEnd(14)} ${fmt(entry.aff).padEnd(36)} ${fmt(entry.country).padEnd(16)} ${img ? "" : "NO IMG"}`);
+    console.log(`✓ ${(img ? decodeURIComponent(img.split("/images/")[1]?.split("/")[2] ?? "") : "NO IMG").padEnd(42)} ${name.padEnd(26)} arc${arc} ${entry.gender} ${fmt(entry.race).padEnd(12)} ${String(entry.age).padEnd(4)} ${fmt(entry.hair).padEnd(10)} ${fmt(entry.magic).padEnd(14)} ${fmt(entry.aff).padEnd(36)} ${fmt(entry.country).padEnd(16)} ${img ? "" : "NO IMG"}`);
   } catch (e) {
     console.log(`✗ ${s.wiki}: ${e.message}`);
   }

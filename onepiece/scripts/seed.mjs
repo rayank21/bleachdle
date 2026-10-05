@@ -57,7 +57,8 @@ export const seed = [
 
   // ── Sky Island ──
   { wiki: "Enel", gender: "M", aff: ["God's Army"] },
-  { wiki: "Wyper", gender: "M" },
+  // The wiki's infobox shows him from the manga: the anime one instead.
+  { wiki: "Wyper", gender: "M", img: "Wyper_Anime_Pre_Timeskip_Infobox.png" },
   { wiki: "Gan Fall", gender: "M" },
   { wiki: "Doc Q", gender: "M", aff: { 2: ["Blackbeard Pirates"] } },
   { wiki: "Marshall D. Teach", gender: "M", fruit: { 2: ["Unknown"], 5: ["Logia", "Paramecia"] }, bounty: { 2: 0, 9: 3996000000 } },
@@ -120,7 +121,7 @@ export const seed = [
   { wiki: "Pedro", gender: "M" },
   { wiki: "Inuarashi", gender: "M" },
   { wiki: "Nekomamushi", gender: "M" },
-  { wiki: "Imu", name: "Imu", gender: "Unknown" },
+  { wiki: "Imu", name: "Imu", gender: "Unknown", img: "Imu_Anime_Concept_Art.png" },
   { wiki: "Charlotte Linlin", gender: "F", bounty: { 6: null, 9: 4388000000 } },
   { wiki: "Charlotte Katakuri", gender: "M" },
   { wiki: "Charlotte Pudding", gender: "F" },

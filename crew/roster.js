@@ -104,6 +104,10 @@
       mikasa-ackerman:4 bertholdt-hoover:4 porco-galliard:4 nile-dok:4`),
   };
   const anyone = () => true;
+  // Attack on Titan commanders, squad leaders and the heads of each faction.
+  const SNK_LEADERS = ["erwin-smith", "hange-zoe", "levi", "mike-zacharias", "keith-shadis", "dot-pixis", "rico-brzenska", "ian-dietrich",
+    "darius-zackly", "nile-dok", "kenny-ackerman", "rod-reiss", "historia-reiss", "eren-kruger", "zeke-yeager", "reiner-braun",
+    "theo-magath", "willy-tybur", "yelena", "floch-forster", "eren-yeager", "kiyomi-azumabito"];
   const HEALER = { en: "Healer", fr: "Soigneur" };
   const STRATEGIST = { en: "Strategist / Engineer", fr: "Stratège / Ingénieur" };
   // The captain and the first mate lead the crew: the stronger they are, the bigger their bonus
@@ -286,6 +290,12 @@
         // Pixis commands the Garrison.
         { label: { en: "Garrison", fr: "Garnison" }, icon: "shield", count: 1, fits: (c) => has(c.aff, "Garrison"),
           score: (c, power) => (c.id === "dot-pixis" ? 10 : power) },
+        // Marley's side: the Warriors (once the anime has unmasked them), its army and the Tybur family.
+        { label: { en: "Marley", fr: "Mahr" }, icon: "skull", count: 1, fits: (c) => has(c.aff, "Warriors", "Marley", "Tybur Family") },
+        // Commanders and squad leaders, with the captains' bonus; Erwin, the Survey Corps' commander, is always worth 10.
+        { label: { en: "Commander / Leader", fr: "Commandant / Leader" }, icon: "crown", role: "captain", count: 1,
+          fits: (c) => SNK_LEADERS.includes(c.id), score: (c, power) => Math.max(c.id === "erwin-smith" ? 10 : 0, leader(c, power)) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
       power: parse(`eren-yeager:10 mikasa-ackerman:9 armin-arlert:8 levi:10 erwin-smith:7 hange-zoe:6 jean-kirstein:6 connie-springer:5
         sasha-blouse:5 historia-reiss:4 ymir:7 mike-zacharias:7 petra-ral:5 oluo-bozado:5 eld-jinn:5 gunther-schultz:4 moblit-berner:3

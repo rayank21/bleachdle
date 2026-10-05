@@ -44,6 +44,38 @@ function heightOf(lines = []) {
   return last ? Number(last.replace(/\D/g, "")) : null;
 }
 
+
+// URL of a wiki file, scaled down like the page images.
+async function fileUrl(file) {
+  const q = await api({ action: "query", titles: `File:${file}`, prop: "imageinfo", iiprop: "url", iiurlwidth: "320" });
+  return Object.values(q.query.pages)[0]?.imageinfo?.[0]?.thumburl ?? null;
+}
+const imagesStarting = async (prefix) =>
+  (await api({ action: "query", list: "allimages", aiprefix: prefix.replace(/ /g, "_"), ailimit: "200" })).query.allimages.map((i) => i.name);
+
+// Portraits from the anime, not the manga: "<name> (Anime) character image", where the wiki often keeps the old
+// spellings (Jaeger, Ackermann, Pyxis). The look from the first seasons (year 850, then the undated one) comes first, so the
+// final-season designs (often the undated one) don't spoil anything; childhood pictures (845) only as a last resort.
+const SPELLINGS = [["Yeager", "Jaeger"], ["Ackerman", "Ackermann"], ["Pixis", "Pyxis"], ["Kirstein", "Kirschtein"], ["Zoë", "Zoe"], ["Dok", "Dawk"],
+  ["Arlert", "Arlelt"], ["Blouse", "Braus"], ["Ral", "Rall"], ["Eld Jinn", "Eld Gin"], ["Bott", "Bodt"], ["Shadis", "Sadies"],
+  ["Connie", "Conny"], ["Mike Zacharias", "Miche Zacharius"], ["Oluo Bozado", "Oruo Bozad"]];
+async function animeImage(title, extra = []) {
+  const variants = new Set([title, ...extra]);
+  for (const v of [...variants]) for (const [a, b] of SPELLINGS) if (v.includes(a)) variants.add(v.replace(a, b));
+  const wanted = new Set([...variants].map((v) => v.toLowerCase()));
+  const found = [];
+  for (const word of new Set([...variants].map((v) => v.split(" ")[0]))) {
+    const r = await api({ action: "query", list: "search", srnamespace: "6", srsearch: `${word} Anime character image`, srlimit: "50" });
+    for (const hit of r.query?.search ?? []) {
+      const m = /^File:(.+) \(Anime\) character image(?: \((?:c\. )?(\d+)\))?\.\w+$/.exec(hit.title);
+      if (m && wanted.has(m[1].toLowerCase())) found.push({ file: hit.title.slice(5), year: m[2] ? Number(m[2]) : null });
+    }
+  }
+  const rank = (x) => (x.year === 850 ? 0 : x.year === null ? 1 : x.year > 845 ? 2 + Math.abs(x.year - 850) : 100);
+  found.sort((a, b) => rank(a) - rank(b));
+  return found[0] ? fileUrl(found[0].file) : null;
+}
+
 async function download(url, id) {
   const res = await fetch(url, { headers: IMG_HEADERS });
   if (!res.ok) throw new Error(`image ${res.status}`);
@@ -62,7 +94,7 @@ for (const s of seed) {
     const title = p.parse.title;
     const f = infobox(p.parse.text["*"]);
     const q = await api({ action: "query", titles: title, prop: "pageimages", pithumbsize: "320" });
-    const img = Object.values(q.query.pages)[0]?.thumbnail?.source;
+    const img = (s.img ? await fileUrl(s.img) : null) ?? (await animeImage(title, [s.name ?? title, s.wiki])) ?? Object.values(q.query.pages)[0]?.thumbnail?.source;
     const name = s.name ?? title;
     const id = slug(name);
     const gender = (f.gender ?? []).join(" ");
@@ -73,9 +105,9 @@ for (const s of seed) {
       height: heightOf(f.height),
       image: img ? await download(img, id) : null,
     };
-    for (const k of Object.keys(s)) if (!["wiki", "name"].includes(k)) entry[k] = s[k];
+    for (const k of Object.keys(s)) if (!["wiki", "name", "img"].includes(k)) entry[k] = s[k];
     out.push(entry);
-    console.log(`✓ ${name.padEnd(22)} ${entry.gender} ${String(entry.height).padEnd(4)} ${img ? "" : "NO IMG"}`);
+    console.log(`✓ ${name.padEnd(22)} ${entry.gender} ${String(entry.height).padEnd(4)} ${img ? decodeURIComponent(img.split("/images/")[1]?.split("/")[2] ?? "") : "NO IMG"}`);
   } catch (e) {
     console.log(`✗ ${s.wiki}: ${e.message}`);
   }

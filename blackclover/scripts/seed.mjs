@@ -29,7 +29,7 @@ export const seed = [
   { wiki: "Nacht Faust" },
   { wiki: "Sekke Bronzazza" },
   // Asta's devil is only named in the Elf arc.
-  { wiki: "Liebe", arc: 7 },
+  { wiki: "Liebe", arc: 7, img: "Liebe_square.png" }, // his anime profile is a black silhouette
 
   // ── Golden Dawn ──
   { wiki: "Yuno", name: "Yuno", country: ["Clover Kingdom"] },
@@ -92,8 +92,8 @@ export const seed = [
   { wiki: "Dante Zogratis" },
   { wiki: "Vanica Zogratis" },
   { wiki: "Zenon Zogratis", race: ["Human"] },
-  { wiki: "Lucius Zogratis", arc: 9 },
-  { wiki: "Morgen Faust" },
+  { wiki: "Lucius Zogratis", arc: 9, img: "Lucius_profile.png" }, // barely in the anime: the coloured manga picture
+  { wiki: "Morgen Faust", img: "Morgen_color_scheme.png" },
   { wiki: "Zagred" },
   { wiki: "Megicula" },
   { wiki: "Lucifero", arc: 9 },
