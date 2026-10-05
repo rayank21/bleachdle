@@ -42,13 +42,13 @@
   const role = (table) => (c, power) => table[c.id] ?? Math.max(1, Math.round(power / 3));
   const ROLES = {
     bleach: {
-      // Unohana and Orihime heal anything; Hikifune rebuilt Ichigo's body.
-      healer: parse(`retsu-unohana:10 orihime-inoue:10 isane-kotetsu:8 kirio-hikifune:8 hanataro-yamada:7 hachigen-ushoda:7
+      // Unohana and Orihime heal anything; Tenjiro's hot springs heal Captains in hours; Hikifune rebuilt Ichigo's body.
+      healer: parse(`retsu-unohana:10 orihime-inoue:10 tenjiro-kirinji:10 isane-kotetsu:8 kirio-hikifune:8 hanataro-yamada:7 hachigen-ushoda:7
         nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:6 kisuke-urahara:5 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3`),
       // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge, Hikifune (12th Division before
-      // Kisuke), Kukaku's fireworks cannon.
-      engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 kirio-hikifune:7
-        senjumaru-shutara:7 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 hiyori-sarugaki:5 tessai-tsukabishi:5 uryu-ishida:4`),
+      // Kisuke), Kukaku's fireworks cannon, Akon running the SRDI's lab.
+      engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 akon:8 kirio-hikifune:7
+        senjumaru-shutara:7 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 tessai-tsukabishi:5 uryu-ishida:4`),
     },
     hunterxhunter: {
       // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
@@ -127,19 +127,19 @@
         { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.bleach.healer) },
         { label: { en: "Engineer", fr: "Ingénieur" }, icon: "flask", role: "engineer", count: 1, fits: anyone, score: role(ROLES.bleach.engineer) },
       ],
-      power: parse(`ichigo-kurosaki:10 rukia-kuchiki:7 orihime-inoue:5 yasutora-sado:6 uryu-ishida:7 kon:2 kisuke-urahara:9 yoruichi-shihoin:9
+      power: parse(`ichigo-kurosaki:10 rukia-kuchiki:7 orihime-inoue:5 yasutora-sado:6 uryu-ishida:8 kon:2 kisuke-urahara:9 yoruichi-shihoin:9
         tessai-tsukabishi:6 isshin-kurosaki:8 masaki-kurosaki:5 karin-kurosaki:2 yuzu-kurosaki:1 tatsuki-arisawa:2 keigo-asano:1 mizuiro-kojima:1
         don-kanonji:2 renji-abarai:7 byakuya-kuchiki:8 ganju-shiba:3 kukaku-shiba:4 kaien-shiba:6 hanataro-yamada:2 genryusai-yamamoto:10
-        chojiro-sasakibe:6 sui-feng:8 marechiyo-omaeda:4 gin-ichimaru:9 izuru-kira:5 retsu-unohana:9 isane-kotetsu:5 sosuke-aizen:10
+        chojiro-sasakibe:7 sui-feng:8 marechiyo-omaeda:4 gin-ichimaru:9 izuru-kira:5 retsu-unohana:9 isane-kotetsu:5 sosuke-aizen:10
         momo-hinamori:5 sajin-komamura:7 tetsuzaemon-iba:4 shunsui-kyoraku:9 nanao-ise:4 kaname-tosen:7 shuhei-hisagi:6 toshiro-hitsugaya:8
-        rangiku-matsumoto:6 kenpachi-zaraki:9 yachiru-kusajishi:7 ikkaku-madarame:6 yumichika-ayasegawa:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5
-        jushiro-ukitake:8 ryuken-ishida:7 shinji-hirako:8 hiyori-sarugaki:6 love-aikawa:6 rojuro-otoribashi:6 kensei-muguruma:7 mashiro-kuna:6
-        lisa-yadomaru:6 hachigen-ushoda:6 ulquiorra-cifer:10 yammy-llargo:7 grimmjow-jaegerjaquez:8 coyote-starrk:9 barragan-louisenbairn:8
+        rangiku-matsumoto:6 kenpachi-zaraki:10 yachiru-kusajishi:7 ikkaku-madarame:6 yumichika-ayasegawa:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5
+        jushiro-ukitake:8 ryuken-ishida:7 shinji-hirako:9 hiyori-sarugaki:5 love-aikawa:7 rojuro-otoribashi:6 kensei-muguruma:8 mashiro-kuna:5
+        lisa-yadomaru:6 hachigen-ushoda:7 ulquiorra-cifer:10 yammy-llargo:7 grimmjow-jaegerjaquez:8 coyote-starrk:9 barragan-louisenbairn:8
         tier-harribel:8 nnoitra-gilga:7 szayelaporro-granz:7 aaroniero-arruruerie:6 luppi-antenor:4 nelliel-tu-odelschwanck:7 loly-aivirrne:2
-        wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:7 shukuro-tsukishima:6 riruka-dokugamine:4
+        wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:7 shukuro-tsukishima:7 riruka-dokugamine:4
         yukio-hans-vorarlberna:4 jackie-tristan:4 giriko-kutsuzawa:4 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
-        bambietta-basterbine:6 candice-catnipp:6 liltotto-lamperd:6 meninas-mcallon:5 giselle-gewelle:6 as-nodt:8 quilge-opie:6
-        gremmy-thoumeaux:8 lille-barro:8 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:8 oetsu-nimaiya:8 kirio-hikifune:8`),
+        bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:8 quilge-opie:6
+        gremmy-thoumeaux:9 lille-barro:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:8 oetsu-nimaiya:8 kirio-hikifune:8 akon:4`),
     },
 
     hunterxhunter: {

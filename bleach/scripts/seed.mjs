@@ -59,6 +59,7 @@ export const seed = [
   { name: "Yumichika Ayasegawa", wiki: "Yumichika Ayasegawa", gender: "M", race: ["Shinigami"], age: "Unknown", hair: ["Black"], height: 169, residence: ["Seireitei"], arc: 1, affiliation: "11th Division" },
   { name: "Mayuri Kurotsuchi", wiki: "Mayuri Kurotsuchi", gender: "M", race: ["Shinigami"], age: "101-500", hair: ["Blue"], height: 174, residence: ["Seireitei"], arc: 1, affiliation: "12th Division" },
   { name: "Nemu Kurotsuchi", wiki: "Nemu Kurotsuchi", gender: "F", race: ["Shinigami"], age: "Unknown", hair: ["Black"], height: 164, residence: ["Seireitei"], arc: 1, affiliation: "12th Division" },
+  { name: "Akon", wiki: "Akon", gender: "M", race: ["Shinigami"], age: "101-500", hair: ["Black"], height: 177, residence: ["Seireitei"], arc: 1, affiliation: "12th Division" },
   { name: "Jūshirō Ukitake", wiki: "Jūshirō Ukitake", gender: "M", race: ["Shinigami"], age: "1000+", hair: ["White"], height: 187, residence: ["Seireitei"], arc: 1, affiliation: "13th Division" },
 
   // ── Arrancar ──────────────────────────────────────────────────────────

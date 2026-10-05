@@ -952,6 +952,25 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/nemu-kurotsuchi.webp"
  },
  {
+  "id": "akon",
+  "name": "Akon",
+  "gender": "M",
+  "race": [
+   "Shinigami"
+  ],
+  "age": "101-500",
+  "hair": [
+   "Black"
+  ],
+  "height": 177,
+  "residence": [
+   "Seireitei"
+  ],
+  "arc": 1,
+  "affiliation": "12th Division",
+  "image": "assets/characters/akon.webp"
+ },
+ {
   "id": "jushiro-ukitake",
   "name": "Jūshirō Ukitake",
   "gender": "M",

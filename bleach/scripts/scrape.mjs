@@ -9,6 +9,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const API = "https://bleach.fandom.com/api.php";
 const IMG_DIR = join(ROOT, "assets", "characters");
 const UA = { "User-Agent": "Bleachdle fan game scraper (personal project)" };
+// The image CDN only serves files when they are requested from the wiki itself.
+const IMG_HEADERS = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36", Referer: "https://bleach.fandom.com/" };
 
 const slug = (s) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -50,7 +52,7 @@ async function infoboxHeight(title) {
 
 // The wiki CDN serves WebP whatever the file name says, so the extension comes from the bytes.
 async function download(url, id) {
-  const res = await fetch(url, { headers: UA });
+  const res = await fetch(url, { headers: IMG_HEADERS });
   if (!res.ok) throw new Error(`image ${res.status}`);
   const buf = Buffer.from(await res.arrayBuffer());
   const ext = buf.subarray(8, 12).toString() === "WEBP" ? "webp" : buf[0] === 0xff ? "jpg" : "png";
