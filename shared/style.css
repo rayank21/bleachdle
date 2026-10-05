@@ -102,19 +102,10 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
 
 /* ── Background collage ─────────────────────────────────────── */
 .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #0b0b0d; contain: strict; }
-.bg-grid {
-  position: absolute;
-  inset: -20%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  grid-auto-rows: 150px;
-  gap: 6px;
-  transform: rotate(-7deg);
-  opacity: 0.2;
-  filter: grayscale(1) contrast(1.15);
-  will-change: transform;
-}
-.bg-grid span { background: center 20% / cover no-repeat; border-radius: 4px; }
+/* The grid and the side characters are painted once into one canvas (decor.js): a still picture, free to scroll over. */
+.bg-grid { display: none; }
+.bg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease; }
+.bg-canvas.is-in { opacity: 1; }
 .bg::after {
   content: "";
   position: absolute;
@@ -1139,6 +1130,21 @@ body[data-game="home"] .cat .cat-name { display: none; }
   .chat-panel { height: min(420px, calc(100vh - 100px)); }
 }
 
+/* ── Tablets and phones: a guess on two lines ──
+   Portrait on the left, every clue labelled with its column, so a whole guess fits the screen with nothing to scroll. */
+@media (max-width: 940px) {
+  .board-wrap { overflow-x: visible; }
+  .board { width: 100%; margin: 0; padding: 0; }
+  .board-head { display: none; }
+  .row { grid-template-columns: 96px repeat(var(--clue-cols, 4), minmax(0, 1fr)); grid-auto-rows: auto; }
+  .row .tile-name { grid-row: span 2; min-height: 0; }
+  .board, .board-rows { gap: 8px; }
+  .tile { min-height: 62px; font-size: 12px; padding: 16px 4px 5px; border-radius: 4px; overflow: hidden; overflow-wrap: anywhere; }
+  .tile-name { padding: 0; }
+  .tile .arrow { position: absolute; right: 3px; bottom: 2px; font-size: 9px; opacity: 0.9; }
+  .tile[data-label]::before { content: attr(data-label); position: absolute; top: 3px; left: 3px; right: 3px; font-size: 8.5px; font-weight: 800; letter-spacing: 0.3px; text-transform: uppercase; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
 /* ── Phone ──────────────────────────────────────────────────── */
 @media (max-width: 520px) {
   :root { --tile: 62px; --gap: 4px; }
@@ -1152,10 +1158,8 @@ body[data-game="home"] .cat .cat-name { display: none; }
   .cat-crew .cat-dice, .cat-crew:not(.is-current) .cat-dice { width: 32px; height: 32px; }
   .lang-switch button { padding: 5px 7px; font-size: 12px; }
   .page { padding-left: 12px; padding-right: 12px; }
-  .board-head, .row { grid-template-columns: var(--cols-phone, var(--cols-narrow)); }
-  .board, .board-rows { gap: 6px; }
-  .col { font-size: 11px; padding: 6px 2px; }
-  .tile { font-size: 10px; padding: 3px; border-radius: 3px; }
+  .row { grid-template-columns: 70px repeat(var(--clue-cols, 4), minmax(0, 1fr)); }
+  .tile { min-height: 54px; font-size: 10.5px; }
   .tile .arrow { font-size: 11px; }
   .tile-caption { font-size: 10px; padding: 12px 3px 4px; }
   /* Room for the chat button under the last element of the page. */
@@ -1190,7 +1194,7 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .game-card.is-tilting::before, .crew-card.is-tilting::before { opacity: 1; }
 
 /* Guess tiles: a light sweep on correct tiles, a jolt on wrong ones */
-.tile.flip.is-correct::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%); transform: translateX(-120%); animation: tile-shine 0.7s ease-out both; animation-delay: inherit; }
+.tile.flip.is-correct:not(.tile-name)::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%); transform: translateX(-120%); animation: tile-shine 0.7s ease-out both; animation-delay: inherit; }
 @keyframes tile-shine { 0%, 50% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
 .row.is-win .tile { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5), 0 0 28px rgba(31, 157, 76, 0.7); }
 
@@ -1552,11 +1556,7 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
 .crew-brand-icon img { width: 100%; height: 100%; object-fit: cover; }
 img.cl-game-crew { background: #5ed3c6; }
 
-/* Decor: two characters fading in on the sides of the background (decor.js). */
-.decor { position: absolute; inset: 0; pointer-events: none; }
-.decor-char { position: absolute; bottom: -2vh; height: 100vh; width: auto; max-width: 42vw; filter: saturate(1.15) contrast(1.05); object-fit: cover; opacity: 0; transition: opacity 1.2s ease; will-change: transform; animation: decor-float 7s ease-in-out infinite alternate; }
-.decor-char.is-in { opacity: 0.6; }
-.decor-char.is-left { left: -3vw; -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 95%); mask-image: linear-gradient(90deg, #000 45%, transparent 95%); }
-.decor-char.is-right { right: -3vw; animation-delay: -3.5s; -webkit-mask-image: linear-gradient(270deg, #000 45%, transparent 95%); mask-image: linear-gradient(270deg, #000 45%, transparent 95%); }
-@keyframes decor-float { from { transform: translateY(0); } to { transform: translateY(-14px); } }
-@media (max-width: 760px) { .decor-char { height: 60vh; max-width: 60vw; } .decor-char.is-in { opacity: 0.3; } }
+/* Long lists: the browser skips laying out and painting what is off screen. */
+.pf-li { content-visibility: auto; contain-intrinsic-size: auto 64px; }
+/* Weak machines (decor.js adds .lite): no endless decorative motion. */
+.lite .aura-10::before, .lite .aura-9::before, .lite .presence-dot, .lite .cl-glow, .lite .pf-hero-face { animation: none !important; }

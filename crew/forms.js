@@ -25,6 +25,13 @@
       jiren: { arc: 8, name: { en: "Full Power", fr: "Pleine puissance" }, fx: "aura", c1: "255, 60, 60", c2: "255, 200, 200", kanji: "全力", lightning: true },
       zamasu: { arc: 8, name: { en: "Fusion Zamasu", fr: "Zamasu fusionné" }, fx: "pillar", c1: "200, 255, 210", c2: "60, 10, 70", kanji: "合体" },
       kale: { arc: 8, name: { en: "Legendary Super Saiyan", fr: "Super Saiyan légendaire" }, fx: "aura", c1: "120, 255, 120", c2: "40, 180, 60", kanji: "伝説", lightning: true },
+      "android-17": { arc: 8, name: { en: "Android Barrier", fr: "Barrière d'androïde" }, fx: "aura", c1: "120, 220, 255", c2: "40, 90, 200", kanji: "障壁" },
+      beerus: { arc: 8, name: { en: "Hakai", fr: "Hakai" }, fx: "domain", c1: "190, 110, 255", c2: "10, 0, 20", kanji: "破壊", lightning: true },
+      whis: { arc: 8, name: { en: "Ultra Instinct", fr: "Ultra Instinct" }, fx: "aura", c1: "200, 220, 255", c2: "120, 140, 220", kanji: "身勝手の極意" },
+      champa: { arc: 8, name: { en: "Hakai", fr: "Hakai" }, fx: "domain", c1: "200, 120, 255", c2: "10, 0, 20", kanji: "破壊", lightning: true },
+      vados: { arc: 8, name: { en: "Ultra Instinct", fr: "Ultra Instinct" }, fx: "aura", c1: "180, 210, 255", c2: "90, 90, 200", kanji: "身勝手の極意" },
+      zeno: { arc: 8, name: { en: "Erasure", fr: "Effacement" }, fx: "domain", c1: "255, 255, 255", c2: "30, 10, 60", kanji: "消滅", lightning: true },
+      "grand-priest": { arc: 8, name: { en: "Ultra Instinct", fr: "Ultra Instinct" }, fx: "aura", c1: "210, 230, 255", c2: "100, 120, 210", kanji: "大神官" },
     },
     bleach: {
       "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI },
@@ -40,6 +47,8 @@
       "sosuke-aizen": { arc: 4, name: { en: "Fused with the Hōgyoku", fr: "Fusion avec le Hōgyoku" }, fx: "domain", c1: "190, 120, 255", c2: "10, 4, 24", kanji: "崩玉" },
       "kenpachi-zaraki": { arc: 6, name: { en: "Bankai", fr: "Bankai" }, ...BANKAI, kanji: "卍解", lightning: true },
       yhwach: { arc: 6, name: { en: "The Almighty", fr: "The Almighty" }, fx: "domain", c1: "255, 40, 50", c2: "4, 4, 12", kanji: "全知全能" },
+      "genryusai-yamamoto": { arc: 6, name: { en: "Bankai · Zanka no Tachi", fr: "Bankai · Zanka no Tachi" }, fx: "pillar", c1: "255, 120, 30", c2: "40, 6, 0", kanji: "残火の太刀" },
+      "ichibe-hyosube": { arc: 6, name: { en: "Ichimonji · Shirafude", fr: "Ichimonji · Shirafude" }, fx: "domain", c1: "240, 240, 240", c2: "4, 4, 6", kanji: "一文字" },
     },
     naruto: {
       "naruto-uzumaki": { arc: 6, name: { en: "Sage Mode", fr: "Mode Ermite" }, fx: "aura", c1: "255, 150, 40", c2: "255, 220, 90", kanji: "仙人" },
@@ -54,6 +63,9 @@
       "minato-namikaze": { arc: 8, name: { en: "Nine-Tails Chakra Mode", fr: "Mode Chakra de Kyûbi" }, fx: "aura", c1: "255, 170, 40", c2: "255, 240, 140", kanji: "九尾", lightning: true },
       "obito-uchiha": { arc: 8, name: { en: "Ten-Tails Jinchūriki", fr: "Jinchûriki de Jûbi" }, fx: "pillar", c1: "240, 240, 230", c2: "20, 10, 30", kanji: "十尾" },
       "madara-uchiha": { arc: 8, name: { en: "Six Paths Sage Mode", fr: "Mode Ermite des Six Chemins" }, fx: "domain", c1: "235, 235, 255", c2: "10, 6, 20", kanji: "六道" },
+      "hashirama-senju": { arc: 8, name: { en: "Sage Mode", fr: "Mode Ermite" }, fx: "aura", c1: "120, 230, 120", c2: "30, 80, 30", kanji: "仙人" },
+      "kaguya-otsutsuki": { arc: 8, name: { en: "Rabbit Goddess", fr: "Déesse Lapin" }, fx: "domain", c1: "235, 235, 255", c2: "20, 10, 40", kanji: "輪廻写輪眼", lightning: true },
+      "hagoromo-otsutsuki": { arc: 8, name: { en: "Sage of Six Paths", fr: "Ermite Rikudô" }, fx: "pillar", c1: "200, 160, 255", c2: "20, 10, 40", kanji: "六道" },
     },
     onepiece: {
       "monkey-d-luffy": { arc: 9, name: { en: "Gear 5", fr: "Gear 5" }, fx: "aura", c1: "255, 255, 255", c2: "190, 150, 255", kanji: "ニカ", lightning: true },
@@ -71,6 +83,20 @@
       sanji: { arc: 8, name: { en: "Raid Suit · Stealth Black", fr: "Raid Suit · Stealth Black" }, fx: "aura", c1: "255, 120, 40", c2: "255, 40, 40", kanji: "黒足" },
       "charlotte-katakuri": { arc: 8, name: { en: "Future Sight", fr: "Haki de l'observation · Futur" }, fx: "domain", c1: "255, 90, 140", c2: "20, 4, 12", kanji: "見聞色" },
       kaidou: { arc: 9, name: { en: "Azure Dragon", fr: "Dragon azur" }, fx: "pillar", c1: "90, 160, 255", c2: "6, 12, 40", kanji: "龍", lightning: true },
+      shanks: { arc: 9, name: { en: "Divine Departure", fr: "Kamusari" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "覇王色", lightning: true },
+      "monkey-d-dragon": { arc: 0, name: { en: "The storm", fr: "La tempête" }, fx: "pillar", c1: "150, 200, 255", c2: "10, 20, 40", kanji: "嵐", lightning: true },
+      "gol-d-roger": { arc: 9, name: { en: "Divine Departure", fr: "Kamusari" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "神避", lightning: true },
+      "dracule-mihawk": { arc: 5, name: { en: "Black Blade Yoru", fr: "Lame noire Yoru" }, fx: "pillar", c1: "120, 255, 160", c2: "0, 20, 10", kanji: "黒刀" },
+      "marshall-d-teach": { arc: 5, name: { en: "Darkness and Tremors", fr: "Ténèbres et séismes" }, fx: "domain", c1: "120, 40, 160", c2: "0, 0, 0", kanji: "闇" },
+      "monkey-d-garp": { arc: 10, name: { en: "Galaxy Impact", fr: "Galaxy Impact" }, fx: "aura", c1: "255, 230, 120", c2: "40, 20, 0", kanji: "拳骨", lightning: true },
+      "silvers-rayleigh": { arc: 5, name: { en: "Conqueror's Haki", fr: "Haki des rois" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "覇王色", lightning: true },
+      "edward-newgate": { arc: 5, name: { en: "Tremors", fr: "Séismes" }, fx: "pillar", c1: "220, 240, 255", c2: "20, 30, 50", kanji: "震", lightning: true },
+      sengoku: { arc: 5, name: { en: "Great Buddha", fr: "Grand Bouddha" }, fx: "pillar", c1: "255, 215, 90", c2: "60, 40, 0", kanji: "大仏" },
+      issho: { arc: 7, name: { en: "Gravity Blade", fr: "Lame gravitationnelle" }, fx: "domain", c1: "190, 120, 255", c2: "6, 0, 14", kanji: "重力刀" },
+      "charlotte-linlin": { arc: 8, name: { en: "Prometheus and Zeus", fr: "Prometheus et Zeus" }, fx: "aura", c1: "255, 140, 60", c2: "255, 230, 120", kanji: "魂", lightning: true },
+      "kouzuki-oden": { arc: 9, name: { en: "Togen Totsuka", fr: "Togen Totsuka" }, fx: "pillar", c1: "120, 220, 255", c2: "0, 20, 40", kanji: "桃源十拳" },
+      "scopper-gaban": { arc: 9, name: { en: "Roger's right hand", fr: "Bras droit de Roger" }, fx: "aura", c1: "255, 190, 90", c2: "60, 30, 0", kanji: "覇気" },
+      "figarland-garling": { arc: 10, name: { en: "Holy Knight's immortality", fr: "Immortalité du Chevalier sacré" }, fx: "domain", c1: "220, 30, 50", c2: "6, 0, 4", kanji: "神の騎士" },
     },
     jujutsukaisen: {
       "satoru-gojo": { arc: 1, name: { en: "Domain Expansion · Infinite Void", fr: "Extension du territoire · Sphère de l'espace infini" }, ...DOMAIN, c1: "90, 170, 255" },
@@ -82,6 +108,9 @@
       "maki-zen-in": { arc: 6, name: { en: "Heavenly Restriction awakened", fr: "Entrave céleste éveillée" }, fx: "aura", c1: "120, 255, 160", c2: "255, 255, 255", kanji: "天与呪縛" },
       "kinji-hakari": { arc: 6, name: { en: "Jackpot", fr: "Jackpot" }, fx: "aura", c1: "90, 230, 255", c2: "255, 90, 200", kanji: "大当たり", lightning: true },
       "hiromi-higuruma": { arc: 6, name: { en: "Domain Expansion · Deadly Sentencing", fr: "Extension du territoire · Jugement mortel" }, ...DOMAIN, c1: "60, 230, 170" },
+      "aoi-todo": { arc: 2, name: { en: "Boogie Woogie", fr: "Boogie Woogie" }, fx: "aura", c1: "120, 160, 255", c2: "10, 10, 40", kanji: "不義遊戯", lightning: true },
+      "toji-fushiguro": { arc: 4, name: { en: "Heavenly Restriction", fr: "Restriction céleste" }, fx: "aura", c1: "140, 255, 140", c2: "10, 30, 10", kanji: "天与呪縛" },
+      "yuki-tsukumo": { arc: 6, name: { en: "Star Rage", fr: "Star Rage" }, fx: "domain", c1: "255, 220, 120", c2: "10, 6, 30", kanji: "星の怒り", lightning: true },
     },
     hunterxhunter: {
       "killua-zoldyck": { arc: 5, name: { en: "Godspeed", fr: "Vitesse divine" }, fx: "aura", c1: "140, 220, 255", c2: "255, 255, 255", kanji: "神速", lightning: true },
@@ -92,6 +121,11 @@
       "isaac-netero": { arc: 5, name: { en: "Hundred-Type Guanyin Bodhisattva", fr: "Bodhisattva aux cent mille mains" }, fx: "pillar", c1: "255, 210, 80", c2: "40, 20, 0", kanji: "百式観音" },
       neferpitou: { arc: 5, name: { en: "Terpsichora", fr: "Terpsichora" }, fx: "aura", c1: "255, 50, 70", c2: "60, 0, 20", kanji: "黒子舞想", lightning: true },
       menthuthuyoupi: { arc: 5, name: { en: "Rage form", fr: "Forme de rage" }, fx: "pillar", c1: "255, 60, 60", c2: "30, 0, 0", kanji: "憤怒" },
+      "zeno-zoldyck": { arc: 5, name: { en: "Dragon Dive", fr: "Dragon Dive" }, fx: "aura", c1: "120, 200, 255", c2: "20, 60, 140", kanji: "龍頭戯画", lightning: true },
+      "chrollo-lucilfer": { arc: 3, name: { en: "Skill Hunter", fr: "Skill Hunter" }, fx: "domain", c1: "190, 150, 255", c2: "10, 4, 20", kanji: "盗賊の極意" },
+      meruem: { arc: 5, name: { en: "Aura Synthesis", fr: "Synthèse d'aura" }, fx: "aura", c1: "120, 255, 200", c2: "30, 90, 120", kanji: "王", lightning: true },
+      "ging-freecss": { arc: 6, name: { en: "Nen release", fr: "Libération du Nen" }, fx: "aura", c1: "255, 210, 90", c2: "120, 70, 20", kanji: "念" },
+      "alluka-zoldyck": { arc: 6, name: { en: "Nanika", fr: "Nanika" }, fx: "domain", c1: "40, 40, 50", c2: "0, 0, 0", kanji: "何か" },
     },
     blackclover: {
       // Devils: their hosts reach 100% Devil Union, the devils themselves fully manifest.
@@ -107,6 +141,11 @@
       "fuegoleon-vermillion": { arc: 7, name: { en: "Salamander", fr: "Salamandre" }, fx: "pillar", c1: "255, 120, 30", c2: "50, 10, 0", kanji: "火精" },
       "noelle-silva": { arc: 9, name: { en: "Valkyrie Dress", fr: "Armure de Valkyrie" }, fx: "aura", c1: "110, 220, 255", c2: "200, 255, 240", kanji: "戦乙女" },
       "dante-zogratis": { arc: 9, name: { en: "Devil Union · 100%", fr: "Union démoniaque · 100 %" }, fx: "domain", c1: "160, 60, 255", c2: "10, 0, 20", kanji: "悪魔同化" },
+      "yami-sukehiro": { arc: 2, name: { en: "Dark Cloaked Dimension Slash", fr: "Lame de ténèbres : Fendeur de dimensions" }, fx: "pillar", c1: "150, 90, 220", c2: "0, 0, 0", kanji: "闇纏・次元斬り", lightning: true },
+      "mereoleona-vermillion": { arc: 4, name: { en: "Calidus Brachium", fr: "Calidus Brachium" }, fx: "pillar", c1: "255, 110, 30", c2: "50, 6, 0", kanji: "炎" },
+      "julius-novachrono": { arc: 6, name: { en: "Time Magic", fr: "Magie du temps" }, fx: "domain", c1: "255, 220, 120", c2: "20, 14, 4", kanji: "時間" },
+      licht: { arc: 7, name: { en: "Sword of Despair", fr: "Épée du désespoir" }, fx: "pillar", c1: "220, 255, 220", c2: "10, 20, 10", kanji: "剣", lightning: true },
+      "lucius-zogratis": { arc: 9, name: { en: "Soul Magic · Chrono Stasis", fr: "Magie de l'âme · Chrono Stasis" }, fx: "domain", c1: "255, 230, 160", c2: "10, 6, 2", kanji: "魂", lightning: true },
     },
     // Each shifter transforms only from the arc where the anime reveals who they are.
     attackontitan: {
@@ -126,16 +165,17 @@
       "grisha-yeager": { arc: 4, name: { en: "Attack Titan", fr: "Titan Assaillant" }, ...TITAN },
       "marcel-galliard": { arc: 4, name: { en: "Jaw Titan", fr: "Titan Mâchoire" }, ...TITAN },
       "ymir-fritz": { arc: 6, name: { en: "Founding Titan", fr: "Titan Originel" }, ...TITAN, c1: "255, 240, 200" },
+      levi: { arc: 4, name: { en: "Ackerman awakening", fr: "Éveil Ackerman" }, fx: "aura", c1: "200, 230, 255", c2: "20, 30, 40", kanji: "人類最強" },
     },
   };
 
   // Forms with an anime clip (crew/assets/clips/<game>-<id>.mp4), played in the transformation cinematic.
   const CLIPS = {
-    onepiece: ["monkey-d-luffy"],
+    onepiece: ["monkey-d-luffy", "gol-d-roger"],
     bleach: ["byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach"],
-    jujutsukaisen: ["ryomen-sukuna", "mahito", "jogo"],
-    hunterxhunter: ["gon-freecss", "killua-zoldyck"],
-    attackontitan: ["annie-leonhart", "reiner-braun", "bertholdt-hoover", "ymir", "zeke-yeager", "lara-tybur", "dina-fritz"],
+    jujutsukaisen: ["ryomen-sukuna", "mahito", "jogo", "aoi-todo", "toji-fushiguro"],
+    hunterxhunter: ["gon-freecss", "killua-zoldyck", "zeno-zoldyck"],
+    attackontitan: ["annie-leonhart", "reiner-braun", "bertholdt-hoover", "ymir", "zeke-yeager", "lara-tybur", "dina-fritz", "levi"],
   };
   for (const [game, ids] of Object.entries(CLIPS)) for (const id of ids) if (window.CREW_FORMS[game]?.[id]) window.CREW_FORMS[game][id].clip = true;
 })();

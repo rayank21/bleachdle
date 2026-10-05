@@ -27,7 +27,7 @@ except (OSError, ValueError, IndexError):
     kept = set()
 
 # Cut but not cleanly (manga pages, effects mistaken for the character): kept framed.
-SKIP = {"blackclover-lucifero", "blackclover-megicula", "bleach-byakuya-kuchiki", "bleach-coyote-starrk", "bleach-ulquiorra-cifer", "onepiece-kaidou", "attackontitan-armin-arlert"}
+SKIP = {"dragonball-beerus", "dragonball-zeno", "hunterxhunter-zeno-zoldyck", "blackclover-lucifero", "blackclover-megicula", "bleach-byakuya-kuchiki", "bleach-coyote-starrk", "bleach-ulquiorra-cifer", "onepiece-kaidou", "attackontitan-armin-arlert"}
 session = new_session("isnet-anime")
 for name in names:
     img = Image.open(os.path.join(FORMS, name + ".webp")).convert("RGB")

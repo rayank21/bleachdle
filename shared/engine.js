@@ -260,6 +260,7 @@
       const tile = el("div", `tile tile-${col.type === "name" ? `name${auraOf(id)}` : col.key} is-${status}`);
       const dirWord = dir ? (dir === "up" ? " ▲" : " ▼") : "";
       tile.setAttribute("aria-label", `${colLabel(col.key)}: ${cellText(col, g)}${dirWord} (${t(status)})`);
+      if (col.type !== "name") tile.dataset.label = colLabel(col.key); // shown on phones, where the header row is hidden
       tile.innerHTML = col.type === "name"
         ? `<img src="${esc(g.image)}" alt="" loading="lazy" /><span class="tile-caption">${esc(g.name)}</span>`
         : `<span class="tile-text">${esc(cellText(col, g))}</span>${arrow(dir)}`;
@@ -816,7 +817,7 @@
       .sort((a, b) => a.k - b.k)
       .map((x) => x.c)
       .slice(0, Math.min(imgs.length * 2, fit));
-    $("#bgGrid").innerHTML = order.map((c) => `<span style="background-image:url('${c.image}')"></span>`).join("");
+    window.DLE_BG?.(order.map((c) => c.image));
   }
 
   function setupLayout() {
@@ -824,8 +825,8 @@
     const narrow = COLS.map((c) => (c.width ? `${Math.round(c.width * 0.84)}px` : "var(--tile)")).join(" ");
     document.documentElement.style.setProperty("--cols", widths);
     document.documentElement.style.setProperty("--cols-narrow", narrow);
-    const phone = COLS.map((c) => (c.width ? `${Math.round(c.width * 0.68)}px` : "var(--tile)")).join(" ");
-    document.documentElement.style.setProperty("--cols-phone", phone);
+    // Phones: the portrait on the left, the clues on two lines next to it, so a whole guess fits the screen.
+    document.documentElement.style.setProperty("--clue-cols", String(Math.ceil((COLS.length - 1) / 2)));
   }
 
   // ── Online race (2–8 players, first to find the character wins) ──

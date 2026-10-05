@@ -7,6 +7,16 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-06T00:28",
+      title: { en: "Smoother everywhere, phone layout, every 10 transforms", fr: "Plus fluide partout, mise en page téléphone, tous les 10 se transforment" },
+      items: [
+        { type: "improved", en: "Much smoother scrolling, even on old computers: the page background is now painted once instead of being redrawn at every frame, and the constant effects that weighed on the Crew Roll board are gone. Weak machines automatically get a lighter version.", fr: "Défilement bien plus fluide, même sur les vieux PC : le fond des pages est maintenant peint une seule fois au lieu d'être redessiné à chaque image, et les effets permanents qui alourdissaient le plateau de Roll ton équipage sont partis. Les machines peu puissantes passent automatiquement en version allégée." },
+        { type: "improved", en: "On phones and tablets, each guess now fits the screen: the portrait on the left and the clues on two lines next to it, each labelled with its column. Nothing is cut off on the right any more.", fr: "Sur téléphone et tablette, chaque essai tient dans l'écran : le portrait à gauche et les indices sur deux lignes à côté, chacun avec le nom de sa colonne. Plus rien n'est coupé à droite." },
+        { type: "new", game: "crew", en: "Every character rated 10 now has a transformation or signature move with its cinematic: Yami's Dimension Slash, Yamamoto's Bankai, Shanks' and Roger's Divine Departure, Toji, Todo, Levi, Meruem, Beerus' Hakai, Whitebeard's tremors, Big Mom, Garp, Hashirama's Sage Mode and many more (43 in all), with anime clips for Roger, Zeno, Todo, Toji and Levi.", fr: "Tous les persos notés 10 ont maintenant une transformation ou leur attaque phare, avec sa cinématique : le Fendeur de dimensions de Yami, le Bankai de Yamamoto, le Kamusari de Shanks et de Roger, Toji, Todo, Livaï, Meruem, le Hakai de Beerus, les séismes de Barbe Blanche, Big Mom, Garp, le Mode Ermite de Hashirama et bien d'autres (43 en tout), avec des extraits de l'anime pour Roger, Zeno, Todo, Toji et Livaï." },
+        { type: "fix", game: "crew", en: "Index: the \"not drawn yet\" tag no longer covers the transformation tag.", fr: "Index : l'étiquette « pas encore tirée » ne recouvre plus celle de la transformation." },
+      ],
+    },
+    {
       at: "2026-10-05T23:56",
       title: { en: "New cinematics, latest looks, admirals and Espada", fr: "Nouvelles cinématiques, looks récents, amiraux et Espada" },
       items: [

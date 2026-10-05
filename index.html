@@ -56,10 +56,9 @@
         `<a class="cat" href="${g.path}" title="${esc(g.brand)}"><span class="cat-logo">${logo(g)}</span><span class="cat-name">${esc(g.brand)}</span></a>`).join("");
       const renderNav = () => { document.querySelectorAll(".cat-crew").forEach((n) => n.remove()); $("#categories").insertAdjacentHTML("beforeend", window.DLE_CREW_LINK("", window.DLE_UI[lang].crew)); };
 
-      $("#bgGrid").innerHTML = GAMES.flatMap((g) => g.featured.map((id) => `${g.path}assets/characters/${id}.webp`))
+      window.DLE_BG?.(GAMES.flatMap((g) => g.featured.map((id) => `${g.path}assets/characters/${id}.webp`))
         .flatMap((src, i, all) => [src, all[(i * 7 + 3) % all.length]])
-        .concat(GAMES.flatMap((g) => g.featured.map((id) => `${g.path}assets/characters/${id}.webp`)))
-        .map((src) => `<span style="background-image:url('${src}')"></span>`).join("").repeat(3);
+        .concat(GAMES.flatMap((g) => g.featured.map((id) => `${g.path}assets/characters/${id}.webp`))));
 
       function render() {
         const t = window.DLE_UI[lang];

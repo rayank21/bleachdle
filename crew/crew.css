@@ -355,7 +355,7 @@
 .tf-name { max-width: 100%; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 900; letter-spacing: 0.6px; text-transform: uppercase; color: #fff; background: linear-gradient(90deg, rgba(var(--fx1), 0.85), rgba(var(--fx2), 0.85)); box-shadow: 0 0 18px rgba(var(--fx1), 0.6); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); animation: tier-in 0.5s 0.2s cubic-bezier(.3, 1.6, .5, 1) both; text-wrap: balance; }
 
 /* On the board: a transformed character keeps a turning aura ring */
-.crew-slot.is-transformed .crew-face { position: relative; overflow: visible; border-color: transparent; background: conic-gradient(from var(--frame-a), rgb(var(--fx1)), rgb(var(--fx2)), rgb(var(--fx1))) border-box; animation: frame-turn 2.5s linear infinite; box-shadow: 0 0 22px rgba(var(--fx1), 0.7); }
+.crew-slot.is-transformed .crew-face { position: relative; overflow: visible; border-color: transparent; background: conic-gradient(from 200deg, rgb(var(--fx1)), rgb(var(--fx2)), rgb(var(--fx1))) border-box; box-shadow: 0 0 22px rgba(var(--fx1), 0.7); }
 .crew-slot.is-transformed .crew-face img { border-radius: 50%; }
 .crew-slot.is-transformed::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(60% 45% at 50% 38%, rgba(var(--fx1), 0.28), transparent 70%); animation: tf-throb 1s ease-in-out infinite alternate; }
 /* Transformation shots are scenes: they fill the card. The aura sits behind the card once transformed. */
@@ -370,7 +370,7 @@
 /* ── Living transformations ── */
 /* The top of the picture (hair, aura) ripples like energy; the body stays still underneath. */
 .reel-hair { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; filter: url(#tf-wave) brightness(1.18) saturate(1.35); -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 38%, transparent 62%); mask-image: linear-gradient(180deg, #000 0%, #000 38%, transparent 62%); pointer-events: none; }
-.reel-item.is-form::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(75% 45% at 50% 22%, rgba(var(--fx1), 0.45), transparent 70%), linear-gradient(0deg, rgba(var(--fx1), 0.25), transparent 40%); animation: tf-flicker 0.16s steps(2) infinite alternate, tf-pulse 1.1s ease-in-out infinite; }
+.reel-item.is-form::after { content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; background: radial-gradient(75% 45% at 50% 22%, rgba(var(--fx1), 0.45), transparent 70%), linear-gradient(0deg, rgba(var(--fx1), 0.25), transparent 40%); animation: tf-flicker 0.16s steps(2) infinite alternate; }
 @keyframes tf-flicker { from { opacity: 0.75; } to { opacity: 1; } }
 @keyframes tf-pulse { 50% { filter: brightness(1.5); } }
 .reel.is-transformed .reel-window { animation: frame-turn 2.5s linear infinite, tf-breathe 1.1s ease-in-out infinite; box-shadow: 0 0 0 4px rgba(var(--fx1), 0.25), 0 0 40px rgba(var(--fx1), 0.65), 0 0 90px rgba(var(--fx1), 0.3); }
@@ -382,7 +382,13 @@
 .tf-zap { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .tf-zap path { fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 2px rgb(var(--fx1))) drop-shadow(0 0 6px rgb(var(--fx1))) drop-shadow(0 0 12px rgb(var(--fx2))); }
 /* On the board: a softer ripple and pulse */
-.crew-slot.is-transformed .crew-face img { filter: url(#tf-wave-soft) saturate(1.3); animation: tf-pulse 1.1s ease-in-out infinite; }
+/* (still: a filter that keeps changing would repaint every frame, and the board stays on screen for the whole game) */
+.crew-slot.is-transformed .crew-face img { filter: saturate(1.3) brightness(1.08); }
+/* Weak machines: the drawn card keeps its look without the rippling and turning effects. */
+.lite .reel-hair { filter: brightness(1.18) saturate(1.35); }
+.lite .reel.is-powering .reel-fg { filter: brightness(1.35) contrast(1.15); animation: none; }
+.lite .reel.is-transformed .reel-window { animation: tf-breathe 1.1s ease-in-out infinite; }
+.lite .reel.is-spinning .reel-window, .lite .reel.is-charging .reel-window { animation: none; }
 
 /* ── Index: every card, its rarity and what it scores in each role ── */
 .ix-view { width: min(100%, 1240px); display: flex; flex-direction: column; gap: 14px; }
@@ -437,7 +443,7 @@
 
 .ix-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .ix-empty { grid-column: 1 / -1; text-align: center; padding: 30px 0; }
-.ix-card { --tier-rgb: 160, 165, 180; position: relative; display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: linear-gradient(180deg, rgba(var(--tier-rgb), 0.12), var(--surface) 40%); border: 1px solid rgba(var(--tier-rgb), 0.3); animation: rise 0.4s ease both; transition: transform 0.18s, border-color 0.18s; content-visibility: auto; contain-intrinsic-size: auto 440px; }
+.ix-card { --tier-rgb: 160, 165, 180; position: relative; display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: linear-gradient(180deg, rgba(var(--tier-rgb), 0.12), var(--surface) 40%); border: 1px solid rgba(var(--tier-rgb), 0.3); animation: rise 0.4s ease both; transition: transform 0.18s, border-color 0.18s; content-visibility: auto; contain-intrinsic-size: auto 440px;  content-visibility: auto; contain-intrinsic-size: auto 340px; }
 .ix-card:hover { transform: translateY(-3px); border-color: rgba(var(--tier-rgb), 0.7); }
 .ix-card.tier-epic { --tier-rgb: 255, 75, 208; }
 .ix-card.tier-legend { --tier-rgb: 255, 200, 60; border: 0; padding: 1.5px; background: linear-gradient(135deg, #ffe16b, #ff9d2e, #fff4c2, #ff9d2e, #ffe16b); }
@@ -456,7 +462,7 @@
 .ix-card.tier-epic .ix-tier { color: #fff; background: linear-gradient(90deg, #ff3b4a, #ff4bd0); }
 .ix-power { position: absolute; z-index: 2; top: 8px; right: 8px; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; font-size: 17px; font-weight: 900; font-style: italic; color: #fff; background: rgba(0, 0, 0, 0.6); border: 1.5px solid rgba(var(--tier-rgb), 0.9); box-shadow: 0 0 12px rgba(var(--tier-rgb), 0.45); }
 .ix-form { position: absolute; z-index: 2; left: 8px; bottom: 8px; max-width: calc(100% - 16px); padding: 3px 10px; border: 0; border-radius: 999px; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; background: linear-gradient(90deg, rgba(var(--fx1), 0.85), rgba(var(--fx2), 0.85)); box-shadow: 0 0 12px rgba(var(--fx1), 0.6); text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
-.ix-card.is-form .ix-face { filter: saturate(1.3); animation: tf-pulse 1.1s ease-in-out infinite; }
+.ix-card.is-form .ix-face { filter: saturate(1.3) brightness(1.1); }
 .ix-card.is-form .ix-form { outline: 2px solid #fff; }
 .ix-name { margin: 0; padding: 10px 12px 4px; font-size: 15.5px; font-weight: 900; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ix-roles { list-style: none; margin: 0; padding: 4px 10px 12px; display: flex; flex-direction: column; gap: 4px; }
@@ -499,7 +505,7 @@
 .ix-own-btn.is-active { color: #fff; background: rgba(var(--accent-rgb), 0.85); }
 .ix-card.is-locked .ix-face { filter: grayscale(1) brightness(0.55); }
 .ix-card.is-locked .ix-name { color: var(--muted); }
-.ix-lock { position: absolute; z-index: 2; left: 50%; bottom: 10px; transform: translateX(-50%); padding: 4px 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.75); color: #ddd; font-size: 11.5px; font-weight: 800; white-space: nowrap; }
+.ix-lock { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 4px 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.75); color: #ddd; font-size: 11.5px; font-weight: 800; white-space: nowrap; }
 
 /* ── Transformation cinematic (cinema.js) ──
    Planes, back to front: background and glows, particles (canvas), diagonal bands and the kanji, the character,
