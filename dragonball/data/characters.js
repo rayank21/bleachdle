@@ -1479,5 +1479,95 @@ window.DLE_CHARACTERS = [
    "Gods"
   ],
   "origin": "Unknown"
+ },
+ {
+  "id": "dr-brief",
+  "name": "Dr. Brief",
+  "gender": "M",
+  "race": [
+   "Human"
+  ],
+  "height": null,
+  "arc": 1,
+  "image": "assets/characters/dr-brief.webp",
+  "hair": [
+   "Purple"
+  ],
+  "aff": [
+   "Capsule Corp"
+  ],
+  "origin": "Earth"
+ },
+ {
+  "id": "gamma-1",
+  "name": "Gamma 1",
+  "gender": "M",
+  "race": [
+   "Android"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/gamma-1.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Red Ribbon Army"
+  ],
+  "origin": "Earth"
+ },
+ {
+  "id": "gamma-2",
+  "name": "Gamma 2",
+  "gender": "M",
+  "race": [
+   "Android"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/gamma-2.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Red Ribbon Army"
+  ],
+  "origin": "Earth"
+ },
+ {
+  "id": "saonel",
+  "name": "Saonel",
+  "gender": "M",
+  "race": [
+   "Namekian"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/saonel.webp",
+  "hair": [
+   "None"
+  ],
+  "aff": [
+   "Heeters"
+  ],
+  "origin": "Namek"
+ },
+ {
+  "id": "pirina",
+  "name": "Pirina",
+  "gender": "M",
+  "race": [
+   "Namekian"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/pirina.webp",
+  "hair": [
+   "None"
+  ],
+  "aff": [
+   "Heeters"
+  ],
+  "origin": "Namek"
  }
 ];

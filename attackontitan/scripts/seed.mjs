@@ -53,6 +53,8 @@ export const seed = [
   { wiki: "Dhalis Zachary", name: "Darius Zackly", race: HU, aff: ["Military Command"], origin: ["Unknown"], arc: 1 },
   { wiki: "Kenny Ackerman", race: HU, aff: ["Interior Police"], origin: ["Underground"], arc: 3 },
   { wiki: "Djel Sannes", race: HU, aff: ["Interior Police"], origin: ["Unknown"], arc: 3 },
+  { wiki: "Marlo Freudenberg", name: "Marlo Freudenberg", race: HU, aff: ["Military Police"], origin: ["Unknown"], arc: 3 },
+  { wiki: "Traute Caven", name: "Traute Carven", race: HU, aff: ["Interior Police"], origin: ["Unknown"], arc: 3 },
   { wiki: "Rod Reiss", race: HU, aff: ["Royal Family"], origin: ["Wall Rose"], arc: 3 },
   { wiki: "Frieda Reiss", race: TS, aff: ["Royal Family"], origin: ["Wall Rose"], arc: 3 },
   { wiki: "Kaya", race: HU, aff: ["Civilian"], origin: ["Wall Rose"], arc: 2 },

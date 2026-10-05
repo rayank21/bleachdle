@@ -48,6 +48,8 @@
     },
     hunterxhunter: {
       "killua-zoldyck": { arc: 5, name: { en: "Godspeed", fr: "Vitesse divine" }, fx: "aura", c1: "140, 220, 255", c2: "255, 255, 255", kanji: "神速", lightning: true },
+      // Gon's vow against Pitou: he forces his body to the age it would need to win.
+      "gon-freecss": { arc: 5, name: { en: "Adult Gon", fr: "Gon adulte" }, fx: "pillar", c1: "255, 170, 50", c2: "30, 10, 0", kanji: "制約", lightning: true },
       kurapika: { arc: 3, name: { en: "Emperor Time", fr: "Emperor Time" }, fx: "domain", c1: "255, 40, 50", c2: "20, 0, 0", kanji: "絶対時間" },
     },
     // Each shifter transforms only from the arc where the anime reveals who they are.

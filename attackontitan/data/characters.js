@@ -634,6 +634,40 @@ window.DLE_CHARACTERS = [
   "arc": 3
  },
  {
+  "id": "marlo-freudenberg",
+  "name": "Marlo Freudenberg",
+  "gender": "M",
+  "height": 178,
+  "image": "assets/characters/marlo-freudenberg.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "Military Police"
+  ],
+  "origin": [
+   "Unknown"
+  ],
+  "arc": 3
+ },
+ {
+  "id": "traute-carven",
+  "name": "Traute Carven",
+  "gender": "F",
+  "height": 172,
+  "image": "assets/characters/traute-carven.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "Interior Police"
+  ],
+  "origin": [
+   "Unknown"
+  ],
+  "arc": 3
+ },
+ {
   "id": "rod-reiss",
   "name": "Rod Reiss",
   "gender": "M",

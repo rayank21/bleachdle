@@ -2397,6 +2397,96 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/charlotte-oven.webp"
  },
  {
+  "id": "gaimon",
+  "name": "Gaimon",
+  "gender": "M",
+  "aff": [
+   "None"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 130,
+  "origin": "East Blue",
+  "age": 43,
+  "epithet": null,
+  "arc": 0,
+  "image": "assets/characters/gaimon.webp"
+ },
+ {
+  "id": "peepley-lulu",
+  "name": "Peepley Lulu",
+  "gender": "M",
+  "aff": [
+   "Galley-La Company"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 206,
+  "origin": "Grand Line",
+  "age": 31,
+  "epithet": null,
+  "arc": 3,
+  "image": "assets/characters/peepley-lulu.webp"
+ },
+ {
+  "id": "den",
+  "name": "Den",
+  "gender": "M",
+  "aff": [
+   "None"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 435,
+  "origin": "Fish-Man Island",
+  "age": 62,
+  "epithet": null,
+  "arc": 6,
+  "image": "assets/characters/den.webp"
+ },
+ {
+  "id": "charlos",
+  "name": "Charlos",
+  "gender": "M",
+  "aff": [
+   "World Government"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": 230,
+  "origin": "Red Line",
+  "age": 22,
+  "epithet": null,
+  "arc": 5,
+  "image": "assets/characters/charlos.webp"
+ },
+ {
+  "id": "scopper-gaban",
+  "name": "Scopper Gaban",
+  "gender": "M",
+  "aff": [
+   "Roger Pirates"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": 80,
+  "epithet": "Mountain-Eater",
+  "arc": 9,
+  "image": "assets/characters/scopper-gaban.webp"
+ },
+ {
   "id": "kouzuki-sukiyaki",
   "name": "Kouzuki Sukiyaki",
   "gender": "M",
@@ -2521,5 +2611,41 @@ window.DLE_CHARACTERS = [
   "epithet": null,
   "arc": 10,
   "image": "assets/characters/shepherd-ju-peter.webp"
+ },
+ {
+  "id": "figarland-garling",
+  "name": "Figarland Garling",
+  "gender": "M",
+  "aff": [
+   "Five Elders"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "Unknown",
+  "age": null,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/figarland-garling.webp"
+ },
+ {
+  "id": "figarland-shamrock",
+  "name": "Figarland Shamrock",
+  "gender": "M",
+  "aff": [
+   "Knights of God"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 0,
+  "height": null,
+  "origin": "West Blue",
+  "age": 39,
+  "epithet": null,
+  "arc": 10,
+  "image": "assets/characters/figarland-shamrock.webp"
  }
 ];

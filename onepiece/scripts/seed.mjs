@@ -157,6 +157,12 @@ export const seed = [
   { wiki: "Streusen", gender: "M" },
   { wiki: "Charlotte Perospero", gender: "M" },
   { wiki: "Charlotte Oven", gender: "M" },
+  { wiki: "Gaimon", gender: "M" },
+  { wiki: "Peepley Lulu", gender: "M" },
+  { wiki: "Den", gender: "M" },
+  { wiki: "Charlos", name: "Charlos", gender: "M" },
+  // Seen in flashbacks from the first episode, but only named in Wano.
+  { wiki: "Scopper Gaban", gender: "M", arc: 9 },
   // Oden's father hides as Hitetsu for most of Wano.
   { wiki: "Kozuki Sukiyaki", gender: "M", arc: 9 },
 
@@ -168,4 +174,6 @@ export const seed = [
   { wiki: "Topman Warcury", gender: "M", arc: 10 },
   { wiki: "Ethanbaron V. Nusjuro", gender: "M", arc: 10 },
   { wiki: "Shepherd Ju Peter", gender: "M", arc: 10 },
+  { wiki: "Figarland Garling", gender: "M", arc: 10 },
+  { wiki: "Figarland Shamrock", gender: "M", arc: 10 },
 ];

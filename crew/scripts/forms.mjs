@@ -32,6 +32,7 @@ const FILES = [
   ["jujutsu-kaisen", "jujutsukaisen", "yuta-okkotsu", "File:Rika's presence behind Yuta (Anime).png"],
   ["jujutsu-kaisen", "jujutsukaisen", "mahito", "File:Self-Embodiment of Perfection (SpecialZ).png"],
   ["hunterxhunter", "hunterxhunter", "killua-zoldyck", "File:129 - Godspeed Killua.png"],
+  ["hunterxhunter", "hunterxhunter", "gon-freecss", "File:Adult Gon Anime.png"],
   ["hunterxhunter", "hunterxhunter", "kurapika", "File:Kurapika emperor time HXH 99 EP69.png"],
   ["attackontitan", "attackontitan", "eren-yeager", "File:Attack Titan character image (Eren Yeager).png"],
   ["attackontitan", "attackontitan", "annie-leonhart", "File:Female Titan character image (Annie Leonhart).png"],

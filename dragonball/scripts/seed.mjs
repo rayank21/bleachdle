@@ -104,4 +104,10 @@ export const seed = [
   { wiki: "Jiren", hair: ["None"], aff: ["Pride Troopers"], origin: "Universe 11" },
   { wiki: "Toppo", name: "Toppo", race: ["Alien"], hair: ["None"], aff: [...GODS, "Pride Troopers"], origin: "Universe 11" },
   { wiki: "Grand Priest", name: "Grand Priest", hair: ["White"], aff: GODS, origin: "Unknown" },
+  { wiki: "Dr. Brief", name: "Dr. Brief", hair: ["Purple"], aff: ["Capsule Corp"], origin: EARTH },
+  // Super Hero (film) and the Granolah arc (manga): no anime episode, so their arc is set here.
+  { wiki: "Gamma 1", name: "Gamma 1", gender: "M", race: ["Android"], arc: 8, hair: ["Black"], aff: RR, origin: EARTH },
+  { wiki: "Gamma 2", name: "Gamma 2", gender: "M", race: ["Android"], arc: 8, hair: ["Black"], aff: RR, origin: EARTH },
+  { wiki: "Saonel", name: "Saonel", gender: "M", race: ["Namekian"], arc: 8, hair: ["None"], aff: ["Heeters"], origin: NAMEK },
+  { wiki: "Pirina", name: "Pirina", gender: "M", race: ["Namekian"], arc: 8, hair: ["None"], aff: ["Heeters"], origin: NAMEK },
 ];
