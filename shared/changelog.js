@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-05T23:40",
+      title: { en: "Black Clover devils", fr: "Les démons de Black Clover" },
+      items: [
+        { type: "new", game: "crew", en: "Crew Roll: every Black Clover devil transforms. Liebe, Zagred, Megicula and Lucifero fully manifest; Vanica, Zenon, Dante and Nacht reach their Devil Union; Asta now unites with Liebe.", fr: "Roll ton équipage : tous les démons de Black Clover se transforment. Liebe, Zagred, Megicula et Lucifero se manifestent entièrement ; Vanica, Zenon, Dante et Nacht passent en union démoniaque ; Asta fusionne maintenant avec Liebe." },
+        { type: "balance", game: "onepiece", en: "One Piece: Blackbeard archaeologist 8.", fr: "One Piece : Barbe Noire archéologue 8." },
+      ],
+    },
+    {
       at: "2026-10-05T23:15",
       title: { en: "Transformation cinematics, the Sunny and a new look", fr: "Cinématiques de transformation, le Sunny et un nouveau décor" },
       items: [

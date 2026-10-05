@@ -30,7 +30,7 @@
     // Crocodile's search for Pluton, Pedro's journey to read one.
     // Olvia, Robin's mother, studied the poneglyphs at Ohara; Sukiyaki was shogun with the Kozuki's secret; Crocus sailed to Laugh Tale.
     archaeologist: parse(`nico-robin:10 nico-olvia:9 imu:9 gol-d-roger:9 kouzuki-sukiyaki:8 charlotte-pudding:8 kouzuki-oden:8 crocus:5 kouzuki-momonosuke:7 silvers-rayleigh:7 vegapunk:7
-      marshall-d-teach:7 jaygarcia-saturn:6 marcus-mars:6 topman-warcury:6 ethanbaron-v-nusjuro:6 shepherd-ju-peter:6 kouzuki-hiyori:6
+      marshall-d-teach:8 jaygarcia-saturn:6 marcus-mars:6 topman-warcury:6 ethanbaron-v-nusjuro:6 shepherd-ju-peter:6 kouzuki-hiyori:6
       inuarashi:6 nekomamushi:6 wyper:6 shanks:5 crocodile:5 pedro:5 kin-emon:5 yamato:5 nefertari-vivi:4 buggy:4 figarland-garling:6`),
     // Tom built the Oro Jackson; Paulie, Kaku and Lucci worked at Galley-La; Rayleigh coats ships; Queen builds
     // Kaidou's weapons and his own cyborg body; Vegapunk builds Seraphim and Egghead; Kid forges his own arm; Usopp

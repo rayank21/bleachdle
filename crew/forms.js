@@ -88,11 +88,19 @@
       menthuthuyoupi: { arc: 5, name: { en: "Rage form", fr: "Forme de rage" }, fx: "pillar", c1: "255, 60, 60", c2: "30, 0, 0", kanji: "憤怒" },
     },
     blackclover: {
-      asta: { arc: 5, name: { en: "Black Asta", fr: "Asta noir" }, fx: "aura", c1: "40, 40, 50", c2: "255, 40, 40", kanji: "悪魔", lightning: true },
+      // Devils: their hosts reach 100% Devil Union, the devils themselves fully manifest.
+      asta: { arc: 9, name: { en: "Devil Union · Liebe", fr: "Union démoniaque · Liebe" }, fx: "aura", c1: "255, 40, 60", c2: "20, 0, 6", kanji: "悪魔同化", lightning: true },
+      liebe: { arc: 7, name: { en: "Devil form", fr: "Forme démoniaque" }, fx: "pillar", c1: "255, 50, 70", c2: "10, 0, 4", kanji: "悪魔" },
+      zagred: { arc: 7, name: { en: "Full manifestation", fr: "Manifestation complète" }, fx: "domain", c1: "200, 60, 255", c2: "8, 0, 16", kanji: "言霊" },
+      megicula: { arc: 9, name: { en: "Full manifestation", fr: "Manifestation complète" }, fx: "domain", c1: "255, 70, 120", c2: "20, 0, 10", kanji: "呪" },
+      lucifero: { arc: 9, name: { en: "Descent of Lucifero", fr: "Descente de Lucifero" }, fx: "pillar", c1: "190, 120, 255", c2: "4, 0, 10", kanji: "重力", lightning: true },
+      "vanica-zogratis": { arc: 9, name: { en: "Devil Union · 100%", fr: "Union démoniaque · 100 %" }, fx: "domain", c1: "255, 60, 90", c2: "20, 0, 8", kanji: "悪魔同化" },
+      "zenon-zogratis": { arc: 9, name: { en: "Devil Union · 100%", fr: "Union démoniaque · 100 %" }, fx: "pillar", c1: "230, 230, 240", c2: "10, 10, 16", kanji: "悪魔同化" },
+      "nacht-faust": { arc: 9, name: { en: "Gallus × Felis × Canis", fr: "Gallus × Felis × Canis" }, fx: "aura", c1: "140, 90, 255", c2: "20, 0, 30", kanji: "悪魔同化", lightning: true },
       yuno: { arc: 7, name: { en: "Spirit Dive", fr: "Spirit Dive" }, fx: "aura", c1: "120, 255, 170", c2: "255, 255, 255", kanji: "精霊同化" },
       "fuegoleon-vermillion": { arc: 7, name: { en: "Salamander", fr: "Salamandre" }, fx: "pillar", c1: "255, 120, 30", c2: "50, 10, 0", kanji: "火精" },
       "noelle-silva": { arc: 9, name: { en: "Valkyrie Dress", fr: "Armure de Valkyrie" }, fx: "aura", c1: "110, 220, 255", c2: "200, 255, 240", kanji: "戦乙女" },
-      "dante-zogratis": { arc: 9, name: { en: "Devil Union", fr: "Fusion démoniaque" }, fx: "domain", c1: "160, 60, 255", c2: "10, 0, 20", kanji: "悪魔同化" },
+      "dante-zogratis": { arc: 9, name: { en: "Devil Union · 100%", fr: "Union démoniaque · 100 %" }, fx: "domain", c1: "160, 60, 255", c2: "10, 0, 20", kanji: "悪魔同化" },
     },
     // Each shifter transforms only from the arc where the anime reveals who they are.
     attackontitan: {
