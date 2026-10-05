@@ -507,6 +507,7 @@
     if (isOnline() && (!race || !race.startedAt || race.done)) return;
     if (!isOnline() && game.guesses.length === 0) recordStart();
     game.guesses.push(id);
+    window.DLE_Profile?.count("guesses");
     const won = id === game.target;
     if (won) {
       game.status = "won";
@@ -804,10 +805,13 @@
 
   function renderBackground() {
     const imgs = CHARS.filter((c) => c.image);
+    // Only as many tiles as the rotated grid shows on this screen (fewer images to load and draw on a phone).
+    const fit = Math.ceil((innerWidth * 1.4) / 126) * Math.ceil((innerHeight * 1.4) / 156) + 8;
     const order = [...imgs, ...imgs]
       .map((c, i) => ({ c, k: hash(`${c.id}:${i}`) }))
       .sort((a, b) => a.k - b.k)
-      .map((x) => x.c);
+      .map((x) => x.c)
+      .slice(0, Math.min(imgs.length * 2, fit));
     $("#bgGrid").innerHTML = order.map((c) => `<span style="background-image:url('${c.image}')"></span>`).join("");
   }
 

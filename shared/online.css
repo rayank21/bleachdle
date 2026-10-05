@@ -109,8 +109,7 @@
   align-items: center;
   gap: 24px;
   padding: 0 6vw;
-  background: radial-gradient(circle at 50% 50%, rgba(var(--accent-rgb), 0.35), rgba(8, 8, 10, 0.94) 60%);
-  backdrop-filter: blur(6px);
+  background: radial-gradient(circle at 50% 50%, rgba(var(--accent-rgb), 0.35), rgba(8, 8, 10, 0.96) 60%);
   animation: fade-in 0.25s ease both;
 }
 .vs-splash.is-out { animation: fade-out 0.35s ease both; }

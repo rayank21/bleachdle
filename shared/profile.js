@@ -15,6 +15,10 @@
       profile: "Profile", create: "Create your profile", createSub: "Your stats and best crew, saved online and shown on the leaderboard.",
       name: "Name", avatar: "Avatar", save: "Create", saving: "Saving…", have: "Already have a profile?", code: "Recovery code",
       login: "Log in", edit: "Edit", done: "Save", cancel: "Cancel", logout: "Log out", since: (d) => `Member since ${d}`,
+      myStats: "My stats", ovPlayed: "Games played", ovPlayedSub: (g, c) => `${g} guessing · ${c} crews`, ovWins: "Wins", ovRate: (r) => `${r}% win rate`,
+      ovRolls: "Rolls", ovRerolls: (n) => `${n} reroll${n === 1 ? "" : "s"}`, ovGuesses: "Guesses", ovPerWin: (a) => `${a} per win`, ovStreak: "Best streak",
+      ovStreakSub: "in a row", ovCrews: "Crews built", ovBest: (s, r) => `best ${s} (${r})`, ovDuels: "Online matches", ovDuelWins: (n) => `${n} won`,
+      ovTime: "Time played", ovFav: (a) => `favourite: ${a}`,
       stats: "Stats", wins: "wins", played: "played", streak: "best streak", crew: "Best crew", crewNone: "No crew yet: play Crew Roll!",
       crews: (n) => `${n} crew${n > 1 ? "s" : ""} built`, recovery: "Recovery code", recoveryHelp: "Keep it secret: it logs into your profile on another device.",
       show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
@@ -34,6 +38,10 @@
       profile: "Profil", create: "Crée ton profil", createSub: "Tes stats et ton meilleur équipage, sauvegardés en ligne et affichés au classement.",
       name: "Pseudo", avatar: "Avatar", save: "Créer", saving: "Enregistrement…", have: "Déjà un profil ?", code: "Code de récupération",
       login: "Se connecter", edit: "Modifier", done: "Enregistrer", cancel: "Annuler", logout: "Se déconnecter", since: (d) => `Membre depuis le ${d}`,
+      myStats: "Mes stats", ovPlayed: "Parties jouées", ovPlayedSub: (g, c) => `${g} devinettes · ${c} équipages`, ovWins: "Victoires", ovRate: (r) => `${r} % de victoires`,
+      ovRolls: "Rolls", ovRerolls: (n) => `${n} relance${n > 1 ? "s" : ""}`, ovGuesses: "Essais", ovPerWin: (a) => `${a} par victoire`, ovStreak: "Meilleure série",
+      ovStreakSub: "d'affilée", ovCrews: "Équipages construits", ovBest: (s, r) => `meilleur ${s} (${r})`, ovDuels: "Matchs en ligne", ovDuelWins: (n) => `${n} gagné${n > 1 ? "s" : ""}`,
+      ovTime: "Temps de jeu", ovFav: (a) => `préféré : ${a}`,
       stats: "Stats", wins: "victoires", played: "parties", streak: "meilleure série", crew: "Meilleur équipage", crewNone: "Pas encore d'équipage : joue à Roll ton équipage !",
       crews: (n) => `${n} équipage${n > 1 ? "s" : ""} construit${n > 1 ? "s" : ""}`, recovery: "Code de récupération", recoveryHelp: "Garde-le secret : il connecte ton profil sur un autre appareil.",
       show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
@@ -120,6 +128,36 @@
     try { const { profile } = await api({ action: "update", id: session.id, token: session.token, name }); adopt(profile); }
     catch { try { localStorage.setItem("dle:name", session.profile.name); } catch {} window.dispatchEvent(new Event("dle:name")); }
   });
+
+  // Activity counters (rolls, rerolls, guesses, seconds played): kept in this browser until the profile gets them.
+  const PENDING = "dle:pending-counters";
+  const pending = () => { try { return JSON.parse(localStorage.getItem(PENDING) || "{}"); } catch { return {}; } };
+  let countTimer;
+  function count(key, n = 1) {
+    const p = pending();
+    p[key] = (p[key] || 0) + n;
+    try { localStorage.setItem(PENDING, JSON.stringify(p)); } catch {}
+    clearTimeout(countTimer);
+    countTimer = setTimeout(flushCounters, 4000);
+  }
+  async function flushCounters(keepalive = false) {
+    const add = pending();
+    if (!session || !Object.keys(add).length) return;
+    try { localStorage.removeItem(PENDING); } catch {}
+    try {
+      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add }) });
+      if (!res.ok) throw new Error();
+      if (!keepalive) adopt((await res.json()).profile);
+    } catch {
+      // Not sent: put them back for next time.
+      const back = pending();
+      for (const [k, v] of Object.entries(add)) back[k] = (back[k] || 0) + v;
+      try { localStorage.setItem(PENDING, JSON.stringify(back)); } catch {}
+    }
+  }
+  // Time played: every half minute the page is in front.
+  setInterval(() => { if (!document.hidden) count("seconds", 30); }, 30000);
+  window.addEventListener("pagehide", () => flushCounters(true));
 
   async function recordCrew(crew) {
     if (!session) return;
@@ -333,6 +371,73 @@
     return box;
   }
 
+  // Overview: totals over every game, with the counters kept by the profile.
+  const OV_ICONS = {
+    games: "M6 11h4M8 9v4M15 12h.01M18 10h.01M17.3 5H6.7a4 4 0 0 0-4 3.6L2 15a3 3 0 0 0 5.5 2l1.2-2h6.6l1.2 2A3 3 0 0 0 22 15l-.7-6.4A4 4 0 0 0 17.3 5z",
+    trophy: "M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3",
+    dice: "M4 4h16v16H4zM8.5 8.5h.01M15.5 15.5h.01M12 12h.01M15.5 8.5h.01M8.5 15.5h.01",
+    search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5",
+    flame: "M12 22c4 0 7-3 7-7 0-5-5-7-5-13-3 2-5 5-5 8-1-1-2-2-2-4-2 2-2 5-2 9 0 4 3 7 7 7z",
+    shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+    swords: "M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 17.5 21 6V3h-3L6.5 14.5M11 19l-6-6M8 16l-4 4M5 21l-2-2",
+    clock: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2",
+  };
+  const OV_RGB = { games: "90, 170, 255", trophy: "255, 200, 60", dice: "255, 90, 120", search: "120, 230, 170", flame: "255, 130, 50", shield: "170, 140, 255", swords: "255, 110, 200", clock: "90, 220, 230" };
+  const fmt = (n) => Math.round(n).toLocaleString(lang());
+  function overview(p) {
+    const stats = Object.values(p.stats ?? {});
+    const sumOf = (k) => stats.reduce((a, modes) => a + Object.values(modes).reduce((b, x) => b + (x?.[k] || 0), 0), 0);
+    const guessPlayed = sumOf("played");
+    const guessWins = sumOf("wins");
+    const crew = p.crew ?? {};
+    const c = p.counters ?? {};
+    const played = guessPlayed + (crew.played || 0) + (crew.duels || 0);
+    const wins = guessWins + (crew.duelWins || 0);
+    const best = Math.max(0, ...stats.flatMap((modes) => Object.values(modes).map((x) => x?.max || 0)));
+    // Favourite anime: the most played guessing game.
+    let fav = null;
+    for (const [g, modes] of Object.entries(p.stats ?? {})) {
+      const n = Object.values(modes).reduce((a, x) => a + (x?.played || 0), 0);
+      if (n && (!fav || n > fav.n)) fav = { g, n };
+    }
+    const secs = c.seconds || 0;
+    const time = secs >= 3600 ? `${Math.floor(secs / 3600)} h ${String(Math.floor((secs % 3600) / 60)).padStart(2, "0")}` : `${Math.floor(secs / 60)} min`;
+    const tiles = [
+      ["games", played, t("ovPlayed"), t("ovPlayedSub")(guessPlayed, crew.played || 0)],
+      ["trophy", wins, t("ovWins"), played ? t("ovRate")(Math.round((wins / Math.max(1, guessPlayed + (crew.duels || 0))) * 100)) : "—"],
+      ["dice", c.rolls || 0, t("ovRolls"), t("ovRerolls")(c.rerolls || 0)],
+      ["search", c.guesses || 0, t("ovGuesses"), guessWins ? t("ovPerWin")(((c.guesses || 0) / guessWins).toFixed(1)) : "—"],
+      ["flame", best, t("ovStreak"), t("ovStreakSub")],
+      ["shield", crew.played || 0, t("ovCrews"), crew.best ? t("ovBest")(crew.best.score.toFixed(1), crew.best.rank) : "—"],
+      ["swords", crew.duels || 0, t("ovDuels"), t("ovDuelWins")(crew.duelWins || 0)],
+      ["clock", null, t("ovTime"), fav ? t("ovFav")(gameOf(fav.g)?.anime ?? "") : "—", time],
+    ];
+    const grid = el("div", "pf-ov");
+    tiles.forEach(([icon, value, label, sub, text], i) => {
+      const tile = el("div", "pf-ov-tile");
+      tile.style.setProperty("--ov-rgb", OV_RGB[icon]);
+      tile.style.animationDelay = `${i * 40}ms`;
+      const ic = el("span", "pf-ov-icon");
+      ic.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="${OV_ICONS[icon]}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      const num = el("b", "pf-ov-num", text ?? "0");
+      if (text == null) countUp(num, value);
+      tile.append(ic, num, el("span", "pf-ov-label", label), el("span", "pf-ov-sub", sub));
+      grid.append(tile);
+    });
+    return grid;
+  }
+  // Numbers roll up when the profile opens.
+  function countUp(node, to) {
+    if (!to || matchMedia("(prefers-reduced-motion: reduce)").matches) { node.textContent = fmt(to || 0); return; }
+    const t0 = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / 700);
+      node.textContent = fmt(to * (1 - (1 - k) ** 3));
+      if (k < 1 && node.isConnected) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
   function profileView() {
     const p = session.profile;
     const box = el("div", "pf-view");
@@ -347,6 +452,8 @@
     who.append(edit);
     hero.append(face, who);
     box.append(hero);
+
+    box.append(el("h3", "pf-h", t("myStats")), overview(p));
 
     // One tile per anime: wins, games and best streak (daily and endless together).
     box.append(el("h3", "pf-h", t("stats")));
@@ -696,7 +803,7 @@
   else init();
 
   window.DLE_Profile = {
-    open, recordCrew, recordDuel, leaderboard, crewFaces,
+    open, recordCrew, recordDuel, leaderboard, crewFaces, count,
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get requests() { return friendState.requests; },

@@ -6,7 +6,7 @@
 //   GET  /api/profile?leaderboard=1        best crews (overall and per anime) and most wins
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
-//   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}}
+//   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}, add?: {rolls, rerolls, guesses, seconds}}
 //   POST /api/profile {action: "friends", id, token}                  my friends and friend requests
 //   POST /api/profile {action: "friend-add", id, token, name}         send a request (or accept theirs)
 //   POST /api/profile {action: "friend-accept" | "friend-remove", id, token, other}
@@ -19,6 +19,8 @@ const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "j
 const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
+// Activity counters sent as increments (rolls, rerolls, guesses, seconds played), capped per request.
+const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600 };
 const INVITE_TTL = 30 * 60 * 1000; // an invitation is kept 30 minutes (the room is probably gone after that)
 
 const json = (data, status = 200) =>
@@ -78,7 +80,7 @@ function cleanCrew(c) {
   return { anime: c.anime, rank: c.rank, score, members, at: Date.now() };
 }
 
-const publicView = (p) => ({ id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew });
+const publicView = (p) => ({ id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew, counters: p.counters ?? {} });
 
 async function readProfile(id) {
   if (!/^[a-z0-9]{10,20}$/.test(id ?? "")) return null;
@@ -140,6 +142,13 @@ async function update(body) {
       // Best crew of each anime too, for the per-anime leaderboards.
       p.crew.bests = bestsOf(p);
       if (!p.crew.bests[c.anime] || c.score > p.crew.bests[c.anime].score) p.crew.bests[c.anime] = c;
+    }
+  }
+  if (body.add && typeof body.add === "object") {
+    p.counters ??= {};
+    for (const [k, cap] of Object.entries(COUNTERS)) {
+      const v = Math.min(cap, num(body.add[k]));
+      if (v) p.counters[k] = (p.counters[k] ?? 0) + v;
     }
   }
   // A Crew Roll online match just ended.

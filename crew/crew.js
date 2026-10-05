@@ -919,6 +919,7 @@
     if (!list.length && solo.rolled) list = soloCandidates();
     if (!list.length) return soloFinish();
     if (isReroll) solo.rerolls--;
+    window.DLE_Profile?.count(isReroll ? "rerolls" : "rolls");
     const pick = list[Math.floor(Math.random() * list.length)];
     const run = solo;
     run.rolling = true;
@@ -1609,6 +1610,7 @@
     if (!list.length && run.rolled) list = matchCandidates();
     if (!list.length) return markDone();
     if (isReroll && !free) run.rerolls--;
+    window.DLE_Profile?.count(isReroll && !free ? "rerolls" : "rolls");
     const pick = list[Math.floor(Math.random() * list.length)];
     run.claims.set(rooms.selfId, pick.id);
     rooms.broadcast("claim", { charId: pick.id });
