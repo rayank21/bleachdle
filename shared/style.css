@@ -1310,3 +1310,62 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .fx-update { position: fixed; left: 50%; bottom: 20px; z-index: 120; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; max-width: calc(100% - 32px); padding: 10px 10px 10px 18px; border-radius: 14px; background: #18181c; border: 1px solid rgba(var(--accent-rgb), 0.5); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(var(--accent-rgb), 0.25); font-weight: 700; animation: rise 0.35s ease both; }
 .fx-update .btn-primary { padding: 8px 16px; font-size: 14px; color: #fff; }
 .fx-update-close { border: 0; background: none; color: var(--muted); font-size: 15px; padding: 6px; }
+
+/* ── What's new (shared/changelog.js) ───────────────────────── */
+.cl-btn { position: relative; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: 800 13px var(--font); cursor: pointer; transition: border-color 0.15s, transform 0.15s; }
+.cl-btn:hover { border-color: rgba(var(--accent-rgb), 0.7); transform: translateY(-1px); }
+.cl-btn svg { color: var(--accent); }
+.cl-btn.has-news::after { content: ""; position: absolute; top: 4px; right: 6px; width: 9px; height: 9px; border-radius: 50%; background: #ff3b4a; box-shadow: 0 0 0 2px var(--bg), 0 0 10px #ff3b4a; animation: cl-ping 1.6s ease-in-out infinite; }
+@keyframes cl-ping { 50% { transform: scale(1.35); } }
+@media (max-width: 760px) { .cl-btn { padding: 0 11px; } .cl-btn-label { display: none; } }
+
+.cl-modal { width: min(760px, calc(100vw - 24px)); max-height: min(88vh, 900px); padding: 0; border: 0; background: none; color: var(--text); overflow: visible; }
+.cl-modal::backdrop { background: rgba(4, 4, 8, 0.72); backdrop-filter: blur(6px); }
+.cl-modal[open] { animation: cl-in 0.5s cubic-bezier(0.2, 1.2, 0.3, 1) both; }
+@keyframes cl-in { from { opacity: 0; transform: translateY(24px) scale(0.96); } }
+.cl-card { position: relative; display: flex; flex-direction: column; max-height: min(88vh, 900px); border-radius: 24px; overflow: hidden;
+  background: linear-gradient(160deg, rgba(var(--accent-rgb), 0.16), transparent 40%), #111116;
+  border: 1px solid rgba(var(--accent-rgb), 0.35); box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset; }
+.cl-glow { position: absolute; inset: -40% -20% auto auto; width: 460px; height: 460px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.35), transparent 65%); filter: blur(10px); animation: cl-float 7s ease-in-out infinite; }
+@keyframes cl-float { 50% { transform: translate(-60px, 40px) scale(1.1); } }
+.cl-head { position: relative; display: flex; align-items: center; gap: 16px; padding: 26px 28px 18px; }
+.cl-spark { display: grid; place-items: center; width: 58px; height: 58px; flex: none; border-radius: 18px; color: #fff;
+  background: linear-gradient(135deg, var(--accent), #ff3b6b); box-shadow: 0 10px 30px rgba(var(--accent-rgb), 0.45); animation: cl-spin 6s linear infinite; }
+.cl-spark svg { animation: cl-spin-back 6s linear infinite; }
+@keyframes cl-spin { to { transform: rotate(360deg); } }
+@keyframes cl-spin-back { to { transform: rotate(-360deg); } }
+.cl-titles { flex: 1; min-width: 0; }
+.cl-title { margin: 0; font-size: clamp(30px, 6vw, 44px); font-weight: 900; font-style: italic; line-height: 1; letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #fff, rgba(var(--accent-rgb), 1)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cl-sub { margin: 6px 0 0; color: var(--muted); font-weight: 600; font-size: 15px; }
+.cl-x { align-self: flex-start; width: 36px; height: 36px; flex: none; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.06); color: var(--muted); font-size: 16px; cursor: pointer; }
+.cl-x:hover { color: var(--text); background: rgba(255, 255, 255, 0.12); }
+.cl-body { position: relative; flex: 1; min-height: 0; overflow-y: auto; padding: 0 28px 8px; display: flex; flex-direction: column; gap: 12px; }
+.cl-older { margin: 10px 0 0; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.cl-day { border-radius: 18px; background: rgba(255, 255, 255, 0.035); border: 1px solid var(--line); }
+.cl-day.is-new { border-color: rgba(var(--accent-rgb), 0.45); background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.1), rgba(255, 255, 255, 0.03)); }
+.cl-day-head { display: flex; flex-direction: column; gap: 2px; padding: 14px 18px; cursor: pointer; list-style: none; }
+.cl-day-head::-webkit-details-marker { display: none; }
+.cl-date { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.cl-day-title { font-size: 19px; font-weight: 900; }
+.cl-list { list-style: none; margin: 0; padding: 0 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+.cl-day[open] .cl-item { animation: rise 0.45s ease both; }
+.cl-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 12px; border-radius: 14px; background: rgba(0, 0, 0, 0.28); }
+.cl-text { margin: 0; flex: 1; font-size: 14.5px; line-height: 1.45; }
+.cl-tag { display: inline-flex; align-items: center; gap: 5px; flex: none; min-width: 102px; padding: 4px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.03em; }
+.cl-new { background: rgba(47, 208, 103, 0.16); color: #5be08a; }
+.cl-improved { background: rgba(95, 168, 255, 0.16); color: #8cc2ff; }
+.cl-balance { background: rgba(255, 196, 70, 0.16); color: #ffd25a; }
+.cl-fix { background: rgba(255, 80, 90, 0.16); color: #ff7c86; }
+.cl-game { width: 26px; height: 26px; flex: none; border-radius: 50%; object-fit: cover; background: #fff; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08); }
+.cl-game-crew { display: grid; place-items: center; background: linear-gradient(135deg, #ff3b4a, #ff8a3d); color: #fff; }
+.cl-go { margin: 14px 28px 24px; padding: 14px; font-size: 16px; }
+@media (max-width: 560px) {
+  .cl-head { padding: 20px 18px 14px; gap: 12px; }
+  .cl-spark { width: 46px; height: 46px; border-radius: 14px; }
+  .cl-body { padding: 0 14px 8px; }
+  .cl-item { flex-wrap: wrap; }
+  .cl-text { flex-basis: 100%; }
+  .cl-go { margin: 12px 14px 18px; }
+}
