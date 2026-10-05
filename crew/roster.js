@@ -151,7 +151,7 @@
         wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:9 shukuro-tsukishima:8 riruka-dokugamine:4
         yukio-hans-vorarlberna:5 jackie-tristan:4 giriko-kutsuzawa:5 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
         bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:8 quilge-opie:6
-        gremmy-thoumeaux:9 lille-barro:9 ichibe-hyosube:9 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3`),
+        gremmy-thoumeaux:9 lille-barro:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3`),
     },
 
     hunterxhunter: {
