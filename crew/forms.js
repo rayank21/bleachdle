@@ -60,6 +60,7 @@
       "tony-tony-chopper": { arc: 3, name: { en: "Monster Point", fr: "Monster Point" }, fx: "pillar", c1: "255, 120, 160", c2: "40, 10, 10", kanji: "怪物" },
       "polo-marco": { arc: 5, name: { en: "Phoenix", fr: "Phénix" }, fx: "aura", c1: "80, 200, 255", c2: "255, 220, 80", kanji: "不死鳥" },
       "rob-lucci": { arc: 3, name: { en: "Leopard Human-Beast form", fr: "Forme hybride du Léopard" }, fx: "aura", c1: "255, 200, 60", c2: "60, 30, 0", kanji: "豹", lightning: true },
+      imu: { arc: 10, name: { en: "True form", fr: "Vraie forme" }, fx: "domain", c1: "200, 40, 60", c2: "6, 0, 8", kanji: "虚" },
       king: { arc: 9, name: { en: "Pteranodon", fr: "Ptéranodon" }, fx: "pillar", c1: "255, 110, 30", c2: "30, 6, 20", kanji: "火災" },
       sanji: { arc: 8, name: { en: "Raid Suit · Stealth Black", fr: "Raid Suit · Stealth Black" }, fx: "aura", c1: "255, 120, 40", c2: "255, 40, 40", kanji: "黒足" },
       "charlotte-katakuri": { arc: 8, name: { en: "Future Sight", fr: "Haki de l'observation · Futur" }, fx: "domain", c1: "255, 90, 140", c2: "20, 4, 12", kanji: "見聞色" },
@@ -113,4 +114,14 @@
       "ymir-fritz": { arc: 6, name: { en: "Founding Titan", fr: "Titan Originel" }, ...TITAN, c1: "255, 240, 200" },
     },
   };
+
+  // Forms with an anime clip (crew/assets/clips/<game>-<id>.mp4), played in the transformation cinematic.
+  const CLIPS = {
+    onepiece: ["monkey-d-luffy"],
+    bleach: ["byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach"],
+    jujutsukaisen: ["ryomen-sukuna", "mahito", "jogo"],
+    hunterxhunter: ["gon-freecss", "killua-zoldyck"],
+    attackontitan: ["annie-leonhart", "reiner-braun", "bertholdt-hoover", "ymir", "zeke-yeager", "lara-tybur", "dina-fritz"],
+  };
+  for (const [game, ids] of Object.entries(CLIPS)) for (const id of ids) if (window.CREW_FORMS[game]?.[id]) window.CREW_FORMS[game][id].clip = true;
 })();

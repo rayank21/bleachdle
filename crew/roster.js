@@ -47,12 +47,12 @@
     bleach: {
       // Unohana and Orihime heal anything; Tenjiro's hot springs heal Captains in hours; Hikifune rebuilt Ichigo's body.
       healer: parse(`retsu-unohana:10 orihime-inoue:10 tenjiro-kirinji:10 isane-kotetsu:9 kirio-hikifune:9 hanataro-yamada:8 hachigen-ushoda:7
-        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:6 kisuke-urahara:5 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3 senjumaru-shutara:7`),
+        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:6 kisuke-urahara:5 mayuri-kurotsuchi:5 nemu-kurotsuchi:5 giselle-gewelle:3 senjumaru-shutara:7 izuru-kira:7 rukia-kuchiki:4`),
       // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge, Hikifune (12th Division before
       // Kisuke), Kukaku's fireworks cannon, Akon running the SRDI's lab. Strategists too: Yhwach sees the future,
       // Shunsui and Gin play their long games, Haschwalth runs the Sternritter.
       engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 akon:8 kirio-hikifune:7
-        senjumaru-shutara:9 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 tessai-tsukabishi:5 uryu-ishida:4 yhwach:9 shunsui-kyoraku:8 jugram-haschwalth:7 gin-ichimaru:7 askin-nakk-le-vaar:6 jushiro-ukitake:6`),
+        senjumaru-shutara:9 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 tessai-tsukabishi:5 uryu-ishida:4 yhwach:9 shunsui-kyoraku:8 jugram-haschwalth:7 gin-ichimaru:6 askin-nakk-le-vaar:6 jushiro-ukitake:6`),
     },
     hunterxhunter: {
       // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
@@ -142,7 +142,7 @@
       power: parse(`ichigo-kurosaki:10 rukia-kuchiki:7 orihime-inoue:5 yasutora-sado:7 uryu-ishida:8 kon:2 kisuke-urahara:9 yoruichi-shihoin:9
         tessai-tsukabishi:6 isshin-kurosaki:8 masaki-kurosaki:5 karin-kurosaki:2 yuzu-kurosaki:1 tatsuki-arisawa:2 keigo-asano:1 mizuiro-kojima:1
         don-kanonji:2 renji-abarai:7 byakuya-kuchiki:8 ganju-shiba:3 kukaku-shiba:4 kaien-shiba:6 hanataro-yamada:2 genryusai-yamamoto:10
-        chojiro-sasakibe:7 sui-feng:7 marechiyo-omaeda:4 gin-ichimaru:9 izuru-kira:5 retsu-unohana:9 isane-kotetsu:5 sosuke-aizen:10
+        chojiro-sasakibe:7 sui-feng:7 marechiyo-omaeda:4 gin-ichimaru:8 izuru-kira:5 retsu-unohana:9 isane-kotetsu:5 sosuke-aizen:10
         momo-hinamori:5 sajin-komamura:7 tetsuzaemon-iba:4 shunsui-kyoraku:9 nanao-ise:4 kaname-tosen:7 shuhei-hisagi:6 toshiro-hitsugaya:8
         rangiku-matsumoto:5 kenpachi-zaraki:10 yachiru-kusajishi:7 ikkaku-madarame:6 yumichika-ayasegawa:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5
         jushiro-ukitake:8 ryuken-ishida:7 shinji-hirako:9 hiyori-sarugaki:5 love-aikawa:7 rojuro-otoribashi:6 kensei-muguruma:8 mashiro-kuna:5

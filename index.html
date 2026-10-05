@@ -38,6 +38,7 @@
   </main>
 
   <script src="shared/games.js"></script>
+  <script src="shared/decor.js"></script>
   <script src="shared/i18n.js"></script>
   <script src="shared/fx.js"></script>
   <script src="shared/profile.js"></script>
@@ -67,7 +68,7 @@
         document.querySelectorAll("[data-i18n-aria]").forEach((n) => n.setAttribute("aria-label", t[n.dataset.i18nAria]));
         document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
         renderNav();
-        $("#crewCard").innerHTML = `<a class="crew-card" href="crew/"><span class="cat-logo cat-dice"><svg viewBox="0 0 24 24" width="30" height="30"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="8.5" r="1.4" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span><span><b>${t.crewTitle}</b><small>${t.crewDesc}</small></span><span class="game-play">${t.play} <span aria-hidden="true">→</span></span></a>`;
+        $("#crewCard").innerHTML = `<a class="crew-card" href="crew/"><span class="cat-logo cat-dice cat-sunny"><img src="assets/logos/sunny.webp" alt=""></span><span><b>${t.crewTitle}</b><small>${t.crewDesc}</small></span><span class="game-play">${t.play} <span aria-hidden="true">→</span></span></a>`;
         $("#gameGrid").innerHTML = GAMES.map((g) => `
           <a class="game-card" href="${g.path}" data-game="${g.id}">
             <div class="game-strip">${g.featured.map((id) => `<span style="background-image:url('${g.path}assets/characters/${id}.webp')"></span>`).join("")}</div>

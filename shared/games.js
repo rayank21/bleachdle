@@ -18,9 +18,9 @@ window.DLE_GAMES = [
     featured: ["eren-yeager", "mikasa-ackerman", "armin-arlert", "levi", "erwin-smith", "hange-zoe"] },
 ];
 
-// Link to the Crew Roll mini-game, shown after the categories in every header.
+// Link to the Crew Roll mini-game, shown after the categories in every header (its logo: the Thousand Sunny).
 window.DLE_CREW_LINK = (root, label) =>
-  `<a class="cat cat-crew" href="${root}crew/" title="${label}"><span class="cat-logo cat-dice"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="8.5" r="1.4" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span><span class="cat-name">${label}</span></a>`;
+  `<a class="cat cat-crew" href="${root}crew/" title="${label}"><span class="cat-logo cat-dice cat-sunny"><img src="${root}assets/logos/sunny.webp" alt=""></span><span class="cat-name">${label}</span></a>`;
 
 // Nostr relays used to find other players (Trystero). Pinned so a dead default relay can't keep players apart.
 window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net"];

@@ -68,6 +68,7 @@ const FILES = [
   ["onepiece", "onepiece", "polo-marco", "File:Marco Phoenix Thousand Storm.png"],
   ["onepiece", "onepiece", "kaidou", "File:Kaidou Dragon Color Scheme.png"],
   ["onepiece", "onepiece", "rob-lucci", "File:Neko Neko no Mi, Model Leopard Human-Beast Form.png"],
+  ["onepiece", "onepiece", "imu", "File:Imu Further Transformation.png"],
   ["onepiece", "onepiece", "king", "File:Ryu Ryu no Mi, Model Pteranodon Beast Form.png"],
   ["onepiece", "onepiece", "charlotte-katakuri", "File:Katakuri's Flame Haki.png"],
   ["jujutsu-kaisen", "jujutsukaisen", "megumi-fushiguro", "File:Chimera Shadow Garden inside Horizon of the Captivating Skandha (Anime).png"],

@@ -7,6 +7,16 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-05T23:15",
+      title: { en: "Transformation cinematics, the Sunny and a new look", fr: "Cinématiques de transformation, le Sunny et un nouveau décor" },
+      items: [
+        { type: "new", game: "crew", en: "Every transformation in Crew Roll now plays a full-screen cinematic: cinema bars, lightning, sparks and speed lines, a blade of light, then the transformed character slams in with its kanji and name. 20 of them play the real anime scene first (Gear 5, Senbonzakura Kageyoshi, Daiguren Hyōrinmaru, Malevolent Shrine, Gon's transformation, the Titans…). Tap to skip.", fr: "Chaque transformation de Roll ton équipage lance une cinématique plein écran : bandes de cinéma, éclairs, étincelles et lignes de vitesse, une lame de lumière, puis le perso transformé débarque avec son kanji et son nom. 20 d'entre elles montrent d'abord la vraie scène de l'anime (Gear 5, Senbonzakura Kageyoshi, Daiguren Hyōrinmaru, Temple maléfique, la transformation de Gon, les Titans…). Touche l'écran pour passer." },
+        { type: "new", game: "onepiece", en: "Imu gets his real face as a portrait, and transforms in Crew Roll (his form from the manga).", fr: "Imu a maintenant son vrai visage en portrait, et se transforme dans Roll ton équipage (sa forme du manga)." },
+        { type: "improved", en: "Crew Roll's logo is now the Thousand Sunny, and two big characters of the anime frame every page.", fr: "Le logo de Roll ton équipage est maintenant le Thousand Sunny, et deux grands persos de l'animé encadrent chaque page." },
+        { type: "balance", game: "bleach", en: "Bleach: Gin 8 (strategist 6), Izuru healer 7, Rukia healer 4.", fr: "Bleach : Gin 8 (stratège 6), Izuru soigneur 7, Rukia soigneuse 4." },
+      ],
+    },
+    {
       at: "2026-10-05T22:54",
       title: { en: "Jack, Lucci and King", fr: "Jack, Lucci et King" },
       items: [
@@ -193,8 +203,9 @@
   function gameMark(id) {
     if (!id) return null;
     if (id === "crew") {
-      const m = el("span", "cl-game cl-game-crew");
-      m.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="8.5" r="1.4" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>';
+      const m = el("img", "cl-game cl-game-crew");
+      m.src = `${ROOT}assets/logos/sunny.webp`;
+      m.alt = "";
       m.title = t("crew");
       return m;
     }

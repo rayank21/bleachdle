@@ -121,7 +121,7 @@ export const seed = [
   { wiki: "Pedro", gender: "M" },
   { wiki: "Inuarashi", gender: "M" },
   { wiki: "Nekomamushi", gender: "M" },
-  { wiki: "Imu", name: "Imu", gender: "Unknown", img: "Imu_Anime_Concept_Art.png" },
+  { wiki: "Imu", name: "Imu", gender: "Unknown", img: "Nerona_Imu_Portrait.png" },
   { wiki: "Charlotte Linlin", gender: "F", bounty: { 6: null, 9: 4388000000 } },
   { wiki: "Charlotte Katakuri", gender: "M" },
   { wiki: "Charlotte Pudding", gender: "F" },

@@ -462,7 +462,7 @@
   function formFor(game, c, arc) {
     const f = window.CREW_FORMS?.[game]?.[c.id];
     if (!f || arc < f.arc) return null;
-    return { ...f, image: `assets/forms/${game}-${c.id}.webp` };
+    return { ...f, image: `assets/forms/${game}-${c.id}.webp`, clip: f.clip ? `assets/clips/${game}-${c.id}.mp4` : null };
   }
 
   // Ripple filters for transformations: an animated turbulence displaces the picture like heat or energy.
@@ -745,7 +745,8 @@
         wrap.classList.add("is-powering");
         hint.textContent = "";
         sfx("powerup");
-        await new Promise((r) => setTimeout(r, 1500));
+        // The full-screen cinematic (cinema.js), or the short charge on the card alone.
+        await (window.CREW_CINEMA?.play({ form, char: c, base: c.image }) ?? new Promise((r) => setTimeout(r, 1500)));
         c.form = form;
         c.formImage = form.image;
         strip.textContent = "";
@@ -2242,7 +2243,10 @@
     $("#crewPickLabel").textContent = t("pick");
     $("#crewModeLabel").textContent = t("modeLabel");
     $("#crewArcLabel").textContent = t("arcLabel");
-    $("#crewBrandIcon").replaceChildren(icon("dice"));
+    const sunny = el("img");
+    sunny.src = `${ROOT}assets/logos/sunny.webp`;
+    sunny.alt = "";
+    $("#crewBrandIcon").replaceChildren(sunny);
     $("#crewScoreLabel").textContent = t("score");
     document.querySelectorAll(".crew-mode [data-mode]").forEach((b) => (b.textContent = t(b.dataset.mode)));
     document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
