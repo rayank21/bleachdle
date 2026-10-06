@@ -57,7 +57,7 @@
       "bazz-b": { arc: 6, name: { en: "Burner Finger", fr: "Burner Finger" }, ...QUINCY, c1: "255, 120, 40" },
       "kirio-hikifune": { arc: 6, name: { en: "Slim form", fr: "Forme affinée" }, fx: "aura", c1: "255, 170, 210", c2: "60, 10, 30", kanji: "麒麟殿" },
       "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI , next: { arc: 4, name: { en: "Final Getsuga Tenshō", fr: "Getsuga Tenshô final" }, fx: "pillar", c1: "200, 20, 30", c2: "6, 0, 2", kanji: "無月", clip: false } },
-      "byakuya-kuchiki": { arc: 1, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, ...BANKAI, c1: "255, 140, 190" , next: { arc: 6, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, clip: false } },
+      "byakuya-kuchiki": { arc: 1, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, ...BANKAI, c1: "255, 140, 190" , next: { arc: 6, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, clip: true } },
       "renji-abarai": { arc: 1, name: { en: "Bankai · Hihiō Zabimaru", fr: "Bankai · Hihiō Zabimaru" }, ...BANKAI },
       "toshiro-hitsugaya": { arc: 1, name: { en: "Bankai · Daiguren Hyōrinmaru", fr: "Bankai · Daiguren Hyōrinmaru" }, ...BANKAI, c1: "120, 210, 255", c2: "6, 20, 40" },
       "ulquiorra-cifer": { arc: 3, name: { en: "Resurrección · Segunda Etapa", fr: "Resurrección · Segunda Etapa" }, ...RESURRECCION },
@@ -193,12 +193,13 @@
     },
   };
 
-  // Forms with an anime clip (crew/assets/clips/<game>-<id>.mp4), played in the transformation cinematic.
+  // Forms with an anime clip (crew/assets/clips/<game>-<id>.mp4), played in the transformation cinematic. Bleach uses
+  // the cut-scenes of Rebirth of Souls (2025), its most recent animation.
   const CLIPS = {
     onepiece: ["monkey-d-luffy", "gol-d-roger"],
-    bleach: ["byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach"],
+    bleach: ["kaname-tosen", "tier-harribel", "nelliel-tu-odelschwanck", "coyote-starrk", "genryusai-yamamoto", "grimmjow-jaegerjaquez", "ichigo-kurosaki", "sosuke-aizen", "renji-abarai", "rukia-kuchiki", "uryu-ishida", "byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach"],
     jujutsukaisen: ["ryomen-sukuna", "mahito", "jogo", "aoi-todo", "toji-fushiguro"],
-    hunterxhunter: ["gon-freecss", "killua-zoldyck", "zeno-zoldyck"],
+    hunterxhunter: ["gon-freecss", "killua-zoldyck"],
     attackontitan: ["annie-leonhart", "reiner-braun", "bertholdt-hoover", "ymir", "zeke-yeager", "lara-tybur", "dina-fritz", "levi"],
   };
   for (const [game, ids] of Object.entries(CLIPS)) for (const id of ids) if (window.CREW_FORMS[game]?.[id]) window.CREW_FORMS[game][id].clip = true;

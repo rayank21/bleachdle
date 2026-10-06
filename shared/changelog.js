@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-06T20:48",
+      title: { en: "Bleach: the newest animated scenes", fr: "Bleach : les scènes animées les plus récentes" },
+      items: [
+        { type: "improved", game: "crew", en: "Bleach transformations now play the cut-scenes of Rebirth of Souls (2025), the most recent animation: Ichigo, Byakuya, Rukia, Renji, Hitsugaya, Komamura, Mayuri, Aizen, Yamamoto, Uryū, Grimmjow, Starrk, Harribel, Nelliel and Tosen. Zeno's 1999 clip was removed.", fr: "Les transformations de Bleach jouent maintenant les scènes de Rebirth of Souls (2025), l'animation la plus récente : Ichigo, Byakuya, Rukia, Renji, Hitsugaya, Komamura, Mayuri, Aizen, Yamamoto, Uryû, Grimmjow, Starrk, Harribel, Nelliel et Tosen. L'extrait de Zeno de 1999 a été retiré." },
+      ],
+    },
+    {
       at: "2026-10-06T20:40",
       title: { en: "Fusions, 41 new characters and a big rebalance", fr: "Fusions, 41 nouveaux persos et un gros rééquilibrage" },
       items: [
