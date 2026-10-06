@@ -329,5 +329,132 @@
         yelena:5 onyankopon:3 kiyomi-azumabito:2 ymir-fritz:10 marlo-freudenberg:4 traute-carven:6`),
     },
   };
+  // ── The six anime added in October 2026 ──
+  Object.assign(window.CREW_GAMES, {
+    demonslayer: {
+      slots: [
+        { label: { en: "Hashira", fr: "Pilier" }, icon: "crown", count: 2, fits: (c) => ["Hashira", "Former Hashira"].includes(c.rank) },
+        { label: { en: "Demon Slayer", fr: "Pourfendeur" }, icon: "sword", count: 2, fits: (c) => has(c.aff, "Demon Slayer Corps") },
+        { label: { en: "Upper Moon", fr: "Lune supérieure" }, icon: "skull", count: 1, fits: (c) => ["Upper Moon", "Demon King"].includes(c.rank) },
+        { label: { en: "Demon", fr: "Démon" }, icon: "flame", count: 1, fits: (c) => has(c.race, "Demon") },
+        // Tamayo's medicine, Shinobu's poisons and the Butterfly Mansion's care; Nezuko's blood burns away poison.
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
+          score: role(parse("tamayo:10 shinobu-kocho:9 aoi-kanzaki:8 kanae-kocho:8 nezuko-kamado:7 yushiro:6 kanao-tsuyuri:5 kagaya-ubuyashiki:4")) },
+        // Kagaya reads the future and leads the Corps; Muzan has hidden for a thousand years; Tengen reads a fight like a score.
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+          score: role(parse(`kagaya-ubuyashiki:10 muzan-kibutsuji:9 tamayo:8 tengen-uzui:8 doma:7 shinobu-kocho:7 yushiro:7 sakonji-urokodaki:6
+            gyomei-himejima:6 nakime:6 tanjiro-kamado:6 giyu-tomioka:5 obanai-iguro:5 hotaru-haganezuka:4`)) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      power: parse(`tanjiro-kamado:9 nezuko-kamado:7 zenitsu-agatsuma:7 inosuke-hashibira:7 kanao-tsuyuri:7 genya-shinazugawa:7 murata:3 aoi-kanzaki:2
+        sabito:6 makomo:5 giyu-tomioka:9 shinobu-kocho:8 kyojuro-rengoku:9 tengen-uzui:9 mitsuri-kanroji:8 muichiro-tokito:9 gyomei-himejima:10
+        sanemi-shinazugawa:9 obanai-iguro:8 kanae-kocho:8 sakonji-urokodaki:7 jigoro-kuwajima:7 shinjuro-rengoku:7 yoriichi-tsugikuni:10
+        kagaya-ubuyashiki:2 senjuro-rengoku:2 hotaru-haganezuka:3 kotetsu:1 makio:4 suma:3 hinatsuru:4 tamayo:6 yushiro:5 muzan-kibutsuji:10
+        kokushibo:10 doma:10 akaza:9 hantengu:9 gyokko:8 daki:7 gyutaro:9 nakime:8 rui:7 enmu:6 kyogai:4 susamaru:4 yahaba:4 hand-demon:3`),
+    },
+
+    myheroacademia: {
+      slots: [
+        { label: { en: "Class 1-A", fr: "Classe 1-A" }, icon: "star", count: 2, fits: (c) => has(c.aff, "Class 1-A") },
+        { label: { en: "Pro Hero", fr: "Héros pro" }, icon: "shield", count: 2, fits: (c) => c.status === "Pro Hero" },
+        { label: { en: "Villain", fr: "Vilain" }, icon: "skull", count: 2, fits: (c) => c.status === "Villain" },
+        { label: { en: "U.A.", fr: "Yuei" }, icon: "book", count: 1, fits: (c) => has(c.aff, "Class 1-B", "General Studies", "U.A. Big Three", "U.A. Teachers", "U.A. High School") },
+        // Recovery Girl's kiss, Eri's rewind, Overhaul rebuilds bodies.
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
+          score: role(parse("recovery-girl:10 eri:9 overhaul:8 all-for-one:5 momo-yaoyorozu:4")) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+          score: role(parse(`nezu:10 all-for-one:10 sir-nighteye:9 tomura-shigaraki:8 momo-yaoyorozu:8 izuku-midoriya:8 shota-aizawa:7 hawks:7
+            katsuki-bakugo:7 overhaul:7 re-destro:7 tenya-iida:6 best-jeanist:6 lady-nagant:6`)) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      power: parse(`izuku-midoriya:10 katsuki-bakugo:9 shoto-todoroki:9 ochaco-uraraka:7 tenya-iida:7 eijiro-kirishima:7 momo-yaoyorozu:7
+        tsuyu-asui:6 denki-kaminari:6 kyoka-jiro:5 fumikage-tokoyami:7 mina-ashido:6 minoru-mineta:3 yuga-aoyama:5 mezo-shoji:5 hanta-sero:5
+        rikido-sato:5 koji-koda:3 toru-hagakure:3 mashirao-ojiro:4 neito-monoma:6 itsuka-kendo:6 tetsutetsu-tetsutetsu:6 hitoshi-shinso:6
+        mirio-togata:9 tamaki-amajiki:8 nejire-hado:8 eri:5 all-might:10 shota-aizawa:8 present-mic:6 midnight:6 cementoss:7 nezu:3
+        recovery-girl:2 endeavor:10 hawks:9 best-jeanist:8 mirko:8 edgeshot:8 gran-torino:8 sir-nighteye:7 fatgum:7 star-and-stripe:10
+        lady-nagant:8 tomura-shigaraki:10 all-for-one:10 kurogiri:7 dabi:9 himiko-toga:7 twice:7 mr-compress:6 spinner:6 magne:6
+        gigantomachia:9 muscular:7 stain:8 overhaul:8 re-destro:8`),
+    },
+
+    // A volleyball team: one setter, two spikers, two middle blockers, a libero, the captain and the bench.
+    haikyuu: {
+      slots: [
+        { label: { en: "Captain", fr: "Capitaine" }, icon: "crown", role: "captain", count: 1, score: leader,
+          fits: (c) => ["daichi-sawamura", "toru-oikawa", "tetsuro-kuroo", "kotaro-bokuto", "wakatoshi-ushijima", "shinsuke-kita", "yuji-terushima",
+            "kenji-futakuchi", "korai-hoshiumi", "chikara-ennoshita"].includes(c.id) },
+        { label: { en: "Setter", fr: "Passeur" }, icon: "star", count: 1, fits: (c) => c.position === "Setter" },
+        { label: { en: "Spiker", fr: "Attaquant" }, icon: "bolt", count: 2, fits: (c) => ["Wing Spiker", "Opposite"].includes(c.position) },
+        { label: { en: "Middle Blocker", fr: "Central" }, icon: "shield", count: 2, fits: (c) => c.position === "Middle Blocker" },
+        { label: { en: "Libero", fr: "Libéro" }, icon: "eye", count: 1, fits: (c) => c.position === "Libero" },
+        { label: { en: "Coach / Manager", fr: "Coach / Manager" }, icon: "book", count: 1, fits: (c) => ["Coach", "Advisor", "Manager", "Supporter"].includes(c.position),
+          score: rated({ "keishin-ukai": 10, "kiyoko-shimizu": 8, "ittetsu-takeda": 7, "hitoka-yachi": 7, "saeko-tanaka": 5 }) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: (c) => !["Coach", "Advisor", "Manager", "Supporter"].includes(c.position) },
+      ],
+      power: parse(`shoyo-hinata:9 tobio-kageyama:10 kei-tsukishima:8 tadashi-yamaguchi:5 daichi-sawamura:7 koshi-sugawara:6 asahi-azumane:8
+        yu-nishinoya:9 ryunosuke-tanaka:7 chikara-ennoshita:5 hisashi-kinoshita:3 kazuhito-narita:3 kiyoko-shimizu:2 hitoka-yachi:2
+        ittetsu-takeda:2 keishin-ukai:5 saeko-tanaka:2 toru-oikawa:10 hajime-iwaizumi:8 issei-matsukawa:6 takahiro-hanamaki:6
+        yutaro-kindaichi:6 akira-kunimi:6 kentaro-kyotani:7 shinji-watari:6 tetsuro-kuroo:9 kenma-kozume:8 morisuke-yaku:9 lev-haiba:7
+        taketora-yamamoto:7 nobuyuki-kai:6 kotaro-bokuto:10 keiji-akaashi:8 kenji-futakuchi:7 takanobu-aone:8 yuji-terushima:7
+        wakatoshi-ushijima:10 satori-tendo:9 kenjiro-shirabu:7 eita-semi:7 tsutomu-goshiki:7 atsumu-miya:10 osamu-miya:9 shinsuke-kita:7
+        rintaro-suna:8 aran-ojiro:9 kiyoomi-sakusa:10 motoya-komori:8 korai-hoshiumi:9 sachiro-hirugami:8`),
+    },
+
+    fireforce: {
+      slots: [
+        { label: { en: "Company 8", fr: "8e brigade" }, icon: "flame", count: 2, fits: (c) => has(c.aff, "Company 8") },
+        { label: { en: "Captain", fr: "Capitaine" }, icon: "crown", role: "captain", count: 1, fits: (c) => c.role === "Captain", score: leader },
+        { label: { en: "Other company", fr: "Autre brigade" }, icon: "shield", count: 1, fits: (c) => has(c.aff, "Company 1", "Company 3", "Company 4", "Company 5", "Company 7") },
+        { label: { en: "White Clad", fr: "Hommes en blanc" }, icon: "skull", count: 1, fits: (c) => has(c.aff, "White Clad") || c.role === "Pillar" },
+        { label: { en: "Adolla Burst", fr: "Adolla Burst" }, icon: "eye", count: 1, fits: (c) => c.adolla === "Yes" },
+        // Vulcan builds Company 8's gear, Licht studies combustion, Giovanni his insect weapons; Joker plays everyone.
+        { label: { en: "Scientist / Strategist", fr: "Scientifique / Stratège" }, icon: "flask", role: "strategist", count: 1, fits: anyone,
+          score: role(parse("vulcan-joseph:10 viktor-licht:10 giovanni:8 joker:8 akitaru-obi:7 takehisa-hinawa:7 kurono:6 haumea:6 leonard-burns:6 iris:4")) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      power: parse(`shinra-kusakabe:10 arthur-boyle:9 akitaru-obi:7 takehisa-hinawa:6 maki-oze:7 iris:2 tamaki-kotatsu:6 viktor-licht:3
+        vulcan-joseph:3 ogun-montgomery:7 lisa-isaribi:6 hibana:7 benimaru-shinmon:10 konro-sagamiya:6 leonard-burns:9 karim-flam:7
+        rekka-hoshimiya:7 giovanni:7 joker:9 sho-kusakabe:10 haumea:9 charon:8 arrow:6 assault:6 dragon:10 yona:7 inca-kasugatani:5
+        nataku-son:8 kurono:7`),
+    },
+
+    slime: {
+      slots: [
+        { label: { en: "Tempest", fr: "Tempest" }, icon: "leaf", count: 3, fits: (c) => has(c.aff, "Tempest") },
+        { label: { en: "Demon Lord", fr: "Seigneur démon" }, icon: "crown", count: 2, fits: (c) => c.title === "Demon Lord" },
+        { label: { en: "Demon / Dragon", fr: "Démon / Dragon" }, icon: "flame", count: 1, fits: (c) => has(c.race, "Demon", "Dragon", "Dragonoid") },
+        { label: { en: "Human", fr: "Humain" }, icon: "person", count: 1, fits: (c) => has(c.race, "Human") },
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
+          score: role(parse("shuna:9 rimuru-tempest:8 luminous-valentine:8 treyni:7 ramiris:6 hinata-sakaguchi:6 shizu:4")) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+          score: role(parse(`diablo:10 rimuru-tempest:9 benimaru:9 guy-crimson:9 yuuki-kagurazaka:9 souei:8 luminous-valentine:8 gazel-dwargo:8
+            elmesia-el-ru-sarion:8 clayman:7 shuna:7 laplace:6 hakuro:6 rigurd:5 fuze:5`)) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      power: parse(`rimuru-tempest:10 veldora-tempest:10 benimaru:9 shuna:6 shion:8 souei:8 hakuro:8 kurobe:3 ranga:8 rigurd:4 gobta:5 rigur:5
+        gabiru:6 geld:8 kaijin:3 treyni:6 diablo:10 testarossa:9 ultima:9 carrera:9 mjurran:5 milim-nava:10 carrion:8 frey:8 clayman:7
+        guy-crimson:10 leon-cromwell:9 ramiris:4 luminous-valentine:10 dino:8 dagruel:9 shizu:7 hinata-sakaguchi:9 masayuki-honjo:2
+        yuuki-kagurazaka:8 chloe-aubert:7 fuze:4 youm:5 gazel-dwargo:8 elmesia-el-ru-sarion:6 edmaris:2 razen:6 gelmud:3 phobio:5
+        laplace:6 footman:5`),
+    },
+
+    onepunchman: {
+      slots: [
+        { label: { en: "S-Class", fr: "Classe S" }, icon: "crown", count: 2, fits: (c) => c.rank === "S-Class" },
+        { label: { en: "Hero", fr: "Héros" }, icon: "shield", count: 2, fits: (c) => has(c.aff, "Hero Association") },
+        { label: { en: "Monster", fr: "Monstre" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Monster", "Alien") || has(c.aff, "Monster Association") },
+        { label: { en: "Free fighter", fr: "Combattant libre" }, icon: "swords", count: 1, fits: (c) => has(c.aff, "None") && has(c.race, "Human") },
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
+          score: role(parse("dr-genus:8 child-emperor:6 metal-knight:5 zombieman:4 sitch:3")) },
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+          score: role(parse("child-emperor:10 metal-knight:10 dr-genus:9 psykos:9 king:8 bang:7 sitch:6 amai-mask:6 atomic-samurai:6 fubuki:6")) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      power: parse(`saitama:10 genos:8 mumen-rider:3 king:2 tatsumaki:10 fubuki:7 bang:9 atomic-samurai:9 child-emperor:7 metal-knight:9
+        zombieman:7 drive-knight:8 pig-god:7 superalloy-darkshine:8 watchdog-man:8 flashy-flash:8 metal-bat:8 tank-top-master:7
+        puri-puri-prisoner:7 amai-mask:7 stinger:5 iaian:6 death-gatling:5 snek:4 sitch:1 sonic:8 garou:10 charanko:3 suiryu:8
+        dr-genus:3 vaccine-man:4 mosquito-girl:4 carnage-kabuto:6 deep-sea-king:6 boros:10 melzargard:8 geryuganshoop:7 orochi:9
+        gouketsu:8 psykos:9 elder-centipede:8 homeless-emperor:8 black-sperm:8`),
+    },
+  });
   window.CREW_DEFAULT_POWER = DEFAULT_POWER;
 })();

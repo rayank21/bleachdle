@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-06T21:42",
+      title: { en: "Six new anime", fr: "Six nouveaux animes" },
+      items: [
+        { type: "new", en: "Six new games, each with its own colours and animated background: Demonslayerdle (Demon Slayer, 48 characters), Mhadle (My Hero Academia, 59), Haikyudle (Haikyuu!!, 50, with real heights and jersey numbers), Fireforcedle (Fire Force, 29), Slimedle (That Time I Got Reincarnated as a Slime, 46) and Onepunchdle (One Punch Man, 43). Classic, blur and description modes, spoiler-free by arc like the others.", fr: "Six nouveaux jeux, chacun avec ses couleurs et son fond animé : Demonslayerdle (Demon Slayer, 48 persos), Mhadle (My Hero Academia, 59), Haikyudle (Haikyuu!!, 50, avec les vraies tailles et les numéros de maillot), Fireforcedle (Fire Force, 29), Slimedle (Moi, quand je me réincarne en Slime, 46) et Onepunchdle (One Punch Man, 43). Modes classique, flou et description, sans spoiler selon l'arc comme les autres." },
+        { type: "new", game: "crew", en: "Crew Roll: the six new anime with their own teams (Hashira and Upper Moons, Class 1-A and villains, a full volleyball team, Company 8, Tempest and the Demon Lords, S-Class heroes and monsters), and a transformation or signature move for every character rated 10, with anime clips for Yoriichi, Kokushibo, Deku, All Might, Endeavor, All For One, Star and Stripe, Rimuru, Diablo, Saitama, Tatsumaki, Garou and Boros.", fr: "Roll ton équipage : les six nouveaux animes avec leurs propres équipes (Piliers et Lunes supérieures, Classe 1-A et vilains, une vraie équipe de volley, la 8e brigade, Tempest et les Seigneurs démons, héros de classe S et monstres), et une transformation ou une attaque phare pour chaque perso noté 10, avec des extraits de l'anime pour Yoriichi, Kokushibo, Deku, All Might, Endeavor, All For One, Star and Stripe, Rimuru, Diablo, Saitama, Tatsumaki, Garou et Boros." },
+        { type: "fix", en: "The shine on a correct tile no longer leaves a grey streak next to the grid.", fr: "Le reflet d'une case juste ne laisse plus de trace grise à côté de la grille." },
+      ],
+    },
+    {
       at: "2026-10-06T20:51",
       title: { en: "A living, colourful background for each anime", fr: "Un fond vivant et coloré pour chaque anime" },
       items: [

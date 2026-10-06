@@ -1218,7 +1218,8 @@ body[data-game="home"] .cat .cat-name { display: none; }
 
 /* Guess tiles: a light sweep on correct tiles, a jolt on wrong ones */
 .tile.flip.is-correct:not(.tile-name)::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%); transform: translateX(-120%); animation: tile-shine 0.7s ease-out both; animation-delay: inherit; }
-@keyframes tile-shine { 0%, 50% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@keyframes tile-shine { 0%, 50% { transform: translateX(-120%); } 100% { transform: translateX(120%); opacity: 0; } }
+.tile.flip.is-correct:not(.tile-name) { overflow: hidden; }
 .row.is-win .tile { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5), 0 0 28px rgba(31, 157, 76, 0.7); }
 
 /* ── Profiles (shared/profile.js) ───────────────────────────── */

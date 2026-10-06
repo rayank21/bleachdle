@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fireforcedle</title>
+  <meta name="description" content="Guess the Fire Force character of the day. Pick how far you've watched the anime and play spoiler-free." />
+  <meta name="theme-color" content="#0b0b0d" />
+  <link rel="icon" type="image/png" href="../assets/logos/fireforcedle.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/style.css" />
+  <link rel="stylesheet" href="../shared/online.css" />
+</head>
+<body data-game="fireforce">
+  <div class="bg" aria-hidden="true"><div class="bg-grid" id="bgGrid"></div></div>
+
+  <header class="topbar">
+    <nav class="categories" id="categories" data-i18n-aria="categories"></nav>
+    <div class="topbar-actions">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="fr">FR</button>
+      </div>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-haspopup="true" aria-expanded="false" data-i18n-aria="menu">
+        <svg viewBox="0 0 24 24" width="28" height="28"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <nav class="menu" id="menu" hidden>
+      <a href="../"><span data-i18n="menuHome"></span></a>
+      <button type="button" data-action="arc"><span data-i18n="menuArc"></span></button>
+      <button type="button" data-action="stats"><span data-i18n="menuStats"></span></button>
+      <button type="button" data-action="help"><span data-i18n="menuHelp"></span></button>
+    </nav>
+  </header>
+  <div class="presence" id="presence"></div>
+
+  <main class="page">
+    <section class="hero card">
+      <div class="stat-row">
+        <button class="stat" type="button" data-action="stats" data-i18n-title="streak">
+          <svg viewBox="0 0 24 24"><path d="M12 2s5 4.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 1-3.5s.5 2 2 2.5C10 7 12 2 12 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <span id="statStreak">0</span>
+        </button>
+        <button class="stat" type="button" data-action="stats" data-i18n-title="wins">
+          <svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a3 3 0 0 0 4 3M16 6h4v1a3 3 0 0 1-4 3M12 13v4M8 20h8M9 17h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="statWins">0</span>
+        </button>
+        <button class="stat" type="button" data-action="arc" data-i18n-title="menuArc">
+          <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4V3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <span id="statArc">-</span>
+        </button>
+        <button class="stat" type="button" data-action="stats" data-i18n-title="menuStats">
+          <svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          <span data-i18n="statsShort"></span>
+        </button>
+        <button class="stat" type="button" data-action="help" data-i18n-title="menuHelp">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.8M12 17.2v.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span>?</span>
+        </button>
+      </div>
+      <h1 class="hero-title" id="heroTitle">FIRE FORCE</h1>
+      <p class="hero-sub" id="heroSub"></p>
+      <div class="mode-tabs" role="tablist">
+        <button type="button" role="tab" data-mode="daily" data-i18n="modeDaily"></button>
+        <button type="button" role="tab" data-mode="endless" data-i18n="modeEndless"></button>
+        <button type="button" role="tab" data-mode="online" data-i18n="modeOnline"></button>
+      </div>
+      <button class="arc-chip" type="button" data-action="arc">
+        <span data-i18n="watchedUpTo"></span> <strong id="arcChipName"></strong>
+        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M4 20h4L19 9l-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </button>
+    </section>
+
+    <section class="card race-box" id="raceBox" hidden aria-live="polite"></section>
+
+    <section class="guess-box card">
+      <form class="search" id="searchForm" autocomplete="off">
+        <div class="search-field">
+          <input id="searchInput" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" spellcheck="false" />
+          <button class="clear-btn" id="clearBtn" type="button" hidden data-i18n-aria="clear">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          </button>
+          <ul class="suggestions" id="suggestions" role="listbox" hidden></ul>
+        </div>
+        <button class="send-btn" type="submit" data-i18n-aria="guess">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 4l15 8-15 8 3-8-3-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+      <div class="hints" id="hints"></div>
+      <p class="guess-count" id="guessCount" aria-live="polite"></p>
+    </section>
+
+    <section class="card result-banner" id="resultBanner" hidden></section>
+
+    <section class="board-wrap" aria-live="polite">
+      <div class="board" id="board">
+        <div class="board-head" id="boardHead"></div>
+        <div class="board-rows" id="boardRows"></div>
+      </div>
+    </section>
+
+    <section class="card weekly" id="weekly"></section>
+
+    <footer class="footer">
+      <p id="footerText"></p>
+    </footer>
+  </main>
+
+  <!-- Modals -->
+  <dialog class="modal" id="arcModal">
+    <div class="modal-inner">
+      <div class="onboard-logo"><img src="../assets/logos/fireforcedle.png" alt="" /></div>
+      <h2 data-i18n="arcTitle"></h2>
+      <p class="muted" data-i18n="arcIntro"></p>
+      <div class="arc-grid" id="arcGrid"></div>
+      <div class="lang-inline">
+        <span data-i18n="language"></span>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="en">English</button>
+          <button type="button" data-lang="fr">Français</button>
+        </div>
+      </div>
+      <button class="btn-primary" id="arcConfirm" type="button" data-i18n="start"></button>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="helpModal">
+    <div class="modal-inner">
+      <button class="modal-close" type="button" data-close data-i18n-aria="close">✕</button>
+      <h2 data-i18n="helpTitle"></h2>
+      <div id="helpBody"></div>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="statsModal">
+    <div class="modal-inner">
+      <button class="modal-close" type="button" data-close data-i18n-aria="close">✕</button>
+      <h2 data-i18n="menuStats"></h2>
+      <div id="statsBody"></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="data/characters.js"></script>
+  <script src="../shared/games.js"></script>
+  <script src="../shared/decor.js"></script>
+  <script src="../shared/ambient.js"></script>
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/fx.js"></script>
+  <script src="../shared/profile.js"></script>
+  <script src="../shared/presence.js"></script>
+  <script src="../shared/changelog.js"></script>
+  <script src="../shared/rooms.js"></script>
+  <script src="config.js"></script>
+  <script src="data/descriptions.js" onerror="this.remove()"></script>
+  <script src="../crew/roster.js"></script>
+  <script src="../shared/engine.js"></script>
+</body>
+</html>

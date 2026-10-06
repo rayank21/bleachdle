@@ -12,6 +12,12 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | **Jujutsudle** (Jujutsu Kaisen) | `jujutsukaisen/` | 60 |
 | **Blackcloverdle** (Black Clover) | `blackclover/` | 70 |
 | **Snkdle** (Attack on Titan) | `attackontitan/` | 57 |
+| **Demonslayerdle** (Demon Slayer) | `demonslayer/` | 48 |
+| **Mhadle** (My Hero Academia) | `myheroacademia/` | 59 |
+| **Haikyudle** (Haikyuu!!) | `haikyuu/` | 50 |
+| **Fireforcedle** (Fire Force) | `fireforce/` | 29 |
+| **Slimedle** (That Time I Got Reincarnated as a Slime) | `slime/` | 46 |
+| **Onepunchdle** (One Punch Man) | `onepunchman/` | 43 |
 
 Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions, plus roles such as healer, engineer or strategist that anyone can fill but specialists score high in; One Piece is all roles); every character has a 1–10 rating and the crew's average is your score. Iconic characters transform when drawn (Super Saiyan, Bankai, Susanoo, domain expansions…), only from the arc where the form appears; the forms are listed in `crew/forms.js` and their portraits fetched by `node crew/scripts/forms.mjs`.
 
@@ -62,6 +68,8 @@ node onepiece/scripts/scrape.mjs
 node jujutsukaisen/scripts/scrape.mjs
 node blackclover/scripts/scrape.mjs
 node attackontitan/scripts/scrape.mjs
+# The newer games share one scraper; their attributes are curated in <game>/scripts/seed.mjs
+node scripts/simple-scrape.mjs demonslayer   # also myheroacademia, haikyuu, fireforce, slime, onepunchman
 ```
 
 ## Adding a category

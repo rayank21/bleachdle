@@ -191,11 +191,59 @@
       "ymir-fritz": { arc: 6, name: { en: "Founding Titan", fr: "Titan Originel" }, ...TITAN, c1: "255, 240, 200" },
       levi: { arc: 4, name: { en: "Ackerman awakening", fr: "Éveil Ackerman" }, fx: "aura", c1: "200, 230, 255", c2: "20, 30, 40", kanji: "人類最強" },
     },
+    // ── The six anime added in October 2026 (moves for those without a transformation) ──
+    demonslayer: {
+      "gyomei-himejima": { arc: 6, name: { en: "Stone Breathing · Demon Slayer Mark", fr: "Souffle de la pierre · Marque du pourfendeur" }, fx: "aura", c1: "200, 200, 210", c2: "40, 30, 20", kanji: "岩", lightning: true },
+      "yoriichi-tsugikuni": { arc: 5, name: { en: "Sun Breathing", fr: "Souffle du soleil" }, fx: "pillar", c1: "255, 140, 40", c2: "60, 10, 0", kanji: "日の呼吸" },
+      "muzan-kibutsuji": { arc: 6, name: { en: "True form", fr: "Forme véritable" }, fx: "domain", c1: "200, 20, 40", c2: "6, 0, 4", kanji: "鬼舞辻", lightning: true },
+      kokushibo: { arc: 5, name: { en: "Moon Breathing", fr: "Souffle de la lune" }, fx: "domain", c1: "170, 120, 255", c2: "6, 2, 18", kanji: "月の呼吸" },
+      doma: { arc: 7, name: { en: "Blood Demon Art · Frozen Lotus", fr: "Art démoniaque · Lotus gelé" }, fx: "domain", c1: "170, 230, 255", c2: "4, 12, 30", kanji: "血鬼術" },
+    },
+    myheroacademia: {
+      "izuku-midoriya": { arc: 2, name: { en: "One For All · Full Cowl", fr: "One For All · Full Cowl" }, fx: "aura", c1: "120, 255, 140", c2: "20, 120, 60", kanji: "ワン・フォー・オール", lightning: true },
+      "all-might": { arc: 3, name: { en: "United States of Smash", fr: "United States of Smash" }, fx: "aura", c1: "255, 220, 60", c2: "40, 60, 200", kanji: "平和の象徴", lightning: true },
+      endeavor: { arc: 6, name: { en: "Plus Ultra · Prominence Burn", fr: "Plus Ultra · Prominence Burn" }, fx: "pillar", c1: "255, 110, 30", c2: "60, 10, 0", kanji: "炎", lightning: true },
+      "tomura-shigaraki": { arc: 7, name: { en: "Decay", fr: "Désintégration" }, fx: "domain", c1: "170, 170, 200", c2: "10, 10, 20", kanji: "崩壊" },
+      "all-for-one": { arc: 8, name: { en: "Prime All For One", fr: "All For One à son apogée" }, fx: "domain", c1: "200, 30, 60", c2: "4, 0, 4", kanji: "魔王", lightning: true },
+      "star-and-stripe": { arc: 8, name: { en: "New Order", fr: "New Order" }, fx: "aura", c1: "255, 240, 140", c2: "30, 60, 200", kanji: "新秩序", lightning: true },
+    },
+    haikyuu: {
+      "tobio-kageyama": { arc: 0, name: { en: "King of the Court", fr: "Le Roi du terrain" }, fx: "aura", c1: "90, 160, 255", c2: "10, 20, 50", kanji: "王様", lightning: true },
+      "toru-oikawa": { arc: 1, name: { en: "Killer jump serve", fr: "Service smashé dévastateur" }, fx: "aura", c1: "120, 230, 210", c2: "10, 40, 40", kanji: "大王様" },
+      "kotaro-bokuto": { arc: 2, name: { en: "Ace cross-shot", fr: "Smash croisé de l'as" }, fx: "aura", c1: "255, 210, 80", c2: "40, 30, 10", kanji: "エース", lightning: true },
+      "wakatoshi-ushijima": { arc: 3, name: { en: "Left-handed cannon", fr: "Le canon gaucher" }, fx: "pillar", c1: "200, 120, 255", c2: "30, 6, 40", kanji: "怪童" },
+      "atsumu-miya": { arc: 4, name: { en: "Twin minus tempo", fr: "Attaque rapide des jumeaux" }, fx: "aura", c1: "255, 190, 70", c2: "40, 10, 10", kanji: "双子", lightning: true },
+      "kiyoomi-sakusa": { arc: 4, name: { en: "Spin spike", fr: "Smash à effet" }, fx: "aura", c1: "255, 230, 90", c2: "40, 40, 10", kanji: "スピン" },
+    },
+    fireforce: {
+      "shinra-kusakabe": { arc: 0, name: { en: "Devil's Footprints", fr: "Empreintes du diable" }, fx: "aura", c1: "255, 120, 40", c2: "40, 6, 0", kanji: "悪魔", lightning: true },
+      "benimaru-shinmon": { arc: 1, name: { en: "Shinmon style · Crimson Moon", fr: "Style Shinmon · Lune pourpre" }, fx: "pillar", c1: "255, 70, 80", c2: "30, 0, 10", kanji: "紅", lightning: true },
+      "sho-kusakabe": { arc: 1, name: { en: "Adolla Link · Stopped time", fr: "Lien Adolla · Le temps arrêté" }, fx: "domain", c1: "220, 220, 255", c2: "6, 6, 20", kanji: "天照" },
+      dragon: { arc: 3, name: { en: "Dragon transformation", fr: "Transformation en dragon" }, fx: "pillar", c1: "255, 90, 40", c2: "20, 4, 0", kanji: "竜", lightning: true },
+    },
+    slime: {
+      "rimuru-tempest": { arc: 2, name: { en: "Megiddo", fr: "Megiddo" }, fx: "domain", c1: "120, 210, 255", c2: "4, 14, 40", kanji: "魔王", lightning: true },
+      "veldora-tempest": { arc: 0, name: { en: "Storm Dragon", fr: "Dragon de la tempête" }, fx: "pillar", c1: "255, 220, 90", c2: "20, 30, 10", kanji: "暴風竜", lightning: true },
+      diablo: { arc: 2, name: { en: "Primordial of Black", fr: "Le Primordial noir" }, fx: "domain", c1: "120, 60, 200", c2: "2, 0, 6", kanji: "悪魔" },
+      "milim-nava": { arc: 3, name: { en: "Dragonoid · Drago Nova", fr: "Dragonoïde · Drago Nova" }, fx: "pillar", c1: "255, 110, 200", c2: "30, 4, 30", kanji: "破壊の暴君", lightning: true },
+      "guy-crimson": { arc: 3, name: { en: "Primordial of Red", fr: "Le Primordial rouge" }, fx: "domain", c1: "230, 30, 50", c2: "10, 0, 2", kanji: "暗黒皇帝", lightning: true },
+      "luminous-valentine": { arc: 3, name: { en: "Queen of the Night", fr: "Reine de la nuit" }, fx: "domain", c1: "200, 190, 255", c2: "10, 6, 20", kanji: "夜魔の女王" },
+    },
+    onepunchman: {
+      saitama: { arc: 1, name: { en: "Serious Punch", fr: "Coup de poing sérieux" }, fx: "pillar", c1: "255, 230, 120", c2: "40, 30, 0", kanji: "マジ殴り", lightning: true },
+      tatsumaki: { arc: 1, name: { en: "Tornado of Terror", fr: "La Tornade de la terreur" }, fx: "domain", c1: "90, 255, 150", c2: "4, 30, 10", kanji: "戦慄のタツマキ" },
+      garou: { arc: 3, name: { en: "Hero Hunter", fr: "Le Chasseur de héros" }, fx: "aura", c1: "255, 255, 255", c2: "20, 20, 30", kanji: "怪人", lightning: true },
+      boros: { arc: 1, name: { en: "Meteoric Burst", fr: "Explosion météorique" }, fx: "aura", c1: "120, 220, 255", c2: "20, 0, 40", kanji: "ボロス", lightning: true },
+    },
   };
 
   // Forms with an anime clip (crew/assets/clips/<game>-<id>.mp4), played in the transformation cinematic. Bleach uses
   // the cut-scenes of Rebirth of Souls (2025), its most recent animation.
   const CLIPS = {
+    demonslayer: ["yoriichi-tsugikuni", "kokushibo"],
+    myheroacademia: ["izuku-midoriya", "all-might", "endeavor", "all-for-one", "star-and-stripe"],
+    slime: ["rimuru-tempest", "diablo"],
+    onepunchman: ["saitama", "tatsumaki", "garou", "boros"],
     onepiece: ["monkey-d-luffy", "gol-d-roger"],
     bleach: ["kaname-tosen", "tier-harribel", "nelliel-tu-odelschwanck", "coyote-starrk", "genryusai-yamamoto", "grimmjow-jaegerjaquez", "ichigo-kurosaki", "sosuke-aizen", "renji-abarai", "rukia-kuchiki", "uryu-ishida", "byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach"],
     jujutsukaisen: ["ryomen-sukuna", "mahito", "jogo", "aoi-todo", "toji-fushiguro"],
