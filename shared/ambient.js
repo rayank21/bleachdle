@@ -1,8 +1,9 @@
-// Living background: a light layer of particles drawn for each anime at the screen's refresh rate (60 fps or
-// more), over the painted background (decor.js). Reishi motes and Hell butterflies for Bleach, Konoha leaves for
-// Naruto, ki sparks for Dragon Ball, waves for One Piece… Every particle is a small picture drawn once and then
-// only moved, so a frame costs a few hundred image copies. It pauses in hidden tabs, uses fewer particles on
-// phones and weak machines (.lite), and stays off when the system asks for reduced motion.
+// Living background: a light layer of particles for each anime over the painted background (decor.js). Reishi motes
+// and Hell butterflies for Bleach, Konoha leaves for Naruto, ki sparks for Dragon Ball, waves for One Piece…
+// Every particle is a small picture drawn once, then moved only with transform animations, which the browser runs
+// on the compositor (GPU) at the screen's refresh rate: nothing is redrawn per frame and the motion never waits for
+// the page's own work (scrolling, rolling a crew, loading pictures). Fewer particles on phones and weak machines
+// (.lite); off when the system asks for reduced motion.
 (() => {
   "use strict";
 
@@ -11,12 +12,15 @@
   const lite = document.documentElement.classList.contains("lite");
 
   // ── Sprites: each drawn once on a small canvas ──
+  const DPR = Math.min(2, devicePixelRatio || 1) * 1.5; // drawn larger than shown: crisp on any screen
   function sprite(w, h, draw) {
     const c = document.createElement("canvas");
-    c.width = w;
-    c.height = h;
-    draw(c.getContext("2d"), w, h);
-    return c;
+    c.width = Math.ceil(w * DPR);
+    c.height = Math.ceil(h * DPR);
+    const g = c.getContext("2d");
+    g.scale(DPR, DPR);
+    draw(g, w, h);
+    return { url: c.toDataURL(), w, h };
   }
   const glow = (color, r = 16) => sprite(r * 2, r * 2, (g) => {
     const grad = g.createRadialGradient(r, r, 0, r, r, r);
@@ -124,14 +128,6 @@
     }
   });
 
-  // ── Particle kinds: how each one spawns and moves (px per second) ──
-  // rise: floats up and sways · fall: drifts down, spins · flit: wanders (butterflies)
-  const KINDS = {
-    rise: (W, H, p, fresh) => Object.assign(p, { x: Math.random() * W, y: fresh ? Math.random() * H : H + 20, vx: 0, vy: -(14 + Math.random() * 30) }),
-    fall: (W, H, p, fresh) => Object.assign(p, { x: Math.random() * W, y: fresh ? Math.random() * H : -30, vx: 10 + Math.random() * 18, vy: 22 + Math.random() * 26 }),
-    flit: (W, H, p) => Object.assign(p, { x: Math.random() * W, y: H * (0.2 + Math.random() * 0.7), vx: (Math.random() < 0.5 ? -1 : 1) * (18 + Math.random() * 14), vy: -4 - Math.random() * 6 }),
-  };
-
   // One theme per page: [sprites, kind, count per 1366×768, size range, opacity, spin, sway]
   const sakura = () => [petal("255, 190, 214", "255, 236, 242"), petal("255, 160, 196", "255, 220, 232")];
   const THEMES = {
@@ -153,100 +149,110 @@
     onepunchman: [[() => [glow("255, 225, 90"), glow("255, 255, 255")], "rise", 30, [5, 12], 0.55, 0, 16], [() => [ember("255, 200, 40")], "rise", 10, [12, 22], 0.5, 0, 6]],
   };
   const theme = THEMES[game] || THEMES.home;
+  const rnd = (a, b) => a + Math.random() * (b - a);
 
-  const canvas = document.createElement("canvas");
-  canvas.className = "bg-ambient";
-  canvas.setAttribute("aria-hidden", "true");
-  const ctx = canvas.getContext("2d");
+  const layer = document.createElement("div");
+  layer.className = "bg-ambient";
+  layer.setAttribute("aria-hidden", "true");
   let W = 0;
   let H = 0;
-  let parts = [];
-  let waves = game === "onepiece";
+
+  // Two nested boxes per particle: the path, swaying included (outer), and the spin or wing flap (the picture),
+  // each one endless animation. A negative delay starts every particle somewhere along its way.
+  function particle(img, kind, size, alpha, spin, sway) {
+    const outer = document.createElement("i");
+    const pic = document.createElement("img");
+    pic.src = img.url;
+    pic.alt = "";
+    pic.decoding = "async";
+    const k = size / Math.max(img.w, img.h);
+    pic.width = Math.max(1, Math.round(img.w * k));
+    pic.height = Math.max(1, Math.round(img.h * k));
+    outer.style.opacity = alpha;
+    outer.append(pic);
+    layer.append(outer);
+
+    if (kind === "flit") {
+      // A butterfly wanders between random points, flapping its wings.
+      const pts = Array.from({ length: 7 }, () => ({ transform: `translate3d(${rnd(0.05, 0.95) * W}px, ${rnd(0.2, 0.9) * H}px, 0)`, easing: "ease-in-out" }));
+      outer.animate(pts, { duration: rnd(36, 54) * 1000, iterations: Infinity, direction: "alternate", delay: -rnd(0, 30000) });
+      pic.animate([{ transform: "scaleX(1)" }, { transform: "scaleX(0.25)" }], { duration: 175, iterations: Infinity, direction: "alternate", easing: "ease-in-out" });
+      return;
+    }
+    // rise: floats up and sways · fall: drifts down sideways and spins (speeds in px per second)
+    const rise = kind === "rise";
+    const x = Math.random() * W;
+    const vy = rise ? rnd(14, 44) : rnd(22, 48);
+    const vx = rise ? 0 : rnd(10, 28);
+    const dur = ((H + 80) / vy) * 1000;
+    const [y0, y1] = rise ? [H + 30, -50] : [-40, H + 40];
+    // The sway is a sine on top of the drift, sampled eight times per swing.
+    const freq = rnd(0.4, 1.2);
+    const amp = Math.min(60, (sway * rnd(0.5, 1.5)) / freq);
+    const phase = rnd(0, 7);
+    const steps = Math.max(2, Math.ceil(((dur / 1000) * freq) / Math.PI * 8));
+    const path = Array.from({ length: steps + 1 }, (_, i) => {
+      const t = (i / steps) * (dur / 1000);
+      return { transform: `translate3d(${(x + vx * t + Math.sin(t * freq + phase) * amp).toFixed(1)}px, ${(y0 + ((y1 - y0) * i) / steps).toFixed(1)}px, 0)` };
+    });
+    outer.animate(path, { duration: dur, iterations: Infinity, easing: "linear", delay: -Math.random() * dur });
+    const vr = (Math.random() - 0.5) * spin;
+    if (Math.abs(vr) > 0.05) {
+      const from = rnd(0, 360);
+      pic.animate([{ transform: `rotate(${from}deg)` }, { transform: `rotate(${from + (vr > 0 ? 360 : -360)}deg)` }],
+        { duration: ((Math.PI * 2) / Math.abs(vr)) * 1000, iterations: Infinity, easing: "linear" });
+    }
+  }
+
+  // One Piece: three layers of waves rolling along the bottom of the screen, each a strip twice as wide as needed
+  // that slides by half of itself, so the loop is seamless.
+  function waves() {
+    const layers = [["40, 120, 210", 0.22, 26, 1, 0.86], ["60, 160, 235", 0.18, 20, -1.4, 0.9], ["170, 225, 255", 0.12, 14, 0.8, 0.94]];
+    for (const [color, a, amp, speed, base] of layers) {
+      const period = 560;
+      const w = (Math.ceil(W / period) + 1) * period;
+      const h = Math.round(H * (1 - base) + amp * 2);
+      let d = `M0 ${h}`;
+      for (let x = 0; x <= w * 2; x += 10) {
+        const t = (x / period) * Math.PI * 2;
+        d += ` L${x} ${(amp + Math.sin(t) * amp * 0.75 + Math.sin(t * 3) * amp * 0.25).toFixed(1)}`;
+      }
+      d += ` L${w * 2} ${h} Z`;
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w * 2}' height='${h}'><path d='${d}' fill='rgba(${color},${a})'/></svg>`;
+      const strip = document.createElement("i");
+      strip.className = "amb-wave";
+      strip.style.cssText = `top:${H - h}px;width:${w * 2}px;height:${h}px;background-image:url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+      layer.append(strip);
+      const [from, to] = speed > 0 ? [0, -w] : [-w, 0];
+      strip.animate([{ transform: `translate3d(${from}px, 0, 0)` }, { transform: `translate3d(${to}px, 0, 0)` }],
+        { duration: (w / (40 * Math.abs(speed))) * 1000, iterations: Infinity, easing: "linear" });
+    }
+  }
 
   function build() {
     W = innerWidth;
     H = innerHeight;
-    canvas.width = W;
-    canvas.height = H;
+    layer.replaceChildren();
     const scale = Math.min(1.6, (W * H) / (1366 * 768)) * (lite ? 0.45 : W < 760 ? 0.6 : 1);
-    parts = [];
+    if (game === "onepiece") waves();
     for (const [make, kind, count, [s0, s1], alpha, spin, sway] of theme) {
       const sprites = make();
       const n = Math.max(3, Math.round(count * scale));
-      for (let i = 0; i < n; i++) {
-        const p = { img: sprites[i % sprites.length], kind, size: s0 + Math.random() * (s1 - s0), alpha: alpha * (0.55 + Math.random() * 0.45),
-          rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * spin, sway: sway * (0.5 + Math.random()), phase: Math.random() * 7, freq: 0.4 + Math.random() * 0.8 };
-        KINDS[kind](W, H, p, true);
-        parts.push(p);
-      }
+      for (let i = 0; i < n; i++) particle(sprites[i % sprites.length], kind, rnd(s0, s1), alpha * rnd(0.55, 1), spin, sway);
     }
-  }
-
-  // One Piece: three layers of waves rolling along the bottom of the screen.
-  function drawWaves(t) {
-    const layers = [["40, 120, 210", 0.22, 26, 0.5, 0.86], ["60, 160, 235", 0.18, 20, -0.7, 0.9], ["170, 225, 255", 0.12, 14, 0.9, 0.94]];
-    for (const [color, a, amp, speed, base] of layers) {
-      ctx.fillStyle = `rgba(${color}, ${a})`;
-      ctx.beginPath();
-      ctx.moveTo(0, H);
-      for (let x = 0; x <= W + 20; x += 20) {
-        const y = H * base + Math.sin(x / 140 + t * speed) * amp + Math.sin(x / 57 - t * speed * 1.7) * amp * 0.35;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(W, H);
-      ctx.closePath();
-      ctx.fill();
-    }
-  }
-
-  let last = 0;
-  let raf = 0;
-  function frame(now) {
-    raf = requestAnimationFrame(frame);
-    const dt = Math.min(0.05, (now - (last || now)) / 1000);
-    last = now;
-    const t = now / 1000;
-    ctx.clearRect(0, 0, W, H);
-    if (waves) drawWaves(t);
-    for (const p of parts) {
-      p.x += (p.vx + Math.sin(t * p.freq + p.phase) * p.sway) * dt;
-      p.y += p.vy * dt;
-      p.rot += p.vr * dt;
-      if (p.kind === "flit") p.vy += Math.sin(t * 2 + p.phase) * 18 * dt;
-      if (p.y < -40 || p.y > H + 40 || p.x < -60 || p.x > W + 60) KINDS[p.kind](W, H, p, false);
-      const w = p.size * (p.img.width / Math.max(p.img.width, p.img.height));
-      const h = p.size * (p.img.height / Math.max(p.img.width, p.img.height));
-      ctx.globalAlpha = p.alpha;
-      if (p.kind === "rise" && !p.vr) {
-        ctx.drawImage(p.img, p.x - w / 2, p.y - h / 2, w, h);
-      } else {
-        ctx.setTransform(1, 0, 0, 1, p.x, p.y);
-        if (p.kind === "flit") ctx.scale(0.25 + Math.abs(Math.sin(t * 9 + p.phase)) * 0.75, 1);
-        else ctx.rotate(p.rot);
-        ctx.drawImage(p.img, -w / 2, -h / 2, w, h);
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-      }
-    }
-    ctx.globalAlpha = 1;
   }
 
   function start() {
     const bg = document.querySelector(".bg");
     if (!bg) return;
-    bg.after(canvas);
+    bg.after(layer);
     build();
-    raf = requestAnimationFrame(frame);
     let timer = 0;
     addEventListener("resize", () => {
       if (Math.abs(innerWidth - W) < 40 && Math.abs(innerHeight - H) < 160) return;
       clearTimeout(timer);
       timer = setTimeout(build, 250);
     }, { passive: true });
-    document.addEventListener("visibilitychange", () => {
-      cancelAnimationFrame(raf);
-      last = 0;
-      if (!document.hidden) raf = requestAnimationFrame(frame);
-    });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

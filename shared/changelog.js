@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T00:30",
+      title: { en: "Sharper, smoother clips and a lighter background", fr: "Des extraits plus nets et plus fluides, un fond plus léger" },
+      items: [
+        { type: "improved", game: "crew", en: "Every transformation clip was remastered: upscaled with an anime-trained AI (up to 4× sharper) and interpolated to 60 frames per second, so they no longer look blurry or choppy full screen.", fr: "Tous les extraits de transformation ont été remasterisés : agrandis par une IA spécialisée anime (jusqu'à 4× plus nets) et interpolés à 60 images par seconde, ils ne sont plus flous ni saccadés en plein écran." },
+        { type: "improved", en: "The animated background is now moved entirely by the graphics card: nothing is redrawn at each frame, so scrolling and the rest of the page stay smooth, even on weak computers, and the particles are crisp on high-resolution screens.", fr: "Le fond animé est désormais entièrement géré par la carte graphique : plus rien n'est redessiné à chaque image, le défilement et le reste de la page restent fluides, même sur un PC faible, et les particules sont nettes sur les écrans haute résolution." },
+      ],
+    },
+    {
       at: "2026-10-06T21:42",
       title: { en: "Six new anime", fr: "Six nouveaux animes" },
       items: [
