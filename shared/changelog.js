@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-06T20:51",
+      title: { en: "A living, colourful background for each anime", fr: "Un fond vivant et coloré pour chaque anime" },
+      items: [
+        { type: "new", en: "Each anime now has its own animated background at your screen's refresh rate: reishi motes and Hell butterflies in Bleach, Konoha leaves in Naruto, ki sparks in Dragon Ball, rolling waves in One Piece, Nen aura in Hunter × Hunter, cursed energy in Jujutsu Kaisen, clovers in Black Clover, Wings of Freedom feathers and ash in Attack on Titan, cherry petals on the home page. It stays light, pauses in hidden tabs and is lighter still on weak machines.", fr: "Chaque anime a maintenant son fond animé à la fréquence de ton écran : particules de reishi et papillons de l'Enfer pour Bleach, feuilles de Konoha pour Naruto, étincelles de ki pour Dragon Ball, vagues pour One Piece, aura de Nen pour Hunter × Hunter, énergie occulte pour Jujutsu Kaisen, trèfles pour Black Clover, plumes des Ailes de la liberté et cendres pour L'Attaque des Titans, pétales de cerisier sur l'accueil. Il reste léger, se met en pause quand l'onglet est caché et s'allège encore sur les machines peu puissantes." },
+        { type: "improved", en: "More colour: the wall of characters behind each game takes its anime's colour, the panels get a glow of it and the title card shows the anime's emblem (卍, 忍, 海, 龍…).", fr: "Plus de couleur : le mur de persos derrière chaque jeu prend la couleur de son anime, les panneaux en gardent une lueur et la carte du titre affiche l'emblème de l'anime (卍, 忍, 海, 龍…)." },
+      ],
+    },
+    {
       at: "2026-10-06T20:48",
       title: { en: "Bleach: the newest animated scenes", fr: "Bleach : les scènes animées les plus récentes" },
       items: [

@@ -102,7 +102,9 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
 
 /* ── Background collage ─────────────────────────────────────── */
 .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #0b0b0d; contain: strict; }
-/* The grid and the side characters are painted once into one canvas (decor.js): a still picture, free to scroll over. */
+/* The grid and the side characters are painted once into one canvas (decor.js): a still picture, free to scroll over.
+   Over it, the anime's particles (ambient.js). */
+.bg-ambient { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
 .bg-grid { display: none; }
 .bg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease; }
 .bg-canvas.is-in { opacity: 1; }
@@ -111,7 +113,9 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(var(--tint-rgb), 0.28), transparent 60%),
+    radial-gradient(ellipse at 50% 0%, rgba(var(--tint-rgb), 0.38), transparent 60%),
+    radial-gradient(ellipse at 85% 100%, rgba(var(--accent-rgb), 0.16), transparent 55%),
+    radial-gradient(ellipse at 10% 90%, rgba(var(--tint-rgb), 0.2), transparent 50%),
     radial-gradient(circle at 50% 50%, transparent 0, rgba(11, 11, 13, 0.55) 70%),
     linear-gradient(180deg, rgba(11, 11, 13, 0.35), rgba(11, 11, 13, 0.85));
 }
@@ -205,11 +209,30 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  /* a thin line of the anime's colour along the top edge */
+  box-shadow: inset 0 1px 0 rgba(var(--accent-rgb), 0.45), 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 40px rgba(var(--tint-rgb), 0.12);
 }
 
 /* ── Hero ───────────────────────────────────────────────────── */
-.hero { width: min(100%, 400px); padding: 14px 20px 18px; text-align: center; }
+.hero { position: relative; isolation: isolate; overflow: hidden; width: min(100%, 400px); padding: 14px 20px 18px; text-align: center;
+  background: radial-gradient(120% 90% at 50% 0%, rgba(var(--accent-rgb), 0.16), transparent 60%), var(--surface); }
+/* Each anime's emblem in big faint letters behind the title. */
+.hero::before { content: var(--kanji, ""); position: absolute; z-index: -1; right: -14px; bottom: -34px; font: 900 150px/1 "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+  color: rgba(var(--accent-rgb), 0.1); pointer-events: none; }
+body[data-game="bleach"] { --kanji: "卍"; }
+body[data-game="hunterxhunter"] { --kanji: "念"; }
+body[data-game="dragonball"] { --kanji: "龍"; }
+body[data-game="naruto"] { --kanji: "忍"; }
+body[data-game="onepiece"] { --kanji: "海"; }
+body[data-game="jujutsukaisen"] { --kanji: "呪"; }
+body[data-game="blackclover"] { --kanji: "魔"; }
+body[data-game="attackontitan"] { --kanji: "巨"; }
+body[data-game="demonslayer"] { --kanji: "鬼"; }
+body[data-game="myheroacademia"] { --kanji: "英"; }
+body[data-game="haikyuu"] { --kanji: "飛"; }
+body[data-game="fireforce"] { --kanji: "炎"; }
+body[data-game="slime"] { --kanji: "転"; }
+body[data-game="onepunchman"] { --kanji: "拳"; }
 .stat-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; }
 .stat {
   display: flex;

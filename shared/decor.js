@@ -90,9 +90,14 @@
       if (img) cover(gx, img, (i % cols) * (cw + 6), Math.floor(i / cols) * 156, cw, 150, 0.2);
     });
     gx.setTransform(1, 0, 0, 1, 0, 0);
-    // Grey: the saturation blend takes the colour out everywhere, even where canvas filters are not supported.
+    // One colour per anime: the saturation blend takes the pictures' own colours out, then the colour blend dyes
+    // them in the anime's tint (Bleach red, Naruto orange…), so the wall of characters reads as the anime's.
     gx.globalCompositeOperation = "saturation";
     gx.fillStyle = "#808080";
+    gx.fillRect(0, 0, g.width, g.height);
+    const tint = getComputedStyle(document.body).getPropertyValue("--tint-rgb").trim() || "120, 40, 60";
+    gx.globalCompositeOperation = "color";
+    gx.fillStyle = `rgba(${tint}, 0.55)`;
     gx.fillRect(0, 0, g.width, g.height);
 
     const ctx = canvas.getContext("2d");
@@ -100,7 +105,7 @@
     canvas.height = g.height;
     ctx.fillStyle = "#0b0b0d";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = 0.2;
+    ctx.globalAlpha = 0.26;
     ctx.drawImage(g, 0, 0);
 
     // The two side characters, fading towards the middle of the page.
