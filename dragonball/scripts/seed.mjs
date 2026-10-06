@@ -110,4 +110,15 @@ export const seed = [
   { wiki: "Gamma 2", name: "Gamma 2", gender: "M", race: ["Android"], arc: 8, hair: ["Black"], aff: RR, origin: EARTH },
   { wiki: "Saonel", name: "Saonel", gender: "M", race: ["Namekian"], arc: 8, hair: ["None"], aff: ["Heeters"], origin: NAMEK },
   { wiki: "Pirina", name: "Pirina", gender: "M", race: ["Namekian"], arc: 8, hair: ["None"], aff: ["Heeters"], origin: NAMEK },
+  // Fusions, the Broly film's Saiyans and the Super era (films and manga arcs sit in arc 8).
+  { wiki: "Vegito", name: "Vegito", gender: "M", race: ["Saiyan"], hair: ["Black"], aff: Z, origin: EARTH },
+  { wiki: "Gogeta", name: "Gogeta", gender: "M", race: ["Saiyan"], arc: 8, hair: ["Black"], aff: Z, origin: EARTH },
+  { wiki: "Kefla", name: "Kefla", gender: "F", race: ["Saiyan"], hair: ["Black"], aff: ["Team Universe 6"], origin: "Universe 6" },
+  { wiki: "Broly", name: "Broly", gender: "M", race: ["Saiyan"], arc: 8, hair: ["Black"], aff: ["Frieza Force"], origin: VEG },
+  { wiki: "Paragus", name: "Paragus", gender: "M", race: ["Saiyan"], arc: 8, hair: ["Black"], aff: ["Frieza Force"], origin: VEG },
+  { wiki: "Gine", name: "Gine", gender: "F", race: ["Saiyan"], arc: 8, hair: ["Black"], origin: VEG, aff: ["None"] },
+  { wiki: "King Vegeta", name: "King Vegeta", gender: "M", race: ["Saiyan"], hair: ["Black"], aff: ["Saiyan Army"], origin: VEG },
+  { wiki: "Pan", name: "Pan", gender: "F", race: ["Saiyan"], hair: ["Black"], aff: Z, origin: EARTH },
+  { wiki: "Belmod", name: "Belmod", gender: "M", race: ["God"], hair: ["None"], aff: [...GODS, "Pride Troopers"], origin: "Universe 11" },
+  { wiki: "Moro", name: "Moro", gender: "M", race: ["Alien"], arc: 8, hair: ["White"], aff: ["Galactic Bandit Brigade"], origin: "Unknown" },
 ];

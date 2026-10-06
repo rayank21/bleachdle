@@ -4,7 +4,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { seed } from "./seed.mjs";
+import { seed, SPECIES } from "./seed.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const API = "https://onepiece.fandom.com/api.php";
@@ -129,6 +129,7 @@ for (const s of seed) {
       bounty: bountyOf(f.bounty, arc, html),
       height: height ? Number(height[0]) : null,
       origin: originOf(f.origin),
+      species: SPECIES[id] ?? "Human",
       age: age ? Number(age[0]) : null,
       epithet: epithet ? epithet[1] : null,
       arc,

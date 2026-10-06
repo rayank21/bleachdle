@@ -185,21 +185,25 @@
   else mountButton();
 
   // ── New version check ──
-  // A tab opened before a deploy keeps running the old code. The site's own scripts are checked
-  // now and then (their ETag changes on deploy); if one changed, a banner offers to reload.
-  const own = () => [...document.scripts].map((x) => x.src).filter((u) => u && new URL(u).origin === location.origin);
+  // A tab opened before a deploy keeps running the old code. Only an update with new content counts: the
+  // newest patch note (shared/changelog.js) is read now and then, and when a newer one appears, a banner
+  // offers to reload. Small fixes deployed without a patch note don't bother anyone.
+  // (read when checking: changelog.js loads after this script)
+  const notesUrl = () => [...document.scripts].map((x) => x.src).find((u) => /shared\/changelog\.js/.test(u || ""));
   async function fingerprint() {
-    const tags = await Promise.all(own().map((u) => fetch(u, { method: "HEAD", cache: "no-store" }).then((r) => r.headers.get("etag") || "", () => "")));
-    return tags.join("|");
+    const url = notesUrl();
+    if (!url) return "";
+    const text = await fetch(url, { cache: "no-store" }).then((r) => (r.ok ? r.text() : ""), () => "");
+    return /at:\s*"([^"]+)"/.exec(text)?.[1] ?? "";
   }
   let first = null;
   let warned = false;
   async function checkVersion() {
     if (warned || location.protocol === "file:" || document.hidden) return;
     const now = await fingerprint();
-    if (!now.replace(/|/g, "")) return;
+    if (!now) return;
     if (first == null) { first = now; return; }
-    if (now === first) return;
+    if (now <= first) return;
     warned = true;
     const fr = (document.documentElement.lang || "").startsWith("fr");
     const bar = document.createElement("div");

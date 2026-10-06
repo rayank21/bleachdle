@@ -177,4 +177,40 @@ export const seed = [
   { wiki: "Shepherd Ju Peter", gender: "M", arc: 10 },
   { wiki: "Figarland Garling", gender: "M", arc: 10 },
   { wiki: "Figarland Shamrock", gender: "M", arc: 10 },
+
+  // ── Added on Naim's list ──
+  { wiki: "Rocks D. Xebec", gender: "M" },
+  { wiki: "Jesus Burgess", gender: "M" },
+  { wiki: "Vasco Shot", gender: "M" },
+  { wiki: "Catarina Devon", gender: "F" },
+  { wiki: "Pica", gender: "M" },
+  { wiki: "Diamante", gender: "M" },
+  { wiki: "Ideo", gender: "M" },
+  { wiki: "Chinjao", name: "Don Chinjao", gender: "M" },
+  { wiki: "Aramaki", gender: "M" },
+  { wiki: "Makino", gender: "F" },
+  { wiki: "Curly Dadan", gender: "F" },
+  { wiki: "Capone Bege", gender: "M" },
+  { wiki: "Hogback", gender: "M" },
+  { wiki: "Foxy", gender: "M" },
+  { wiki: "Caribou", gender: "M" },
+  { wiki: "Kawamatsu", gender: "M" },
+  { wiki: "Kurozumi Kanjuro", name: "Kanjuro", gender: "M" },
+  { wiki: "Ulti", gender: "F" },
+  { wiki: "Sasaki", gender: "M" },
+  { wiki: "Charlotte Smoothie", gender: "F" },
+  { wiki: "Black Maria", gender: "F" },
+  { wiki: "Nezumi", gender: "M" },
+  { wiki: "Higuma", gender: "M" },
+  { wiki: "Gem", name: "Gem (Mr. 5)", gender: "M" },
 ];
+
+// Species, for the classic game's column (everyone else is Human).
+export const SPECIES = {
+  "tony-tony-chopper": "Reindeer", jinbe: "Fish-Man", arlong: "Fish-Man", "hody-jones": "Fish-Man", "fisher-tiger": "Fish-Man",
+  den: "Fish-Man", tom: "Fish-Man", kawamatsu: "Fish-Man", neptune: "Merfolk", shirahoshi: "Merfolk",
+  carrot: "Mink", pedro: "Mink", inuarashi: "Mink", nekomamushi: "Mink", bepo: "Mink",
+  dorry: "Giant", brogy: "Giant", enel: "Sky People", wyper: "Sky People", "gan-fall": "Sky People", urouge: "Sky People",
+  king: "Lunarian", kaidou: "Oni", yamato: "Oni", "bartholomew-kuma": "Buccaneer", "scratchmen-apoo": "Longarm Tribe",
+  "charlotte-pudding": "Three-Eye Tribe", imu: "Unknown",
+};

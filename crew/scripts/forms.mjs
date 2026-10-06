@@ -102,7 +102,7 @@ const FILES = [
   ["attackontitan", "attackontitan", "ymir-fritz", "File:Founding Titan (Anime) character image (Ymir Fritz).png"],
   ["attackontitan", "attackontitan", "grisha-yeager", "File:Attack Titan (Anime) character image (Grisha Jaeger).png"],
   ["attackontitan", "attackontitan", "marcel-galliard", "File:Jaw Titan (Anime) character image (Marcel Galliard).png"],
-  ["bleach", "bleach", "genryusai-yamamoto", "File:506Yamamoto's Bankai, Zanka no Tachi.png"],
+  ["bleach", "bleach", "genryusai-yamamoto", "File:Ep371YamamotoConfrontsRoyd.png"],
   ["bleach", "bleach", "ichibe-hyosube", "File:Ep374IchibeiCharaPic.png"],
   ["hunterxhunter", "hunterxhunter", "zeno-zoldyck", "File:111 - Zeno.png"],
   ["hunterxhunter", "hunterxhunter", "chrollo-lucilfer", "File:HxH2011 EP41 Chrollo appears.png"],
@@ -141,7 +141,27 @@ const FILES = [
   ["blackclover", "blackclover", "julius-novachrono", "File:Julius anime profile.png"],
   ["blackclover", "blackclover", "licht", "File:Licht casts forbidden magic spell.png"],
   ["attackontitan", "attackontitan", "levi", "File:Levi slices up the Beast Titan.png"],
+  ["dragonball", "dragonball", "vegito", "File:SSGSS Barrier Vegito.png"],
+  ["dragonball", "dragonball", "gogeta", "File:SSBGogeta.png"],
+  ["dragonball", "dragonball", "kefla", "File:Kefla SS2.jpeg"],
+  ["dragonball", "dragonball", "broly", "File:Broly - The Legendary Super Saiyan - LSSJ Broly.jpg"],
+  ["onepiece", "onepiece", "rocks-d-xebec", "File:Rocks D. Xebec Full Appearance.png"],
+  ["onepiece", "onepiece", "aramaki", "File:Mori Mori no Mi Infobox.png"],
+  ["bleach", "bleach", "tier-harribel", "File:Ep275Harribel's Resurreccion, Tiburon.png"],
+  ["bleach", "bleach", "nelliel-tu-odelschwanck", "File:195Nelliel's Resurreccion, Gamuza.png"],
+  ["bleach", "bleach", "askin-nakk-le-vaar", "File:Ep408GiftBallDeluxe.png"],
+  ["bleach", "bleach", "bambietta-basterbine", "File:Ep383BambiettaVollstandig.png"],
+  ["bleach", "bleach", "liltotto-lamperd", "File:Ep387LiltottoVollstandigGagael.png"],
+  ["bleach", "bleach", "as-nodt", "File:Ep385AsVollstandigTatarforas.png"],
+  ["bleach", "bleach", "lille-barro", "File:Ep403LilleVollstandigJillielSecondFormFull.png"],
+  ["bleach", "bleach", "gremmy-thoumeaux", "File:Ep386GremmyCreatesHand.png"],
+  ["bleach", "bleach", "jugram-haschwalth", "File:Ep409HaschwalthEvadesLaser.png"],
+  ["bleach", "bleach", "bazz-b", "File:Ep404BurnerFinger3.png"],
+  ["bleach", "bleach", "uryu-ishida", "File:125Quincy - Letzt Stil.png"],
+  ["bleach", "bleach", "kirio-hikifune", "File:Ep375HikifuneExplainsPurpose.png"],
 ];
+// Pictures supplied by hand (not on the wiki): Rukia's and Tosen's forms, Ichigo's and Byakuya's later looks
+// (bleach-ichigo-kurosaki-2, bleach-byakuya-kuchiki-2).
 // node crew/scripts/forms.mjs <game/id> … downloads only those.
 const only = process.argv.slice(2);
 // The image CDN only serves files requested from the wiki itself.

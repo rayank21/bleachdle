@@ -121,4 +121,13 @@ export const seed = [
   { name: "Tenjirō Kirinji", wiki: "Tenjirō Kirinji", gender: "M", race: ["Shinigami"], age: "1000+", hair: ["Black"], height: 180, residence: ["Soul King Palace"], arc: 6, affiliation: "Zero Division" },
   { name: "Ōetsu Nimaiya", wiki: "Ōetsu Nimaiya", gender: "M", race: ["Shinigami"], age: "1000+", hair: ["Black"], height: 172, residence: ["Soul King Palace"], arc: 6, affiliation: "Zero Division" },
   { name: "Kirio Hikifune", wiki: "Kirio Hikifune", gender: "F", race: ["Shinigami"], age: "101-500", hair: ["Purple"], height: 175, residence: ["Soul King Palace"], arc: 6, affiliation: "Zero Division" },
+
+  // ── Added on Naim's list ──
+  { name: "Kiyone Kotetsu", wiki: "Kiyone Kotetsu", gender: "F", race: ["Shinigami"], age: "101-500", hair: ["Blonde"], height: 147, residence: ["Seireitei"], arc: 1, affiliation: "13th Division" },
+  { name: "Sentarō Kotsubaki", wiki: "Sentarō Kotsubaki", gender: "M", race: ["Shinigami"], age: "101-500", hair: ["Black"], height: 183, residence: ["Seireitei"], arc: 1, affiliation: "13th Division" },
+  { name: "Dordoni Alessandro Del Socaccio", wiki: "Dordoni Alessandro Del Socaccio", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Black"], height: 186, residence: ["Las Noches", "Hueco Mundo"], arc: 3, affiliation: "Privaron Espada" },
+  { name: "Cirucci Sanderwicci", wiki: "Cirucci Sanderwicci", gender: "F", race: ["Arrancar"], age: "Unknown", hair: ["Purple"], height: 160, residence: ["Las Noches", "Hueco Mundo"], arc: 3, affiliation: "Privaron Espada" },
+  { name: "Gantenbainne Mosqueda", wiki: "Gantenbainne Mosqueda", gender: "M", race: ["Arrancar"], age: "Unknown", hair: ["Brown"], height: 199, residence: ["Las Noches", "Hueco Mundo"], arc: 3, affiliation: "Privaron Espada" },
+  { name: "Ikumi Unagiya", wiki: "Ikumi Unagiya", gender: "F", race: ["Human"], age: "21-100", hair: ["Black"], height: 168, residence: ["Karakura Town"], arc: 5, affiliation: "Unagiya Shop" },
+  { name: "Zennosuke Kurumadani", wiki: "Zennosuke Kurumadani", gender: "M", race: ["Shinigami"], age: "101-500", hair: ["Black"], height: 175, residence: ["Karakura Town"], arc: 5, affiliation: "13th Division" },
 ];

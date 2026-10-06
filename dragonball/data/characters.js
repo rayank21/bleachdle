@@ -1569,5 +1569,186 @@ window.DLE_CHARACTERS = [
    "Heeters"
   ],
   "origin": "Namek"
+ },
+ {
+  "id": "vegito",
+  "name": "Vegito",
+  "gender": "M",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 7,
+  "image": "assets/characters/vegito.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Z Fighters"
+  ],
+  "origin": "Earth"
+ },
+ {
+  "id": "gogeta",
+  "name": "Gogeta",
+  "gender": "M",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/gogeta.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Z Fighters"
+  ],
+  "origin": "Earth"
+ },
+ {
+  "id": "kefla",
+  "name": "Kefla",
+  "gender": "F",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/kefla.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Team Universe 6"
+  ],
+  "origin": "Universe 6"
+ },
+ {
+  "id": "broly",
+  "name": "Broly",
+  "gender": "M",
+  "race": [
+   "Saiyan"
+  ],
+  "height": 239,
+  "arc": 8,
+  "image": "assets/characters/broly.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Frieza Force"
+  ],
+  "origin": "Planet Vegeta"
+ },
+ {
+  "id": "paragus",
+  "name": "Paragus",
+  "gender": "M",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/paragus.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Frieza Force"
+  ],
+  "origin": "Planet Vegeta"
+ },
+ {
+  "id": "gine",
+  "name": "Gine",
+  "gender": "F",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/gine.webp",
+  "hair": [
+   "Black"
+  ],
+  "origin": "Planet Vegeta",
+  "aff": [
+   "None"
+  ]
+ },
+ {
+  "id": "king-vegeta",
+  "name": "King Vegeta",
+  "gender": "M",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 5,
+  "image": "assets/characters/king-vegeta.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Saiyan Army"
+  ],
+  "origin": "Planet Vegeta"
+ },
+ {
+  "id": "pan",
+  "name": "Pan",
+  "gender": "F",
+  "race": [
+   "Saiyan"
+  ],
+  "height": null,
+  "arc": 7,
+  "image": "assets/characters/pan.webp",
+  "hair": [
+   "Black"
+  ],
+  "aff": [
+   "Z Fighters"
+  ],
+  "origin": "Earth"
+ },
+ {
+  "id": "belmod",
+  "name": "Belmod",
+  "gender": "M",
+  "race": [
+   "God"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/belmod.webp",
+  "hair": [
+   "None"
+  ],
+  "aff": [
+   "Gods",
+   "Pride Troopers"
+  ],
+  "origin": "Universe 11"
+ },
+ {
+  "id": "moro",
+  "name": "Moro",
+  "gender": "M",
+  "race": [
+   "Alien"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/moro.webp",
+  "hair": [
+   "White"
+  ],
+  "aff": [
+   "Galactic Bandit Brigade"
+  ],
+  "origin": "Unknown"
  }
 ];

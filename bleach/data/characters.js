@@ -1960,5 +1960,141 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "affiliation": "Zero Division",
   "image": "assets/characters/kirio-hikifune.webp"
+ },
+ {
+  "id": "kiyone-kotetsu",
+  "name": "Kiyone Kotetsu",
+  "gender": "F",
+  "race": [
+   "Shinigami"
+  ],
+  "age": "101-500",
+  "hair": [
+   "Blonde"
+  ],
+  "height": 154,
+  "residence": [
+   "Seireitei"
+  ],
+  "arc": 1,
+  "affiliation": "13th Division",
+  "image": "assets/characters/kiyone-kotetsu.webp"
+ },
+ {
+  "id": "sentaro-kotsubaki",
+  "name": "Sentarō Kotsubaki",
+  "gender": "M",
+  "race": [
+   "Shinigami"
+  ],
+  "age": "101-500",
+  "hair": [
+   "Black"
+  ],
+  "height": 183,
+  "residence": [
+   "Seireitei"
+  ],
+  "arc": 1,
+  "affiliation": "13th Division",
+  "image": "assets/characters/sentaro-kotsubaki.webp"
+ },
+ {
+  "id": "dordoni-alessandro-del-socaccio",
+  "name": "Dordoni Alessandro Del Socaccio",
+  "gender": "M",
+  "race": [
+   "Arrancar"
+  ],
+  "age": "Unknown",
+  "hair": [
+   "Black"
+  ],
+  "height": 190,
+  "residence": [
+   "Las Noches",
+   "Hueco Mundo"
+  ],
+  "arc": 3,
+  "affiliation": "Privaron Espada",
+  "image": "assets/characters/dordoni-alessandro-del-socaccio.webp"
+ },
+ {
+  "id": "cirucci-sanderwicci",
+  "name": "Cirucci Sanderwicci",
+  "gender": "F",
+  "race": [
+   "Arrancar"
+  ],
+  "age": "Unknown",
+  "hair": [
+   "Purple"
+  ],
+  "height": 158,
+  "residence": [
+   "Las Noches",
+   "Hueco Mundo"
+  ],
+  "arc": 3,
+  "affiliation": "Privaron Espada",
+  "image": "assets/characters/cirucci-sanderwicci.webp"
+ },
+ {
+  "id": "gantenbainne-mosqueda",
+  "name": "Gantenbainne Mosqueda",
+  "gender": "M",
+  "race": [
+   "Arrancar"
+  ],
+  "age": "Unknown",
+  "hair": [
+   "Brown"
+  ],
+  "height": 201,
+  "residence": [
+   "Las Noches",
+   "Hueco Mundo"
+  ],
+  "arc": 3,
+  "affiliation": "Privaron Espada",
+  "image": "assets/characters/gantenbainne-mosqueda.webp"
+ },
+ {
+  "id": "ikumi-unagiya",
+  "name": "Ikumi Unagiya",
+  "gender": "F",
+  "race": [
+   "Human"
+  ],
+  "age": "21-100",
+  "hair": [
+   "Black"
+  ],
+  "height": 168,
+  "residence": [
+   "Karakura Town"
+  ],
+  "arc": 5,
+  "affiliation": "Unagiya Shop",
+  "image": "assets/characters/ikumi-unagiya.webp"
+ },
+ {
+  "id": "zennosuke-kurumadani",
+  "name": "Zennosuke Kurumadani",
+  "gender": "M",
+  "race": [
+   "Shinigami"
+  ],
+  "age": "101-500",
+  "hair": [
+   "Black"
+  ],
+  "height": 175,
+  "residence": [
+   "Karakura Town"
+  ],
+  "arc": 5,
+  "affiliation": "13th Division",
+  "image": "assets/characters/zennosuke-kurumadani.webp"
  }
 ];

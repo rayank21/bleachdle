@@ -1398,8 +1398,8 @@
     }
   }
 
-  const BLUR = [30, 22, 16, 12, 9, 6, 4, 2.5, 1.5, 0.8];
-  const ZOOM = [2.1, 1.8, 1.6, 1.45, 1.3, 1.2, 1.12, 1.06, 1.02, 1];
+  const BLUR = [18, 13, 10, 7.5, 5.5, 4, 3, 2, 1.2, 0.6];
+  const ZOOM = [1.8, 1.6, 1.45, 1.32, 1.22, 1.14, 1.08, 1.04, 1.02, 1];
   function renderPlay(feedback) {
     const box = $("#playBox");
     if (!box) return;

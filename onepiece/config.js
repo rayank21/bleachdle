@@ -34,6 +34,7 @@
     columns: [
       { key: "name", type: "name", width: 116 },
       { key: "gender", type: "exact" },
+      { key: "species", type: "exact", width: 100 },
       { key: "aff", type: "set", width: 132 },
       { key: "fruit", type: "set", width: 100 },
       { key: "bounty", type: "number", width: 100, format: berries },
@@ -42,8 +43,8 @@
       { key: "arc", type: "arc", width: 140 },
     ],
     labels: {
-      en: { name: "Name", gender: "Gender", aff: "Affiliation", fruit: "Devil Fruit", bounty: "Bounty", height: "Height", origin: "Origin", arc: "First Arc" },
-      fr: { name: "Nom", gender: "Genre", aff: "Affiliation", fruit: "Fruit du démon", bounty: "Prime", height: "Taille", origin: "Origine", arc: "1er arc" },
+      en: { name: "Name", gender: "Gender", species: "Species", aff: "Affiliation", fruit: "Devil Fruit", bounty: "Bounty", height: "Height", origin: "Origin", arc: "First Arc" },
+      fr: { name: "Nom", gender: "Genre", species: "Espèce", aff: "Affiliation", fruit: "Fruit du démon", bounty: "Prime", height: "Taille", origin: "Origine", arc: "1er arc" },
     },
 
     hints: [
@@ -64,6 +65,9 @@
       en: { M: "Male", F: "Female" },
       fr: {
         M: "Homme", F: "Femme", Unknown: "Inconnu", None: "Aucun",
+        Human: "Humain", "Fish-Man": "Homme-Poisson", Merfolk: "Triton / Sirène", Mink: "Mink", Giant: "Géant", Reindeer: "Renne",
+        "Sky People": "Peuple du ciel", Lunarian: "Lunarien", Oni: "Oni", Buccaneer: "Buccaneer", "Longarm Tribe": "Tribu des Longs-Bras",
+        "Three-Eye Tribe": "Tribu des Trois-Yeux",
         "Fish-Man Island": "Île des Hommes-Poissons", "Sky Island": "Île céleste",
         "Straw Hat Pirates": "Chapeau de paille", Marines: "Marine", "Seven Warlords": "Grands Corsaires",
         "Revolutionary Army": "Armée révolutionnaire", "Whitebeard Pirates": "Équipage de Barbe Blanche",

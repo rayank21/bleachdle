@@ -6,9 +6,13 @@
 (() => {
   const SAIYAN = { fx: "aura", c1: "255, 225, 77", c2: "255, 157, 46", kanji: "超", lightning: true };
   const BANKAI = { fx: "pillar", c1: "255, 42, 42", c2: "30, 6, 8", kanji: "卍解" };
+  // A Quincy's Vollständig: wings of light and a halo.
+  const QUINCY = { fx: "pillar", c1: "130, 210, 255", c2: "4, 10, 30", kanji: "滅却師" };
   const RESURRECCION = { fx: "pillar", c1: "60, 220, 140", c2: "10, 40, 25", kanji: "帰刃" };
   const DOMAIN = { fx: "domain", c1: "150, 90, 255", c2: "8, 4, 20", kanji: "領域展開" };
   // A Titan shifter's transformation: a lightning strike and a column of steam.
+  // A fusion: two warriors become one in a blue and gold burst.
+  const FUSION = { fx: "aura", c1: "90, 200, 255", c2: "255, 230, 120", kanji: "合体", lightning: true };
   const TITAN = { fx: "pillar", c1: "255, 196, 110", c2: "40, 14, 4", kanji: "巨人", lightning: true };
 
   window.CREW_FORMS = {
@@ -32,10 +36,28 @@
       vados: { arc: 8, name: { en: "Ultra Instinct", fr: "Ultra Instinct" }, fx: "aura", c1: "180, 210, 255", c2: "90, 90, 200", kanji: "身勝手の極意" },
       zeno: { arc: 8, name: { en: "Erasure", fr: "Effacement" }, fx: "domain", c1: "255, 255, 255", c2: "30, 10, 60", kanji: "消滅", lightning: true },
       "grand-priest": { arc: 8, name: { en: "Ultra Instinct", fr: "Ultra Instinct" }, fx: "aura", c1: "210, 230, 255", c2: "100, 120, 210", kanji: "大神官" },
+      vegito: { arc: 8, name: { en: "Potara fusion · Super Saiyan Blue", fr: "Fusion Potara · Super Saiyan Blue" }, ...FUSION },
+      gogeta: { arc: 8, name: { en: "Fusion dance · Super Saiyan Blue", fr: "Danse de fusion · Super Saiyan Blue" }, ...FUSION },
+      kefla: { arc: 8, name: { en: "Potara fusion · Super Saiyan 2", fr: "Fusion Potara · Super Saiyan 2" }, ...FUSION, c1: "140, 255, 120" },
+      broly: { arc: 8, name: { en: "Legendary Super Saiyan", fr: "Super Saiyan légendaire" }, fx: "aura", c1: "140, 255, 90", c2: "255, 240, 120", kanji: "伝説", lightning: true },
     },
     bleach: {
-      "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI },
-      "byakuya-kuchiki": { arc: 1, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, ...BANKAI, c1: "255, 140, 190" },
+      "rukia-kuchiki": { arc: 6, name: { en: "Bankai · Hakka no Togame", fr: "Bankai · Hakka no Togame" }, fx: "pillar", c1: "200, 240, 255", c2: "8, 16, 40", kanji: "白霞罸" },
+      "kaname-tosen": { arc: 4, name: { en: "Resurrección · Grillar Grillo", fr: "Resurrección · Grillar Grillo" }, ...RESURRECCION, c1: "170, 130, 255", kanji: "清虫百式" },
+      "tier-harribel": { arc: 4, name: { en: "Resurrección · Tiburón", fr: "Resurrección · Tiburón" }, ...RESURRECCION, c1: "255, 220, 120", kanji: "皇鮫后" },
+      "nelliel-tu-odelschwanck": { arc: 3, name: { en: "Resurrección · Gamuza", fr: "Resurrección · Gamuza" }, ...RESURRECCION, kanji: "羚騎士" },
+      "uryu-ishida": { arc: 1, name: { en: "Letzt Stil", fr: "Letzt Stil" }, ...QUINCY },
+      "askin-nakk-le-vaar": { arc: 6, name: { en: "Vollständig · Gift Ball Deluxe", fr: "Vollständig · Gift Ball Deluxe" }, ...QUINCY, c1: "190, 110, 255" },
+      "bambietta-basterbine": { arc: 6, name: { en: "Vollständig · Calaveras", fr: "Vollständig · Calaveras" }, ...QUINCY, c1: "255, 90, 110" },
+      "liltotto-lamperd": { arc: 6, name: { en: "Vollständig · Gagael", fr: "Vollständig · Gagael" }, ...QUINCY, c1: "255, 230, 90" },
+      "as-nodt": { arc: 6, name: { en: "Vollständig · Tatarforas", fr: "Vollständig · Tatarforas" }, ...QUINCY, c1: "170, 90, 255" },
+      "lille-barro": { arc: 6, name: { en: "Vollständig · Jilliel", fr: "Vollständig · Jilliel" }, ...QUINCY, c1: "255, 210, 90" },
+      "gremmy-thoumeaux": { arc: 6, name: { en: "The Visionary", fr: "L'Imagination" }, ...QUINCY, c1: "255, 80, 120" },
+      "jugram-haschwalth": { arc: 6, name: { en: "The Balance", fr: "L'Équilibre" }, ...QUINCY },
+      "bazz-b": { arc: 6, name: { en: "Burner Finger", fr: "Burner Finger" }, ...QUINCY, c1: "255, 120, 40" },
+      "kirio-hikifune": { arc: 6, name: { en: "Slim form", fr: "Forme affinée" }, fx: "aura", c1: "255, 170, 210", c2: "60, 10, 30", kanji: "麒麟殿" },
+      "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI , next: { arc: 4, name: { en: "Final Getsuga Tenshō", fr: "Getsuga Tenshô final" }, fx: "pillar", c1: "200, 20, 30", c2: "6, 0, 2", kanji: "無月", clip: false } },
+      "byakuya-kuchiki": { arc: 1, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, ...BANKAI, c1: "255, 140, 190" , next: { arc: 6, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, clip: false } },
       "renji-abarai": { arc: 1, name: { en: "Bankai · Hihiō Zabimaru", fr: "Bankai · Hihiō Zabimaru" }, ...BANKAI },
       "toshiro-hitsugaya": { arc: 1, name: { en: "Bankai · Daiguren Hyōrinmaru", fr: "Bankai · Daiguren Hyōrinmaru" }, ...BANKAI, c1: "120, 210, 255", c2: "6, 20, 40" },
       "ulquiorra-cifer": { arc: 3, name: { en: "Resurrección · Segunda Etapa", fr: "Resurrección · Segunda Etapa" }, ...RESURRECCION },
@@ -68,6 +90,8 @@
       "hagoromo-otsutsuki": { arc: 8, name: { en: "Sage of Six Paths", fr: "Ermite Rikudô" }, fx: "pillar", c1: "200, 160, 255", c2: "20, 10, 40", kanji: "六道" },
     },
     onepiece: {
+      "rocks-d-xebec": { arc: 9, name: { en: "Conqueror's Haki · God Valley", fr: "Haki des rois · God Valley" }, fx: "aura", c1: "255, 50, 70", c2: "20, 0, 6", kanji: "覇王色", lightning: true },
+      aramaki: { arc: 9, name: { en: "Logia · Forest", fr: "Logia · Forêt" }, fx: "domain", c1: "120, 230, 110", c2: "6, 24, 6", kanji: "森" },
       "monkey-d-luffy": { arc: 9, name: { en: "Gear 5", fr: "Gear 5" }, fx: "aura", c1: "255, 255, 255", c2: "190, 150, 255", kanji: "ニカ", lightning: true },
       "roronoa-zoro": { arc: 3, name: { en: "Asura", fr: "Asura" }, fx: "domain", c1: "90, 255, 150", c2: "4, 20, 10", kanji: "阿修羅" },
       "tony-tony-chopper": { arc: 3, name: { en: "Monster Point", fr: "Monster Point" }, fx: "pillar", c1: "255, 120, 160", c2: "40, 10, 10", kanji: "怪物" },

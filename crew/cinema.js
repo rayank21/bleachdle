@@ -42,11 +42,15 @@
     }
     if (form.clip && !cache.has(form.clip)) {
       const v = document.createElement("video");
-      Object.assign(v, { muted: true, preload: "auto", src: form.clip });
+      Object.assign(v, { muted: true, playsInline: true, preload: "auto", src: form.clip });
+      v.setAttribute("muted", "");
+      v.setAttribute("playsinline", "");
       cache.set(form.clip, v);
     }
   }
-  const ready = (src) => Promise.race([cache.get(src) ?? Promise.resolve(), new Promise((r) => setTimeout(r, 900))]);
+  // The picture is shown only once decoded (a half-loaded picture would pop in during the reveal); a slow
+  // network gets 2.5 s before the scene goes on anyway.
+  const ready = (src) => Promise.race([cache.get(src) ?? Promise.resolve(), new Promise((r) => setTimeout(r, 2500))]);
 
   // A fine, irregular, branching bolt between two points.
   function bolt(x0, y0, x1, y1, rough) {
@@ -113,9 +117,10 @@
         clipBox = el("div", "cine-clip");
         const cached = cache.get(form.clip);
         video = cached instanceof HTMLVideoElement ? cached : el("video");
-        Object.assign(video, { muted: true, playsInline: true, preload: "auto" });
+        Object.assign(video, { muted: true, playsInline: true, preload: "auto", controls: false, disablePictureInPicture: true });
         video.setAttribute("muted", "");
         video.setAttribute("playsinline", "");
+        video.setAttribute("disableremoteplayback", "");
         if (!video.getAttribute("src")) video.src = form.clip;
         try { video.currentTime = 0; } catch {}
         clipBox.append(video);
@@ -291,23 +296,26 @@
         // The clip, in a diagonal panel, before the reveal.
         let charge = 1050;
         if (clipBox) {
-          const ok = await new Promise((res) => {
-            if (video.readyState >= 2) return res(true);
-            video.addEventListener("loadeddata", () => res(true), { once: true });
+          // Enough of the clip buffered to play smoothly, then it must really start: a phone that blocks
+          // autoplay (battery saver) or a clip that fails skips straight to the reveal instead of a frozen frame.
+          let ok = await new Promise((res) => {
+            if (video.readyState >= 3) return res(true);
+            video.addEventListener("canplay", () => res(true), { once: true });
             video.addEventListener("error", () => res(false), { once: true });
             setTimeout(() => res(video.readyState >= 2), 2200);
           });
           if (done || exiting) return;
+          if (ok) ok = await Promise.race([video.play().then(() => true, () => false), new Promise((r) => setTimeout(() => r(!video.paused), 900))]);
+          if (done || exiting) return;
           if (ok) {
             const len = Math.min(5200, Math.max(1400, (video.duration || 3) * 1000));
-            video.play().catch(() => {});
             anim(clipBox, [{ clipPath: "polygon(0 0, 0 0, -12% 100%, -12% 100%)" }, { clipPath: "polygon(0 0, 112% 0, 100% 100%, -12% 100%)" }], { duration: 520, easing: EXPO });
             anim(video, [{ transform: "scale(1.06)" }, { transform: "scale(1)" }], { duration: len, easing: "linear" });
             await new Promise((r) => at(len, r));
             if (done || exiting) return;
             anim(clipBox, [{ clipPath: "polygon(0 0, 112% 0, 100% 100%, -12% 100%)" }, { clipPath: "polygon(112% 0, 112% 0, 100% 100%, 100% 100%)" }], { duration: 420, easing: SNAP });
             charge = 280;
-          } else clipBox.remove();
+          } else { video.pause(); clipBox.remove(); }
         }
         if (done || exiting) return;
 

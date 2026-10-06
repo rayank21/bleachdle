@@ -65,8 +65,9 @@
     }
     const W = innerWidth, H = innerHeight;
     size = { w: W, h: H };
-    const dpr = Math.min(devicePixelRatio || 1, document.documentElement.classList.contains("lite") ? 1 : 1.5);
     const mobile = W <= 760;
+    // Phones keep the canvases small: mobile browsers cap canvas memory and reload a page that goes over it.
+    const dpr = Math.min(devicePixelRatio || 1, document.documentElement.classList.contains("lite") || mobile ? 1 : 1.5);
 
     // The grid: 140% of the screen, turned by -7°, cells of 120×150 with 6px gaps, like the old CSS grid.
     const gw = W * 1.4, gh = H * 1.4;
@@ -122,9 +123,13 @@
       const y = H * 1.02 - h;
       ctx.globalAlpha = mobile ? 0.3 : 0.6;
       ctx.drawImage(d, x * dpr, y * dpr);
+      d.width = d.height = 0;
     });
     ctx.globalAlpha = 1;
     canvas.classList.add("is-in");
+    // Free the scratch canvas and the decoded pictures at once instead of waiting for the garbage collector.
+    g.width = g.height = 0;
+    cache.clear();
   }
 
   function schedule(delay = 0) {
