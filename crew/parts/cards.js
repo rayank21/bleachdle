@@ -6,7 +6,7 @@
 import { S } from "./state.js";
 import { $, CREW, DEFAULT_POWER, GAMES, ROOT, displayName, el, loadGame, t, toast, wait } from "./base.js";
 import { burst, sfx, tierOf } from "./fx.js";
-import { drawPack } from "./boosters.js";
+import { drawPack, packEl } from "./boosters.js";
 
 const PROFILE = () => window.DLE_Profile;
 const CV = { sub: "inv", anime: "all", dupesOnly: false, trade: null, mode: "pack", size: 2 };
@@ -640,7 +640,7 @@ function startMatch(room, data) {
     ids, names: new Map(room.members.map((x) => [x.id, x.name])), teams, teamNames: cardRooms.teamNames(room),
     points: new Map(ids.map((id) => [id, 0])), teamPts: [0, 0], active: new Set(ids),
     // pack battle: every player's pack for each round
-    packs: new Map(ids.map((id) => [id, []])),
+    packs: new Map(ids.map((id) => [id, []])), opened: [], revealed: new Set(), queue: [], anim: null, timer: 0,
     // deck battle: every player's hand and the card they played each round
     hands: new Map(), plays: new Map(ids.map((id) => [id, []])),
   };
@@ -671,7 +671,9 @@ function onMatchMessage(type, d, from) {
   if (type === "pack" && m.mode === "pack" && Number.isInteger(d.r) && d.r >= 0 && d.r < 3 && Array.isArray(d.cards) && !m.packs.get(from)[d.r]) {
     m.packs.get(from)[d.r] = d.cards.slice(0, 5).map((c) => cleanCard(c, m.game.id)).filter((c) => c?.g);
     drawMatch();
-    tryRevealPack(m.round);
+    packStep();
+  } else if (type === "open" && m.mode === "pack" && d.r === m.round) {
+    markOpen(from);
   } else if (type === "deck" && m.mode === "deck" && Array.isArray(d.cards) && !m.hands.has(from)) {
     m.hands.set(from, d.cards.slice(0, DECK_SIZE).map((c) => cleanCard(c)).filter((c) => c?.g));
     drawMatch();
@@ -694,7 +696,7 @@ function playerLeft(id) {
   const sides = m.teams ? new Set(left.map((x) => m.teams[x])) : null;
   if (left.length < 2 || (sides && sides.size < 2)) { finish("forfeit"); return; }
   drawMatch();
-  if (m.mode === "pack") tryRevealPack(m.round);
+  if (m.mode === "pack") packStep();
   else tryResolve();
 }
 
@@ -722,7 +724,8 @@ function isOver(m, r) {
   return left <= 0 || sorted[0] - (sorted[1] ?? 0) > left;
 }
 
-// ── Pack battle: three rounds, everyone opens a pack, the bigger total wins the round ──
+// ── Pack battle: three rounds; each player in turn tears their pack open and its cards turn over one by one,
+// then the bigger total wins the round ──
 async function sendPack(r) {
   const m = S.cardMatch;
   const cards = await drawPack(m.game);
@@ -730,48 +733,117 @@ async function sendPack(r) {
   m.packs.get(m.me)[r] = cards.map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: c.tier, f: c.f }));
   cardRooms.broadcast("pack", { r, key: m.key, cards: m.packs.get(m.me)[r] });
   drawMatch();
-  tryRevealPack(r);
+  packStep();
 }
 
-async function tryRevealPack(r) {
+// The turn order shifts by one each round, so a different player opens first.
+const packOrder = (m) => m.ids.map((_, i) => m.ids[(i + m.round) % m.ids.length]).filter((id) => m.active.has(id));
+const openedNow = (m) => (m.opened[m.round] ??= new Set());
+const packsReady = (m) => [...m.active].every((id) => m.packs.get(id)?.[m.round]);
+// Whose turn it is to open (nobody while a pack is being opened, or before every pack is drawn).
+const opener = (m) => (m.done || m.busy || m.running || m.queue.length || !packsReady(m) ? null : packOrder(m).find((id) => !openedNow(m).has(id)) ?? null);
+
+function openMine() {
   const m = S.cardMatch;
-  if (!m || m.done || m.round !== r || m.busy || m.log[r]) return;
-  const live = [...m.active];
-  if (live.some((id) => !m.packs.get(id)?.[r])) return;
-  m.busy = true;
-  m.flipped = 0;
-  drawMatch();
-  // Turn the cards over column by column, on every pack at once; the count survives a redraw of the screen.
-  for (let i = 0; i < 5; i++) {
-    m.flipped = i + 1;
-    let best = null;
-    for (const list of document.querySelectorAll(".cv-match .cvm-row .cvm-cards")) {
-      const node = list.children[i];
-      if (!node) continue;
-      node.classList.add("is-flipped");
-      const tier = node.dataset.tier;
-      if (tier === "legend" || tier === "secret") { const b = node.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, { count: 40, spread: 200, gold: tier === "legend", color: tier === "secret" ? "120, 230, 255" : null }); }
-      const rank = ["common", "epic", "legend", "secret"].indexOf(tier);
-      if (best == null || rank > best) best = rank;
+  if (!m || opener(m) !== m.me) return;
+  cardRooms.broadcast("open", { r: m.round, key: m.key });
+  markOpen(m.me);
+}
+
+function markOpen(id) {
+  const m = S.cardMatch;
+  if (!m || m.done || !m.active.has(id) || !packsReady(m) || openedNow(m).has(id)) return;
+  openedNow(m).add(id);
+  m.queue.push(id);
+  runOpenings();
+}
+
+// Opens the queued packs one after the other, on every screen.
+async function runOpenings() {
+  const m = S.cardMatch;
+  if (!m || m.running) return;
+  m.running = true;
+  clearTimeout(m.timer);
+  while (m.queue.length && S.cardMatch === m && !m.done) {
+    const id = m.queue.shift();
+    const cards = m.packs.get(id)?.[m.round];
+    if (!cards) continue;
+    m.anim = { id, n: 0, torn: false };
+    drawMatch();
+    const row = () => document.querySelector(`.cv-match .cvm-row[data-id="${id}"]`);
+    row()?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    // The pack shakes, its top tears off, then the cards come out face down.
+    const pack = row()?.querySelector(".bpack");
+    if (pack) {
+      pack.classList.remove("is-idle");
+      pack.animate([{ transform: "none" }, { transform: "translateX(-2px) rotate(-1deg)" }, { transform: "translateX(2px) rotate(1deg)" }, { transform: "none" }], { duration: 150, iterations: 4 });
+      sfx("rise", { dur: 0.6 });
+      await wait(600);
+      pack.querySelector(".bpack-top")?.animate([{ transform: "none", opacity: 1 }, { transform: "translate(60px, -90px) rotate(40deg)", opacity: 0 }], { duration: 500, easing: "cubic-bezier(.3,.6,.4,1)", fill: "forwards" });
+      pack.classList.add("is-torn");
+      const b = pack.getBoundingClientRect();
+      burst(b.left + b.width / 2, b.top + b.height * 0.15, { count: 36, spread: 180 });
+      sfx("slash");
+      await wait(450);
     }
-    sfx(best >= 2 ? "impact" : best === 1 ? "shimmer" : "place");
-    await wait(420);
+    if (S.cardMatch !== m || m.done) return;
+    m.anim.torn = true;
+    drawMatch();
+    await wait(350);
+    // The cards turn over one by one.
+    for (let i = 0; i < cards.length; i++) {
+      if (S.cardMatch !== m || m.done) return;
+      m.anim.n = i + 1;
+      const node = row()?.querySelector(".cvm-cards")?.children[i];
+      const tier = cards[i].tier;
+      if (node) {
+        node.classList.add("is-flipped");
+        if (tier === "legend" || tier === "secret") { const b = node.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, { count: 40, spread: 200, gold: tier === "legend", color: tier === "secret" ? "120, 230, 255" : null }); }
+      }
+      sfx(tier === "legend" || tier === "secret" ? "impact" : tier === "epic" ? "shimmer" : "place");
+      await wait(tier === "legend" || tier === "secret" ? 900 : 550);
+    }
+    m.revealed.add(id);
+    m.anim = null;
+    drawMatch();
+    sfx("stamp");
+    await wait(700);
   }
-  if (S.cardMatch !== m || m.done) return;
-  const rows = live.filter((id) => m.packs.get(id)?.[r]).map((id) => ({ id, s: packScore(m.packs.get(id)[r]) }));
-  m.log[r] = scoreRound(m, rows);
-  const winners = m.log[r].winners;
-  sfx(winners.includes(m.me) ? "win" : winners.length ? "stamp" : "place");
+  m.anim = null;
+  m.running = false;
+  if (S.cardMatch === m) packStep();
+}
+
+// After every change: score the round once every pack is open, or wait for the next player to open theirs.
+async function packStep() {
+  const m = S.cardMatch;
+  if (!m || m.done || m.mode !== "pack" || m.busy || m.running || m.queue.length) return;
+  const r = m.round;
+  const live = [...m.active];
+  if (!packsReady(m)) { drawMatch(); return; }
+  if (live.every((id) => m.revealed.has(id))) {
+    m.busy = true;
+    clearTimeout(m.timer);
+    const rows = live.map((id) => ({ id, s: packScore(m.packs.get(id)[r]) }));
+    m.log[r] = scoreRound(m, rows);
+    const winners = m.log[r].winners;
+    sfx(winners.includes(m.me) ? "win" : winners.length ? "stamp" : "place");
+    drawMatch();
+    await wait(2600);
+    m.busy = false;
+    if (S.cardMatch !== m || m.done) return;
+    if (isOver(m, r)) { finish(); return; }
+    m.round++;
+    m.revealed = new Set();
+    drawMatch();
+    sendPack(m.round);
+    return;
+  }
+  // My turn opens by itself after a while; someone who never opens is opened for after longer.
+  const who = opener(m);
   drawMatch();
-  await wait(2200);
-  m.busy = false;
-  if (S.cardMatch !== m || m.done) return;
-  if (isOver(m, r)) { finish(); return; }
-  m.flipped = 0;
-  m.round++;
-  drawMatch();
-  sendPack(m.round);
-  tryRevealPack(m.round);
+  clearTimeout(m.timer);
+  if (who) m.timer = setTimeout(() => { if (S.cardMatch === m && opener(m) === who) { if (who === m.me) openMine(); else markOpen(who); } }, who === m.me ? 15000 : 30000);
 }
 
 // ── Deck battle: five rounds, everyone plays a card, the strongest wins the round (or the strongest team) ──
@@ -835,6 +907,7 @@ function finish(why) {
   const m = S.cardMatch;
   if (!m || m.done) return;
   m.done = true;
+  clearTimeout(m.timer);
   if (m.teams) {
     const k = m.teams[m.me];
     const left = [0, 1].filter((x) => [...m.active].some((id) => m.teams[id] === x));
@@ -870,23 +943,42 @@ function drawMatch() {
     const entry = m.log[r];
     const many = m.ids.length > 2;
     const order = [...m.ids.filter((id) => id !== m.me), m.me];
-    const rows = el("div", `cvm-rows${many ? " is-multi" : ""}${m.ids.length > 4 ? " is-big" : ""}`);
+    const turn = opener(m);
+    const rows = el("div", `cvm-rows${many ? " is-multi" : ""}`);
     for (const id of order) {
       const cards = m.packs.get(id)?.[r];
       const gone = !m.active.has(id);
       if (gone && !cards) continue;
-      const total = entry?.rows.find((x) => x.id === id)?.s;
-      const row = el("div", `cvm-row${id === m.me ? " is-me" : ""}${m.teams ? ` team-${m.teams[id]}` : ""}${gone ? " has-left" : ""}${entry?.winners.includes(id) ? " is-winner" : ""}`);
+      const shown = m.revealed.has(id);
+      const total = shown && cards ? packScore(cards) : null;
+      const anim = m.anim?.id === id ? m.anim : null;
+      const row = el("div", `cvm-row${id === m.me ? " is-me" : ""}${m.teams ? ` team-${m.teams[id]}` : ""}${gone ? " has-left" : ""}${entry?.winners.includes(id) ? " is-winner" : ""}${turn === id || anim ? " is-turn" : ""}`);
+      row.dataset.id = id;
       const name = id === m.me ? t("you") : m.names.get(id) ?? "Player";
       row.append(el("span", "cvm-row-label", total == null ? name : `${name} · ${total}`));
       const list = el("div", "cvm-cards");
-      (cards ?? []).forEach((c, i) => list.append(flipCard(c, !!entry || i < (m.flipped ?? 0))));
       if (!cards) list.append(el("p", "muted cvm-wait", t("cOpening")));
+      else if (shown || anim?.torn) cards.forEach((c, i) => list.append(flipCard(c, shown || i < anim.n)));
+      else {
+        // Still sealed: the pack, which I tear open myself when it's my turn.
+        const pack = packEl(m.game);
+        pack.classList.add("cvm-pack");
+        if (turn === id) pack.classList.add("is-idle");
+        if (turn === m.me && id === m.me) {
+          const b = el("button", "cvm-pack-btn");
+          b.type = "button";
+          b.append(pack, el("span", "btn-primary btn-small", t("cOpenMine")));
+          b.addEventListener("click", openMine);
+          list.append(b);
+        } else list.append(pack);
+      }
       row.append(list);
       rows.append(row);
     }
     board.append(rows);
     if (entry) board.append(verdict(m, entry));
+    else if (turn && turn === m.me) board.append(el("p", "cvm-hint is-turn", t("cYourPack")));
+    else if (turn || (m.anim && m.anim.id !== m.me)) board.append(el("p", "cvm-hint", t("cTheirPack")(m.names.get(turn ?? m.anim.id) ?? "Player")));
   } else {
     // The arena: every player's card this round (hidden until everyone has played), then my hand.
     const r = m.round;

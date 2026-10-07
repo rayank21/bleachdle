@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T01:20",
+      title: { en: "Pack battles: open your pack in turn", fr: "Bataille de boosters : chacun son tour" },
+      items: [
+        { type: "improved", game: "crew", en: "In pack battles, the packs are no longer opened all at once: each player in turn tears their pack open (tap Open, or it opens by itself after 15 s) and everyone watches its cards turn over one by one. The first opener changes each round.", fr: "En bataille de boosters, les boosters ne s'ouvrent plus tous d'un coup : chaque joueur déchire le sien à son tour (bouton Ouvrir, ou tout seul au bout de 15 s) et tout le monde voit ses cartes se retourner une par une. Celui qui ouvre en premier change à chaque manche." },
+      ],
+    },
+    {
       at: "2026-10-08T00:50",
       title: { en: "Pack battles up to 8 players, in teams too", fr: "Batailles de boosters jusqu'à 8, en équipes aussi" },
       items: [

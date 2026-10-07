@@ -97,7 +97,7 @@ function untilParisMidnight() {
 }
 
 // A pack: foil body with the anime's colours, its kanji, logo and name; a crimped top strip that tears off.
-function packEl(g) {
+export function packEl(g) {
   const [c1, c2, kanji] = PACKS[g.id] ?? ["255, 80, 80", "20, 4, 6", "★"];
   const pack = el("div", "bpack");
   pack.style.setProperty("--p1", c1);

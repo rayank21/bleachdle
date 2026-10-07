@@ -886,3 +886,13 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 .cvm-row.has-left { opacity: 0.45; }
 .cvm-rows.is-multi .cvm-row.is-winner { border-color: rgba(125, 255, 176, 0.8); box-shadow: 0 0 18px rgba(80, 255, 150, 0.3); }
 .cvm-rows:not(.is-multi) .cvm-row.is-winner .cvm-row-label { color: #7dffb0; }
+
+/* Pack battles: each player tears their pack open in turn. */
+.cvm .bpack.cvm-pack { --w: clamp(64px, 12vw, 104px); }
+.cvm-rows.is-multi .bpack.cvm-pack { --w: clamp(48px, 7vw, 72px); }
+.cvm-pack-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 6px 0 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.cvm-pack-btn:hover .bpack { transform: translateY(-6px) rotate(-2deg) scale(1.05); }
+.cvm-row.is-turn { position: relative; }
+.cvm-rows.is-multi .cvm-row.is-turn { border-color: rgba(255, 211, 77, 0.8); box-shadow: 0 0 20px rgba(255, 211, 77, 0.25); }
+.cvm-row.is-turn .cvm-row-label { color: #ffd34d; }
+.cvm-hint.is-turn { color: #ffd34d; animation: rise 0.35s ease both; }
