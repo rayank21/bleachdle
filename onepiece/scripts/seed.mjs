@@ -31,6 +31,7 @@ export const seed = [
   { wiki: "Koby", gender: "M", aff: ["Marines"] },
   { wiki: "Helmeppo", gender: "M" },
   { wiki: "Morgan", gender: "M" },
+  { wiki: "Fullbody", gender: "M", epithet: { 0: "Ironfist Fullbody", 6: "Double Ironfist Fullbody" } },
   { wiki: "Kuro", gender: "M" },
   { wiki: "Don Krieg", gender: "M" },
   { wiki: "Zeff", gender: "M" },

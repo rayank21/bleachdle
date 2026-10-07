@@ -236,7 +236,7 @@
         { label: { en: "Combatant", fr: "Combattant" }, icon: "shield", role: "combatant", count: 3, fits: () => true },
       ],
       power: parse(`monkey-d-luffy:10 roronoa-zoro:9 nami:5 usopp:5 sanji:9 tony-tony-chopper:6 nico-robin:7 franky:7 brook:7 jinbe:8 shanks:10
-        buggy:4 alvida:2 koby:6 helmeppo:3 morgan:3 kuro:4 krieg:3 zeff:3 arlong:4 nojiko:1 bell-mere:3 smoker:7 tashigi:5
+        buggy:4 alvida:2 koby:6 helmeppo:3 morgan:3 fullbody:3 kuro:4 krieg:3 zeff:3 arlong:4 nojiko:1 bell-mere:3 smoker:7 tashigi:5
         monkey-d-dragon:10 gol-d-roger:10 shimotsuki-kuina:2 dracule-mihawk:10 crocodile:7 daz-bonez:5 bentham:4 galdino:4 nefertari-vivi:2
         wapol:3 kureha:3 hiriluk:1 portgas-d-ace:6 enel:7 wyper:5 gan-fall:4 marshall-d-teach:10 kuzan:10 iceburg:3 rob-lucci:8 kaku:7
         kalifa:4 spandam:1 monkey-d-garp:10 gecko-moria:6 perona:5 bartholomew-kuma:6 silvers-rayleigh:10 eustass-kid:9 trafalgar-law:9

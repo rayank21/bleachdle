@@ -401,6 +401,28 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/morgan.webp"
  },
  {
+  "id": "fullbody",
+  "name": "Fullbody",
+  "gender": "M",
+  "aff": [
+   "Marines"
+  ],
+  "fruit": [
+   "None"
+  ],
+  "bounty": 1000000,
+  "height": 184,
+  "origin": "North Blue",
+  "species": "Human",
+  "age": 26,
+  "epithet": {
+   "0": "Ironfist Fullbody",
+   "6": "Double Ironfist Fullbody"
+  },
+  "arc": 0,
+  "image": "assets/characters/fullbody.webp"
+ },
+ {
   "id": "kuro",
   "name": "Kuro",
   "gender": "M",
