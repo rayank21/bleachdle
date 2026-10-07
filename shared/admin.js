@@ -1,6 +1,7 @@
 // Admin panel, for the site's owner only: live test tools on every page (the answer, a chosen character,
 // forced Crew Roll draws, cinematics, sounds, banners, storage, a sandbox…).
-// Unlocked once per browser by opening any page with #admin=<key>; #admin-off locks it again. The key only keeps
+// Unlocked once per browser by opening any page with #admin=<key>; #admin-off locks it again. It also shows by
+// itself on any browser signed in to the owner's profile (unless locked there). The key only keeps
 // the panel out of other players' way: every tool acts on this browser alone, nothing is granted on the server.
 // Sandbox: the browser's storage is saved when it starts and put back when it ends, and in between nothing reaches
 // the profile (stats, crews, counters), so tests never show on the leaderboard.
@@ -15,6 +16,9 @@
   const FPS = "dle:admin-fps";
   const LITE = "dle:admin-lite";
   const OPEN = "dle:admin-open";
+  // The owner's profile (SHA-256 of its id): signed in to it, the panel is always there.
+  const OWNER_HASH = "1be7cdfe721cbd59d88229e88f94d4abed8718e2c6c395459a7262b9f170437b";
+  const LOCKED = "dle:admin-locked";
   // Crew Roll luck on this browser (solo and online draws): 1 = fair; above, the strongest characters come up more
   // often (crew.js reads window.DLE_ADMIN_LUCK, which only exists once the panel is unlocked).
   const LUCK = "dle:admin-luck";
@@ -56,6 +60,7 @@
   function lock() {
     if (sandboxOn()) ls.set(RESTORE, "1");
     ls.del(UNLOCK);
+    ls.set(LOCKED, "1");
     location.reload();
   }
 
@@ -192,8 +197,10 @@
   let panel = null;
   let body = null;
 
+  let started = false;
   function start() {
-    if (fab) return;
+    if (started) return;
+    started = true;
     setLuck(Number(ls.get(LUCK)) || 1);
     guardFetch();
     injectStyle();
@@ -589,6 +596,7 @@
     sha256(decodeURIComponent(m[1])).then((h) => {
       if (h !== KEY_HASH) return;
       ls.set(UNLOCK, h);
+      ls.del(LOCKED);
       start();
       toast("Menu admin activé sur ce navigateur (Alt+A)");
     }, () => {});
@@ -597,5 +605,16 @@
   addEventListener("hashchange", readHash);
   // Crew Roll: another anime or mode changes the pool, the forms and the title.
   addEventListener("dle:admin-refresh", () => render());
-  if (!readHash() && ls.get(UNLOCK) === KEY_HASH) start();
+  // Signed in to the owner's profile (now, or later on this page): the panel shows without the key.
+  function ownerCheck() {
+    if (started || ls.get(LOCKED) === "1") return;
+    let id = null;
+    try { id = JSON.parse(ls.get("dle:profile") || "null")?.id; } catch {}
+    if (typeof id === "string" && id) sha256(id).then((h) => { if (h === OWNER_HASH && !started) { ls.set(UNLOCK, KEY_HASH); start(); } }, () => {});
+  }
+  addEventListener("dle:profile", ownerCheck);
+  if (!readHash()) {
+    if (ls.get(UNLOCK) === KEY_HASH) start();
+    else ownerCheck();
+  }
 })();
