@@ -250,8 +250,7 @@ function renderRaceBoard(box) {
   const list = el("ol", "ranking race-list");
   for (const p of raceRanking()) {
     const li = el("li", `${p.id === rooms.selfId ? "is-me" : ""}${p.found ? " is-found" : ""}${p.left ? " has-left" : ""}${S.race.teams ? ` team-${S.race.teams[p.id] ?? 0}` : ""}`);
-    const name = el("span", "ranking-name");
-    name.textContent = p.id === rooms.selfId ? `${p.name} (${t("you")})` : p.name;
+    const name = window.DLE_NAME(p.id === rooms.selfId ? `${p.name} (${t("you")})` : p.name, rooms.pidOf(p.id), "ranking-name");
     const status = p.found ? t("foundIn")(p.n, clock(p.ms)) : p.gaveUp ? t("gaveUpShort") : p.left ? t("left") : t("looking")(p.n);
     const sq = el("span", "race-squares");
     for (const s of p.last) sq.append(el("i", `sq is-${s}`));
@@ -338,9 +337,7 @@ function racePeers(box) {
   const mine = rooms.myRoom;
   for (const p of around) {
     const chip = el("span", "lobby-chip");
-    const name = el("span");
-    name.textContent = p.name;
-    chip.append(name);
+    chip.append(window.DLE_NAME(p.name, rooms.pidOf(p.id)));
     const theirs = rooms.roomOf(p.id);
     let btn = null;
     if (theirs && theirs.id !== mine?.id) {
@@ -452,9 +449,7 @@ function renderRaceLobby(box) {
       const m = room.members[i];
       const li = el("li", m ? "is-taken" : "is-free");
       li.append(el("span", "room-seat", String(i + 1)));
-      const label = el("span");
-      label.textContent = m ? (m.id === rooms.selfId ? `${m.name} (${t("you")})` : m.name) : t("freeSeat");
-      li.append(label);
+      li.append(window.DLE_NAME(m ? (m.id === rooms.selfId ? `${m.name} (${t("you")})` : m.name) : t("freeSeat"), m ? rooms.pidOf(m.id) : null));
       if (m && m.id === room.host) li.append(el("span", "lobby-badge", esc(t("host"))));
       seats.append(li);
     }

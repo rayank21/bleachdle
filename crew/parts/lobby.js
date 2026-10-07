@@ -214,9 +214,7 @@ async function joinRoom(r) {
 // A player in the lobby: join the room they wait in, or invite them into mine.
 function peerChip(p) {
   const chip = el("span", "lobby-chip");
-  const name = el("span");
-  name.textContent = p.name;
-  chip.append(name);
+  chip.append(window.DLE_NAME(p.name, rooms.pidOf(p.id)));
   const mine = rooms.myRoom;
   const theirs = rooms.roomOf(p.id);
   let btn = null;
@@ -342,7 +340,7 @@ function roomCard(room) {
     const m = room.members[i];
     const li = el("li", m ? "is-taken" : "is-free");
     li.append(el("span", "room-seat", String(i + 1)));
-    li.append(el("span", null, m ? (m.id === rooms.selfId ? `${m.name} (${t("you")})` : m.name) : t("freeSeat")));
+    li.append(m ? window.DLE_NAME(m.id === rooms.selfId ? `${m.name} (${t("you")})` : m.name, rooms.pidOf(m.id)) : el("span", null, t("freeSeat")));
     if (m && m.id === room.host) li.append(el("span", "lobby-badge", t("host")));
     list.append(li);
   }

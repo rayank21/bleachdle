@@ -404,6 +404,24 @@
 .ix-title { margin: 0; font-size: clamp(26px, 4vw, 40px); line-height: 1.05; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: -0.5px; background: linear-gradient(90deg, #fff, var(--accent-strong)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .ix-sub { margin: 6px 0 0; font-size: 13.5px; text-wrap: balance; }
 .ix-tiers { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Drop rates by rarity: one bar split by rarity, then the rates. */
+.ix-drops { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); }
+.ix-drops-head b { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
+.ix-drops-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: rgba(255, 255, 255, 0.06); }
+.ix-drops-bar i { height: 100%; min-width: 3px; }
+.ix-drops-bar i + i { box-shadow: -2px 0 0 #131316; }
+.ix-drops-bar .tier-legend { background: linear-gradient(90deg, #ffe16b, #ff9d2e, #ffe16b); background-size: 200% 100%; animation: gold-slide 1.6s linear infinite; }
+.ix-drops-bar .tier-epic { background: linear-gradient(90deg, #ff7ad9, #b06bff); }
+.ix-drops-bar .tier-common { background: rgba(255, 255, 255, 0.28); }
+.ix-drops-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; font-weight: 700; }
+.ix-drop { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+.ix-drop b { color: var(--text); font-variant-numeric: tabular-nums; }
+.ix-drop-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.4); }
+.ix-drop.tier-legend { color: #ffd34d; }
+.ix-drop.tier-legend .ix-drop-dot { background: #ffd34d; box-shadow: 0 0 8px rgba(255, 190, 60, 0.7); }
+.ix-drop.tier-epic { color: #ff7ad9; }
+.ix-drop.tier-epic .ix-drop-dot { background: #ff7ad9; box-shadow: 0 0 8px rgba(255, 122, 217, 0.6); }
+.ix-drops-note { margin: 0; font-size: 12px; line-height: 1.4; }
 .ix-tier-pill { display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--muted); font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; }
 .ix-tier-pill b { min-width: 26px; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); color: var(--text); font-size: 12px; letter-spacing: 0; }
 .ix-tier-pill:hover { transform: translateY(-1px); }

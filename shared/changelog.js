@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T14:55",
+      title: { en: "The top 3 shine, drop rates in the index", fr: "Le top 3 brille, taux de drop dans l'index" },
+      items: [
+        { type: "new", en: "The top 3 of the leaderboard (best place between best crews and most wins) get a shining name everywhere: online bar, chat, lobbies, matches and the leaderboard. 1st: a flowing rainbow with a crown and sparkles; 2nd: ice and silver; 3rd: embers and gold.", fr: "Le top 3 du classement (meilleure place entre meilleurs équipages et plus de victoires) a un pseudo qui brille partout : barre en ligne, chat, salons, parties et classement. 1er : un arc-en-ciel qui défile avec une couronne et des étincelles ; 2e : glace et argent ; 3e : braise et or." },
+        { type: "new", game: "crew", en: "Crew Roll index: the drop rate of each rarity (legendary, epic, common) for the anime at your arc.", fr: "Index de Roll ton équipage : le taux de drop de chaque rareté (légendaire, épique, commun) pour l'anime, à ton arc." },
+      ],
+    },
+    {
       at: "2026-10-07T14:40",
       title: { en: "Rare badges and a lighter site", fr: "Badges rares et site plus léger" },
       items: [

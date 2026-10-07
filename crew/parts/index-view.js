@@ -44,6 +44,31 @@ export async function renderIndex() {
     b.addEventListener("click", () => { ix.tier = tr; tiers.querySelectorAll("button").forEach((x) => x.classList.toggle("is-active", x === b)); drawGrid(); });
     tiers.append(b);
   }
+  // Drop rates by rarity: a draw is uniform among the cards that still fit, so a rarity's rate is its share of the
+  // cards at the player's arc (the first draw exactly; later ones move a little with the places left).
+  const drops = el("div", "ix-drops");
+  const dropHead = el("div", "ix-drops-head");
+  dropHead.append(el("b", null, t("dropTitle")));
+  const dropBar = el("div", "ix-drops-bar");
+  const dropLegend = el("div", "ix-drops-legend");
+  const pct = (n) => (n / Math.max(1, cards.length)) * 100;
+  // Whole percents that add up to 100 (the largest remainders get the leftover points).
+  const TIERS = ["legend", "epic", "common"];
+  const exact = TIERS.map((tr) => pct(cards.filter((x) => x.tier === tr).length));
+  const shown = exact.map(Math.floor);
+  const spare = cards.length ? 100 - shown.reduce((a, b) => a + b, 0) : 0;
+  exact.map((p, i) => [p - Math.floor(p), i]).sort((a, b) => b[0] - a[0]).slice(0, spare).forEach(([, i]) => shown[i]++);
+  const fmtPct = (i) => `${shown[i]} %`;
+  for (const [k, tr] of TIERS.entries()) {
+    const n = cards.filter((x) => x.tier === tr).length;
+    const seg = el("i", `tier-${tr}`);
+    seg.style.width = `${pct(n)}%`;
+    dropBar.append(seg);
+    const item = el("span", `ix-drop tier-${tr}`);
+    item.append(el("span", "ix-drop-dot"), el("span", null, t("tiers")[tr]), el("b", null, fmtPct(k)));
+    dropLegend.append(item);
+  }
+  drops.append(dropHead, dropBar, dropLegend, el("p", "muted ix-drops-note", t("dropNote")(cards.length)));
   // Collection: the cards this player has drawn.
   const owned = window.DLE_Profile?.collectionOf?.(g.id) ?? new Set();
   const have = cards.filter((x) => owned.has(x.c.id)).length;
@@ -62,7 +87,7 @@ export async function renderIndex() {
   }
   coll.append(own);
   const left = el("div", "ix-hero-main");
-  left.append(head, tiers, coll);
+  left.append(head, tiers, drops, coll);
   hero.append(left, ixTopCrews(g, token));
   view.append(hero);
 

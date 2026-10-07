@@ -109,13 +109,15 @@ function gameLogo(id) {
 const badgeRow = (ids) => window.DLE_Profile?.badgeRow?.(ids) ?? null;
 const cleanBadges = (list) => window.DLE_Profile?.cleanBadges?.(list) ?? [];
 const myBadges = () => window.DLE_Profile?.badges?.() ?? [];
+const myPid = () => window.DLE_Profile?.current?.id ?? null;
+const cleanPid = (s) => (/^[a-z0-9]{10,20}$/.test(s ?? "") ? s : null);
 
-function chip(name, gameId, isMe, isFriend, badges = []) {
+function chip(name, gameId, isMe, isFriend, badges = [], pid = null) {
   const li = el("li", `presence-chip${isMe ? " is-me" : ""}${isFriend ? " is-friend" : ""}`);
   if (isFriend) li.title = t("friends");
   const logo = gameLogo(gameId);
   if (logo) li.append(logo);
-  li.append(el("span", "presence-name", name));
+  li.append(window.DLE_NAME(name, pid, "presence-name"));
   const row = badgeRow(badges);
   if (row) li.append(row);
   if (isMe) li.append(el("span", "presence-you", `(${t("you")})`));
@@ -124,7 +126,7 @@ function chip(name, gameId, isMe, isFriend, badges = []) {
 
 function myChip() {
   if (!editing) {
-    const li = chip(shownName(), game, true, false, myBadges());
+    const li = chip(shownName(), game, true, false, myBadges(), myPid());
     const btn = el("button", "presence-edit");
     btn.type = "button";
     btn.setAttribute("aria-label", t("edit"));
@@ -189,7 +191,7 @@ function render() {
   const list = el("ul", "presence-list");
   list.append(myChip());
   const others = [...peers.values()].sort((a, b) => isFriend(b) - isFriend(a) || a.name.localeCompare(b.name));
-  for (const p of others) list.append(chip(p.name, p.game, false, isFriend(p), p.badges));
+  for (const p of others) list.append(chip(p.name, p.game, false, isFriend(p), p.badges, p.pid));
   bar.append(list);
 
   // Friends: how many are here, and a shortcut to the friends list (with join / invite buttons).
@@ -267,6 +269,8 @@ window.addEventListener("dle:room", announce);
 window.addEventListener("dle:profile", () => { announce(); render(); });
 window.addEventListener("dle:friends", render);
 window.addEventListener("dle:badges", () => { announce(); render(); });
+// The top 3 came in (or changed): their names shine.
+window.addEventListener("dle:ranks", () => { render(); renderChat(); });
 
 // For the friends list: who is here, where, and in which open room.
 window.DLE_Presence = {
@@ -405,6 +409,7 @@ function cleanMessage(m) {
     ts: Math.min(Number(m.ts) || realNow(), realNow() + 60000), // real time (shared/games.js), not a wrong local clock
     game: GAMES.some((x) => x.id === m.game) ? m.game : "home",
     badges: cleanBadges(m.badges),
+    pid: cleanPid(m.pid),
     mine: !!m.mine,
   };
 }
@@ -517,7 +522,7 @@ function renderChat({ scroll = false } = {}) {
       const time = el("time", null, clock(m.ts));
       time.dateTime = new Date(m.ts).toISOString();
       time.title = fullDate(m.ts);
-      meta.append(el("b", null, m.mine ? `${m.name} (${t("you")})` : m.name));
+      meta.append(window.DLE_NAME(m.mine ? `${m.name} (${t("you")})` : m.name, m.pid, "chat-author"));
       const row = badgeRow(m.badges);
       if (row) meta.append(row);
       meta.append(time);
@@ -548,7 +553,7 @@ $c(".chat-form").addEventListener("submit", (e) => {
   const now = Date.now();
   if (!text || !sendChat || now - lastSent < 800) return;
   lastSent = now;
-  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now, badges: myBadges() };
+  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now, badges: myBadges(), pid: myPid() };
   sendChat(msg);
   addMessage({ ...msg, mine: true });
   chatInput.value = "";
@@ -559,7 +564,7 @@ function receive(data, peerId) {
   if (!allowed(peerId)) return;
   // Use the name their presence announced when we know it.
   const from = peers.get(peerId);
-  if (!addMessage({ ...data, name: from?.name || data?.name, badges: from?.badges ?? data?.badges, mine: false })) return;
+  if (!addMessage({ ...data, name: from?.name || data?.name, badges: from?.badges ?? data?.badges, pid: from ? from.pid : data?.pid, mine: false })) return;
   renderChat();
   if (!chat.open) {
     chatToggle.classList.remove("bump");
@@ -587,7 +592,7 @@ function notify(m) {
   const head = el("span", "chat-note-head");
   const logo = gameLogo(m.game);
   if (logo) head.append(logo);
-  head.append(el("b", null, m.name), el("time", null, clock(m.ts)));
+  head.append(window.DLE_NAME(m.name, m.pid, "chat-author"), el("time", null, clock(m.ts)));
   card.append(head, el("span", "chat-note-text", m.text));
   card.addEventListener("click", () => setChatOpen(true));
   notes.append(card);

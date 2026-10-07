@@ -1159,7 +1159,7 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .chat-msg.is-mine { align-self: flex-end; text-align: right; }
 .chat-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 12px; }
 .chat-msg.is-mine .chat-meta { justify-content: flex-end; }
-.chat-meta b { font-weight: 800; }
+.chat-meta .chat-author { font-weight: 800; }
 .chat-meta time { color: var(--muted); font-size: 11px; }
 .chat-meta .presence-logo { width: 18px; height: 18px; }
 .chat-text { display: inline-block; margin: 0; padding: 7px 11px; border-radius: 4px 14px 14px 14px; background: var(--surface-3); font-size: 14px; line-height: 1.35; text-align: left; overflow-wrap: anywhere; }
@@ -1175,7 +1175,7 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .chat-note:hover { border-color: rgba(var(--accent-rgb), 0.8); }
 .chat-note.is-leaving { opacity: 0; transform: translateX(-12px); }
 .chat-note-head { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-.chat-note-head b { font-weight: 800; color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-note-head .chat-author { font-weight: 800; color: var(--accent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chat-note-head time { margin-left: auto; color: var(--muted); font-size: 11px; }
 .chat-note-head .presence-logo { width: 18px; height: 18px; }
 .chat-note-text { font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1564,6 +1564,77 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
 .ach-badge.tier-gold { --tier-rgb: 255, 200, 60; }
 .ach-badge.is-done { color: #1a1205; border: 0; background: radial-gradient(circle at 35% 30%, #fff 0, rgb(var(--tier-rgb)) 45%, rgba(var(--tier-rgb), 0.6) 100%); box-shadow: 0 0 14px rgba(var(--tier-rgb), 0.5); }
 .ach-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* ── The leaderboard's top 3: shining names everywhere (online bar, chat, lobbies, matches) ──
+   1st: a rainbow flowing through the letters, a glow cycling its colours, a crown and twinkling sparkles.
+   2nd: ice and silver, 3rd: embers and gold. Each gradient is --flow wide and repeats, so short and long names show
+   the same colours and the flow loops without a jump. */
+.top-name { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; font-weight: 800; vertical-align: bottom; }
+.top-text {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 1px;
+  --flow: 180px;
+  background-size: var(--flow) 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: top-flow 3s linear infinite;
+}
+@keyframes top-flow { to { background-position: var(--flow) 0; } }
+
+.top-1 .top-text {
+  --flow: 120px;
+  background-image: linear-gradient(90deg, #ff3b6b, #ff9a3c, #ffe14d, #3dffa2, #3dd8ff, #7c6bff, #ff4fd8, #ff3b6b);
+  animation: top-flow 2.6s linear infinite, top-glow-1 2.6s linear infinite;
+}
+@keyframes top-glow-1 {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 70, 120, 0.75)); }
+  25% { filter: drop-shadow(0 0 7px rgba(255, 210, 70, 0.8)); }
+  50% { filter: drop-shadow(0 0 5px rgba(60, 220, 255, 0.8)); }
+  75% { filter: drop-shadow(0 0 7px rgba(170, 100, 255, 0.85)); }
+}
+.top-crown { position: relative; display: inline-grid; flex: none; color: #ffd34d; animation: crown-bob 2.2s ease-in-out infinite; }
+.top-crown svg { width: 14px; height: 14px; filter: drop-shadow(0 0 4px rgba(255, 190, 40, 0.9)); }
+@keyframes crown-bob { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-2px) rotate(6deg); } }
+/* Sparkles: two little four-point stars that twinkle around the crown. */
+.top-crown::before, .top-crown::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 3px #fff6c0);
+  animation: sparkle 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.top-crown::before { top: -5px; right: -5px; }
+.top-crown::after { bottom: -3px; left: -6px; width: 5px; height: 5px; animation-delay: 0.9s; }
+@keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0.2) rotate(0); } 45% { opacity: 1; transform: scale(1) rotate(45deg); } 70% { opacity: 0; transform: scale(0.4) rotate(90deg); } }
+
+.top-2 .top-text {
+  background-image: linear-gradient(90deg, #dbe8ff, #8fd0ff, #ffffff, #b8a8ff, #8fd0ff, #dbe8ff);
+  filter: drop-shadow(0 0 5px rgba(140, 200, 255, 0.65));
+  animation-duration: 3.4s;
+}
+.top-3 .top-text {
+  background-image: linear-gradient(90deg, #ffb36b, #ff6a3d, #ffd98a, #e07a2e, #ff8f4d, #ffb36b);
+  filter: drop-shadow(0 0 5px rgba(255, 120, 50, 0.6));
+  animation-duration: 3.8s;
+}
+/* Weak machines and reduced motion: the same colours, standing still. */
+.lite .top-text, .lite .top-crown, .lite .top-crown::before, .lite .top-crown::after { animation: none; }
+.lite .top-crown::before, .lite .top-crown::after { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .top-text, .top-crown, .top-crown::before, .top-crown::after { animation: none; }
+  .top-crown::before, .top-crown::after { opacity: 0; }
+}
+
 /* Rare achievements next to a player's name (online bar, chat). */
 .rare-badges { display: inline-flex; align-items: center; gap: 3px; flex: none; }
 .rare-badge { --tier-rgb: 255, 200, 60; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; color: #1a1205; background: radial-gradient(circle at 35% 30%, #fff 0, rgb(var(--tier-rgb)) 45%, rgba(var(--tier-rgb), 0.65) 100%); box-shadow: 0 0 8px rgba(var(--tier-rgb), 0.55); }

@@ -33,6 +33,9 @@
   const newCode = () => Array.from({ length: 5 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join("");
   const cleanName = (s) => String(s ?? "").replace(/[\u0000-\u001f<>]/g, "").replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  // Profile ids: lets the pages show the leaderboard's top 3 with their shining names (shared/profile.js).
+  const cleanPid = (s) => (/^[a-z0-9]{10,20}$/.test(s ?? "") ? s : null);
+  const myPid = () => window.DLE_Profile?.current?.id ?? null;
 
   // startData(room) gives the shared data of a match (e.g. the arc and the character to find);
   // it is used both by the host's Start button and by the automatic start when the room is full.
@@ -88,7 +91,7 @@
     const isHost = () => api.myRoom && api.myRoom.host === api.selfId;
     const sanitizeRoom = (r, from) => {
       if (!r || typeof r !== "object" || typeof r.id !== "string" || r.host !== from) return null;
-      const members = Array.isArray(r.members) ? r.members.slice(0, 8).map((m) => ({ id: String(m.id), name: cleanName(m.name) || "Player", arc: Number.isInteger(m.arc) ? m.arc : 0 })) : [];
+      const members = Array.isArray(r.members) ? r.members.slice(0, 8).map((m) => ({ id: String(m.id), name: cleanName(m.name) || "Player", arc: Number.isInteger(m.arc) ? m.arc : 0, pid: notePid(String(m.id), cleanPid(m.pid)) })) : [];
       return { id: r.id.slice(0, 64), code: cleanCode(r.code), host: from, game: String(r.game), size: clamp(Number(r.size) || 2, 2, 8), members, started: !!r.started, meta: cleanMeta(r.meta, members) };
     };
     const announce = (target) => {
@@ -97,15 +100,21 @@
       api.rooms.set(api.myRoom.id, api.myRoom);
     };
     const members = () => (api.myRoom ? api.myRoom.members.filter((m) => m.id !== api.selfId).map((m) => m.id) : []);
+    // What I tell the others about me, with my profile id.
+    const helloData = () => ({ ...api.profile, pid: myPid() });
+    // Every player's profile id seen so far (kept after they leave, for the end of a match).
+    const knownPids = new Map();
+    const notePid = (id, pid) => { if (pid) knownPids.set(id, pid); return pid; };
+    api.pidOf = (id) => (id === api.selfId ? myPid() : api.myRoom?.members.find((m) => m.id === id)?.pid ?? api.peers.get(id)?.pid ?? knownPids.get(id) ?? null);
 
     function handle(type, d, from) {
       if (!d || typeof d !== "object") return;
       if (type === "hello") {
-        api.peers.set(from, { id: from, name: cleanName(d.name) || "Player", game: String(d.game ?? ""), arc: Number.isInteger(d.arc) ? d.arc : 0 });
+        api.peers.set(from, { id: from, name: cleanName(d.name) || "Player", game: String(d.game ?? ""), arc: Number.isInteger(d.arc) ? d.arc : 0, pid: notePid(from, cleanPid(d.pid)) });
         // Keep my name up to date in the room I host.
         if (isHost()) {
           const m = api.myRoom.members.find((x) => x.id === from);
-          if (m) { m.name = api.peers.get(from).name; m.arc = api.peers.get(from).arc; announce(); }
+          if (m) { m.name = api.peers.get(from).name; m.arc = api.peers.get(from).arc; m.pid = api.peers.get(from).pid; announce(); }
         }
       } else if (type === "roominfo") {
         if (d.closed) {
@@ -139,7 +148,7 @@
         if (room.started) {
           if (!lateJoin || room.members.some((m) => m.id === from) || room.members.length >= 8) { announce(from); return; }
           const p = api.peers.get(from);
-          room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0 });
+          room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0, pid: p?.pid ?? null });
           room.size = Math.max(room.size, room.members.length);
           placeInTeam(from);
           announce();
@@ -151,7 +160,7 @@
         }
         if (!room.members.some((m) => m.id === from) && room.members.length < room.size) {
           const p = api.peers.get(from);
-          room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0 });
+          room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0, pid: p?.pid ?? null });
           placeInTeam(from);
         }
         announce();
@@ -232,7 +241,7 @@
           gone.delete(peerId);
           if (api.myRoom?.started && api.myRoom.members.some((m) => m.id === peerId)) onMessage("rejoin", {}, peerId);
         }
-        send.hello(api.profile, peerId);
+        send.hello(helloData(), peerId);
         if (isHost() && (!api.myRoom.started || lateJoin)) announce(peerId);
       };
       room.onPeerLeave = (peerId) => {
@@ -275,7 +284,7 @@
         await joinLobby();
         api.status = "live";
         tries = 0;
-        send.hello(api.profile);
+        send.hello(helloData());
         // Closing or leaving the page says goodbye at once, so the others don't wait for the grace period. During a
         // match, though, a reload must not give the seat away: keep a ticket to come back instead.
         window.addEventListener("pagehide", () => {
@@ -298,10 +307,10 @@
 
     api.setProfile = (p) => {
       api.profile = { name: cleanName(p.name) || "Player", game: p.game, arc: Number.isInteger(p.arc) ? p.arc : 0 };
-      send.hello?.(api.profile);
+      send.hello?.(helloData());
       if (isHost()) {
         const me = api.myRoom.members.find((m) => m.id === api.selfId);
-        if (me) { me.name = api.profile.name; me.arc = api.profile.arc; }
+        if (me) { me.name = api.profile.name; me.arc = api.profile.arc; me.pid = myPid(); }
         if (!api.myRoom.started) announce();
       }
     };
@@ -315,7 +324,7 @@
         host: api.selfId,
         game,
         size: clamp(size, 2, 8),
-        members: [{ id: api.selfId, name: api.profile.name, arc: api.profile.arc }],
+        members: [{ id: api.selfId, name: api.profile.name, arc: api.profile.arc, pid: myPid() }],
         started: false,
         meta: { play: PLAYS.includes(play) ? play : "classic", teams: false, team: { [api.selfId]: 0 } },
       };
@@ -379,7 +388,7 @@
       if (t.wasHost) {
         // I hosted the room: take it back with my new id and tell the others (again for a while, as they reconnect).
         const room = t.room;
-        for (const m of room.members) if (m.id === t.oldId) { m.id = api.selfId; m.name = api.profile.name || m.name; }
+        for (const m of room.members) if (m.id === t.oldId) { m.id = api.selfId; m.name = api.profile.name || m.name; m.pid = myPid(); }
         if (room.meta?.team && t.oldId in room.meta.team) { room.meta.team[api.selfId] = room.meta.team[t.oldId]; delete room.meta.team[t.oldId]; }
         room.host = api.selfId;
         api.myRoom = room;
@@ -514,9 +523,7 @@
         if (!mine.length) { const li = document.createElement("li"); li.className = "team-empty"; li.textContent = L.empty; list.append(li); }
         for (const m of mine) {
           const li = document.createElement("li");
-          const name = document.createElement("span");
-          name.textContent = m.id === api.selfId ? `${m.name} ★` : m.name;
-          li.append(name);
+          li.append(window.DLE_NAME(m.id === api.selfId ? `${m.name} ★` : m.name, api.pidOf(m.id)));
           if (isHost() || m.id === api.selfId) {
             const b = document.createElement("button");
             b.type = "button";
@@ -564,8 +571,7 @@
     function chatItem(m) {
       const li = document.createElement("li");
       li.className = `room-chat-msg${m.mine ? " is-mine" : ""}`;
-      const who = document.createElement("b");
-      who.textContent = m.name;
+      const who = window.DLE_NAME(m.name, m.pid, "room-chat-who");
       const text = document.createElement("span");
       text.textContent = m.text;
       li.append(who, text);
@@ -590,7 +596,7 @@
       times.push(now);
       chat.rate.set(from, times);
       if (times.length > 6) return;
-      pushChat({ roomId: api.myRoom.id, name: chatName(from), text, mine: false });
+      pushChat({ roomId: api.myRoom.id, name: chatName(from), pid: api.pidOf(from), text, mine: false });
     }
 
     api.chatBox = () => {
@@ -637,7 +643,7 @@
         const text = chatText(input.value);
         if (!text || !api.myRoom) return;
         api.broadcast("chat", { text });
-        pushChat({ roomId: api.myRoom.id, name: api.profile.name, text, mine: true });
+        pushChat({ roomId: api.myRoom.id, name: api.profile.name, pid: myPid(), text, mine: true });
         input.value = chat.draft = "";
       });
       box.append(title, list, form);

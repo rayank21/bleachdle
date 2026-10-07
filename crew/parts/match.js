@@ -66,6 +66,13 @@ function boardBox(key) {
   if (key === boardKey(rooms.selfId)) return { box: $("#duelMine"), mini: false };
   return { box: document.querySelector(`[data-board="${CSS.escape(key)}"]`), mini: true };
 }
+// A board's label as an element: a team's name and players, or the player's (shining for the top 3).
+function labelEl(key, cls) {
+  const p = el("p", cls);
+  if (S.match.teams && key.startsWith("team-")) p.textContent = boardLabel(key);
+  else p.append(window.DLE_NAME(memberName(key), rooms.pidOf(key)));
+  return p;
+}
 const boardLabel = (key) => {
   if (!S.match.teams || !key.startsWith("team-")) return memberName(key);
   const k = Number(key.slice(5));
@@ -638,7 +645,7 @@ export function finishMatch() {
   const list = el("ol", "ranking");
   for (const r of ranking) {
     const li = el("li", `${r.id === rooms.selfId ? "is-me" : ""}${S.match.teams ? ` team-${S.match.teams[r.id] ?? 0}` : ""}`);
-    li.append(el("span", "ranking-name", r.left ? `${r.name} (${t("left")})` : r.name), el("b", null, r.score.toFixed(1)));
+    li.append(window.DLE_NAME(r.left ? `${r.name} (${t("left")})` : r.name, rooms.pidOf(r.id), "ranking-name"), el("b", null, r.score.toFixed(1)));
     list.append(li);
   }
   panel.querySelector(".crew-result").insertBefore(list, panel.querySelector(".crew-result .roll-actions"));
@@ -683,7 +690,7 @@ export function renderScoreboard() {
     const score = el("b", "duel-score");
     // Scores animate from the value shown last time.
     score.dataset.value = S.match.shown?.get(id) ?? 0;
-    chip.append(dot, el("span", "duel-pname", memberName(id)), score);
+    chip.append(dot, window.DLE_NAME(memberName(id), rooms.pidOf(id), "duel-pname"), score);
     box.append(chip);
     const value = duelScore(boardOf(id).map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)));
     countUp(score, value);
@@ -720,7 +727,7 @@ export function renderMatch() {
   grid.classList.toggle("is-1v1", duo);
   if (duo) {
     const wrap = el("div", "duel-mine");
-    wrap.append(el("p", "duel-label is-me", S.match.teams ? boardLabel(boardKey(rooms.selfId)) : memberName(rooms.selfId)), mine);
+    wrap.append(labelEl(boardKey(rooms.selfId), "duel-label is-me"), mine);
     grid.append(wrap, panel);
   } else grid.append(mine, panel);
 
@@ -728,7 +735,7 @@ export function renderMatch() {
   for (const key of S.match.boards.keys()) {
     if (key === boardKey(rooms.selfId)) continue;
     const wrap = el("div", "duel-theirs");
-    wrap.append(el("p", "duel-label", boardLabel(key)));
+    wrap.append(labelEl(key, "duel-label"));
     const b = el("div", "crew-board");
     b.dataset.board = key;
     wrap.append(b);

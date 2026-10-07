@@ -1062,7 +1062,7 @@
       const face = el("span", "pf-li-face");
       if (r.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(r.avatar)); img.alt = ""; face.append(img); }
       const who = el("span", "pf-li-who");
-      who.append(el("span", "pf-li-name", r.name));
+      who.append(nameEl(r.name, r.id, "pf-li-name"));
       const more = extra?.(r);
       if (more) who.append(more);
       li.append(el("span", "pf-pos", String(i + 1)), face, who, value(r));
@@ -1074,8 +1074,61 @@
 
   window.addEventListener("dle:lang", () => { renderButton(); if (dialog?.open) render(); });
 
+  // ── Top 3: the best players' names shine everywhere (online bar, chat, lobbies, matches) ──
+  // A player's place is their best one between the two all-time boards (best crews, most wins), from the server's
+  // leaderboard: nobody can claim it. Kept in this browser 10 minutes, so pages don't ask the server each time.
+  const TOP_KEY = "dle:top";
+  const TOP_TTL = 10 * 60000;
+  let topRanks = new Map(); // profile id → 1, 2 or 3
+  function readTop(d) {
+    const ranks = new Map();
+    for (const list of [d?.crews, d?.wins]) {
+      (list ?? []).slice(0, 3).forEach((r, i) => { if (r?.id && (!ranks.has(r.id) || ranks.get(r.id) > i + 1)) ranks.set(r.id, i + 1); });
+    }
+    return ranks;
+  }
+  function setTop(ranks) {
+    const before = JSON.stringify([...topRanks]);
+    topRanks = ranks;
+    if (JSON.stringify([...ranks]) !== before) window.dispatchEvent(new Event("dle:ranks"));
+  }
+  function loadTop() {
+    try {
+      const kept = JSON.parse(localStorage.getItem(TOP_KEY) || "null");
+      if (kept && Array.isArray(kept.ranks)) {
+        setTop(new Map(kept.ranks));
+        if (Date.now() - kept.at < TOP_TTL) return;
+      }
+    } catch {}
+    if (location.protocol === "file:") return;
+    leaderboard().then((d) => {
+      const ranks = readTop(d);
+      try { localStorage.setItem(TOP_KEY, JSON.stringify({ at: Date.now(), ranks: [...ranks] })); } catch {}
+      setTop(ranks);
+    }).catch(() => {});
+  }
+  const rankOf = (pid) => (pid ? topRanks.get(pid) ?? 0 : 0);
+  const TOP_TITLE = {
+    en: ["", "#1 on the leaderboard", "#2 on the leaderboard", "#3 on the leaderboard"],
+    fr: ["", "1er du classement", "2e du classement", "3e du classement"],
+  };
+  const CROWN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18l-1.6-10-4.9 4.4L12 4.5 9.5 12.4 4.6 8z" fill="currentColor"/></svg>`;
+  // A player's name: plain text, or for the top 3 a shining one (gradient, glow; a crown and sparkles for the first).
+  function nameEl(text, pid, cls = "") {
+    const node = el("span", cls || null);
+    const r = rankOf(pid);
+    if (!r) { node.textContent = text; return node; }
+    node.classList.add("top-name", `top-${r}`);
+    node.title = TOP_TITLE[lang()][r];
+    if (r === 1) node.insertAdjacentHTML("afterbegin", `<span class="top-crown">${CROWN}</span>`);
+    node.append(el("span", "top-text", text));
+    return node;
+  }
+
   function init() {
     renderButton();
+    loadTop();
+    setInterval(() => { if (!document.hidden) loadTop(); }, TOP_TTL);
     if (session) { refresh(); syncStats(); loadFriends(); }
     // New requests and new friends show up without reloading.
     setInterval(() => { if (session && !document.hidden) loadFriends(); }, 45000);
@@ -1086,7 +1139,7 @@
 
   window.DLE_Profile = {
     open, recordCrew, recordDuel, recordTeam, leaderboard, crewFaces, count, collect, collectionOf,
-    badges: myBadges, cleanBadges, badgeRow,
+    badges: myBadges, cleanBadges, badgeRow, rankOf, nameEl,
     // Admin panel: a random achievement's toast.
     testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },

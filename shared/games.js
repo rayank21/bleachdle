@@ -46,6 +46,17 @@ window.DLE_SMALL_IMG = (img, url) => {
   return img;
 };
 
+// A player's name as an element: the top 3 of the leaderboard shine (shared/profile.js), others are plain text.
+// pid: their profile id, when known. Names are untrusted: always set as text.
+window.DLE_NAME = (text, pid, cls = "") => {
+  const made = window.DLE_Profile?.nameEl?.(text, pid, cls);
+  if (made) return made;
+  const node = document.createElement("span");
+  if (cls) node.className = cls;
+  node.textContent = text;
+  return node;
+};
+
 // Nostr relays used to find other players (Trystero). Pinned so a dead default relay can't keep players apart.
 window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net", "wss://relay.damus.io",
   "wss://relay.nostr.net", "wss://nostr.oxtr.dev"];
