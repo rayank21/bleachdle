@@ -45,7 +45,7 @@
         "E-Rank": "Rang E", "D-Rank": "Rang D", "C-Rank": "Rang C", "B-Rank": "Rang B", "A-Rank": "Rang A", "S-Rank": "Rang S", "National Level": "Niveau national",
         Fighter: "Combattant", Mage: "Mage", Tank: "Tank", Assassin: "Assassin", Healer: "Soigneur", Ranger: "Archer",
         "Shadow Army": "Armée des ombres", "Ahjin Guild": "Guilde Ahjin", "Hunters Guild": "Guilde des Chasseurs", "White Tiger Guild": "Guilde du Tigre Blanc",
-        "Reapers Guild": "Guilde des Faucheurs", "Fame Guild": "Guilde Fame", "Knights Guild": "Guilde des Chevaliers", "Scavenger Guild": "Guilde Scavenger",
+        "Reapers Guild": "Guilde des Faucheurs", "Fame Guild": "Guilde Fame", "Draw Sword Guild": "Guilde Draw Sword", "Knights Guild": "Guilde des Chevaliers", "Scavenger Guild": "Guilde Scavenger",
         "Asura Guild": "Guilde Asura", "Richter Guild": "Guilde Richter", "Korean Hunters Association": "Association des chasseurs de Corée",
         "Japanese Hunters Association": "Association des chasseurs du Japon", "Federal Bureau of Hunters": "Bureau fédéral des chasseurs",
         "Yoojin Construction": "Yoojin Construction", "Demon Castle": "Château du Démon", Monarchs: "Monarques", Rulers: "Souverains",

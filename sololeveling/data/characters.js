@@ -411,6 +411,57 @@ window.DLE_CHARACTERS = [
   "arc": 3
  },
  {
+  "id": "son-kihoon",
+  "name": "Son Kihoon",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/son-kihoon.webp",
+  "race": [
+   "Human"
+  ],
+  "rank": "A-Rank",
+  "class": "Tank",
+  "aff": [
+   "Hunters Guild"
+  ],
+  "country": "Korea",
+  "arc": 2
+ },
+ {
+  "id": "han-semi",
+  "name": "Han Semi",
+  "gender": "F",
+  "height": null,
+  "image": "assets/characters/han-semi.webp",
+  "race": [
+   "Human"
+  ],
+  "rank": "A-Rank",
+  "class": "Healer",
+  "aff": [
+   "Hunters Guild"
+  ],
+  "country": "Korea",
+  "arc": 2
+ },
+ {
+  "id": "jung-yerim",
+  "name": "Jung Yerim",
+  "gender": "F",
+  "height": null,
+  "image": "assets/characters/jung-yerim.webp",
+  "race": [
+   "Human"
+  ],
+  "rank": "A-Rank",
+  "class": "Healer",
+  "aff": [
+   "Knights Guild"
+  ],
+  "country": "Korea",
+  "arc": 4
+ },
+ {
   "id": "hwang-dongsoo",
   "name": "Hwang Dongsoo",
   "gender": "M",
@@ -457,6 +508,23 @@ window.DLE_CHARACTERS = [
   "class": "Fighter",
   "aff": [
    "Japanese Hunters Association"
+  ],
+  "country": "Japan",
+  "arc": 3
+ },
+ {
+  "id": "akari-shimizu",
+  "name": "Akari Shimizu",
+  "gender": "F",
+  "height": null,
+  "image": "assets/characters/akari-shimizu.webp",
+  "race": [
+   "Human"
+  ],
+  "rank": "S-Rank",
+  "class": "Healer",
+  "aff": [
+   "Draw Sword Guild"
   ],
   "country": "Japan",
   "arc": 3
@@ -664,6 +732,52 @@ window.DLE_CHARACTERS = [
   ],
   "country": "Other World",
   "arc": 2
+ },
+ {
+  "id": "baran",
+  "name": "Baran",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/baran.webp",
+  "race": {
+   "2": [
+    "Demon"
+   ],
+   "4": [
+    "Demon",
+    "Monarch"
+   ]
+  },
+  "rank": "Unranked",
+  "class": "None",
+  "aff": {
+   "2": [
+    "Demon Castle"
+   ],
+   "4": [
+    "Demon Castle",
+    "Monarchs"
+   ]
+  },
+  "country": "Other World",
+  "arc": 2
+ },
+ {
+  "id": "ant-queen",
+  "name": "Ant Queen",
+  "gender": "F",
+  "height": null,
+  "image": "assets/characters/ant-queen.webp",
+  "race": [
+   "Ant"
+  ],
+  "rank": "S-Rank",
+  "class": "None",
+  "aff": [
+   "None"
+  ],
+  "country": "Other World",
+  "arc": 3
  },
  {
   "id": "esil-radiru",

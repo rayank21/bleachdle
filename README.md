@@ -18,7 +18,7 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 | **Fireforcedle** (Fire Force) | `fireforce/` | 29 |
 | **Slimedle** (That Time I Got Reincarnated as a Slime) | `slime/` | 46 |
 | **Onepunchdle** (One Punch Man) | `onepunchman/` | 43 |
-| **Sololevelingdle** (Solo Leveling) | `sololeveling/` | 56 |
+| **Sololevelingdle** (Solo Leveling) | `sololeveling/` | 62 |
 
 Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place them in your crew (factions, plus roles such as healer, engineer or strategist that anyone can fill but specialists score high in; One Piece is all roles); every character has a 1–10 rating and the crew's average is your score. Iconic characters transform when drawn (Super Saiyan, Bankai, Susanoo, domain expansions…), only from the arc where the form appears; the forms are listed in `crew/forms.js` and their portraits fetched by `node crew/scripts/forms.mjs`.
 

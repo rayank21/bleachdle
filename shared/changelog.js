@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T02:30",
+      title: { en: "Solo Leveling: new characters, new forms, rebalanced team", fr: "Solo Leveling : nouveaux persos, transformations et équipe rééquilibrée" },
+      items: [
+        { type: "new", game: "sololeveling", en: "6 new characters: the healers Han Semi, Jung Yerim and Akari Shimizu, the tank Son Kihoon, Baran the King of Demons and the Ant Queen (62 in all).", fr: "6 nouveaux persos : les soigneuses Han Semi, Jung Yerim et Akari Shimizu, le tank Son Kihoon, Baran le roi des démons et la Reine des fourmis (62 en tout)." },
+        { type: "new", game: "crew", en: "Solo Leveling transformations: Baek Yoonho's White Tiger form, Sung Il-hwan with the Rulers' power, and Jinwoo becoming the Shadow Monarch in the webtoon arc. Jinwoo's Arise now shows him from the front.", fr: "Transformations Solo Leveling : la forme Tigre blanc de Baek Yoonho, Sung Il-hwan avec le pouvoir des Souverains, et Jinwoo qui devient le Monarque des Ombres dans l'arc du webtoon. L'Arise de Jinwoo le montre maintenant de face." },
+        { type: "balance", game: "crew", en: "Solo Leveling team: one Shadow soldier slot becomes a second Monster / Monarch slot. More healers with higher ratings (Min Byung-Gyu 10, Akari, Jinwoo and Beru 9, Han Semi, Jung Yerim and Lee Joohee 8); Jinwoo strategist 8; Igris 9. S-rank hunters and monsters are spread out more evenly.", fr: "Équipe Solo Leveling : un emplacement Soldat de l'ombre devient un deuxième Monstre / Monarque. Plus de soigneurs, mieux notés (Min Byung-Gyu 10, Akari, Jinwoo et Beru 9, Han Semi, Jung Yerim et Lee Joohee 8) ; Jinwoo stratège 8 ; Igris 9. Les notes des chasseurs de rang S et des monstres sont mieux réparties." },
+      ],
+    },
+    {
       at: "2026-10-08T01:45",
       title: { en: "New card pictures for Ichigo and Yoruichi", fr: "Nouvelles images de carte pour Ichigo et Yoruichi" },
       items: [

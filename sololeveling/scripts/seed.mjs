@@ -43,11 +43,15 @@ export const seed = [
   { wiki: "Min Byung-Gyu", race: H, rank: "S-Rank", class: "Healer", aff: NONE, country: KR, arc: 0 },
   { wiki: "Lim Tae-Gyu", race: H, rank: "S-Rank", class: "Ranger", aff: ["Reapers Guild"], country: KR, arc: 3 },
   { wiki: "Ma Dongwook", race: H, rank: "S-Rank", class: "Tank", aff: ["Fame Guild"], country: KR, arc: 3 },
+  { wiki: "Son Kihoon", race: H, rank: "A-Rank", class: "Tank", aff: ["Hunters Guild"], country: KR, arc: 2 },
+  { wiki: "Han Semi", gender: "F", race: H, rank: "A-Rank", class: "Healer", aff: ["Hunters Guild"], country: KR, arc: 2 },
+  { wiki: "Jung Yerim", gender: "F", race: H, rank: "A-Rank", class: "Healer", aff: ["Knights Guild"], country: KR, arc: 4 },
 
   // ── Hunters of other countries ──
   { wiki: "Hwang Dongsoo", race: H, rank: "S-Rank", class: "Fighter", aff: ["Scavenger Guild"], country: "USA", arc: 1 },
   { wiki: "Thomas Andre", img: "Andre1.jpg", race: H, rank: "National Level", class: "Tank", aff: ["Scavenger Guild"], country: "USA", arc: 3 },
   { wiki: "Goto Ryuji", race: H, rank: "S-Rank", class: "Fighter", aff: ["Japanese Hunters Association"], country: "Japan", arc: 3 },
+  { wiki: "Akari Shimizu", gender: "F", race: H, rank: "S-Rank", class: "Healer", aff: ["Draw Sword Guild"], country: "Japan", arc: 3 },
   { wiki: "Liu Zhigang", race: H, rank: "National Level", class: "Fighter", aff: NONE, country: "China", arc: 3 },
   { wiki: "Christopher Reed", race: H, rank: "National Level", class: "Fighter", aff: NONE, country: "USA", arc: 4 },
   { wiki: "Siddharth Bachchan", race: H, rank: "National Level", class: "Unknown", aff: ["Asura Guild"], country: "India", arc: 4 },
@@ -62,6 +66,8 @@ export const seed = [
   { wiki: "Kargalgan", gender: "M", race: ["Orc"], rank: "S-Rank", class: "None", aff: NONE, country: OW, arc: 2 },
   { wiki: "Cerberus", gender: "Unknown", race: ["Magic Beast"], rank: "A-Rank", class: "None", aff: ["Demon Castle"], country: OW, arc: 2 },
   { wiki: "Vulcan", gender: "M", race: ["Demon"], rank: "S-Rank", class: "None", aff: ["Demon Castle"], country: OW, arc: 2 },
+  { wiki: "Baran", gender: "M", race: { 2: ["Demon"], 4: ["Demon", "Monarch"] }, rank: U, class: "None", aff: { 2: ["Demon Castle"], 4: ["Demon Castle", "Monarchs"] }, country: OW, arc: 2 },
+  { wiki: "Ant Queen", img: "Solo-leveling-ant-queen.png", gender: "F", race: ["Ant"], rank: "S-Rank", class: "None", aff: NONE, country: OW, arc: 3 },
   { wiki: "Esil Radiru", gender: "F", race: ["Demon"], rank: U, class: "None", aff: ["Demon Castle"], country: OW, arc: 3 },
   { wiki: "Kamish", gender: "Unknown", race: ["Dragon"], rank: "S-Rank", class: "None", aff: NONE, country: OW, arc: 4 },
 

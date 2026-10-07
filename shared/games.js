@@ -28,7 +28,7 @@ window.DLE_GAMES = [
     featured: ["rimuru-tempest", "benimaru", "shuna", "shion", "milim-nava", "diablo"] },
   { id: "onepunchman", storage: "onepunchdle", brand: "Onepunchdle", anime: "One Punch Man", path: "onepunchman/", logo: "assets/logos/onepunchdle.webp", count: 43, arcs: 5,
     featured: ["saitama", "genos", "tatsumaki", "garou", "bang", "boros"] },
-  { id: "sololeveling", storage: "sololevelingdle", brand: "Sololevelingdle", anime: "Solo Leveling", path: "sololeveling/", logo: "assets/logos/sololevelingdle.webp", count: 56, arcs: 5,
+  { id: "sololeveling", storage: "sololevelingdle", brand: "Sololevelingdle", anime: "Solo Leveling", path: "sololeveling/", logo: "assets/logos/sololevelingdle.webp", count: 62, arcs: 5,
     featured: ["sung-jinwoo", "cha-hae-in", "igris", "beru", "go-gunhee", "thomas-andre"] },
 ];
 
