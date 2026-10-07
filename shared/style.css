@@ -142,8 +142,16 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
 /* Too many animes for one row: the strip scrolls (mouse wheel too) and "Roll ton équipage" stays pinned at its end. */
 .categories .cat.cat-crew { position: sticky; right: 0; z-index: 1; background: rgba(10, 10, 12, 0.97); box-shadow: -14px 0 12px -4px rgba(10, 10, 12, 0.97); }
 @media (max-width: 1700px) {
-  .categories .cat.is-current { gap: 0; padding: 4px; }
-  .categories .cat.is-current .cat-name { display: none; }
+  .categories { gap: 2px; }
+  .categories .cat.is-current:not(.cat-crew) { gap: 0; padding: 4px; }
+  .categories .cat.is-current:not(.cat-crew) .cat-name { display: none; }
+  .categories .cat:not(.is-current) { padding: 3px; }
+  .categories .cat:not(.is-current) .cat-logo { width: 34px; height: 34px; }
+}
+/* "Roll ton équipage" always shows its name (except on phones, where only logos fit). */
+@media (min-width: 521px) {
+  .categories .cat.cat-crew { gap: 10px; padding: 5px 10px 5px 5px; }
+  .categories .cat.cat-crew .cat-name { display: inline; font-size: 20px; white-space: nowrap; }
 }
 .cat {
   display: flex;

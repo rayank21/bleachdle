@@ -296,7 +296,7 @@ window.DLE_UI = {
         <li><strong>En ligne</strong> : affronte tes amis dans les trois jeux, chacun pour soi ou <strong>équipe contre équipe</strong> (rouges contre bleus).</li>
         <li>Indique <strong>jusqu'où tu as regardé</strong> pour éviter tout spoiler.</li>
       </ul>`,
-    crew: "Équipage",
+    crew: "Roll ton équipage",
     crewTitle: "Roll ton équipage",
     crewDesc: "Tire des persos au hasard, place-les dans ton équipage et vise le meilleur score.",
     homeTitle: "Choisis ton anime",
