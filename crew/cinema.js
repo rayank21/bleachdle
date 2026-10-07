@@ -109,6 +109,7 @@
       const hero = el("div", `cine-hero${cut ? " is-cut" : " is-framed"}`);
       const img = el("img");
       img.src = cut ?? form.image;
+      if (!cut && form.focus) img.style.objectPosition = form.focus;
       img.alt = "";
       img.decoding = "async";
       hero.append(img);

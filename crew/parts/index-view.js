@@ -167,6 +167,7 @@ function ixCard({ c, tier, scores, best, form }, roles, sorted, n, mine = true) 
     tag.addEventListener("click", () => {
       const on = card.classList.toggle("is-form");
       img.src = on ? form.image : c.image;
+      img.style.objectPosition = on && form.focus ? form.focus : "";
     });
     top.append(tag);
   }

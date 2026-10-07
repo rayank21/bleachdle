@@ -79,6 +79,7 @@ export function makeReel() {
       const hair = el("img", "reel-hair");
       hair.src = c.image;
       hair.alt = "";
+      if (c.focus) fg.style.objectPosition = hair.style.objectPosition = c.focus;
       item.append(hair);
     }
     return item;
@@ -281,7 +282,7 @@ export function makeReel() {
       c.form = form;
       c.formImage = form.image;
       strip.textContent = "";
-      strip.append(card({ image: form.image, isForm: true }));
+      strip.append(card({ image: form.image, isForm: true, focus: form.focus }));
       wrap.classList.remove("is-powering");
       showForm(c);
       kanji.textContent = form.kanji;

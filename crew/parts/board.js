@@ -33,6 +33,7 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
     if (slot.char) {
       const img = el("img");
       img.src = slot.char.formImage || slot.char.image;
+      if (slot.char.form?.focus && slot.char.formImage) img.style.objectPosition = slot.char.form.focus;
       if (slot.char.form) { ensureFilters(); card.classList.add("is-transformed"); card.style.setProperty("--fx1", slot.char.form.c1); card.style.setProperty("--fx2", slot.char.form.c2); }
       img.alt = "";
       face.append(img);
