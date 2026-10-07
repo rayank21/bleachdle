@@ -38,6 +38,34 @@ window.DLE_CREW_LINK = (root, label) =>
 window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net", "wss://relay.damus.io",
   "wss://relay.nostr.net", "wss://nostr.oxtr.dev"];
 
+// The real time, from the site's server. A computer whose clock is off (days behind) gets every message refused by
+// the relays as "expired", so nobody sees that player: messages are dated with this offset instead of the local clock.
+// DLE_CLOCK.ready resolves once measured; DLE_CLOCK.now() is the corrected Date.now(); DLE_CLOCK.offset in ms.
+window.DLE_CLOCK = (() => {
+  const clock = { offset: 0, measured: false, now: () => Date.now() + clock.offset };
+  clock.ready = (async () => {
+    if (location.protocol === "file:") return clock;
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 4000);
+      const t0 = Date.now();
+      const res = await fetch(`${location.origin}/?clock=${t0}`, { method: "HEAD", cache: "no-store", signal: ctrl.signal });
+      clearTimeout(timer);
+      const t1 = Date.now();
+      const server = Date.parse(res.headers.get("date") || "");
+      if (Number.isFinite(server)) {
+        // The Date header is rounded down to the second: aim for the middle of that second and of the round trip.
+        const offset = server + 500 - (t0 + t1) / 2;
+        // A few seconds don't matter; only correct a real gap, so small rounding never moves anything.
+        clock.offset = Math.abs(offset) > 5000 ? Math.round(offset) : 0;
+        clock.measured = true;
+      }
+    } catch {}
+    return clock;
+  })();
+  return clock;
+})();
+
 // TURN relays (from /api/turn) for players who can't connect directly, e.g. two devices on the same box.
 // Asked once per page and kept for the tab a few hours; never waits more than 3 s, and [] means direct only.
 window.DLE_TURN = (() => {

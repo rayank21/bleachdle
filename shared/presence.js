@@ -384,6 +384,7 @@ let sendChat = null;
 let lastSent = 0;
 const rate = new Map(); // peerId → recent receive times
 
+const realNow = () => window.DLE_CLOCK?.now() ?? Date.now();
 function cleanMessage(m) {
   if (!m || typeof m !== "object") return null;
   const text = String(m.text ?? "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, CHAT_MAX);
@@ -393,7 +394,7 @@ function cleanMessage(m) {
     id,
     text,
     name: cleanName(m.name) || "Player",
-    ts: Math.min(Number(m.ts) || Date.now(), Date.now()),
+    ts: Math.min(Number(m.ts) || realNow(), realNow() + 60000), // real time (shared/games.js), not a wrong local clock
     game: GAMES.some((x) => x.id === m.game) ? m.game : "home",
     mine: !!m.mine,
   };
@@ -535,7 +536,7 @@ $c(".chat-form").addEventListener("submit", (e) => {
   const now = Date.now();
   if (!text || !sendChat || now - lastSent < 800) return;
   lastSent = now;
-  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: now };
+  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now };
   sendChat(msg);
   addMessage({ ...msg, mine: true });
   chatInput.value = "";

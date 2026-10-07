@@ -77,7 +77,7 @@
           opened = Math.round(performance.now() - t0);
           ws.send(JSON.stringify(["REQ", "diag", { kinds: [KIND], "#x": [topic], since: Math.floor(Date.now() / 1000) - 5 }]));
           if (!schnorr) return finish({ open: true, echo: false, ms: opened, error: "pas de signature" });
-          const ev = { pubkey: keys.pub, created_at: Math.floor(Date.now() / 1000), kind: KIND, tags: [["x", topic]], content: "diag" };
+          const ev = { pubkey: keys.pub, created_at: Math.floor((window.DLE_CLOCK?.now() ?? Date.now()) / 1000), kind: KIND, tags: [["x", topic]], content: "diag" };
           const id = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify([0, ev.pubkey, ev.created_at, ev.kind, ev.tags, ev.content])));
           const sig = hex(await schnorr.signAsync(new Uint8Array(id), keys.secret));
           ws.send(JSON.stringify(["EVENT", { ...ev, id: hex(id), sig }]));
@@ -111,6 +111,19 @@
       line("Navigateur")(brave ? "warn" : "ok", brave ? "Brave" : (navigator.userAgentData?.brands?.map((b) => b.brand).filter((b) => !/Not/.test(b)).join(", ") || "OK"),
         brave ? "Les boucliers de Brave peuvent bloquer le mode en ligne : désactive-les pour ce site." : navigator.userAgent.slice(0, 120));
       line("Connexion internet")(navigator.onLine ? "ok" : "bad", navigator.onLine ? "en ligne" : "hors ligne");
+      // A computer clock that is off makes the relays refuse every message as "expired".
+      const clockLine = line("Heure de l'ordinateur");
+      const clock = await window.DLE_CLOCK?.ready;
+      if (!clock?.measured) clockLine("warn", "non vérifiée", "Impossible de lire l'heure du serveur.");
+      else {
+        const gap = Math.round(clock.offset / 1000);
+        const human = Math.abs(gap) >= 86400 ? `${Math.round(Math.abs(gap) / 864) / 100} jour(s)` : Math.abs(gap) >= 3600 ? `${Math.round(Math.abs(gap) / 36) / 100} h` : Math.abs(gap) >= 60 ? `${Math.round(Math.abs(gap) / 60)} min` : `${Math.abs(gap)} s`;
+        if (Math.abs(gap) < 60) clockLine("ok", "à l'heure");
+        else {
+          clockLine("bad", `${gap > 0 ? "en retard" : "en avance"} de ${human}`, "Paramètres Windows → Heure et langue → « Régler l'heure automatiquement », puis « Synchroniser maintenant ».");
+          problems.push(`L'horloge de ton PC est ${gap > 0 ? "en retard" : "en avance"} de ${human} : règle l'heure automatiquement (Paramètres → Heure et langue → Synchroniser maintenant). Le site corrige l'heure de ses messages, mais les connexions directes restent bloquées tant que l'heure est fausse.`);
+        }
+      }
       const secure = window.isSecureContext && !!crypto?.subtle;
       line("Chiffrement du navigateur")(secure ? "ok" : "bad", secure ? "OK" : "indisponible", secure ? "" : "Ouvre le site en https.");
       if (!secure) problems.push("Le navigateur ne fournit pas le chiffrement (ouvre le site en https).");
@@ -158,6 +171,7 @@
       const working = results.filter((r) => r.echo).length;
       const opened = results.filter((r) => r.open).length;
       if (!working) problems.push(opened ? "Les relais s'ouvrent mais ne transmettent rien." : "Aucun relais joignable : bloqueur de pub, protection web de l'antivirus, VPN ou filtre réseau.");
+      else if (working < 3) problems.push(`Seulement ${working} relais sur ${relays.length} transmettent tes messages${results.some((r) => /expired|expir/i.test(r.error || "")) ? " (ils les refusent comme « expirés » : l'heure de ton PC est fausse)" : ""}.`);
 
       // A real channel through the site's own code
       const presence = line("Joueurs en ligne trouvés");
@@ -176,7 +190,8 @@
       report.push(`Relais OK: ${working}/${relays.length}`);
       if (problems.length) {
         verdict.className = "verdict is-bad";
-        verdict.textContent = `Problème trouvé : ${problems.join(" ")} Désactive ton bloqueur de pub / VPN / la protection web de ton antivirus pour ce site, ou essaie un autre navigateur (Chrome), puis relance le test.`;
+        const onlyClock = problems.every((p) => /horloge|heure de ton PC/.test(p));
+        verdict.textContent = `Problème trouvé : ${problems.join(" ")}${onlyClock ? " Recharge ensuite le site (Ctrl+F5)." : " Désactive ton bloqueur de pub / VPN / la protection web de ton antivirus pour ce site, ou essaie un autre navigateur (Chrome), puis relance le test."}`;
       } else {
         verdict.className = "verdict is-ok";
         verdict.textContent = `Tout fonctionne de ton côté (${working}/${relays.length} relais). Si tu ne vois toujours personne, fais Ctrl+F5 sur le site et attends 30 secondes.`;

@@ -17,6 +17,8 @@
   const LOST = 45000; // a relay-only player silent this long has left
   const GRACE = 4000; // time given to the direct link before falling back to the relays
 
+  // The real time (shared/games.js): relays refuse events dated by a computer clock that is days off.
+  const realNow = () => window.DLE_CLOCK?.now() ?? Date.now();
   const enc = new TextEncoder();
   const dec = new TextDecoder();
   const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -48,7 +50,7 @@
   }
 
   const subId = (topic) => `dle${topic.slice(0, 20)}`;
-  const req = (topic) => JSON.stringify(["REQ", subId(topic), { kinds: [KIND], "#x": [topic], since: Math.floor(Date.now() / 1000) - 10 }]);
+  const req = (topic) => JSON.stringify(["REQ", subId(topic), { kinds: [KIND], "#x": [topic], since: Math.floor(realNow() / 1000) - 10 }]);
 
   function openSocket(url) {
     const entry = sockets.get(url) ?? { ws: null, retry: 0 };
@@ -106,7 +108,8 @@
 
   async function publish(topic, content) {
     const { secretKey, pubkey, schnorr } = await ensureKeys();
-    const ev = { pubkey, created_at: Math.floor(Date.now() / 1000), kind: KIND, tags: [["x", topic]], content };
+    await window.DLE_CLOCK?.ready; // date the event with the real time, not a wrong computer clock
+    const ev = { pubkey, created_at: Math.floor(realNow() / 1000), kind: KIND, tags: [["x", topic]], content };
     const id = await sha256(JSON.stringify([0, ev.pubkey, ev.created_at, ev.kind, ev.tags, ev.content]));
     const full = JSON.stringify(["EVENT", { ...ev, id: hex(id), sig: hex(await schnorr.signAsync(new Uint8Array(id), secretKey)) }]);
     seen.add(hex(id));
