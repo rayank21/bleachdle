@@ -24,6 +24,36 @@
   try { forcedLite = localStorage.getItem("dle:admin-lite"); } catch {}
   if (forcedLite === "1" || (forcedLite !== "0" && (cores <= 4 || mem <= 4))) document.documentElement.classList.add("lite");
 
+  // Machines slow despite their specs (a weak graphics chip, hardware acceleration turned off): a few seconds after
+  // loading, the page counts its own frames; under ~25 per second it goes light, and remembers it for a week (then
+  // measures again). ambient.js thins its particles on the "dle:lite" event.
+  const AUTO = "dle:auto-lite";
+  const WEEK = 7 * 24 * 3600 * 1000;
+  const isLite = () => document.documentElement.classList.contains("lite");
+  if (forcedLite === null && !isLite()) {
+    let since = 0;
+    try { since = Number(localStorage.getItem(AUTO)) || 0; } catch {}
+    if (since && Date.now() - since < WEEK) document.documentElement.classList.add("lite");
+    else setTimeout(watch, 4000);
+  }
+  function watch() {
+    if (document.hidden) { document.addEventListener("visibilitychange", watch, { once: true }); return; }
+    const gaps = [];
+    let prev = 0;
+    const step = (now) => {
+      if (prev) gaps.push(now - prev);
+      prev = now;
+      if (document.hidden) return; // the tab went away: frames stop, nothing to judge
+      if (gaps.length < 90) { requestAnimationFrame(step); return; }
+      gaps.sort((a, b) => a - b);
+      if (gaps[gaps.length >> 1] <= 40) return;
+      document.documentElement.classList.add("lite");
+      try { localStorage.setItem(AUTO, String(Date.now())); } catch {}
+      dispatchEvent(new Event("dle:lite"));
+    };
+    requestAnimationFrame(step);
+  }
+
   function load(src) {
     if (!cache.has(src)) {
       cache.set(src, new Promise((resolve) => {

@@ -407,9 +407,10 @@
     const lite = el("select", "adm-input");
     for (const [v, label] of [["", "Auto"], ["1", "Forcé"], ["0", "Désactivé"]]) { const o = el("option", null, label); o.value = v; lite.append(o); }
     lite.value = ls.get(LITE) ?? "";
-    lite.addEventListener("change", () => { lite.value ? ls.set(LITE, lite.value) : ls.del(LITE); location.reload(); });
+    // Back to auto: also forget a "too slow" verdict (decor.js) so the page measures itself again.
+    lite.addEventListener("change", () => { lite.value ? ls.set(LITE, lite.value) : ls.del(LITE); ls.del("dle:auto-lite"); location.reload(); });
     s.append(row(check), row(el("span", "adm-label", "Mode léger"), lite));
-    s.append(note(`Actuellement ${document.documentElement.classList.contains("lite") ? "actif" : "inactif"} · ${navigator.hardwareConcurrency ?? "?"} cœurs · ${navigator.deviceMemory ?? "?"} Go`));
+    s.append(note(`Actuellement ${document.documentElement.classList.contains("lite") ? "actif" : "inactif"}${ls.get("dle:auto-lite") ? " (page mesurée trop lente)" : ""} · ${navigator.hardwareConcurrency ?? "?"} cœurs · ${navigator.deviceMemory ?? "?"} Go`));
     return s;
   }
 

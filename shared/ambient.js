@@ -9,7 +9,6 @@
 
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const game = document.body?.dataset.game || "home";
-  const lite = document.documentElement.classList.contains("lite");
 
   // ── Sprites: each drawn once on a small canvas ──
   const DPR = Math.min(2, devicePixelRatio || 1) * 1.5; // drawn larger than shown: crisp on any screen
@@ -233,6 +232,7 @@
     W = innerWidth;
     H = innerHeight;
     layer.replaceChildren();
+    const lite = document.documentElement.classList.contains("lite");
     const scale = Math.min(1.6, (W * H) / (1366 * 768)) * (lite ? 0.45 : W < 760 ? 0.6 : 1);
     if (game === "onepiece") waves();
     for (const [make, kind, count, [s0, s1], alpha, spin, sway] of theme) {
@@ -253,6 +253,8 @@
       clearTimeout(timer);
       timer = setTimeout(build, 250);
     }, { passive: true });
+    // The page found itself slow and went light (decor.js): fewer particles from now on.
+    addEventListener("dle:lite", build);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);

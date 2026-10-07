@@ -1286,11 +1286,12 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .pf-code { font-family: ui-monospace, monospace; font-size: 13px; }
 
 /* Avatar: a gradient ring that turns slowly */
-@property --pf-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-.pf-hero-face { position: relative; align-self: center; width: 104px; height: 104px; flex: none; padding: 4px; border-radius: 50%; background: conic-gradient(from var(--pf-a), #ff3b4a, #ff8a3d, #ffd34d, #ff4bd0, #ff3b4a); animation: pf-turn 5s linear infinite; box-shadow: 0 0 30px rgba(255, 90, 60, 0.35); }
+/* The ring is a layer of its own that rotates (transform: no repaint), rather than a gradient redrawn at every frame. */
+.pf-hero-face { position: relative; isolation: isolate; align-self: center; width: 104px; height: 104px; flex: none; padding: 4px; border-radius: 50%; box-shadow: 0 0 30px rgba(255, 90, 60, 0.35); }
+.pf-hero-face::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 50%; background: conic-gradient(#ff3b4a, #ff8a3d, #ffd34d, #ff4bd0, #ff3b4a); animation: pf-turn 5s linear infinite; }
 .pf-hero-face img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: center top; background: var(--surface-2); border: 3px solid #131316; }
 .pf-hero-face img.pf-pop { animation: pf-pop 0.45s cubic-bezier(.3, 1.6, .5, 1); }
-@keyframes pf-turn { to { --pf-a: 360deg; } }
+@keyframes pf-turn { to { transform: rotate(360deg); } }
 @keyframes pf-pop { from { transform: scale(0.6) rotate(-10deg); filter: brightness(2); } }
 .pf-hero { display: flex; align-items: center; gap: 18px; padding: 16px; border-radius: 14px; background: radial-gradient(120% 120% at 0% 0%, rgba(255, 70, 60, 0.22), transparent 60%), linear-gradient(135deg, var(--surface-2), #101013); border: 1px solid var(--line); }
 .pf-who { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; }
@@ -1565,7 +1566,8 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
 .ach-badge.tier-silver { --tier-rgb: 200, 214, 230; }
 .ach-badge.tier-gold { --tier-rgb: 255, 200, 60; }
 .ach-badge.is-done { opacity: 1; filter: drop-shadow(0 0 7px rgba(var(--tier-rgb), 0.55)); }
-.ach-tile.is-done .ach-badge.tier-gold .emblem { animation: emblem-shine 2.6s ease-in-out infinite; }
+/* Under the pointer only: a filter animation repaints the badge at every frame, and a profile shows many of them. */
+.ach-tile.is-done:hover .ach-badge.tier-gold .emblem { animation: emblem-shine 2.6s ease-in-out infinite; }
 @keyframes emblem-shine { 50% { filter: brightness(1.25) drop-shadow(0 0 4px rgba(255, 220, 120, 0.8)); } }
 .ach-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 /* ── The leaderboard's top 3: shining names everywhere (online bar, chat, lobbies, matches) ──
@@ -1594,13 +1596,8 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
 .top-1 .top-text {
   --flow: 120px;
   background-image: linear-gradient(90deg, #ff3b6b, #ff9a3c, #ffe14d, #3dffa2, #3dd8ff, #7c6bff, #ff4fd8, #ff3b6b);
-  animation: top-flow 2.6s linear infinite, top-glow-1 2.6s linear infinite;
-}
-@keyframes top-glow-1 {
-  0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 70, 120, 0.75)); }
-  25% { filter: drop-shadow(0 0 7px rgba(255, 210, 70, 0.8)); }
-  50% { filter: drop-shadow(0 0 5px rgba(60, 220, 255, 0.8)); }
-  75% { filter: drop-shadow(0 0 7px rgba(170, 100, 255, 0.85)); }
+  filter: drop-shadow(0 0 5px rgba(255, 110, 140, 0.75));
+  animation-duration: 2.6s;
 }
 .top-crown { position: relative; display: inline-grid; flex: none; color: #ffd34d; animation: crown-bob 2.2s ease-in-out infinite; }
 .top-crown svg { width: 14px; height: 14px; filter: drop-shadow(0 0 4px rgba(255, 190, 40, 0.9)); }
@@ -1631,7 +1628,9 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
   filter: drop-shadow(0 0 5px rgba(255, 120, 50, 0.6));
   animation-duration: 3.8s;
 }
-/* Weak machines and reduced motion: the same colours, standing still. */
+/* In chat logs the names stand still: each flowing name is repainted at every frame, and a log holds many.
+   Weak machines and reduced motion: the same colours, standing still everywhere. */
+.chat-author .top-text, .room-chat-who .top-text { animation: none; }
 .lite .top-text, .lite .top-crown, .lite .top-crown::before, .lite .top-crown::after { animation: none; }
 .lite .top-crown::before, .lite .top-crown::after { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
@@ -1699,7 +1698,7 @@ img.cl-game-crew { background: #5ed3c6; }
 /* Long lists: the browser skips laying out and painting what is off screen. */
 .pf-li { content-visibility: auto; contain-intrinsic-size: auto 64px; }
 /* Weak machines (decor.js adds .lite): no endless decorative motion. */
-.lite .aura-10::before, .lite .aura-9::before, .lite .presence-dot, .lite .cl-glow, .lite .pf-hero-face { animation: none !important; }
+.lite .aura-10::before, .lite .aura-9::before, .lite .presence-dot, .lite .cl-glow, .lite .pf-hero-face::before { animation: none !important; }
 
 /* ── Trading cards (profile.js cardEl): boosters, showcase ──
    A metal frame in the rarity's colours, the art in a window, the anime's logo and the power gem on top, a name plate
@@ -1708,7 +1707,7 @@ img.cl-game-crew { background: #5ed3c6; }
 .tcg.is-tilting { transition: transform 0.08s linear, box-shadow 0.3s; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6), 0 0 26px rgba(var(--t1), 0.45); }
 .tcg-epic { --t1: 196, 132, 255; --t2: 86, 34, 196; }
 .tcg-legend { --t1: 255, 214, 92; --t2: 176, 98, 0; }
-.tcg-secret { --t1: 255, 128, 214; --t2: 64, 170, 255; background: linear-gradient(150deg, #ff7ad6, #7a5cff 25%, #3fd0ff 45%, #6dffb0 62%, #ffd34d 80%, #ff7ad6); background-size: 200% 200%; animation: tcg-rainbow 4s linear infinite; }
+.tcg-secret { --t1: 255, 128, 214; --t2: 64, 170, 255; background: linear-gradient(150deg, #ff7ad6, #7a5cff 25%, #3fd0ff 45%, #6dffb0 62%, #ffd34d 80%, #ff7ad6); }
 .tcg::before { content: ""; position: absolute; inset: 2.6cqw; z-index: 0; border-radius: 4cqw; background: radial-gradient(120% 70% at 50% 0%, rgba(var(--t1), 0.28), transparent 60%), linear-gradient(180deg, #1c1c26, #0b0b10); box-shadow: inset 0 0 0 0.6cqw rgba(0, 0, 0, 0.55), inset 0 0 0 1cqw rgba(255, 255, 255, 0.06); }
 .tcg-art { position: absolute; z-index: 1; left: 6.5cqw; right: 6.5cqw; top: 17cqw; height: 88cqw; border-radius: 3cqw; overflow: hidden; background: radial-gradient(circle at 50% 35%, rgba(var(--t1), 0.45), #0f0f16 72%); box-shadow: 0 0 0 0.7cqw rgba(var(--t1), 0.85), 0 0 0 1.4cqw rgba(0, 0, 0, 0.55), 0 2cqw 4cqw rgba(0, 0, 0, 0.5); }
 .tcg-art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 16%; }
@@ -1724,16 +1723,15 @@ img.cl-game-crew { background: #5ed3c6; }
 .tcg-holo, .tcg-glare { position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit; }
 .tcg-holo { opacity: 0; mix-blend-mode: color-dodge; background-size: 220% 220%; background-position: var(--mx) var(--my); }
 .tcg-epic .tcg-holo { opacity: 0.32; background-image: repeating-linear-gradient(115deg, transparent 0 7%, rgba(220, 180, 255, 0.55) 9%, transparent 12%), linear-gradient(115deg, transparent 30%, rgba(196, 132, 255, 0.5), transparent 70%); }
-.tcg-legend .tcg-holo { opacity: 0.45; background-image: radial-gradient(circle, rgba(255, 240, 180, 0.9) 0 0.5px, transparent 1.2px), repeating-linear-gradient(115deg, transparent 0 6%, rgba(255, 220, 120, 0.6) 8%, transparent 11%); background-size: 9px 9px, 220% 220%; animation: tcg-sweep 5s linear infinite; }
-.tcg-secret .tcg-holo { opacity: 0.2; mix-blend-mode: soft-light; background-image: linear-gradient(115deg, #ff9ab0, #ffe58a 20%, #9dffd2 40%, #9ad2ff 60%, #e09aff 80%, #ff9ab0); animation: tcg-sweep 3.5s linear infinite; }
+.tcg-legend .tcg-holo { opacity: 0.45; background-image: radial-gradient(circle, rgba(255, 240, 180, 0.9) 0 0.5px, transparent 1.2px), repeating-linear-gradient(115deg, transparent 0 6%, rgba(255, 220, 120, 0.6) 8%, transparent 11%); background-size: 9px 9px, 220% 220%; }
+.tcg-secret .tcg-holo { opacity: 0.2; mix-blend-mode: soft-light; background-image: linear-gradient(115deg, #ff9ab0, #ffe58a 20%, #9dffd2 40%, #9ad2ff 60%, #e09aff 80%, #ff9ab0); }
 .tcg-glare { opacity: 0; background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.4), transparent 42%); mix-blend-mode: overlay; transition: opacity 0.3s; }
 .tcg.is-tilting .tcg-glare { opacity: 1; }
-.tcg.is-tilting .tcg-holo { animation-play-state: paused; }
-.tcg-legend::after, .tcg-secret::after { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none; border-radius: inherit; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.45) 48%, transparent 58%); background-size: 250% 100%; animation: tcg-shine 3.2s ease-in-out infinite; mix-blend-mode: overlay; }
-@keyframes tcg-sweep { from { background-position: 0% 0%, 0% 50%; } to { background-position: 90px 90px, 220% 50%; } }
-@keyframes tcg-shine { 0% { background-position: 160% 0; } 55%, 100% { background-position: -60% 0; } }
-@keyframes tcg-rainbow { to { background-position: 200% 200%; } }
-.lite .tcg-holo, .lite .tcg::after, .lite .tcg-secret { animation: none !important; }
+/* The shine on rare cards slides with transform only (the compositor runs it): the foil, the shine and the rainbow
+   frame used to animate background-position under blend modes, which repainted every rare card at every frame. */
+.tcg-legend::after, .tcg-secret::after { content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none; background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.2) 48%, transparent 66%); transform: translateX(-110%); animation: tcg-shine 3.2s ease-in-out infinite; }
+@keyframes tcg-shine { 0% { transform: translateX(-110%); } 55%, 100% { transform: translateX(110%); } }
+.lite .tcg::after { animation: none !important; }
 
 /* +1 booster: a small banner at the bottom; a click goes to the boosters. */
 .boost-toast { position: fixed; z-index: 1001; left: 50%; bottom: 22px; display: flex; align-items: center; gap: 12px; padding: 10px 14px 10px 10px; border-radius: 16px; color: #fff; text-decoration: none; background: linear-gradient(135deg, #24161a, #17171c); border: 1px solid rgba(255, 138, 61, 0.55); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 26px rgba(255, 110, 50, 0.35); transform: translateX(-50%); animation: boost-in 0.55s cubic-bezier(0.2, 1.4, 0.3, 1) both; }

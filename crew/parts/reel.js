@@ -27,6 +27,7 @@ export function makeReel() {
   zap.setAttribute("class", "tf-zap");
   win.append(zap);
   let zapTimer = null;
+  let calmTimer = null;
   // A few jagged bolts at random places, redrawn several times a second.
   const drawZap = () => {
     zap.textContent = "";
@@ -101,7 +102,8 @@ export function makeReel() {
   const clearTier = () => wrap.classList.remove("tier-legend", "tier-epic", "tier-common");
   const clearForm = () => {
     stopZap();
-    wrap.classList.remove("is-powering", "is-transformed", "tf-aura", "tf-pillar", "tf-domain");
+    clearTimeout(calmTimer);
+    wrap.classList.remove("is-powering", "is-transformed", "is-calm", "tf-aura", "tf-pillar", "tf-domain");
     fxLayer.textContent = "";
     kanji.classList.remove("go");
     formTag.hidden = true;
@@ -151,6 +153,15 @@ export function makeReel() {
     buildFx(c.form);
     if (c.form.lightning) startZap();
     wrap.classList.add("is-transformed");
+    // The costly part (bolts redrawn 9 times a second, a ripple the processor computes at every frame) plays for the
+    // reveal only, then calms down: a player can think over their placement for minutes with the card on screen.
+    document.getElementById("tf-filters")?.unpauseAnimations?.();
+    clearTimeout(calmTimer);
+    calmTimer = setTimeout(() => {
+      stopZap();
+      wrap.classList.add("is-calm");
+      if (!document.querySelector(".reel.is-transformed:not(.is-calm), .reel.is-powering")) document.getElementById("tf-filters")?.pauseAnimations?.();
+    }, 6000);
     formTag.textContent = c.form.name[S.lang];
     formTag.hidden = false;
   };
@@ -277,6 +288,7 @@ export function makeReel() {
     // portrait becomes the transformed form, which keeps glowing.
     async transform(c, form) {
       ensureFilters();
+      document.getElementById("tf-filters")?.unpauseAnimations?.();
       buildFx(form);
       startZap();
       wrap.classList.add("is-powering");
