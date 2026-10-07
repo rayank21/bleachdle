@@ -313,10 +313,12 @@
         const d = fast ? 0.6 : 1;
         const across = (from, to) => [{ transform: `translateX(${from}) skewX(-18deg)` }, { transform: `translateX(${to}) skewX(-18deg)` }];
         sfx("slash");
+        // Whatever happens to the animations (a paused tab, a busy machine), the site is back within 1.5 s.
+        at(1500 * d, cleanup);
         anim(wipeA, across("-140%", "0%"), { duration: 300 * d, easing: SNAP });
         anim(wipeB, across("-140%", "0%"), { duration: 300 * d, delay: 70 * d, easing: SNAP }).finished.then(() => {
           if (done) return;
-          for (const n of [bg, glow, glow2, back, world, frontFx, skip]) n.style.visibility = "hidden";
+          for (const n of [bg, glow, glow2, back, world, ring, frontFx, ...bars, impact, skip]) n.style.visibility = "hidden";
           finish();
           anim(wipeB, across("0%", "140%"), { duration: 400 * d, easing: EXPO });
           anim(wipeA, across("0%", "140%"), { duration: 400 * d, delay: 60 * d, easing: EXPO }).finished.then(cleanup, cleanup);
@@ -325,7 +327,10 @@
       const onKey = (e) => { if (e.key === "Escape") { e.preventDefault(); exit(true); } };
       addEventListener("keydown", onKey, true);
       skip.addEventListener("click", (e) => { e.stopPropagation(); exit(true); });
-      root.addEventListener("click", () => exit(true));
+      // A click during the exit closes at once (never a screen stuck between the scene and the site).
+      root.addEventListener("click", () => (exiting ? cleanup() : exit(true)));
+      // And the scene never lasts more than 15 s.
+      at(15000, () => exit(true));
 
       // Reduced motion: the scene fades in, holds, fades out.
       if (quiet) {
