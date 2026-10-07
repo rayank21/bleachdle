@@ -34,7 +34,7 @@
 
   // startData(room) gives the shared data of a match (e.g. the arc and the character to find);
   // it is used both by the host's Start button and by the automatic start when the room is full.
-  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {}, onInvite = () => {} }) {
+  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {}, onInvite = () => {}, onRejoined = () => {} }) {
     const api = {
       status: "connecting", // connecting | live | offline
       selfId: null,
@@ -47,7 +47,23 @@
     let started = false;
     // A peer-to-peer link often drops for a few seconds (phone in the background, network hiccup) and comes back on
     // its own. A player is only treated as gone after this grace period, unless they said goodbye themselves.
-    const GRACE = 30000;
+    const GRACE = 45000;
+
+    // ── Coming back after a reload ──
+    // A reload gives this tab a new network id. During a match the page doesn't say goodbye: it keeps a ticket in the
+    // tab (the room, my old id, the match data) and, once reconnected, asks the host to put me back in my seat (or, as
+    // the host, takes the room back). Everyone then swaps my old id for the new one ("renamed").
+    const TICKET = `dle:rejoin:${channel}`;
+    const readTicket = () => {
+      try {
+        const t = JSON.parse(sessionStorage.getItem(TICKET) || "null");
+        return t && Date.now() - t.at < GRACE + 15000 && t.room?.id && t.oldId ? t : null;
+      } catch { return null; }
+    };
+    const dropTicket = () => { try { sessionStorage.removeItem(TICKET); } catch {} };
+    let lastStart = null; // the data of the match being played, for the ticket
+    let ticket = readTicket();
+    api.rejoining = !!ticket;
     const gone = new Map(); // peerId → timer
     let tries = 0;
 
@@ -97,8 +113,14 @@
           if (!room) return;
           api.rooms.set(room.id, room);
           if (api.myRoom?.id === room.id) {
+            const inIt = room.members.some((m) => m.id === api.selfId);
+            if (api.rejoining && ticket && !ticket.wasHost) {
+              // Coming back: wait until the host has put me back in my seat.
+              if (inIt) { api.myRoom = room; finishRejoin(); }
+              return;
+            }
             // The host may have removed me (room full or I left).
-            api.myRoom = room.members.some((m) => m.id === api.selfId) ? room : null;
+            api.myRoom = inIt ? room : null;
           }
         }
       } else if (type === "roomjoin") {
@@ -122,7 +144,20 @@
         const room = sanitizeRoom(d.room, from);
         if (!room || api.myRoom?.id !== room.id || !room.members.some((m) => m.id === api.selfId)) return;
         api.myRoom = room;
+        lastStart = d.data ?? {};
         onStart(room, d.data ?? {});
+      } else if (type === "reclaim") {
+        const room = api.myRoom;
+        const old = String(d.oldId ?? "");
+        if (!isHost() || !room.started || d.roomId !== room.id || old === from || room.members.some((m) => m.id === from)) return;
+        const seat = room.members.find((m) => m.id === old);
+        if (!seat) return;
+        seat.id = from;
+        if (room.meta?.team && old in room.meta.team) { room.meta.team[from] = room.meta.team[old]; delete room.meta.team[old]; }
+        clearTimeout(gone.get(old));
+        gone.delete(old);
+        renamed(old, from);
+        return;
       } else if (type === "invite") {
         // Any member can invite; the host still decides when the join request arrives.
         const room = sanitizeRoom(d.room, d.room?.host);
@@ -133,6 +168,11 @@
       } else if (type === "msg") {
         if (!api.myRoom || d.roomId !== api.myRoom.id || !api.myRoom.members.some((m) => m.id === from)) return;
         if (d.type === "chat") { receiveChat(d.data, from); return; }
+        if (d.type === "renamed") {
+          const old = String(d.data?.old ?? "");
+          clearTimeout(gone.get(old));
+          gone.delete(old);
+        }
         // A member asks the host to move them to the other team.
         if (d.type === "team") {
           if (isHost() && !api.myRoom.started && api.myRoom.meta?.teams) { api.myRoom.meta.team[from] = d.data?.team === 1 ? 1 : 0; announce(); onChange(); }
@@ -156,7 +196,7 @@
       const name = `${channel}-lobby`;
       const room = window.DLE_Link ? await window.DLE_Link.join(trystero, config, name) : trystero.joinRoom(config, name);
       lobby = room;
-      for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
+      for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite", "reclaim"]) {
         const action = room.makeAction(name);
         send[name] = (data, target) => action.send(data, target ? { target } : undefined);
         action.onMessage = (data, { peerId }) => { if (lobby === room) handle(name, data, peerId); };
@@ -213,8 +253,17 @@
         api.status = "live";
         tries = 0;
         send.hello(api.profile);
-        // Closing or leaving the page says goodbye at once, so the others don't wait for the grace period.
-        window.addEventListener("pagehide", () => api.leave());
+        // Closing or leaving the page says goodbye at once, so the others don't wait for the grace period. During a
+        // match, though, a reload must not give the seat away: keep a ticket to come back instead.
+        window.addEventListener("pagehide", () => {
+          const r = api.myRoom;
+          if (r?.started && api.keepSeat) {
+            try { sessionStorage.setItem(TICKET, JSON.stringify({ room: r, oldId: api.selfId, wasHost: isHost(), data: lastStart, at: Date.now() })); } catch {}
+            return;
+          }
+          api.leave();
+        });
+        if (ticket) startRejoin();
       } catch (e) {
         // The network library could not load (CDN or connection hiccup): try again, forever, a bit slower each time.
         console.warn("Online rooms unavailable, retrying:", e);
@@ -261,6 +310,7 @@
     };
 
     api.leave = () => {
+      dropTicket();
       if (!api.myRoom) return;
       const room = api.myRoom;
       if (room.host === api.selfId) {
@@ -279,6 +329,7 @@
       if (!isHost() || api.myRoom.members.length < 2 || api.myRoom.started) return;
       api.myRoom.started = true;
       const payload = startData(api.myRoom);
+      lastStart = payload;
       for (const id of members()) send.roomstart({ room: api.myRoom, data: payload }, id);
       announce();
       onStart(api.myRoom, payload);
@@ -289,6 +340,60 @@
       if (!api.myRoom) return;
       for (const id of members()) send.msg({ roomId: api.myRoom.id, type, data }, id);
     };
+
+    // Everyone swaps a player's old id for the new one (the host tells the room, and the page fixes its match).
+    function renamed(old, now) {
+      announce();
+      api.broadcast("renamed", { old, now });
+      onMessage("renamed", { old, now }, api.selfId);
+      onChange();
+    }
+
+    function startRejoin() {
+      const t = ticket;
+      lastStart = t.data ?? null;
+      if (t.wasHost) {
+        // I hosted the room: take it back with my new id and tell the others (again for a while, as they reconnect).
+        const room = t.room;
+        for (const m of room.members) if (m.id === t.oldId) { m.id = api.selfId; m.name = api.profile.name || m.name; }
+        if (room.meta?.team && t.oldId in room.meta.team) { room.meta.team[api.selfId] = room.meta.team[t.oldId]; delete room.meta.team[t.oldId]; }
+        room.host = api.selfId;
+        api.myRoom = room;
+        let n = 0;
+        const again = () => {
+          if (api.myRoom?.id !== room.id) return;
+          announce();
+          api.broadcast("renamed", { old: t.oldId, now: api.selfId });
+          if (++n < 12) setTimeout(again, 2500);
+        };
+        again();
+        finishRejoin();
+        return;
+      }
+      // I was a player: ask the host for my seat back until it answers (roominfo with me in it).
+      api.myRoom = t.room;
+      let n = 0;
+      const ask = () => {
+        if (!api.rejoining || api.myRoom?.id !== t.room.id) return;
+        if (++n > 24) { api.rejoining = false; ticket = null; dropTicket(); api.myRoom = null; onClosed("rejoin-failed"); onChange(); return; }
+        send.reclaim?.({ roomId: t.room.id, oldId: t.oldId });
+        setTimeout(ask, 2500);
+      };
+      ask();
+    }
+
+    function finishRejoin() {
+      const t = ticket;
+      api.rejoining = false;
+      ticket = null;
+      dropTicket();
+      onRejoined(api.myRoom, t?.data ?? {}, t?.oldId);
+      onChange();
+    }
+
+    // The match is over: no seat to keep on reload anymore.
+    api.clearRejoin = () => { api.keepSeat = false; dropTicket(); };
+    api.keepSeat = false;
 
     // Host only: change the room's game while waiting; members follow it.
     api.setGame = (game) => {

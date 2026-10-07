@@ -82,6 +82,9 @@
       waitHost: "Waiting for the host to start…",
       needTwo: "At least 2 players are needed to start.",
       roomClosed: "The host closed the room.",
+      rejoining: "Getting you back into your match…",
+      rejoined: "Back in the match!",
+      rejoinFailed: "Your match couldn't be found anymore.",
       invite: "Invite",
       inviteSent: (n) => `Invitation sent to ${n}`,
       invitedBy: (n, a) => `${n} invites you to play${a ? ` (${a})` : ""}`,
@@ -191,6 +194,9 @@
       waitHost: "En attente du lancement par l'hôte…",
       needTwo: "Il faut au moins 2 joueurs pour lancer.",
       roomClosed: "L'hôte a fermé la salle.",
+      rejoining: "Retour dans ta partie…",
+      rejoined: "De retour dans la partie !",
+      rejoinFailed: "Impossible de retrouver ta partie.",
       invite: "Inviter",
       inviteSent: (n) => `Invitation envoyée à ${n}`,
       invitedBy: (n, a) => `${n} t'invite à jouer${a ? ` (${a})` : ""}`,
@@ -1164,11 +1170,13 @@
       onChange: () => { tryPendingJoin(); if (!match) renderLobby(); else renderScoreboard(); },
       onStart: (room, data) => startMatch(room, data),
       onMessage: onMatchMessage,
-      onClosed: () => {
+      onClosed: (why) => {
+        resume = null;
         if (match && !match.done) { match.closedByHost = true; finishMatch(); }
         else { match = null; renderLobby(); }
-        toast(t("roomClosed"));
+        toast(why === "rejoin-failed" ? t("rejoinFailed") : t("roomClosed"));
       },
+      onRejoined: (room, data) => askResume(room, data),
       onInvite: (room, from) => {
         if (match && !match.done) return;
         const g = GAMES.find((x) => x.id === room.game);
@@ -1194,6 +1202,16 @@
   // ── Lobby ──
   function renderLobby() {
     if (mode !== "online" || match) return;
+    if (rooms?.rejoining || resume) {
+      $("#duel").hidden = true;
+      const box = $("#lobby");
+      box.hidden = false;
+      box.textContent = "";
+      const w = el("p", "lobby-waiting");
+      w.append(el("span", "spinner"), t("rejoining"));
+      box.append(el("h2", null, t("lobbyTitle")), w);
+      return;
+    }
     // The host changed the anime: follow it (and send my spoiler limit for that anime).
     const joined = rooms?.myRoom;
     if (joined && !rooms.isHost() && joined.game !== currentGame.id && GAMES.some((g) => g.id === joined.game)) {
@@ -1503,19 +1521,29 @@
     const arc = Math.min(Number.isInteger(data.arc) ? data.arc : 0, gameData.config.arcs.length - 1);
     const pool = makePool(g, gameData, arc);
     const ids = room.members.map((m) => m.id);
+    const teams = data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null;
+    // Team vs team: one board per team, its players take turns on it; the turns alternate between the teams.
+    const keys = teams ? [0, 1].filter((k) => ids.some((id) => teams[id] === k)).map((k) => `team-${k}`) : ids;
+    let order = ids;
+    if (teams) {
+      const side = [0, 1].map((k) => ids.filter((id) => teams[id] === k));
+      order = [];
+      for (let i = 0; i < Math.max(side[0].length, side[1].length); i++) for (const k of [0, 1]) if (side[k][i]) order.push(side[k][i]);
+    }
     match = {
       room, g, pool, ids, arc, config: gameData.config,
       names: new Map(room.members.map((m) => [m.id, m.id === rooms.selfId ? myName() || t("you") : m.name])),
-      boards: new Map(ids.map((id) => [id, makeSlots(g, pool)])),
+      boards: new Map(keys.map((k) => [k, makeSlots(g, pool)])),
       active: new Set(ids),
       finished: new Set(),
       claims: new Map(), // playerId → character they have rolled and not placed yet
       rolled: null, rerolls: REROLLS, rolling: false, done: false, starting: true,
       key: String(data.key ?? ""), // tells this match's messages from the previous one's
-      order: ids, current: null, show: Promise.resolve(),
-      // Team vs team: each player's team (0 red, 1 blue); a team scores the average of its crews.
-      teams: data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null,
+      order, current: null, show: Promise.resolve(),
+      // Team vs team: each player's team (0 red, 1 blue), and the team's board is the one its players fill.
+      teams,
     };
+    rooms.keepSeat = true;
     renderPicker();
     renderMatch();
     const others = ids.filter((id) => id !== rooms.selfId).map(memberName);
@@ -1524,8 +1552,23 @@
     match.starting = false;
     // Everyone picks the same first player from the match key.
     const seed = [...match.key].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
-    setTurn(ids[seed % ids.length]);
+    setTurn(order[seed % order.length]);
   }
+
+  // The board a player fills: their own, or their team's in team vs team.
+  const boardKey = (id) => (match?.teams ? `team-${match.teams[id] ?? 0}` : id);
+  const boardOf = (id) => match.boards.get(boardKey(id));
+  const teammates = (id) => match.ids.filter((x) => boardKey(x) === boardKey(id));
+  // Where a board is drawn: mine (full size) or one of the others (small).
+  function boardBox(key) {
+    if (key === boardKey(rooms.selfId)) return { box: $("#duelMine"), mini: false };
+    return { box: document.querySelector(`[data-board="${CSS.escape(key)}"]`), mini: true };
+  }
+  const boardLabel = (key) => {
+    if (!match.teams || !key.startsWith("team-")) return memberName(key);
+    const k = Number(key.slice(5));
+    return `${rooms.teamNames()[k]} · ${match.ids.filter((id) => match.teams[id] === k).map(memberName).join(" & ")}`;
+  };
 
   // ── Turns ──
   const myTurn = () => !!match && match.current === rooms.selfId;
@@ -1597,7 +1640,7 @@
       .then(() => s.remove());
   }
 
-  const myBoard = () => match.boards.get(rooms.selfId);
+  const myBoard = () => boardOf(rooms.selfId);
 
   // Taken: placed on any board, or currently rolled by another player.
   function takenIds() {
@@ -1700,7 +1743,7 @@
   function markDone() {
     if (!match || match.finished.has(rooms.selfId)) return;
     const run = match;
-    run.finished.add(rooms.selfId);
+    for (const id of teammates(rooms.selfId)) run.finished.add(id);
     const sendDone = () => rooms.broadcast("done", { key: run.key, board: myBoard().map((s, i) => (s.char ? [i, s.char.id] : null)).filter(Boolean) });
     sendDone();
     let left = 20;
@@ -1752,7 +1795,7 @@
   const movesSeen = () => [...match.boards.values()].reduce((a, b) => a + filledOf(b).length, 0);
   // Fill in placements of a player that I missed (lost message, link dropped for a moment).
   function fillBoard(from, pairs) {
-    const board = match.boards.get(from);
+    const board = boardOf(from);
     let changed = false;
     for (const pair of pairs.slice(0, board.length)) {
       const [i, charId] = Array.isArray(pair) ? pair : [];
@@ -1765,14 +1808,24 @@
       }
     }
     if (changed) {
-      const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
-      if (box) renderBoard(box, board, { mini: true });
+      const { box, mini } = boardBox(boardKey(from));
+      if (box) renderBoard(box, board, { mini });
     }
   }
   const myPairs = () => myBoard().map((s, i) => (s.char ? [i, s.char.id] : null)).filter(Boolean);
 
   function onMatchMessage(type, d, from) {
-    if (!match || !match.boards.has(from)) return;
+    // Coming back after a reload: the first full state that answers my request rebuilds the match.
+    if (type === "state") {
+      if (resume && !match && d && String(d.key) === resume.key) resumeMatch(d);
+      return;
+    }
+    if (type === "renamed") { renameInMatch(String(d.old ?? ""), String(d.now ?? "")); return; }
+    if (!match || !match.ids.includes(from)) return;
+    if (type === "want") {
+      if (String(d.key) === match.key) rooms.broadcast("state", matchState());
+      return;
+    }
     if (type === "rejoin") {
       // Their link dropped for a moment: send them my board and whose turn it is.
       rooms.broadcast("sync", { key: match.key, board: myPairs(), current: match.current, moves: movesSeen(), finished: match.finished.has(rooms.selfId) });
@@ -1784,7 +1837,7 @@
       if (Array.isArray(d.board) && !match.done) fillBoard(from, d.board);
       if (d.finished === true && !match.finished.has(from)) match.finished.add(from);
       // They saw more of the match than I did: trust their idea of whose turn it is.
-      if (Number(d.moves) > before && match.boards.has(d.current) && !match.done) setTurn(d.current);
+      if (Number(d.moves) > before && match.ids.includes(d.current) && !match.done) setTurn(d.current);
       renderScoreboard();
       checkMatchEnd();
       return;
@@ -1801,7 +1854,7 @@
         const run = match;
         spectate(async () => {
           run.spectating = true;
-          const board = run.boards.get(from);
+          const board = boardOf(from);
           const list = run.pool.filter((x) => fitsIn(board, x));
           await matchReel.spin(list.length ? list : [c], c, { game: run.g.id, arc: run.arc });
           if (match === run) matchReel.hint(t("turnOf")(memberName(from)));
@@ -1812,7 +1865,7 @@
     if (type === "place") {
       match.claims.delete(from);
       const c = match.pool.find((x) => x.id === d.charId);
-      const board = match.boards.get(from);
+      const board = boardOf(from);
       const i = Number(d.slot);
       const slot = board[i];
       if (c && slot && !slot.char && !slot.locked && slot.def.fits(c) && !board.some((s) => s.char?.id === c.id)) {
@@ -1822,14 +1875,14 @@
         slot.pending = true;
         const run = match;
         spectate(async () => {
-          const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
+          const { box, mini } = boardBox(boardKey(from));
           if (box) {
             await fly(matchReel.window, slotFace(box, i) || box, c.formImage || c.image);
           }
           slot.pending = false;
           run.spectating = false;
           if (match !== run) return;
-          if (box) { renderBoard(box, board, { mini: true }); popSlot(box, i, slot.points); }
+          if (box) { renderBoard(box, board, { mini }); popSlot(box, i, slot.points); }
           renderScoreboard();
           if (!myTurn()) matchReel.idle(run.current ? t("turnOf")(memberName(run.current)) : t("waitOthers"));
         });
@@ -1845,7 +1898,7 @@
       if (match.finished.has(from)) return;
       match.claims.delete(from);
       // Fill in any placement whose message was lost.
-      const board = match.boards.get(from);
+      const board = boardOf(from);
       if (Array.isArray(d.board) && !match.done) {
         for (const pair of d.board.slice(0, board.length)) {
           const [i, charId] = Array.isArray(pair) ? pair : [];
@@ -1856,10 +1909,11 @@
             slot.points = pointsFor(slot, c);
           }
         }
-        const box = document.querySelector(`[data-board="${CSS.escape(from)}"]`);
-        if (box) renderBoard(box, board, { mini: true });
+        const { box, mini } = boardBox(boardKey(from));
+        if (box) renderBoard(box, board, { mini });
       }
-      match.finished.add(from);
+      // A shared board is done for the whole team.
+      for (const id of teammates(from)) match.finished.add(id);
       if (match.current === from) setTurn(nextAfter(from));
       renderScoreboard();
       checkMatchEnd();
@@ -1871,19 +1925,116 @@
     }
   }
 
-  const scores = () => match.ids.map((id) => ({ id, name: memberName(id), score: duelScore(match.boards.get(id)), left: !match.active.has(id) }))
+  // ── Back after a reload ──
+  // The whole match as I see it, for a player who reloaded their page.
+  const pairsOf = (board) => board.map((x, i) => (x.char ? [i, x.char.id] : null)).filter(Boolean);
+  function matchState() {
+    const m = match;
+    return {
+      key: m.key, arc: m.arc, ids: m.ids, order: m.order, teams: m.teams, current: m.current,
+      finished: [...m.finished], active: [...m.active], done: m.done,
+      boards: Object.fromEntries([...m.boards].map(([k, b]) => [k, pairsOf(b)])),
+    };
+  }
+
+  // A player came back with a new id (or I did, as seen by the others): swap it everywhere in the match.
+  function renameInMatch(old, now) {
+    const m = match;
+    if (!m || !old || !now || old === now || !m.ids.includes(old)) return;
+    const sw = (id) => (id === old ? now : id);
+    m.ids = m.ids.map(sw);
+    m.order = m.order.map(sw);
+    for (const map of [m.names, m.claims, m.shown, m.boards]) if (map?.has(old)) { map.set(now, map.get(old)); map.delete(old); }
+    for (const set of [m.active, m.finished]) if (set.has(old)) { set.delete(old); set.add(now); }
+    if (m.teams && old in m.teams) { m.teams[now] = m.teams[old]; delete m.teams[old]; }
+    if (m.current === old) m.current = now;
+    if (rooms.myRoom) m.room = rooms.myRoom;
+    const box = document.querySelector(`[data-board="${CSS.escape(old)}"]`);
+    if (box) box.dataset.board = now;
+    renderScoreboard();
+    renderMatchActions();
+  }
+
+  // Back in the room after a reload: ask the others for the match, again until one answers.
+  let resume = null;
+  function askResume(room, data) {
+    if (!data?.key || match) return;
+    if (mode !== "online") setMode("online");
+    resume = { room, data, key: String(data.key) };
+    renderLobby();
+    let n = 0;
+    const ask = () => {
+      if (!resume || match || resume.key !== String(data.key)) return;
+      if (++n > 15) { resume = null; toast(t("rejoinFailed")); rooms.leave(); renderLobby(); return; }
+      rooms.broadcast("want", { key: resume.key });
+      setTimeout(ask, 2000);
+    };
+    ask();
+  }
+
+  async function resumeMatch(st) {
+    const { room } = resume;
+    const g = GAMES.find((x) => x.id === room.game);
+    if (!g || !Array.isArray(st.ids) || !st.ids.includes(rooms.selfId)) return;
+    resume.loading = true;
+    if (currentGame.id !== g.id) await selectGame(g.id, { quiet: true });
+    const gameData = await loadGame(g);
+    if (!resume || match) return;
+    const arc = Math.min(Number.isInteger(st.arc) ? st.arc : 0, gameData.config.arcs.length - 1);
+    const pool = makePool(g, gameData, arc);
+    const ids = st.ids.map(String);
+    const teams = st.teams && typeof st.teams === "object" ? Object.fromEntries(ids.map((id) => [id, st.teams[id] === 1 ? 1 : 0])) : null;
+    const boards = new Map();
+    for (const [k, pairs] of Object.entries(st.boards ?? {})) {
+      const board = makeSlots(g, pool);
+      for (const pair of Array.isArray(pairs) ? pairs.slice(0, board.length) : []) {
+        const [i, charId] = Array.isArray(pair) ? pair : [];
+        const slot = board[i];
+        const c = pool.find((x) => x.id === charId);
+        if (c && slot && !slot.char && !slot.locked && slot.def.fits(c)) { slot.char = c; slot.points = pointsFor(slot, c); }
+      }
+      boards.set(String(k), board);
+    }
+    let rerolls = REROLLS;
+    try {
+      const saved = JSON.parse(sessionStorage.getItem("dle:crew-rerolls") || "null");
+      if (saved?.key === st.key && Number.isInteger(saved.rerolls)) rerolls = Math.max(0, Math.min(REROLLS, saved.rerolls));
+    } catch {}
+    const names = new Map((rooms.myRoom ?? room).members.map((m) => [m.id, m.id === rooms.selfId ? myName() || t("you") : m.name]));
+    match = {
+      room: rooms.myRoom ?? room, g, pool, ids, arc, config: gameData.config, names, boards,
+      active: new Set((st.active ?? ids).map(String)),
+      finished: new Set((st.finished ?? []).map(String)),
+      claims: new Map(),
+      rolled: null, rerolls, rolling: false, done: false, starting: false,
+      key: String(st.key), order: (st.order ?? ids).map(String), current: null, show: Promise.resolve(), teams,
+    };
+    resume = null;
+    rooms.keepSeat = true;
+    renderPicker();
+    renderMatch();
+    toast(t("rejoined"));
+    if (st.done) { finishMatch(); return; }
+    setTurn(ids.includes(st.current) ? st.current : match.order.find((id) => match.active.has(id) && !match.finished.has(id)) ?? null);
+    checkMatchEnd();
+  }
+
+  // My rerolls left, kept in the tab for a reload.
+  window.addEventListener("pagehide", () => {
+    if (!match || match.done) return;
+    try { sessionStorage.setItem("dle:crew-rerolls", JSON.stringify({ key: match.key, rerolls: match.rerolls })); } catch {}
+  });
+
+  const scores = () => match.ids.map((id) => ({ id, name: memberName(id), score: duelScore(boardOf(id)), left: !match.active.has(id) }))
     .sort((a, b) => b.score - a.score);
 
   function teamScores(live = false) {
-    const sum = [0, 0];
-    const count = [0, 0];
-    for (const id of match.ids) {
-      const k = match.teams[id] ?? 0;
-      const board = match.boards.get(id);
-      sum[k] += duelScore(live ? board.map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)) : board);
-      count[k]++;
-    }
-    return [0, 1].map((k) => (count[k] ? sum[k] / count[k] : 0));
+    // Each team scores its own board.
+    return [0, 1].map((k) => {
+      const board = match.boards.get(`team-${k}`);
+      if (!board) return 0;
+      return duelScore(live ? board.map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)) : board);
+    });
   }
 
   function finishMatch() {
@@ -1891,12 +2042,13 @@
     match.done = true;
     match.current = null;
     clearInterval(match.timer);
+    rooms.clearRejoin();
     renderScoreboard();
-    const mine = match.boards.get(rooms.selfId);
+    const mine = myBoard();
     renderBoard($("#duelMine"), mine);
     const ranking = scores();
     // Equal scores share a place.
-    const myScore = duelScore(match.boards.get(rooms.selfId));
+    const myScore = duelScore(myBoard());
     const place = 1 + ranking.filter((r) => r.score > myScore + 1e-9).length;
     const tiedTop = place === 1 && ranking.filter((r) => Math.abs(r.score - myScore) < 1e-9).length > 1;
     const panel = $("#duelPanel");
@@ -1965,7 +2117,7 @@
       score.dataset.value = match.shown?.get(id) ?? 0;
       chip.append(dot, el("span", "duel-pname", memberName(id)), score);
       box.append(chip);
-      const value = duelScore(match.boards.get(id).map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)));
+      const value = duelScore(boardOf(id).map((x) => (x.pending ? { ...x, char: null, points: 0 } : x)));
       countUp(score, value);
       (match.shown ??= new Map()).set(id, value);
     }
@@ -1995,29 +2147,29 @@
     const actions = el("div", "roll-actions");
     actions.id = "matchActions";
     panel.append(matchReel.el, actions);
-    // 1v1: both boards side by side, the reel between them. More players: theirs below mine.
-    const duo = match.ids.length === 2;
+    // Two boards (1v1, or team vs team): side by side, the reel between them. More: theirs below mine.
+    const duo = match.boards.size === 2;
     grid.classList.toggle("is-1v1", duo);
     if (duo) {
       const wrap = el("div", "duel-mine");
-      wrap.append(el("p", "duel-label is-me", memberName(rooms.selfId)), mine);
+      wrap.append(el("p", "duel-label is-me", match.teams ? boardLabel(boardKey(rooms.selfId)) : memberName(rooms.selfId)), mine);
       grid.append(wrap, panel);
     } else grid.append(mine, panel);
 
     const others = el("div", "others");
-    for (const id of match.ids) {
-      if (id === rooms.selfId) continue;
+    for (const key of match.boards.keys()) {
+      if (key === boardKey(rooms.selfId)) continue;
       const wrap = el("div", "duel-theirs");
-      wrap.append(el("p", "duel-label", memberName(id)));
+      wrap.append(el("p", "duel-label", boardLabel(key)));
       const b = el("div", "crew-board");
-      b.dataset.board = id;
+      b.dataset.board = key;
       wrap.append(b);
       (duo ? grid : others).append(wrap);
-      renderBoard(b, match.boards.get(id), { mini: true, stagger: true });
+      renderBoard(b, match.boards.get(key), { mini: true, stagger: true });
     }
     view.append(head, grid);
     if (!duo) view.append(others);
-    renderBoard(mine, match.boards.get(rooms.selfId), { stagger: true });
+    renderBoard(mine, myBoard(), { stagger: true });
     renderScoreboard();
   }
 
@@ -2357,7 +2509,9 @@
     // Give up after a while if the host is gone.
     setTimeout(() => { if (pendingJoin === key && !rooms?.myRoom) { pendingJoin = null; toast(t("linkGone")); renderLobby(); } }, 25000);
   }
-  mode = location.hash === "#online" || joinHash ? "online" : location.hash === "#index" ? "index" : "solo";
+  let backToMatch = false;
+  try { backToMatch = !!sessionStorage.getItem("dle:rejoin:crew"); } catch {}
+  mode = location.hash === "#online" || joinHash || backToMatch ? "online" : location.hash === "#index" ? "index" : "solo";
   setMode(mode);
   selectGame(currentGame.id);
 })();
