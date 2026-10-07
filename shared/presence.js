@@ -84,6 +84,19 @@ const shownName = () => myName || fallbackName;
 
 // ── State ──
 const peers = new Map(); // peerId → { name, game, pid (profile id), room (open room they wait in) }
+// The people behind the peers, once each: a player with several tabs, or whose old link is still in its grace
+// period after a reload, is one person (same profile, or same name without one). Me in another tab isn't shown.
+const personKey = (p) => (p.pid ? `p:${p.pid}` : `n:${p.name.toLowerCase()}`);
+function people() {
+  const me = personKey(myInfo());
+  const out = new Map();
+  for (const p of peers.values()) {
+    const k = personKey(p);
+    if (k === me) continue;
+    if (!out.has(k) || (p.at ?? 0) > (out.get(k).at ?? 0)) out.set(k, p);
+  }
+  return [...out.values()];
+}
 let status = "connecting"; // connecting | live | offline
 let editing = !myName;
 let sendInfo = null;
@@ -172,7 +185,8 @@ function render() {
   bar.dataset.status = status;
   const head = el("div", "presence-status");
   head.append(el("span", "presence-dot"));
-  const count = peers.size + 1;
+  const others = people().sort((a, b) => isFriend(b) - isFriend(a) || a.name.localeCompare(b.name));
+  const count = others.length + 1;
   // No relay reachable at all: nobody can be found, whatever the game does. Say why instead of waiting forever.
   const cut = (status === "live" && window.DLE_Link?.blocked()) || status === "offline";
   if (cut) bar.dataset.status = "offline";
@@ -190,7 +204,6 @@ function render() {
 
   const list = el("ul", "presence-list");
   list.append(myChip());
-  const others = [...peers.values()].sort((a, b) => isFriend(b) - isFriend(a) || a.name.localeCompare(b.name));
   for (const p of others) list.append(chip(p.name, p.game, false, isFriend(p), p.badges, p.pid));
   bar.append(list);
 
@@ -323,7 +336,7 @@ async function joinLobby() {
     if (!name) return;
     const g = GAMES.some((x) => x.id === data?.game) ? data.game : "home";
     const pid = /^[a-z0-9]{10,20}$/.test(data?.pid ?? "") ? data.pid : null;
-    peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room), badges: cleanBadges(data?.badges) });
+    peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room), badges: cleanBadges(data?.badges), at: Date.now() });
     render();
     presenceChanged();
     renderChat();
@@ -493,7 +506,7 @@ function renderChat({ scroll = false } = {}) {
   chatRoot.classList.toggle("is-open", chat.open);
   $c(".chat-panel").hidden = !chat.open;
   $c("#chatTitle").textContent = t("chat");
-  $c(".chat-count").textContent = status === "live" ? t("online")(peers.size + 1) : status === "connecting" ? t("connecting") : t("offline");
+  $c(".chat-count").textContent = status === "live" ? t("online")(people().length + 1) : status === "connecting" ? t("connecting") : t("offline");
   $c(".chat-close").setAttribute("aria-label", t("close"));
   $c(".chat-send").setAttribute("aria-label", t("send"));
   chatInput.placeholder = status === "offline" ? t("offline") : t("say")(shownName());
