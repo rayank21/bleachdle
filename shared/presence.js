@@ -520,7 +520,7 @@ function renderChat({ scroll = false } = {}) {
 
 function setChatOpen(open) {
   chat.open = open;
-  if (open) chat.unread = 0;
+  if (open) { chat.unread = 0; document.querySelector(".chat-notes")?.replaceChildren(); }
   try { sessionStorage.setItem("dle:chatOpen", open ? "1" : "0"); } catch {}
   renderChat({ scroll: true });
   (open ? chatInput : chatToggle).focus();
@@ -552,7 +552,34 @@ function receive(data, peerId) {
     chatToggle.classList.remove("bump");
     void chatToggle.offsetWidth;
     chatToggle.classList.add("bump");
+    const id = String(data?.id ?? "").slice(0, 40);
+    notify(chat.messages.find((m) => m.id === id));
   }
+}
+
+// A message while the chat is closed: a small card next to the chat button for a few seconds (a click opens the
+// chat). Never more than 2 on screen, and none at all while messages pour in (3 shown in the last 20 s): the badge
+// still counts them, so the screen is never flooded.
+const notes = el("div", "chat-notes");
+document.body.append(notes);
+let noteTimes = [];
+function notify(m) {
+  if (!m || chat.open) return;
+  const now = Date.now();
+  noteTimes = noteTimes.filter((x) => now - x < 20000);
+  if (noteTimes.length >= 3) return;
+  noteTimes.push(now);
+  const card = el("button", "chat-note");
+  card.type = "button";
+  const head = el("span", "chat-note-head");
+  const logo = gameLogo(m.game);
+  if (logo) head.append(logo);
+  head.append(el("b", null, m.name), el("time", null, clock(m.ts)));
+  card.append(head, el("span", "chat-note-text", m.text));
+  card.addEventListener("click", () => setChatOpen(true));
+  notes.append(card);
+  while (notes.children.length > 2) notes.firstElementChild.remove();
+  setTimeout(() => { card.classList.add("is-leaving"); setTimeout(() => card.remove(), 250); }, 5000);
 }
 
 function receiveHistory(data, peerId) {
