@@ -162,6 +162,8 @@ const FILES = [
   ["bleach", "bleach", "kugo-ginjo", "File:Ep365GinjoBankai.png"],
   ["bleach", "bleach", "yoruichi-shihoin", "File:Ep56Shunkō3.png"],
   ["bleach", "bleach", "yoruichi-shihoin-2", "File:Shunkō- Raijin Senkei.png"],
+  // Card picture (forms.js "card"): Vasto Lorde, cropped by hand from the 2261×1080 original (x 330–1490).
+  ["bleach", "bleach", "ichigo-kurosaki-vl", "File:BBSFully Hollowfied Ichigo.png"],
   ["solo-leveling", "sololeveling", "beru", "File:Ant King Anime2.png"],
   ["solo-leveling", "sololeveling", "ashborn", "File:Ashborn22.jpg"],
   ["solo-leveling", "sololeveling", "antares", "File:Antares Dragon Form.png"],

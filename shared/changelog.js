@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T01:45",
+      title: { en: "New card pictures for Ichigo and Yoruichi", fr: "Nouvelles images de carte pour Ichigo et Yoruichi" },
+      items: [
+        { type: "improved", game: "bleach", en: "Ichigo's card, showcase and profile picture now show him as a Vasto Lorde, and Yoruichi's show her Shunkō · Raijin Senkei against Askin.", fr: "La carte, la vitrine et la photo de profil d'Ichigo le montrent maintenant en Vasto Lorde, et celles de Yoruichi avec son Shunkô · Raijin Senkei contre Askin." },
+      ],
+    },
+    {
       at: "2026-10-08T01:20",
       title: { en: "Pack battles: open your pack in turn", fr: "Bataille de boosters : chacun son tour" },
       items: [

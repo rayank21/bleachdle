@@ -57,7 +57,7 @@
       "jugram-haschwalth": { arc: 6, name: { en: "The Balance", fr: "L'Équilibre" }, ...QUINCY },
       "bazz-b": { arc: 6, name: { en: "Burner Finger", fr: "Burner Finger" }, ...QUINCY, c1: "255, 120, 40" },
       "kirio-hikifune": { arc: 6, name: { en: "Slim form", fr: "Forme affinée" }, fx: "aura", c1: "255, 170, 210", c2: "60, 10, 30", kanji: "麒麟殿" },
-      "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI , next: { arc: 4, name: { en: "Final Getsuga Tenshō", fr: "Getsuga Tenshô final" }, fx: "pillar", c1: "200, 20, 30", c2: "6, 0, 2", kanji: "無月", clip: false } },
+      "ichigo-kurosaki": { arc: 1, name: { en: "Bankai · Tensa Zangetsu", fr: "Bankai · Tensa Zangetsu" }, ...BANKAI , card: "ichigo-kurosaki-vl", cardFocus: "48% 20%", next: { arc: 4, name: { en: "Final Getsuga Tenshō", fr: "Getsuga Tenshô final" }, fx: "pillar", c1: "200, 20, 30", c2: "6, 0, 2", kanji: "無月", clip: false } },
       "byakuya-kuchiki": { arc: 1, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, ...BANKAI, c1: "255, 140, 190" , next: { arc: 6, name: { en: "Bankai · Senbonzakura Kageyoshi", fr: "Bankai · Senbonzakura Kageyoshi" }, clip: true } },
       "renji-abarai": { arc: 1, name: { en: "Bankai · Hihiō Zabimaru", fr: "Bankai · Hihiō Zabimaru" }, ...BANKAI },
       "toshiro-hitsugaya": { arc: 1, name: { en: "Bankai · Daiguren Hyōrinmaru", fr: "Bankai · Daiguren Hyōrinmaru" }, ...BANKAI, c1: "120, 210, 255", c2: "6, 20, 40" },
@@ -73,7 +73,7 @@
       "genryusai-yamamoto": { focus: "8% 20%", arc: 6, name: { en: "Bankai · Zanka no Tachi", fr: "Bankai · Zanka no Tachi" }, fx: "pillar", c1: "255, 120, 30", c2: "40, 6, 0", kanji: "残火の太刀" },
       // Ginjo after stealing Ichigo's Fullbring: his Cross of Scaffold turns into a Bankai-like form (episode 365).
       "kugo-ginjo": { arc: 5, name: { en: "Fullbring · Ichigo's power absorbed", fr: "Fullbring · pouvoir d'Ichigo absorbé" }, fx: "aura", c1: "120, 255, 190", c2: "10, 30, 24", kanji: "完現術", lightning: true },
-      "yoruichi-shihoin": { arc: 1, name: { en: "Shunkō", fr: "Shunkô" }, fx: "aura", c1: "200, 230, 255", c2: "60, 30, 110", kanji: "瞬閧", lightning: true, next: { arc: 6, name: { en: "Shunkō · Raijin Senkei", fr: "Shunkô · Raijin Senkei" }, c1: "255, 210, 60", c2: "60, 30, 0", kanji: "雷神戦形", clip: false } },
+      "yoruichi-shihoin": { arc: 1, name: { en: "Shunkō", fr: "Shunkô" }, fx: "aura", card: "yoruichi-shihoin-2", cardFocus: "50% 35%", c1: "200, 230, 255", c2: "60, 30, 110", kanji: "瞬閧", lightning: true, next: { arc: 6, name: { en: "Shunkō · Raijin Senkei", fr: "Shunkô · Raijin Senkei" }, c1: "255, 210, 60", c2: "60, 30, 0", kanji: "雷神戦形", clip: false } },
       "ichibe-hyosube": { arc: 6, name: { en: "Ichimonji · Shirafude", fr: "Ichimonji · Shirafude" }, fx: "domain", c1: "240, 240, 240", c2: "4, 4, 6", kanji: "一文字" },
     },
     naruto: {

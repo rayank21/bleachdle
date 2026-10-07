@@ -89,7 +89,9 @@
   const portrait = (game, char) => { const g = gameOf(game); return g ? `${ROOT}${g.path}assets/characters/${char}.webp` : ""; };
   // Characters with a transformation (crew/forms.js, loaded on every page) show it on their cards and as avatars.
   const formOf = (game, char) => window.CREW_FORMS?.[game]?.[char] ?? null;
-  const formSrc = (g, id) => `${ROOT}crew/assets/forms/${g}-${id}.webp`;
+  // A form can name another picture for cards, the showcase and avatars ("card"), framed on "cardFocus".
+  const formSrc = (g, id) => `${ROOT}crew/assets/forms/${g}-${formOf(g, id)?.card ?? id}.webp`;
+  const formFocus = (f) => (f?.card ? f.cardFocus : f?.focus);
   const avatarSrc = (a) => (!a ? "" : formOf(a.game, a.char) ? formSrc(a.game, a.char) : portrait(a.game, a.char));
   // Frames a transformation picture in a circle or a card: on the form's focus, else on the head of a tall one.
   function frameForm(img, focus) {
@@ -101,7 +103,7 @@
   function avatarImg(img, a) {
     window.DLE_SMALL_IMG(img, avatarSrc(a));
     const f = a && formOf(a.game, a.char);
-    if (f) frameForm(img, f.focus);
+    if (f) frameForm(img, formFocus(f));
     return img;
   }
   // Crew Roll loads crew/forms.js itself (after this file): only other pages fetch it, once the page is parsed.
@@ -338,7 +340,7 @@
     img.src = c.img || (c.f || form ? formSrc(c.g, c.id) : portrait(c.g, c.id));
     if (form) card.classList.add("has-form");
     // A tall full-body picture shows the head, a wide one its middle (or the form's own focus).
-    frameForm(img, form?.focus);
+    frameForm(img, formFocus(form));
     art.append(img);
     const top = el("div", "tcg-top");
     if (game) { const logo = el("img", "tcg-logo"); logo.src = ROOT + game.logo; logo.alt = ""; top.append(logo); }
