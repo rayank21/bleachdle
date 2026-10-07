@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T00:50",
+      title: { en: "Pack battles up to 8 players, in teams too", fr: "Batailles de boosters jusqu'à 8, en équipes aussi" },
+      items: [
+        { type: "new", game: "crew", en: "Pack battles are no longer 1v1 only: 2 to 8 players each open a pack, three times, and the strongest pack wins the round. From 3 players, the host can make two teams; the team whose packs add up to more wins.", fr: "Les batailles de boosters ne sont plus seulement en 1v1 : de 2 à 8 joueurs ouvrent chacun un booster, trois fois, et le plus fort gagne la manche. À partir de 3 joueurs, l'hôte peut faire deux équipes ; l'équipe dont les boosters cumulent le plus gagne." },
+      ],
+    },
+    {
       at: "2026-10-08T00:20",
       title: { en: "Deck battles up to 8 players, in teams too", fr: "Batailles de decks jusqu'à 8, en équipes aussi" },
       items: [

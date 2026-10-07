@@ -10,9 +10,9 @@ import { drawPack } from "./boosters.js";
 
 const PROFILE = () => window.DLE_Profile;
 const CV = { sub: "inv", anime: "all", dupesOnly: false, trade: null, mode: "pack", size: 2 };
-// A deck battle takes 2 to 8 players (free for all, or two teams); a pack battle is always 1v1.
+// Both battles take 2 to 8 players: free for all, or two teams from 3 players.
 const SIZES = [2, 3, 4, 5, 6, 7, 8];
-const roomSize = () => (CV.mode === "deck" ? CV.size : 2);
+const roomSize = () => CV.size;
 export let cardRooms = null;
 S.cardMatch = null;
 
@@ -371,7 +371,7 @@ export function ensureCardRooms() {
     channel: "cards",
     startData: (room) => ({
       mode: room.meta?.play === "deck" ? "deck" : "pack", game: room.game, seed: Math.floor(Math.random() * 2 ** 31), key: Math.random().toString(36).slice(2, 10),
-      teams: room.meta?.play === "deck" && room.meta?.teams ? Object.fromEntries(room.members.map((m) => [m.id, cardRooms.teamOf(m.id, room) ?? 0])) : null,
+      teams: room.meta?.teams ? Object.fromEntries(room.members.map((m) => [m.id, cardRooms.teamOf(m.id, room) ?? 0])) : null,
     }),
     onChange: () => { tryPendingCardJoin(); if (S.mode === "cards" && CV.sub === "duel" && !(S.cardMatch && !S.cardMatch.done)) renderCards(); else if (S.cardMatch) drawMatch(); },
     onStart: (room, data) => startMatch(room, data),
@@ -440,19 +440,17 @@ function duelView(box) {
     modes.append(b);
   }
   lobby.append(modes);
-  if (CV.mode === "pack") lobby.append(animeRow());
-  else {
-    const sizes = el("div", "cv-sizes");
-    sizes.append(el("span", "crew-setting-label", t("players")));
-    for (const n of SIZES) {
-      const b = el("button", `size-pick${n === CV.size ? " is-active" : ""}`, String(n));
-      b.type = "button";
-      b.addEventListener("click", () => { CV.size = n; renderCards(); });
-      sizes.append(b);
-    }
-    lobby.append(sizes, el("p", "muted cv-teams-note", t("cTeamsNote")));
-    deckBuilder(lobby);
+  const sizes = el("div", "cv-sizes");
+  sizes.append(el("span", "crew-setting-label", t("players")));
+  for (const n of SIZES) {
+    const b = el("button", `size-pick${n === CV.size ? " is-active" : ""}`, String(n));
+    b.type = "button";
+    b.addEventListener("click", () => { CV.size = n; renderCards(); });
+    sizes.append(b);
   }
+  lobby.append(sizes, el("p", "muted cv-teams-note", t("cTeamsNote")));
+  if (CV.mode === "pack") lobby.append(animeRow());
+  else deckBuilder(lobby);
 
   const create = el("button", "btn-primary", t("cCreate"));
   create.type = "button";
@@ -604,8 +602,8 @@ function roomCard(room) {
     list.append(li);
   }
   card.append(list);
-  // Deck battles with 3 players or more can be played in two teams.
-  if (deck && room.size > 2) card.append(cardRooms.teamsBox());
+  // Battles with 3 players or more can be played in two teams.
+  if (room.size > 2) card.append(cardRooms.teamsBox());
   const actions = el("div", "roll-actions");
   if (cardRooms.isHost()) {
     const start = el("button", "btn-primary", t("start"));
@@ -632,18 +630,19 @@ function startMatch(room, data) {
   if (!others.length) return;
   // Every screen orders the players the same way (for the luck of each round).
   const ids = room.members.map((m) => m.id).sort();
-  const opp = others[0];
   const deck = data.mode === "deck";
-  const teams = deck && data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null;
+  let teams = data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null;
+  if (teams && new Set(Object.values(teams)).size < 2) teams = null;
   const m = {
     key: String(data.key ?? ""), mode: deck ? "deck" : "pack", game: GAMES.find((g) => g.id === data.game) ?? S.currentGame,
-    seed: Number(data.seed) >>> 0, me: cardRooms.selfId, opp: opp.id, oppName: opp.name, side: ids.indexOf(cardRooms.selfId),
-    round: 0, score: [0, 0], done: false, log: [], busy: false,
-    // pack battle (1v1): my and their packs per round
-    mine: [], theirs: [],
-    // deck battle: every player's hand and the card they played each round, their points (or the teams')
+    seed: Number(data.seed) >>> 0, me: cardRooms.selfId,
+    round: 0, done: false, log: [], busy: false,
     ids, names: new Map(room.members.map((x) => [x.id, x.name])), teams, teamNames: cardRooms.teamNames(room),
-    hands: new Map(), plays: new Map(ids.map((id) => [id, []])), points: new Map(ids.map((id) => [id, 0])), teamPts: [0, 0], active: new Set(ids),
+    points: new Map(ids.map((id) => [id, 0])), teamPts: [0, 0], active: new Set(ids),
+    // pack battle: every player's pack for each round
+    packs: new Map(ids.map((id) => [id, []])),
+    // deck battle: every player's hand and the card they played each round
+    hands: new Map(), plays: new Map(ids.map((id) => [id, []])),
   };
   S.cardMatch = m;
   CV.sub = "duel";
@@ -654,7 +653,8 @@ function startMatch(room, data) {
   else sendDeck();
 }
 
-const isMine = (from) => S.cardMatch && (S.cardMatch.mode === "deck" ? S.cardMatch.ids.includes(from) : from === S.cardMatch.opp);
+const isMine = (from) => S.cardMatch?.ids.includes(from);
+const ROUNDS = (m) => (m.mode === "pack" ? 3 : DECK_SIZE);
 const cleanCard = (c, g) => (c && /^[a-z0-9-]{1,60}$/.test(c.id ?? "") ? {
   g: GAMES.some((x) => x.id === (g ?? c.g)) ? g ?? c.g : null, id: c.id, n: String(c.n ?? "").replace(/[\u0000-\u001f<>]/g, "").slice(0, 40) || "?",
   p: Math.min(10, Math.max(1, Math.round(+c.p || 1))), tier: ["common", "epic", "legend", "secret"].includes(c.tier) ? c.tier : "common", f: c.f === true, form: c.form === true,
@@ -664,15 +664,14 @@ function onMatchMessage(type, d, from) {
   const m = S.cardMatch;
   if (!m || m.done) return;
   if (type === "left") {
-    const who = d?.id ?? from;
-    if (m.mode === "pack") { if (who === m.opp) finish("forfeit"); return; }
-    playerLeft(who);
+    playerLeft(d?.id ?? from);
     return;
   }
   if (!isMine(from)) return;
-  if (type === "pack" && m.mode === "pack" && Number.isInteger(d.r) && d.r >= 0 && d.r < 3 && Array.isArray(d.cards)) {
-    m.theirs[d.r] = d.cards.slice(0, 5).map((c) => cleanCard(c, m.game.id)).filter((c) => c?.g);
-    tryRevealPack(d.r);
+  if (type === "pack" && m.mode === "pack" && Number.isInteger(d.r) && d.r >= 0 && d.r < 3 && Array.isArray(d.cards) && !m.packs.get(from)[d.r]) {
+    m.packs.get(from)[d.r] = d.cards.slice(0, 5).map((c) => cleanCard(c, m.game.id)).filter((c) => c?.g);
+    drawMatch();
+    tryRevealPack(m.round);
   } else if (type === "deck" && m.mode === "deck" && Array.isArray(d.cards) && !m.hands.has(from)) {
     m.hands.set(from, d.cards.slice(0, DECK_SIZE).map((c) => cleanCard(c)).filter((c) => c?.g));
     drawMatch();
@@ -686,7 +685,7 @@ function onMatchMessage(type, d, from) {
   }
 }
 
-// A player left a deck battle: the others play on without them, until one player (or one team) is left.
+// A player left: the others play on without them, until one player (or one team) is left.
 function playerLeft(id) {
   const m = S.cardMatch;
   if (!m.active.has(id)) return;
@@ -695,53 +694,84 @@ function playerLeft(id) {
   const sides = m.teams ? new Set(left.map((x) => m.teams[x])) : null;
   if (left.length < 2 || (sides && sides.size < 2)) { finish("forfeit"); return; }
   drawMatch();
-  tryResolve();
+  if (m.mode === "pack") tryRevealPack(m.round);
+  else tryResolve();
 }
 
-// ── Pack battle: three rounds, both open a pack, the bigger total wins the round ──
+// Scores a round. Free for all: the best score wins (several if tied). Teams: the team with the larger total wins.
+function scoreRound(m, rows) {
+  if (m.teams) {
+    const totals = [0, 1].map((k) => rows.filter((x) => m.teams[x.id] === k).reduce((a, x) => a + x.s, 0));
+    const teamWin = totals[0] === totals[1] ? null : totals[0] > totals[1] ? 0 : 1;
+    if (teamWin != null) m.teamPts[teamWin]++;
+    return { rows, teamWin, totals, winners: teamWin == null ? [] : rows.filter((x) => m.teams[x.id] === teamWin).map((x) => x.id) };
+  }
+  const best = Math.max(...rows.map((x) => x.s));
+  const winners = rows.filter((x) => x.s === best).map((x) => x.id);
+  // Everyone tied: nobody scores.
+  if (winners.length === rows.length && rows.length > 1) return { rows, winners: [] };
+  for (const id of winners) m.points.set(id, m.points.get(id) + 1);
+  return { rows, winners };
+}
+
+// Over after the last round, or once the leader can't be caught.
+function isOver(m, r) {
+  const left = ROUNDS(m) - 1 - r;
+  const pts = m.teams ? m.teamPts : [...m.active].map((id) => m.points.get(id));
+  const sorted = [...pts].sort((a, b) => b - a);
+  return left <= 0 || sorted[0] - (sorted[1] ?? 0) > left;
+}
+
+// ── Pack battle: three rounds, everyone opens a pack, the bigger total wins the round ──
 async function sendPack(r) {
   const m = S.cardMatch;
   const cards = await drawPack(m.game);
   if (S.cardMatch !== m || m.done) return;
-  m.mine[r] = cards.map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: c.tier, f: c.f }));
-  cardRooms.broadcast("pack", { r, key: m.key, cards: m.mine[r] });
+  m.packs.get(m.me)[r] = cards.map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: c.tier, f: c.f }));
+  cardRooms.broadcast("pack", { r, key: m.key, cards: m.packs.get(m.me)[r] });
   drawMatch();
   tryRevealPack(r);
 }
 
 async function tryRevealPack(r) {
   const m = S.cardMatch;
-  if (!m || m.round !== r || !m.mine[r] || !m.theirs[r] || m.busy) return;
+  if (!m || m.done || m.round !== r || m.busy || m.log[r]) return;
+  const live = [...m.active];
+  if (live.some((id) => !m.packs.get(id)?.[r])) return;
   m.busy = true;
   m.flipped = 0;
   drawMatch();
-  // Turn the cards over two by two (theirs, then mine); the count survives a redraw of the screen.
+  // Turn the cards over column by column, on every pack at once; the count survives a redraw of the screen.
   for (let i = 0; i < 5; i++) {
     m.flipped = i + 1;
-    const rows = document.querySelectorAll(".cv-match .cvm-row .cvm-cards");
-    for (const node of [rows[0]?.children[i], rows[1]?.children[i]]) {
+    let best = null;
+    for (const list of document.querySelectorAll(".cv-match .cvm-row .cvm-cards")) {
+      const node = list.children[i];
       if (!node) continue;
       node.classList.add("is-flipped");
       const tier = node.dataset.tier;
-      if (tier === "legend" || tier === "secret") { const b = node.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, { count: 40, spread: 200, gold: tier === "legend", color: tier === "secret" ? "120, 230, 255" : null }); sfx("impact"); }
-      else sfx(tier === "epic" ? "shimmer" : "place");
-      await wait(230);
+      if (tier === "legend" || tier === "secret") { const b = node.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, { count: 40, spread: 200, gold: tier === "legend", color: tier === "secret" ? "120, 230, 255" : null }); }
+      const rank = ["common", "epic", "legend", "secret"].indexOf(tier);
+      if (best == null || rank > best) best = rank;
     }
+    sfx(best >= 2 ? "impact" : best === 1 ? "shimmer" : "place");
+    await wait(420);
   }
-  const a = packScore(m.mine[r]);
-  const b = packScore(m.theirs[r]);
-  if (a !== b) m.score[a > b ? 0 : 1]++;
-  m.log.push({ a, b });
-  sfx(a > b ? "win" : a < b ? "stamp" : "place");
+  if (S.cardMatch !== m || m.done) return;
+  const rows = live.filter((id) => m.packs.get(id)?.[r]).map((id) => ({ id, s: packScore(m.packs.get(id)[r]) }));
+  m.log[r] = scoreRound(m, rows);
+  const winners = m.log[r].winners;
+  sfx(winners.includes(m.me) ? "win" : winners.length ? "stamp" : "place");
   drawMatch();
-  await wait(1800);
+  await wait(2200);
   m.busy = false;
   if (S.cardMatch !== m || m.done) return;
-  if (m.round >= 2 || Math.max(...m.score) >= 2) { finish(); return; }
+  if (isOver(m, r)) { finish(); return; }
   m.flipped = 0;
   m.round++;
   drawMatch();
   sendPack(m.round);
+  tryRevealPack(m.round);
 }
 
 // ── Deck battle: five rounds, everyone plays a card, the strongest wins the round (or the strongest team) ──
@@ -784,21 +814,8 @@ async function tryResolve() {
     const l = luck(m.seed, r, m.ids.indexOf(id));
     return { id, c, l, s: strength(c, l) };
   });
-  // Free for all: the strongest card scores (several if tied). Teams: the team with the larger total scores.
-  let winners = [];
-  let teamWin = null;
-  if (m.teams) {
-    const tot = [0, 1].map((k) => rows.filter((x) => m.teams[x.id] === k).reduce((a, x) => a + x.s, 0));
-    teamWin = tot[0] === tot[1] ? null : tot[0] > tot[1] ? 0 : 1;
-    if (teamWin != null) m.teamPts[teamWin]++;
-    winners = teamWin == null ? [] : rows.filter((x) => m.teams[x.id] === teamWin).map((x) => x.id);
-    m.log[r] = { rows, winners, teamWin, totals: tot };
-  } else {
-    const best = Math.max(...rows.map((x) => x.s));
-    winners = rows.filter((x) => x.s === best).map((x) => x.id);
-    for (const id of winners) m.points.set(id, m.points.get(id) + 1);
-    m.log[r] = { rows, winners };
-  }
+  m.log[r] = scoreRound(m, rows);
+  const { winners } = m.log[r];
   m.shown = r;
   drawMatch();
   sfx("slash");
@@ -808,11 +825,7 @@ async function tryResolve() {
   m.busy = false;
   m.shown = null;
   if (S.cardMatch !== m || m.done) return;
-  // Over after five rounds, or once the leader can't be caught.
-  const left = DECK_SIZE - 1 - r;
-  const pts = m.teams ? m.teamPts : [...m.active].map((id) => m.points.get(id));
-  const sorted = [...pts].sort((a, b) => b - a);
-  if (left <= 0 || sorted[0] - (sorted[1] ?? 0) > left) { finish(); return; }
+  if (isOver(m, r)) { finish(); return; }
   m.round++;
   drawMatch();
   tryResolve();
@@ -822,18 +835,16 @@ function finish(why) {
   const m = S.cardMatch;
   if (!m || m.done) return;
   m.done = true;
-  if (m.mode === "deck") {
-    if (m.teams) {
-      const k = m.teams[m.me];
-      const left = [0, 1].filter((x) => [...m.active].some((id) => m.teams[id] === x));
-      m.result = why === "forfeit" ? (left.includes(k) ? "win" : "lose") : m.teamPts[k] > m.teamPts[1 - k] ? "win" : m.teamPts[k] < m.teamPts[1 - k] ? "lose" : "draw";
-    } else {
-      const pts = [...m.active].map((id) => m.points.get(id));
-      const best = Math.max(...pts);
-      const mine = m.points.get(m.me);
-      m.result = why === "forfeit" && m.active.size === 1 ? "win" : mine < best ? "lose" : pts.filter((x) => x === best).length > 1 ? "draw" : "win";
-    }
-  } else m.result = why === "forfeit" ? "win" : m.score[0] > m.score[1] ? "win" : m.score[0] < m.score[1] ? "lose" : "draw";
+  if (m.teams) {
+    const k = m.teams[m.me];
+    const left = [0, 1].filter((x) => [...m.active].some((id) => m.teams[id] === x));
+    m.result = why === "forfeit" ? (left.includes(k) ? "win" : "lose") : m.teamPts[k] > m.teamPts[1 - k] ? "win" : m.teamPts[k] < m.teamPts[1 - k] ? "lose" : "draw";
+  } else {
+    const pts = [...m.active].map((id) => m.points.get(id));
+    const best = Math.max(...pts);
+    const mine = m.points.get(m.me);
+    m.result = why === "forfeit" && m.active.size === 1 ? "win" : mine < best ? "lose" : pts.filter((x) => x === best).length > 1 ? "draw" : "win";
+  }
   m.forfeit = why === "forfeit";
   const P = PROFILE();
   P?.count?.("cardDuels", 1);
@@ -850,28 +861,32 @@ function drawMatch() {
   box.textContent = "";
   const board = el("div", `card cvm cvm-${m.mode}`);
   const top = el("div", "cvm-score");
-  if (m.mode === "pack") top.append(el("span", "cvm-name", m.oppName), el("b", "cvm-pts", `${m.score[1]} – ${m.score[0]}`), el("span", "cvm-name is-me", myName() || t("you")));
-  else if (m.teams) top.append(el("span", "cvm-name team-0", m.teamNames[0]), el("b", "cvm-pts", `${m.teamPts[0]} – ${m.teamPts[1]}`), el("span", "cvm-name team-1 is-left", m.teamNames[1]));
-  if (m.mode === "deck") board.append(top, scoreChips(m));
-  const round = el("p", "cvm-round", m.done ? "" : m.mode === "pack" ? t("cRound")(m.round + 1, 3) : t("cRound")(m.round + 1, DECK_SIZE));
-  board.append(...(m.mode === "pack" ? [top] : []), round);
+  if (m.teams) top.append(el("span", "cvm-name team-0", m.teamNames[0]), el("b", "cvm-pts", `${m.teamPts[0]} – ${m.teamPts[1]}`), el("span", "cvm-name team-1 is-left", m.teamNames[1]));
+  board.append(top, scoreChips(m), el("p", "cvm-round", m.done ? "" : t("cRound")(m.round + 1, ROUNDS(m))));
 
   if (m.mode === "pack") {
+    // One row per player (mine last); the packs stay face down until everyone has opened theirs.
     const r = m.round;
-    const shown = m.log.length > r;
-    for (const [cards, label, total] of [[m.theirs[r], m.oppName, shown ? m.log[r].b : null], [m.mine[r], t("you"), shown ? m.log[r].a : null]]) {
-      const row = el("div", "cvm-row");
-      row.append(el("span", "cvm-row-label", total == null ? label : `${label} · ${total}`));
+    const entry = m.log[r];
+    const many = m.ids.length > 2;
+    const order = [...m.ids.filter((id) => id !== m.me), m.me];
+    const rows = el("div", `cvm-rows${many ? " is-multi" : ""}${m.ids.length > 4 ? " is-big" : ""}`);
+    for (const id of order) {
+      const cards = m.packs.get(id)?.[r];
+      const gone = !m.active.has(id);
+      if (gone && !cards) continue;
+      const total = entry?.rows.find((x) => x.id === id)?.s;
+      const row = el("div", `cvm-row${id === m.me ? " is-me" : ""}${m.teams ? ` team-${m.teams[id]}` : ""}${gone ? " has-left" : ""}${entry?.winners.includes(id) ? " is-winner" : ""}`);
+      const name = id === m.me ? t("you") : m.names.get(id) ?? "Player";
+      row.append(el("span", "cvm-row-label", total == null ? name : `${name} · ${total}`));
       const list = el("div", "cvm-cards");
-      (cards ?? []).forEach((c, i) => list.append(flipCard(c, shown || i < (m.flipped ?? 0))));
+      (cards ?? []).forEach((c, i) => list.append(flipCard(c, !!entry || i < (m.flipped ?? 0))));
       if (!cards) list.append(el("p", "muted cvm-wait", t("cOpening")));
       row.append(list);
-      board.append(row);
+      rows.append(row);
     }
-    if (shown) {
-      const { a, b } = m.log[r];
-      board.append(el("p", `cvm-verdict ${a > b ? "is-win" : a < b ? "is-lose" : ""}`, a > b ? t("cRoundWon") : a < b ? t("cRoundLost") : t("cRoundTie")));
-    }
+    board.append(rows);
+    if (entry) board.append(verdict(m, entry));
   } else {
     // The arena: every player's card this round (hidden until everyone has played), then my hand.
     const r = m.round;
@@ -893,12 +908,7 @@ function drawMatch() {
       arena.append(box);
     }
     board.append(arena);
-    if (entry) {
-      const won = entry.winners.includes(m.me);
-      const text = m.teams ? (entry.teamWin == null ? t("cRoundTie") : `${t("teamWins")(m.teamNames[entry.teamWin])} (${entry.totals[0]} – ${entry.totals[1]})`)
-        : won ? (entry.winners.length > 1 ? t("cRoundShared") : t("cRoundWon")) : t("cRoundBy")(entry.winners.map((id) => m.names.get(id) ?? "?").join(", "));
-      board.append(el("p", `cvm-verdict ${won ? "is-win" : entry.winners.length ? "is-lose" : ""}`, text));
-    }
+    if (entry) board.append(verdict(m, entry));
     const hand = el("div", "cvm-hand is-mine");
     const mine = m.plays.get(m.me) ?? [];
     (m.hands.get(m.me) ?? []).forEach((c, i) => {
@@ -938,7 +948,16 @@ function drawMatch() {
   return board;
 }
 
-// Deck battle: every player's points (or each team's members under its score).
+// Who won the round, as seen from my side.
+function verdict(m, entry) {
+  const won = entry.winners.includes(m.me);
+  const text = !entry.winners.length ? t("cRoundTie")
+    : m.teams ? `${t("teamWins")(m.teamNames[entry.teamWin])} (${entry.totals[0]} – ${entry.totals[1]})`
+    : won ? (entry.winners.length > 1 ? t("cRoundShared") : t("cRoundWon")) : t("cRoundBy")(entry.winners.map((id) => m.names.get(id) ?? "?").join(", "));
+  return el("p", `cvm-verdict ${won ? "is-win" : entry.winners.length ? "is-lose" : ""}`, text);
+}
+
+// Every player's points (or each team's members under its score).
 function scoreChips(m) {
   const row = el("div", "cvm-chips");
   for (const id of m.ids) {

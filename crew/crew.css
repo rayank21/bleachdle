@@ -872,3 +872,17 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 .cvm-slot-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 900; padding-bottom: 2px; }
 .cvm-slot.is-me .cvm-slot-name { color: #ffd34d; }
 .cvm-slot.is-winner > .tcg { box-shadow: 0 0 0 3px #7dffb0, 0 0 26px rgba(80, 255, 150, 0.55); }
+
+/* Pack battles for up to 8 players: one row of cards per player. */
+.cvm-rows { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.cvm-rows.is-multi { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 10px; }
+.cvm-rows.is-multi .cvm-row { padding: 8px 6px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); }
+.cvm-rows.is-multi .cvm-cards { gap: 4px; }
+.cvm-rows.is-multi .bcard.cvm-card { flex: 1 1 0; min-width: 0; width: auto; max-width: 84px; }
+.cvm-rows.is-multi .bcard-back-mark { font-size: clamp(16px, 2.4vw, 26px); }
+.cvm-row.is-me .cvm-row-label { color: #ffd34d; }
+.cvm-row.team-0 .cvm-row-label { box-shadow: inset 0 -2px 0 #ff4b5c; }
+.cvm-row.team-1 .cvm-row-label { box-shadow: inset 0 -2px 0 #4b9dff; }
+.cvm-row.has-left { opacity: 0.45; }
+.cvm-rows.is-multi .cvm-row.is-winner { border-color: rgba(125, 255, 176, 0.8); box-shadow: 0 0 18px rgba(80, 255, 150, 0.3); }
+.cvm-rows:not(.is-multi) .cvm-row.is-winner .cvm-row-label { color: #7dffb0; }
