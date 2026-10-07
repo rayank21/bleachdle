@@ -5,6 +5,9 @@
 //   3. impact  — the name lands big, a brief light accent, a few fine lightning branches, a small camera jolt;
 //   4. pose    — the composition holds while the camera slowly pushes in, the planes drift apart (parallax);
 //   5. exit    — diagonal panels in the same colours sweep across and hand back to the site.
+// On top, the anime grammar: cinema bars, a still of the moment (scene) punched in with impact frames when there is
+// no clip, black-and-white impact frames, manga speed lines, a shockwave ring, an RGB split on the hit and a sound
+// for every beat (shared/fx.js).
 // The character is a cut-out (assets/forms/cut/, see crew/scripts/cutouts.py) or, for close-ups that can't be cut,
 // the picture in a feathered diagonal frame. Everything moves with transform / opacity / clip-path; all of it is
 // removed at the end. "Skip" (button, Escape or a tap) jumps to the exit. Reduced motion: a simple fade.
@@ -24,6 +27,8 @@
   const EXPO = "cubic-bezier(0.16, 1, 0.3, 1)";
   const SNAP = "cubic-bezier(0.7, 0, 0.84, 0)";
   const SMOOTH = "cubic-bezier(0.45, 0, 0.25, 1)";
+  const sfx = (name, opts) => window.DLE_FX?.play(name, opts);
+  const lite = () => document.documentElement.classList.contains("lite");
   const cutOf = (form) => {
     const name = form.image.replace(/^.*\//, "").replace(/\.webp$/, "");
     return (window.CREW_CUTOUTS || []).includes(name) ? form.image.replace(/forms\//, "forms/cut/") : null;
@@ -39,6 +44,12 @@
       img.decoding = "async";
       img.src = src;
       cache.set(src, img.decode ? img.decode().catch(() => {}) : Promise.resolve());
+    }
+    if (form.scene && !form.clip && !cache.has(form.scene)) {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = form.scene;
+      cache.set(form.scene, img.decode ? img.decode().catch(() => {}) : Promise.resolve());
     }
     if (form.clip && !cache.has(form.clip)) {
       const v = document.createElement("video");
@@ -125,12 +136,24 @@
         try { video.currentTime = 0; } catch {}
         clipBox.append(video);
       }
+      let sceneImg = null;
+      if (!clipBox && form.scene && !quiet) {
+        clipBox = el("div", "cine-clip is-scene");
+        sceneImg = el("img");
+        sceneImg.src = form.scene;
+        sceneImg.alt = "";
+        sceneImg.decoding = "async";
+        clipBox.append(sceneImg);
+      }
+      const bars = [el("i", "cine-bar is-top"), el("i", "cine-bar is-bottom")];
+      const impact = el("i", "cine-impact");
+      const ring = el("i", "cine-ring");
       world.append(shapes, ...(clipBox ? [clipBox] : []), hero, type, front);
       const wipeA = el("i", "cine-wipe is-a");
       const wipeB = el("i", "cine-wipe is-b");
       const skip = el("button", "cine-skip", lang === "fr" ? "Passer ›" : "Skip ›");
       skip.type = "button";
-      root.append(bg, glow, glow2, back, world, frontFx, wipeA, wipeB, skip);
+      root.append(bg, glow, glow2, back, world, ring, frontFx, ...bars, impact, wipeA, wipeB, skip);
       document.body.append(root);
       skip.focus({ preventScroll: true });
 
@@ -150,6 +173,8 @@
       const motes = Array.from({ length: mobile ? 26 : 44 }, () => ({ x: rand(0, 1), y: rand(0, 1), r: rand(0.6, 2.2), s: rand(0.006, 0.02), a: rand(0.12, 0.5), front: Math.random() < 0.15 }));
       const bolts = [];
       let lineK = 0;
+      let speedK = 0; // manga speed lines around the hit, 1 → 0
+      let speedAt = [0, 0];
       let raf = 0;
       let last = performance.now();
       const heroBox = () => {
@@ -199,6 +224,24 @@
           c.arc(m.x * w, m.y * h, m.front ? m.r * 1.5 : m.r, 0, Math.PI * 2);
           c.fill();
         }
+        // Speed lines: thin wedges from the edges toward the hit, redrawn every frame so they flicker.
+        if (speedK > 0.01) {
+          const [sx, sy] = speedAt;
+          const far = Math.hypot(w, h);
+          ctxF.fillStyle = rgba("255, 255, 255", 0.55 * speedK);
+          const n = lite() ? 28 : 64;
+          for (let i = 0; i < n; i++) {
+            const a = (i / n) * Math.PI * 2 + rand(-0.04, 0.04);
+            const r0 = far * rand(0.22, 0.42) * (1.2 - speedK * 0.4);
+            const wid = rand(0.002, 0.009);
+            ctxF.beginPath();
+            ctxF.moveTo(sx + Math.cos(a) * r0, sy + Math.sin(a) * r0);
+            ctxF.lineTo(sx + Math.cos(a - wid) * far, sy + Math.sin(a - wid) * far);
+            ctxF.lineTo(sx + Math.cos(a + wid) * far, sy + Math.sin(a + wid) * far);
+            ctxF.fill();
+          }
+          speedK *= Math.pow(0.9965, dt);
+        }
         ctxF.globalCompositeOperation = "lighter";
         for (let i = bolts.length - 1; i >= 0; i--) {
           const b = bolts[i];
@@ -230,6 +273,20 @@
       const timers = [];
       const at = (ms, fn) => timers.push(setTimeout(fn, ms));
       const anim = (node, frames, opts) => { const a = node.animate(frames, { fill: "both", ...opts }); anims.push(a); return a; };
+      // An anime hit: two flickers of the negative image, a shockwave ring, speed lines and a hard shake.
+      const hit = (x, y, big = true) => {
+        sfx(big ? "impact" : "slam");
+        anim(impact, [{ opacity: 0 }, { opacity: 1, offset: 0.01 }, { opacity: 1, offset: 0.3 }, { opacity: 0, offset: 0.31 }, { opacity: 0, offset: 0.5 }, { opacity: 1, offset: 0.51 }, { opacity: 1, offset: 0.7 }, { opacity: 0, offset: 0.71 }, { opacity: 0 }], { duration: big ? 260 : 150, easing: "linear" });
+        ring.style.left = x + "px";
+        ring.style.top = y + "px";
+        anim(ring, [{ transform: "translate(-50%, -50%) scale(0.05)", opacity: 1, borderWidth: "26px" }, { transform: "translate(-50%, -50%) scale(1)", opacity: 0, borderWidth: "1px" }], { duration: big ? 700 : 500, easing: EXPO });
+        speedAt = [x, y];
+        speedK = big ? 1 : 0.6;
+        const k = big ? 1 : 0.5;
+        const shake = [[-14, 8], [11, -7], [-7, 5], [4, -2]].map(([a, b]) => ({ translate: a * k + "px " + b * k + "px" }));
+        anim(world, [{ translate: "0 0" }, ...shake, { translate: "0 0" }], { duration: big ? 380 : 240, easing: "linear" });
+      };
+      const centerOf = (node) => { const r = node.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height * 0.45]; };
       let exiting = false;
       let done = false;
       let resolved = false;
@@ -255,6 +312,7 @@
         exiting = true;
         const d = fast ? 0.6 : 1;
         const across = (from, to) => [{ transform: `translateX(${from}) skewX(-18deg)` }, { transform: `translateX(${to}) skewX(-18deg)` }];
+        sfx("slash");
         anim(wipeA, across("-140%", "0%"), { duration: 300 * d, easing: SNAP });
         anim(wipeB, across("-140%", "0%"), { duration: 300 * d, delay: 70 * d, easing: SNAP }).finished.then(() => {
           if (done) return;
@@ -281,6 +339,8 @@
         if (done) return;
         // 1. Tension.
         anim(bg, [{ opacity: 0 }, { opacity: 1 }], { duration: 380, easing: "ease-out" });
+        anim(bars[0], [{ transform: "translateY(-100%)" }, { transform: "translateY(0)" }], { duration: 520, easing: EXPO });
+        anim(bars[1], [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }], { duration: 520, easing: EXPO });
         anim(glow, [{ opacity: 0, transform: "scale(0.6)" }, { opacity: 0.85, transform: "scale(1)" }], { duration: 1200, easing: EXPO });
         anim(glow2, [{ opacity: 0, transform: "scale(0.5)" }, { opacity: 0.55, transform: "scale(1)" }], { duration: 1400, delay: 250, easing: EXPO });
         bands.forEach((b, i) => anim(b, [{ transform: `translateX(${i % 2 ? 160 : -160}%) skewX(-18deg)`, opacity: 0 }, { transform: "translateX(0) skewX(-18deg)", opacity: 1 }], { duration: 900, delay: 220 + i * 110, easing: EXPO }));
@@ -295,7 +355,28 @@
 
         // The clip, in a diagonal panel, before the reveal.
         let charge = 1050;
-        if (clipBox) {
+        // A still of the moment (no clip): punched in, two hits, then cut away.
+        if (sceneImg) {
+          await ready(form.scene);
+          if (done || exiting) return;
+          sfx("slash");
+          anim(clipBox, [{ clipPath: "polygon(0 0, 0 0, -12% 100%, -12% 100%)" }, { clipPath: "polygon(0 0, 112% 0, 100% 100%, -12% 100%)" }], { duration: 460, easing: EXPO });
+          anim(sceneImg, [{ transform: "scale(1.32) rotate(-1.5deg)" }, { transform: "scale(1.12) rotate(0deg)", offset: 0.35 }, { transform: "scale(1.04)" }], { duration: 2300, easing: SMOOTH });
+          sfx("rise", { dur: 0.7 });
+          await new Promise((r) => at(720, r));
+          if (done || exiting) return;
+          hit(...centerOf(clipBox), true);
+          anim(sceneImg, [{ filter: "brightness(2.2) contrast(1.4) saturate(1.6)" }, { filter: "none" }], { duration: 420, easing: "ease-out" });
+          await new Promise((r) => at(650, r));
+          if (done || exiting) return;
+          hit(...centerOf(clipBox), false);
+          await new Promise((r) => at(700, r));
+          if (done || exiting) return;
+          sfx("slash");
+          anim(clipBox, [{ clipPath: "polygon(0 0, 112% 0, 100% 100%, -12% 100%)" }, { clipPath: "polygon(112% 0, 112% 0, 100% 100%, 100% 100%)" }], { duration: 380, easing: SNAP });
+          charge = 260;
+        }
+        if (clipBox && video) {
           // Enough of the clip buffered to play smoothly, then it must really start: a phone that blocks
           // autoplay (battery saver) or a clip that fails skips straight to the reveal instead of a frozen frame.
           let ok = await new Promise((res) => {
@@ -309,6 +390,7 @@
           if (done || exiting) return;
           if (ok) {
             const len = Math.min(5200, Math.max(1400, (video.duration || 3) * 1000));
+            sfx("slash");
             anim(clipBox, [{ clipPath: "polygon(0 0, 0 0, -12% 100%, -12% 100%)" }, { clipPath: "polygon(0 0, 112% 0, 100% 100%, -12% 100%)" }], { duration: 520, easing: EXPO });
             anim(video, [{ transform: "scale(1.06)" }, { transform: "scale(1)" }], { duration: len, easing: "linear" });
             await new Promise((r) => at(len, r));
@@ -321,9 +403,10 @@
 
         // 2. Reveal: a diagonal mask, a short move that settles.
         at(charge, () => {
+          sfx("slash");
           anim(hero, [{ clipPath: "polygon(-30% 0, -30% 0, -60% 100%, -60% 100%)" }, { clipPath: "polygon(-30% 0, 160% 0, 130% 100%, -60% 100%)" }], { duration: 640, easing: EXPO });
           anim(img, [{ transform: "translateX(6%) scale(1.07)" }, { transform: "translateX(0) scale(1)" }], { duration: 1150, easing: EXPO });
-          anim(kanji, [{ opacity: 0, transform: "translate(-50%, -50%) scale(1.25)" }, { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }], { duration: 1200, delay: 120, easing: EXPO });
+          anim(kanji, [{ opacity: 0, transform: "translate(-50%, -50%) scale(2.6)" }, { opacity: 1, transform: "translate(-50%, -50%) scale(0.96)", offset: 0.22 }, { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }], { duration: 1100, delay: 140, easing: "cubic-bezier(0.2, 0.9, 0.3, 1)" });
         });
         // 3. Impact: the name, a brief accent, fine bolts, a small jolt.
         at(charge + 400, () => {
@@ -332,12 +415,16 @@
           anim(formLine, [{ opacity: 0, transform: "translateX(-24px)" }, { opacity: 1, transform: "translateX(0)" }], { duration: 520, delay: 200, easing: EXPO });
           if (subLine) anim(subLine, [{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 320, easing: "ease-out" });
           anim(streak, [{ opacity: 0, transform: "translateX(-80%) skewX(-18deg)" }, { opacity: 1, offset: 0.35 }, { opacity: 0, transform: "translateX(180%) skewX(-18deg)" }], { duration: 440, delay: 80, easing: "ease-out" });
-          anim(world, [{ translate: "0 0" }, { translate: "-5px 3px" }, { translate: "4px -2px" }, { translate: "-2px 1px" }, { translate: "0 0" }], { duration: 230, easing: "linear" });
-          strike(form.lightning ? 3 : 2);
+          const [hx, hy] = heroBox();
+          hit(hx, hy, true);
+          if (!lite()) anim(img, [{ filter: "drop-shadow(-9px 0 0 rgba(255, 30, 70, 0.75)) drop-shadow(9px 0 0 rgba(30, 220, 255, 0.75)) brightness(1.5)" }, { filter: "drop-shadow(0 0 0 rgba(255, 30, 70, 0)) drop-shadow(0 0 0 rgba(30, 220, 255, 0)) brightness(1)" }], { duration: 480, easing: "ease-out" });
+          strike(form.lightning ? 5 : 3);
+          at(260, () => strike(form.lightning ? 3 : 2));
         });
         // 4. Pose: slow push-in, the planes drift apart. 5. Exit.
         at(charge + 720, () => {
           const hold = 2300;
+          sfx("shimmer");
           anim(world, [{ transform: "scale(1)" }, { transform: "scale(1.045)" }], { duration: hold, easing: SMOOTH });
           anim(shapes, [{ translate: "0 0" }, { translate: "-1.6% 0" }], { duration: hold, easing: SMOOTH });
           anim(hero, [{ translate: "0 0" }, { translate: "-0.8% 0" }], { duration: hold, easing: SMOOTH });

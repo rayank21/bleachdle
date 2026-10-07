@@ -3,6 +3,7 @@
 // arc: first arc where the form appears, so it never shows up before the player got there.
 // fx: the effect's shape (aura: flames and lightning, pillar: a beam of energy, domain: a sphere
 // that swallows the panel); c1/c2: its colours; kanji: the word slammed over the card.
+// scene: a still of the moment (crew/assets/scenes/<game>-<id>.webp), animated in the cinematic when there is no clip.
 (() => {
   const SAIYAN = { fx: "aura", c1: "255, 225, 77", c2: "255, 157, 46", kanji: "超", lightning: true };
   const BANKAI = { fx: "pillar", c1: "255, 42, 42", c2: "30, 6, 8", kanji: "卍解" };
@@ -96,7 +97,9 @@
       "roronoa-zoro": { arc: 3, name: { en: "Asura", fr: "Asura" }, fx: "domain", c1: "90, 255, 150", c2: "4, 20, 10", kanji: "阿修羅" },
       "tony-tony-chopper": { arc: 3, name: { en: "Monster Point", fr: "Monster Point" }, fx: "pillar", c1: "255, 120, 160", c2: "40, 10, 10", kanji: "怪物" },
       "polo-marco": { arc: 5, name: { en: "Phoenix", fr: "Phénix" }, fx: "aura", c1: "80, 200, 255", c2: "255, 220, 80", kanji: "不死鳥" },
-      "rob-lucci": { arc: 3, name: { en: "Leopard Human-Beast form", fr: "Forme hybride du Léopard" }, fx: "aura", c1: "255, 200, 60", c2: "60, 30, 0", kanji: "豹", lightning: true },
+      "rob-lucci": { arc: 3, name: { en: "Leopard Human-Beast form", fr: "Forme hybride du Léopard" }, fx: "aura", c1: "255, 200, 60", c2: "60, 30, 0", kanji: "豹", lightning: true,
+        // Egghead: awakened, against Luffy in Gear 5 (the clash of their fists opens the cinematic: scenes/<game>-<id>-2.webp).
+        next: { arc: 10, name: { en: "Awakening · Leopard", fr: "Éveil · Léopard" }, fx: "aura", c1: "120, 150, 255", c2: "30, 10, 60", kanji: "覚醒", lightning: true, scene: true } },
       magellan: { arc: 5, name: { en: "Venom Demon: Hell's Judgement", fr: "Démon du venin : Jugement des enfers" }, fx: "pillar", c1: "200, 60, 255", c2: "30, 0, 30", kanji: "毒" },
       // The admirals' Logia: magma, ice, light.
       sakazuki: { arc: 5, name: { en: "Logia · Magma", fr: "Logia · Magma" }, fx: "pillar", c1: "255, 90, 30", c2: "40, 6, 0", kanji: "冥狗", lightning: true },

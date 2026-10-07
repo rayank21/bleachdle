@@ -484,7 +484,8 @@
     const key = late ? `${game}-${c.id}-2` : `${game}-${c.id}`;
     const base = late ? { ...f, ...f.next } : f;
     const clip = late ? f.next.clip : f.clip;
-    return { ...base, image: `assets/forms/${key}.webp`, clip: clip ? `assets/clips/${key}.mp4` : null };
+    const scene = late ? f.next.scene : f.scene;
+    return { ...base, image: `assets/forms/${key}.webp`, clip: clip ? `assets/clips/${key}.mp4` : null, scene: scene ? `assets/scenes/${key}.webp` : null };
   }
 
   // Ripple filters for transformations: an animated turbulence displaces the picture like heat or energy.

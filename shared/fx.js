@@ -97,6 +97,26 @@
       notes([392, 523, 659, 784, 1047], { type: "sawtooth", step: 0.015, dur: 1.2, vol: 0.06, start: 0.05 });
       notes([1568, 2093], { type: "sine", step: 0.08, dur: 0.9, vol: 0.06, start: 0.15 });
     },
+    // Transformation cinematic (crew/cinema.js).
+    // An anime "impact frame": a sub-bass drop, a cracking hit and a burst of air.
+    impact: () => {
+      tone({ freq: 95, to: 28, dur: 1.1, vol: 0.85 });
+      tone({ freq: 190, to: 60, type: "square", dur: 0.18, vol: 0.12 });
+      noise({ dur: 0.09, vol: 0.55, type: "highpass", freq: 1800 });
+      noise({ dur: 0.7, vol: 0.4, type: "lowpass", freq: 1600, to: 120 });
+      noise({ start: 0.05, dur: 0.5, vol: 0.12, type: "bandpass", freq: 5000, to: 900, q: 0.7 });
+    },
+    // A blade of air across the screen (panels, wipes).
+    slash: () => { noise({ dur: 0.22, vol: 0.32, freq: 6000, to: 700, q: 1.2 }); tone({ freq: 2400, to: 900, type: "sine", dur: 0.12, vol: 0.05 }); },
+    // The big kanji landing.
+    slam: () => { tone({ freq: 70, to: 40, dur: 0.5, vol: 0.55 }); noise({ dur: 0.18, vol: 0.4, type: "lowpass", freq: 900 }); tone({ freq: 880, type: "triangle", start: 0.03, dur: 0.5, vol: 0.06 }); },
+    // Energy building up fast before the hit.
+    rise: ({ dur = 0.9 } = {}) => {
+      tone({ freq: 160, to: 1400, type: "sawtooth", dur, vol: 0.05, attack: dur * 0.8 });
+      noise({ dur, vol: 0.25, freq: 500, to: 7000, q: 1.4 });
+    },
+    // A shimmer while the pose holds.
+    shimmer: () => { notes([1568, 2093, 2637, 3136], { type: "sine", step: 0.06, dur: 0.7, vol: 0.05 }); noise({ dur: 1, vol: 0.05, type: "highpass", freq: 8000 }); },
     message: () => { tone({ freq: 1180, type: "sine", dur: 0.12, vol: 0.12 }); tone({ freq: 1580, type: "sine", start: 0.07, dur: 0.16, vol: 0.1 }); },
   };
 

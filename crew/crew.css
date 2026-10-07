@@ -533,6 +533,15 @@
 /* The anime clip, in a diagonal panel. */
 .cine-clip { position: absolute; left: 50%; top: 50%; width: min(86vw, calc(70vh * 16 / 9)); aspect-ratio: 16 / 9; translate: -50% -50%; clip-path: polygon(0 0, 0 0, -12% 100%, -12% 100%); overflow: hidden; }
 .cine-clip video { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* A still of the moment (no clip), punched in. */
+.cine-clip.is-scene img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 45%; }
+/* Cinema bars, the negative "impact frame" and the shockwave of a hit. */
+.cine-bar { position: absolute; left: 0; right: 0; z-index: 4; height: 8.5vh; background: #000; pointer-events: none; }
+.cine-bar.is-top { top: 0; transform: translateY(-100%); }
+.cine-bar.is-bottom { bottom: 0; transform: translateY(100%); }
+.cine-impact { position: absolute; inset: 0; z-index: 4; background: #fff; mix-blend-mode: difference; opacity: 0; pointer-events: none; }
+.cine-ring { position: absolute; z-index: 3; width: 120vmax; height: 120vmax; border: 1px solid rgba(var(--c1), 0.9); border-radius: 50%; box-shadow: 0 0 40px rgba(var(--c1), 0.6), inset 0 0 40px rgba(255, 255, 255, 0.35); opacity: 0; transform: translate(-50%, -50%) scale(0.05); pointer-events: none; }
+.cine.is-quiet .cine-bar, .cine.is-quiet .cine-impact, .cine.is-quiet .cine-ring { display: none; }
 .cine-clip::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(var(--cy), 0.45), inset 0 0 60px rgba(3, 5, 11, 0.7); }
 /* Type. */
 .cine-type { position: absolute; left: 7vw; top: 50%; translate: 0 -50%; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; max-width: 40vw; }
