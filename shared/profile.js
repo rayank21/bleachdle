@@ -435,6 +435,34 @@
     clock: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2",
     crown: "M3 18h18M4 8l4 4 4-7 4 7 4-4-2 10H6z",
   };
+  // Tier emblems, like ranked crests: a metal shield with the icon engraved on a dark core. Bronze is the bare shield,
+  // silver grows wings, gold adds a crown and a gem. Locked ones are plain iron.
+  const METAL = {
+    bronze: ["#ffd9b3", "#cd7f32", "#5e3210"],
+    silver: ["#ffffff", "#b4c3d6", "#4f5d70"],
+    gold: ["#fff7c7", "#ffc531", "#7d4f00"],
+    locked: ["#8d929c", "#5a5f69", "#30333a"],
+  };
+  let emblemN = 0;
+  function emblem(icon, tier, done = true) {
+    const [hi, mid, lo] = METAL[done ? tier : "locked"] ?? METAL.bronze;
+    const g = `emb${++emblemN}`;
+    const metal = `url(#${g}m)`;
+    const wings = tier === "bronze" ? "" :
+      `<path d="M12 15 3.5 10.5 5 18 1.5 21.5 7 23.5 4.5 28 11.5 28.5 13 32Z M36 15 44.5 10.5 43 18 46.5 21.5 41 23.5 43.5 28 36.5 28.5 35 32Z" fill="${metal}" stroke="${lo}" stroke-width="0.8" stroke-linejoin="round"/>`;
+    const crown = tier !== "gold" ? "" :
+      `<path d="M15.5 9.5 16.5 2.5 20.5 6 24 0.8 27.5 6 31.5 2.5 32.5 9.5Z" fill="${metal}" stroke="${lo}" stroke-width="0.8" stroke-linejoin="round"/>`;
+    const gem = tier !== "gold" ? "" : `<path d="M24 40.5 27 44 24 47.5 21 44Z" fill="${done ? "#ff4b6e" : mid}" stroke="${lo}" stroke-width="0.8"/>`;
+    return `<svg class="emblem" viewBox="0 0 48 48" aria-hidden="true"><defs>` +
+      `<linearGradient id="${g}m" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" stop-color="${hi}"/><stop offset="0.45" stop-color="${mid}"/><stop offset="1" stop-color="${lo}"/></linearGradient>` +
+      `<radialGradient id="${g}c" cx="0.5" cy="0.35" r="0.75"><stop offset="0" stop-color="${done ? "#2c2433" : "#2a2c31"}"/><stop offset="1" stop-color="#0d0c12"/></radialGradient></defs>` +
+      wings + crown +
+      `<path d="M24 7 37 12V25.5C37 33 31.5 38.5 24 42.5 16.5 38.5 11 33 11 25.5V12Z" fill="${metal}" stroke="${lo}" stroke-width="1"/>` +
+      `<path d="M24 10.6 34 14.5V25.5C34 31.3 29.8 35.6 24 38.9 18.2 35.6 14 31.3 14 25.5V14.5Z" fill="url(#${g}c)"/>` +
+      `<path d="M24 10.6 34 14.5V18C30 16.5 27 16 24 16S18 16.5 14 18V14.5Z" fill="#fff" opacity="0.08"/>` +
+      gem +
+      `<g transform="translate(16.6 15.4) scale(0.62)"><path d="${ACH_ICONS[icon]}" fill="none" stroke="${done ? hi : mid}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`;
+  }
   // [id, icon, tier, goal, value(ctx), name en, name fr, how en, how fr]
   const ACHIEVEMENTS = [
     ["win1", "trophy", "bronze", 1, (c) => c.wins, "First win", "Première victoire", "Win a game", "Gagne une partie"],
@@ -514,7 +542,7 @@
       const [, icon, tier, , , en, fr, howEn, howFr] = def;
       const b = el("span", `rare-badge tier-${tier}`);
       b.title = lang() === "fr" ? `${fr} · ${howFr}` : `${en} · ${howEn}`;
-      b.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="${ACH_ICONS[icon]}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      b.innerHTML = emblem(icon, tier);
       b.setAttribute("role", "img");
       b.setAttribute("aria-label", b.title);
       row.append(b);
@@ -536,7 +564,7 @@
   }
   function achBadge(a) {
     const b = el("span", `ach-badge tier-${a.tier}${a.done ? " is-done" : ""}`);
-    b.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22"><path d="${ACH_ICONS[a.icon]}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    b.innerHTML = emblem(a.icon, a.tier, a.done);
     return b;
   }
   function achToast(a) {
