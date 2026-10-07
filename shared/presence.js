@@ -274,10 +274,11 @@ let tries = 0;
 // The network library doesn't set a dropped link up again by itself: when someone vanishes and isn't back after a few
 // seconds, leave the lobby and join it again (a fresh handshake), at most every 20 seconds.
 let trystero = null;
+let turn = []; // TURN relays, used when the direct link fails
 let lobby = null;
 let lastRelink = 0;
 function joinLobby() {
-  const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, "lobby");
+  const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS }, turnConfig: turn }, "lobby");
   lobby = room;
   const mine = (fn) => (data, meta) => { if (lobby === room) fn(data, meta); };
   const info = room.makeAction("info");
@@ -329,6 +330,7 @@ async function relink() {
 async function connect() {
   try {
     trystero = await import(TRYSTERO);
+    turn = (await window.DLE_TURN?.()) ?? [];
     joinLobby();
     status = "live";
     tries = 0;

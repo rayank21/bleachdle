@@ -147,10 +147,11 @@
     // The lobby channel. A link that drops is not set up again by the network library on its own, so when a player
     // of my room vanishes without saying goodbye, I leave the channel and join it again: a fresh handshake.
     let trystero = null;
+    let turn = []; // TURN relays, used when the direct link fails
     let lobby = null;
     let relinking = false;
     function joinLobby() {
-      const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS } }, `${channel}-lobby`);
+      const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS }, turnConfig: turn }, `${channel}-lobby`);
       lobby = room;
       for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
         const action = room.makeAction(name);
@@ -204,6 +205,7 @@
       try {
         trystero = await import(TRYSTERO);
         api.selfId = trystero.selfId;
+        turn = (await window.DLE_TURN?.()) ?? [];
         joinLobby();
         api.status = "live";
         tries = 0;

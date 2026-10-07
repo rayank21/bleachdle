@@ -36,3 +36,28 @@ window.DLE_CREW_LINK = (root, label) =>
 
 // Nostr relays used to find other players (Trystero). Pinned so a dead default relay can't keep players apart.
 window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net"];
+
+// TURN relays (from /api/turn) for players who can't connect directly, e.g. two devices on the same box.
+// Asked once per page and kept for the tab a few hours; never waits more than 3 s, and [] means direct only.
+window.DLE_TURN = (() => {
+  let pending = null;
+  return () => (pending ??= (async () => {
+    try {
+      const kept = JSON.parse(sessionStorage.getItem("dle:turn") || "null");
+      if (kept && kept.until > Date.now() && Array.isArray(kept.servers)) return kept.servers;
+    } catch {}
+    if (location.protocol === "file:") return [];
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 3000);
+      const res = await fetch("/api/turn", { signal: ctrl.signal });
+      clearTimeout(timer);
+      const servers = res.ok ? (await res.json()).iceServers : [];
+      const clean = Array.isArray(servers) ? servers.filter((s) => s && s.urls) : [];
+      try { sessionStorage.setItem("dle:turn", JSON.stringify({ servers: clean, until: Date.now() + (clean.length ? 5 * 3600e3 : 600e3) })); } catch {}
+      return clean;
+    } catch {
+      return [];
+    }
+  })());
+})();
