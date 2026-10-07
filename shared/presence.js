@@ -19,6 +19,8 @@ const T = {
     alone: "Only you right now",
     connecting: "Connecting…",
     offline: "Live players unavailable",
+    blocked: "Can't reach the other players",
+    blockedHelp: "Your connection blocks the servers used to find players: turn off your ad blocker or your antivirus' web protection for this site, or try another network (phone data), then reload.",
     you: "you",
     placeholder: "Your name",
     edit: "Change your name",
@@ -42,6 +44,8 @@ const T = {
     alone: "Tu es seul pour l'instant",
     connecting: "Connexion…",
     offline: "Joueurs en direct indisponibles",
+    blocked: "Impossible de joindre les autres joueurs",
+    blockedHelp: "Ta connexion bloque les serveurs qui servent à trouver les joueurs : désactive ton bloqueur de pub ou la protection web de ton antivirus pour ce site, ou essaie un autre réseau (4G/5G), puis recharge la page.",
     you: "toi",
     placeholder: "Ton pseudo",
     edit: "Modifier ton pseudo",
@@ -158,9 +162,14 @@ function render() {
   const head = el("div", "presence-status");
   head.append(el("span", "presence-dot"));
   const count = peers.size + 1;
+  // No relay reachable at all: nobody can be found, whatever the game does. Say why instead of waiting forever.
+  const cut = (status === "live" && window.DLE_Link?.blocked()) || status === "offline";
+  if (cut) bar.dataset.status = "offline";
   head.append(el("span", "presence-count",
-    status === "offline" ? t("offline") : status === "connecting" ? t("connecting") : count === 1 ? t("alone") : t("online")(count)));
+    cut ? t("blocked") : status === "offline" ? t("offline") : status === "connecting" ? t("connecting") : count === 1 ? t("alone") : t("online")(count)));
+  if (cut) head.title = t("blockedHelp");
   bar.append(head);
+  if (cut) bar.append(el("span", "presence-blocked", t("blockedHelp")));
 
   const list = el("ul", "presence-list");
   list.append(myChip());
@@ -555,6 +564,7 @@ window.addEventListener("load", () => {
 });
 
 window.addEventListener("dle:lang", () => { render(); renderChat(); });
+window.addEventListener("dle:relays", render);
 // A name saved in a game lobby is the name here too.
 window.addEventListener("dle:name", () => {
   myName = storedName() || myName;

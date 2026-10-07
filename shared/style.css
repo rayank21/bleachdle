@@ -749,6 +749,7 @@ body[data-game="hunterxhunter"] .hero-title { font-size: 31px; white-space: nowr
 .presence-dot { width: 8px; height: 8px; border-radius: 50%; background: #6b6b74; }
 .presence[data-status="live"] .presence-dot { background: #2fd067; box-shadow: 0 0 0 3px rgba(47, 208, 103, 0.2); animation: pulse 2s ease-in-out infinite; will-change: opacity; }
 .presence[data-status="offline"] .presence-dot { background: var(--wrong); }
+.presence-blocked { flex: none; max-width: min(560px, 70vw); white-space: normal; color: #ff9b9b; font-size: 12px; font-weight: 600; line-height: 1.3; }
 @keyframes pulse { 50% { opacity: 0.55; } }
 .presence-list { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .presence-chip {

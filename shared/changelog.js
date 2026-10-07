@@ -11,6 +11,7 @@
       title: { en: "Finding each other faster, dates in the chat", fr: "On se trouve plus vite, les dates dans le chat" },
       items: [
         { type: "fix", en: "Online: players who can't connect directly now find each other in about 15 seconds instead of more than a minute.", fr: "En ligne : les joueurs qui ne peuvent pas se connecter directement se trouvent maintenant en 15 secondes environ, au lieu de plus d'une minute." },
+        { type: "improved", en: "Online: twice as many relays to find other players, and when your connection blocks all of them (ad blocker, antivirus, network filter), the online bar says so and what to do.", fr: "En ligne : deux fois plus de relais pour trouver les autres joueurs, et si ta connexion les bloque tous (bloqueur de pub, antivirus, filtre réseau), la barre « en ligne » le dit et explique quoi faire." },
         { type: "new", en: "Chat: each day starts with its date (Today, Yesterday, Sun 4 Oct…), and hovering a time shows the full date.", fr: "Chat : chaque jour commence par sa date (Aujourd'hui, Hier, dim. 4 oct.…), et l'heure affiche la date complète au survol." },
       ],
     },

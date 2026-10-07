@@ -35,7 +35,8 @@ window.DLE_CREW_LINK = (root, label) =>
   `<a class="cat cat-crew" href="${root}crew/" title="${label}"><span class="cat-logo cat-dice cat-sunny"><img src="${root}assets/logos/sunny.webp" alt=""></span><span class="cat-name">${label}</span></a>`;
 
 // Nostr relays used to find other players (Trystero). Pinned so a dead default relay can't keep players apart.
-window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net"];
+window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net", "wss://relay.damus.io",
+  "wss://relay.nostr.net", "wss://nostr.oxtr.dev", "wss://offchain.pub", "wss://nostr.bitcoiner.social"];
 
 // TURN relays (from /api/turn) for players who can't connect directly, e.g. two devices on the same box.
 // Asked once per page and kept for the tab a few hours; never waits more than 3 s, and [] means direct only.

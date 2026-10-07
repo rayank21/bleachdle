@@ -30,6 +30,14 @@
   const topics = new Map(); // topic → handler(content)
   const seen = new Set();
   const outbox = []; // events signed while no socket was open yet, sent as soon as one opens
+  let startedAt = 0; // first channel opened
+  const openCount = () => [...sockets.values()].filter((e) => e.ws?.readyState === 1).length;
+  // Tells the page (online bar) when the number of reachable relays changes.
+  let lastCount = -1;
+  const statusChanged = () => {
+    const n = openCount();
+    if (n !== lastCount) { lastCount = n; window.dispatchEvent(new Event("dle:relays")); }
+  };
 
   async function ensureKeys() {
     if (keys) return keys;
@@ -50,6 +58,7 @@
     entry.ws = ws;
     ws.onopen = () => {
       entry.retry = 0;
+      statusChanged();
       for (const topic of topics.keys()) ws.send(req(topic));
       // Events from before any socket was open; recent ones only (the others are stale).
       const now = Date.now();
@@ -70,6 +79,7 @@
     ws.onclose = () => {
       if (entry.ws !== ws) return;
       entry.ws = null;
+      statusChanged();
       if (!topics.size) return;
       setTimeout(() => openSocket(url), Math.min(30000, 2000 * 2 ** entry.retry++));
     };
@@ -77,6 +87,11 @@
 
   function listen(topic, handler) {
     topics.set(topic, handler);
+    if (!startedAt) {
+      startedAt = Date.now();
+      // Give the sockets 12 s; then the online bar can tell if none of them got through.
+      setTimeout(() => { lastCount = -1; statusChanged(); }, 12000);
+    }
     for (const url of window.DLE_RELAYS || []) {
       const entry = sockets.get(url);
       if (!entry) openSocket(url);
@@ -238,5 +253,8 @@
     };
   }
 
-  window.DLE_Link = { join };
+  // No relay reachable for a while: this browser is cut off (ad blocker, antivirus, network filter).
+  const blocked = () => startedAt > 0 && Date.now() - startedAt > 12000 && openCount() === 0;
+
+  window.DLE_Link = { join, blocked, relays: openCount };
 })();
