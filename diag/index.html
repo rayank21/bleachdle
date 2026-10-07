@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diagnostic en ligne</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0b0b0d" />
+  <link rel="icon" type="image/png" href="../assets/logos/bleachdle.png" />
+  <link rel="stylesheet" href="../shared/style.css" />
+  <style>
+    body { background: var(--bg); }
+    .diag { width: min(760px, 100% - 32px); margin: 32px auto 80px; display: flex; flex-direction: column; gap: 16px; }
+    .diag h1 { margin: 0; font-size: 30px; font-weight: 900; font-style: italic; }
+    .diag p { margin: 0; color: var(--muted); line-height: 1.5; }
+    .diag ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .diag li { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; }
+    .diag li small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; overflow-wrap: anywhere; }
+    .diag li .v { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+    .ok .dot { color: #2fd067; } .bad .dot { color: #ff5a5a; } .warn .dot { color: #f2bf2a; } .wait .dot { color: var(--muted); }
+    .dot { font-size: 18px; text-align: center; }
+    .verdict { padding: 16px; border-radius: 12px; font-weight: 700; line-height: 1.45; border: 1px solid var(--line); background: var(--surface-2); }
+    .verdict.is-bad { border-color: #ff5a5a; background: rgba(255, 90, 90, 0.08); }
+    .verdict.is-ok { border-color: #2fd067; background: rgba(47, 208, 103, 0.08); }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <main class="diag">
+    <h1>Diagnostic du mode en ligne</h1>
+    <p>Cette page vérifie tout ce dont le site a besoin pour te mettre en relation avec les autres joueurs. Attends la fin (environ 15 secondes), puis envoie une capture ou le rapport copié.</p>
+    <div class="verdict" id="verdict">Test en cours…</div>
+    <ol id="list"></ol>
+    <div class="row">
+      <button class="btn-primary" type="button" id="copy" disabled>Copier le rapport</button>
+      <button class="btn-ghost" type="button" id="again">Relancer le test</button>
+      <a class="btn-ghost" href="../">Retour au site</a>
+    </div>
+  </main>
+
+  <script src="../shared/games.js"></script>
+  <script src="../shared/link.js"></script>
+  <script>
+  (() => {
+    const TRYSTERO = "https://cdn.jsdelivr.net/npm/trystero@0.25.4/+esm";
+    const NOBLE = "https://cdn.jsdelivr.net/npm/@noble/secp256k1@3.1.0/+esm";
+    const KIND = 23517;
+    const list = document.getElementById("list");
+    const report = [];
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+    function line(label) {
+      const li = document.createElement("li");
+      li.className = "wait";
+      li.innerHTML = `<span class="dot">●</span><span><b></b><small></small></span><span class="v">…</span>`;
+      li.querySelector("b").textContent = label;
+      list.append(li);
+      return (state, value, note = "") => {
+        li.className = state;
+        li.querySelector(".v").textContent = value;
+        li.querySelector("small").textContent = note;
+        report.push(`${state === "ok" ? "OK " : state === "warn" ? "~~ " : "XX "} ${label}: ${value}${note ? ` (${note})` : ""}`);
+      };
+    }
+
+    // One relay: opens, accepts our signed event and sends it back on our subscription.
+    async function relay(url, schnorr, keys) {
+      const t0 = performance.now();
+      return new Promise((done) => {
+        let ws, opened = 0;
+        const finish = (r) => { clearTimeout(timer); try { ws.close(); } catch {} done(r); };
+        const timer = setTimeout(() => finish({ open: !!opened, echo: false, ms: opened }), 8000);
+        try { ws = new WebSocket(url); } catch (e) { return finish({ open: false, error: e.message }); }
+        const topic = `dle-diag-${Math.random().toString(36).slice(2)}`;
+        ws.onopen = async () => {
+          opened = Math.round(performance.now() - t0);
+          ws.send(JSON.stringify(["REQ", "diag", { kinds: [KIND], "#x": [topic], since: Math.floor(Date.now() / 1000) - 5 }]));
+          if (!schnorr) return finish({ open: true, echo: false, ms: opened, error: "pas de signature" });
+          const ev = { pubkey: keys.pub, created_at: Math.floor(Date.now() / 1000), kind: KIND, tags: [["x", topic]], content: "diag" };
+          const id = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify([0, ev.pubkey, ev.created_at, ev.kind, ev.tags, ev.content])));
+          const sig = hex(await schnorr.signAsync(new Uint8Array(id), keys.secret));
+          ws.send(JSON.stringify(["EVENT", { ...ev, id: hex(id), sig }]));
+        };
+        ws.onmessage = (e) => {
+          try {
+            const m = JSON.parse(e.data);
+            if (m[0] === "EVENT" && m[2]?.content === "diag") finish({ open: true, echo: true, ms: opened, rt: Math.round(performance.now() - t0) });
+            if (m[0] === "OK" && m[2] === false) finish({ open: true, echo: false, ms: opened, error: String(m[3]).slice(0, 80) });
+          } catch {}
+        };
+        ws.onerror = () => { if (!opened) finish({ open: false, error: "connexion refusée ou bloquée" }); };
+      });
+    }
+
+    async function run() {
+      list.textContent = "";
+      report.length = 0;
+      document.getElementById("copy").disabled = true;
+      const verdict = document.getElementById("verdict");
+      verdict.className = "verdict";
+      verdict.textContent = "Test en cours…";
+      const problems = [];
+
+      report.push(`Diagnostic ${new Date().toLocaleString("fr-FR")}`);
+      report.push(`Navigateur: ${navigator.userAgent}`);
+      let name = "";
+      try { name = localStorage.getItem("dle:name") || ""; } catch {}
+      report.push(`Pseudo: ${name || "(aucun)"}`);
+      const brave = !!navigator.brave;
+      line("Navigateur")(brave ? "warn" : "ok", brave ? "Brave" : (navigator.userAgentData?.brands?.map((b) => b.brand).filter((b) => !/Not/.test(b)).join(", ") || "OK"),
+        brave ? "Les boucliers de Brave peuvent bloquer le mode en ligne : désactive-les pour ce site." : navigator.userAgent.slice(0, 120));
+      line("Connexion internet")(navigator.onLine ? "ok" : "bad", navigator.onLine ? "en ligne" : "hors ligne");
+      const secure = window.isSecureContext && !!crypto?.subtle;
+      line("Chiffrement du navigateur")(secure ? "ok" : "bad", secure ? "OK" : "indisponible", secure ? "" : "Ouvre le site en https.");
+      if (!secure) problems.push("Le navigateur ne fournit pas le chiffrement (ouvre le site en https).");
+
+      // Libraries from the CDN
+      const cdn = line("Bibliothèque réseau (jsDelivr)");
+      let trystero = null;
+      try { trystero = await import(TRYSTERO); cdn("ok", "chargée"); } catch (e) { cdn("bad", "bloquée", String(e.message || e).slice(0, 100)); problems.push("cdn.jsdelivr.net est bloqué (bloqueur de pub, antivirus ou réseau)."); }
+      const sigLine = line("Signature des messages");
+      let schnorr = null, keys = null;
+      try {
+        ({ schnorr } = await import(NOBLE));
+        const k = schnorr.keygen();
+        keys = { secret: k.secretKey, pub: hex(k.publicKey) };
+        sigLine("ok", "OK");
+      } catch (e) { sigLine("bad", "erreur", String(e.message || e).slice(0, 100)); problems.push("Impossible de signer les messages."); }
+
+      // WebRTC (direct links)
+      const rtcLine = line("Connexion directe (WebRTC)");
+      if (!window.RTCPeerConnection) { rtcLine("warn", "désactivée", "Le navigateur ou une extension a coupé WebRTC : le site passera par les relais."); }
+      else {
+        try {
+          const pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+          pc.createDataChannel("diag");
+          const types = new Set();
+          pc.onicecandidate = (e) => { if (e.candidate) types.add(e.candidate.type); };
+          await pc.setLocalDescription(await pc.createOffer());
+          await sleep(4000);
+          pc.close();
+          const pub = types.has("srflx");
+          rtcLine(pub ? "ok" : "warn", [...types].join(", ") || "aucune", pub ? "" : "Pas d'adresse publique : les connexions directes échoueront, le site passera par les relais.");
+        } catch (e) { rtcLine("warn", "erreur", String(e.message || e).slice(0, 100)); }
+      }
+
+      // Relays
+      const relays = window.DLE_RELAYS || [];
+      const results = await Promise.all(relays.map(async (url) => {
+        const l = line(url.replace("wss://", "Relais "));
+        const r = await relay(url, schnorr, keys);
+        if (r.echo) l("ok", `${r.rt} ms`);
+        else if (r.open) l("warn", "ouvert", r.error || "n'a pas renvoyé le message test");
+        else l("bad", "bloqué", r.error || "");
+        return r;
+      }));
+      const working = results.filter((r) => r.echo).length;
+      const opened = results.filter((r) => r.open).length;
+      if (!working) problems.push(opened ? "Les relais s'ouvrent mais ne transmettent rien." : "Aucun relais joignable : bloqueur de pub, protection web de l'antivirus, VPN ou filtre réseau.");
+
+      // A real channel through the site's own code
+      const presence = line("Joueurs en ligne trouvés");
+      if (trystero && window.DLE_Link) {
+        try {
+          const room = await window.DLE_Link.join(trystero, { appId: "bleachdle.rayank21.v1", relayConfig: { urls: relays } }, "lobby");
+          const seen = new Set();
+          room.onPeerJoin = (id) => seen.add(id);
+          room.makeAction("info");
+          await sleep(14000);
+          presence(seen.size ? "ok" : "warn", String(seen.size), seen.size ? "" : "Personne trouvé (normal si personne n'est sur le site en ce moment).");
+          room.leave();
+        } catch (e) { presence("bad", "erreur", String(e.message || e).slice(0, 100)); }
+      } else presence("bad", "impossible", "la bibliothèque n'a pas pu se charger");
+
+      report.push(`Relais OK: ${working}/${relays.length}`);
+      if (problems.length) {
+        verdict.className = "verdict is-bad";
+        verdict.textContent = `Problème trouvé : ${problems.join(" ")} Désactive ton bloqueur de pub / VPN / la protection web de ton antivirus pour ce site, ou essaie un autre navigateur (Chrome), puis relance le test.`;
+      } else {
+        verdict.className = "verdict is-ok";
+        verdict.textContent = `Tout fonctionne de ton côté (${working}/${relays.length} relais). Si tu ne vois toujours personne, fais Ctrl+F5 sur le site et attends 30 secondes.`;
+      }
+      report.splice(3, 0, `Verdict: ${verdict.textContent}`);
+      document.getElementById("copy").disabled = false;
+    }
+
+    document.getElementById("copy").addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(report.join("\n")); document.getElementById("copy").textContent = "Copié !"; } catch {}
+    });
+    document.getElementById("again").addEventListener("click", run);
+    run();
+  })();
+  </script>
+</body>
+</html>

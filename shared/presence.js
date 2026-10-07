@@ -20,6 +20,7 @@ const T = {
     connecting: "Connecting…",
     offline: "Live players unavailable",
     blocked: "Can't reach the other players",
+    diag: "Run the diagnostic",
     blockedHelp: "Your connection blocks the servers used to find players: turn off your ad blocker or your antivirus' web protection for this site, or try another network (phone data), then reload.",
     you: "you",
     placeholder: "Your name",
@@ -45,6 +46,7 @@ const T = {
     connecting: "Connexion…",
     offline: "Joueurs en direct indisponibles",
     blocked: "Impossible de joindre les autres joueurs",
+    diag: "Lancer le diagnostic",
     blockedHelp: "Ta connexion bloque les serveurs qui servent à trouver les joueurs : désactive ton bloqueur de pub ou la protection web de ton antivirus pour ce site, ou essaie un autre réseau (4G/5G), puis recharge la page.",
     you: "toi",
     placeholder: "Ton pseudo",
@@ -169,7 +171,13 @@ function render() {
     cut ? t("blocked") : status === "offline" ? t("offline") : status === "connecting" ? t("connecting") : count === 1 ? t("alone") : t("online")(count)));
   if (cut) head.title = t("blockedHelp");
   bar.append(head);
-  if (cut) bar.append(el("span", "presence-blocked", t("blockedHelp")));
+  if (cut) {
+    const help = el("span", "presence-blocked", `${t("blockedHelp")} `);
+    const diag = el("a", null, t("diag"));
+    diag.href = `${root}diag/`;
+    help.append(diag);
+    bar.append(help);
+  }
 
   const list = el("ul", "presence-list");
   list.append(myChip());
