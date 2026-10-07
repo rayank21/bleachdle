@@ -366,6 +366,8 @@
 .tier-epic .reel-name .reel-letter { background: linear-gradient(180deg, #fff 40%, #ffb3a1); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .tier-legend .reel-name .reel-letter { background: linear-gradient(180deg, #fff3b0, #ffd34d 55%, #ff9d2e); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .reel-item.is-wide .reel-fg { object-fit: cover; object-position: center 20%; }
+/* Full-body transformations: whole, over the blurred copy, like the base portraits. */
+.reel-item.is-form.is-tall .reel-fg, .reel-item.is-tall .reel-hair { object-fit: contain; object-position: center bottom; }
 
 /* ── Living transformations ── */
 /* The top of the picture (hair, aura) ripples like energy; the body stays still underneath. */

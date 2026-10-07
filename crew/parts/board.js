@@ -1,7 +1,7 @@
 // A crew's board: its places and the characters in them.
 
 import { ROLE_RGB, el, icon, isCaptain, pointsFor, slotLabel, t } from "./base.js";
-import { burst, ensureFilters, sfx, shockwave } from "./fx.js";
+import { burst, ensureFilters, frameImg, sfx, shockwave } from "./fx.js";
 
 // ── Board ──
 export function renderBoard(container, slots, { rolled = null, onPlace = null, mini = false, stagger = false } = {}) {
@@ -33,7 +33,7 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
     if (slot.char) {
       const img = el("img");
       img.src = slot.char.formImage || slot.char.image;
-      if (slot.char.form?.focus && slot.char.formImage) img.style.objectPosition = slot.char.form.focus;
+      if (slot.char.formImage) frameImg(img, slot.char.form?.focus);
       if (slot.char.form) { ensureFilters(); card.classList.add("is-transformed"); card.style.setProperty("--fx1", slot.char.form.c1); card.style.setProperty("--fx2", slot.char.form.c2); }
       img.alt = "";
       face.append(img);

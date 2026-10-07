@@ -109,7 +109,11 @@
       const hero = el("div", `cine-hero${cut ? " is-cut" : " is-framed"}`);
       const img = el("img");
       img.src = cut ?? form.image;
-      if (!cut && form.focus) img.style.objectPosition = form.focus;
+      // Framed (4:5): on the character, the head of a tall full-body picture.
+      if (!cut) {
+        const aim = () => { img.style.objectPosition = form.focus || (img.naturalHeight > img.naturalWidth * 1.15 ? "50% 4%" : ""); };
+        if (img.complete && img.naturalWidth) aim(); else img.addEventListener("load", aim, { once: true });
+      }
       img.alt = "";
       img.decoding = "async";
       hero.append(img);

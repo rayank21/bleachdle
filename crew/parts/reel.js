@@ -70,7 +70,12 @@ export function makeReel() {
     const bg = el("img", "reel-bg");
     const fg = el("img", "reel-fg");
     // Wide pictures fill the card; only tall portraits are shown whole over the blur.
-    fg.addEventListener("load", () => item.classList.toggle("is-wide", fg.naturalWidth / fg.naturalHeight > 0.8), { once: true });
+    // A tall transformation (full body) is shown whole too, never cut at the neck.
+    fg.addEventListener("load", () => {
+      const r = fg.naturalWidth / fg.naturalHeight;
+      item.classList.toggle("is-wide", r > 0.8);
+      item.classList.toggle("is-tall", r < 0.87);
+    }, { once: true });
     bg.src = fg.src = c.image;
     bg.alt = fg.alt = "";
     item.append(bg, fg);

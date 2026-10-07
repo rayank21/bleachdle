@@ -96,6 +96,17 @@ export function subtitleOf(c) {
   return "";
 }
 
+// Frames a transformation portrait in a cropped box (circle, card): on the form's `focus` when it has one, else on the
+// head for tall full-body pictures (the middle would show the belt).
+export function frameImg(img, focus) {
+  const set = () => {
+    const tall = img.naturalHeight > img.naturalWidth * 1.15;
+    img.style.objectPosition = focus || (tall ? "50% 4%" : "");
+  };
+  if (img.complete && img.naturalWidth) set();
+  else img.addEventListener("load", set, { once: true });
+}
+
 // Transformation of a character at this arc (crew/forms.js), with its portrait.
 export function formFor(game, c, arc) {
   const f = window.CREW_FORMS?.[game]?.[c.id];

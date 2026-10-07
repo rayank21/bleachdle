@@ -2,7 +2,7 @@
 
 import { S } from "./state.js";
 import { $, CREW, ROLE_RGB, ROOT, el, icon, loadGame, makePool, playerArc, pointsFor, t } from "./base.js";
-import { formFor, tierOf } from "./fx.js";
+import { formFor, frameImg, tierOf } from "./fx.js";
 
 // ════════════════════ INDEX ════════════════════
 // Every card of the anime at the player's arc: its rarity, its power and what it scores in each role.
@@ -167,7 +167,8 @@ function ixCard({ c, tier, scores, best, form }, roles, sorted, n, mine = true) 
     tag.addEventListener("click", () => {
       const on = card.classList.toggle("is-form");
       img.src = on ? form.image : c.image;
-      img.style.objectPosition = on && form.focus ? form.focus : "";
+      img.style.objectPosition = "";
+      if (on) frameImg(img, form.focus);
     });
     top.append(tag);
   }
