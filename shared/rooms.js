@@ -36,7 +36,7 @@
 
   // startData(room) gives the shared data of a match (e.g. the arc and the character to find);
   // it is used both by the host's Start button and by the automatic start when the room is full.
-  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {}, onInvite = () => {}, onRejoined = () => {} }) {
+  function create({ channel, startData = () => ({}), onChange = () => {}, onStart = () => {}, onMessage = () => {}, onClosed = () => {}, onInvite = () => {}, onRejoined = () => {}, lateJoin = false, onLateJoined = () => {} }) {
     const api = {
       status: "connecting", // connecting | live | offline
       selfId: null,
@@ -74,7 +74,8 @@
     let published = "null";
     onChange = () => {
       const r = api.myRoom;
-      const mine = r && !r.started && r.members.length < r.size ? { code: r.code, channel, game: r.game } : null;
+      const seat = r && (r.started ? lateJoin && r.members.length < 8 : r.members.length < r.size);
+      const mine = seat ? { code: r.code, channel, game: r.game, started: !!r.started } : null;
       if (JSON.stringify(mine) !== published) {
         published = JSON.stringify(mine);
         window.DLE_MY_ROOM = mine;
@@ -116,6 +117,13 @@
           api.rooms.set(room.id, room);
           if (api.myRoom?.id === room.id) {
             const inIt = room.members.some((m) => m.id === api.selfId);
+            if (api.lateJoining && inIt) {
+              api.lateJoining = false;
+              api.myRoom = room;
+              onLateJoined(room);
+              onChange();
+              return;
+            }
             if (api.rejoining && ticket && !ticket.wasHost) {
               // Coming back: wait until the host has put me back in my seat.
               if (inIt) { api.myRoom = room; finishRejoin(); }
@@ -126,8 +134,21 @@
           }
         }
       } else if (type === "roomjoin") {
-        if (!isHost() || d.roomId !== api.myRoom.id || api.myRoom.started) return;
+        if (!isHost() || d.roomId !== api.myRoom.id) return;
         const room = api.myRoom;
+        if (room.started) {
+          if (!lateJoin || room.members.some((m) => m.id === from) || room.members.length >= 8) { announce(from); return; }
+          const p = api.peers.get(from);
+          room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0 });
+          room.size = Math.max(room.size, room.members.length);
+          placeInTeam(from);
+          announce();
+          const info = { id: from, name: p?.name ?? "Player", team: room.meta?.teams ? room.meta.team[from] ?? 0 : null };
+          api.broadcast("joined", info);
+          onMessage("joined", info, api.selfId);
+          onChange();
+          return;
+        }
         if (!room.members.some((m) => m.id === from) && room.members.length < room.size) {
           const p = api.peers.get(from);
           room.members.push({ id: from, name: p?.name ?? "Player", arc: p?.arc ?? 0 });
@@ -212,7 +233,7 @@
           if (api.myRoom?.started && api.myRoom.members.some((m) => m.id === peerId)) onMessage("rejoin", {}, peerId);
         }
         send.hello(api.profile, peerId);
-        if (isHost() && !api.myRoom.started) announce(peerId);
+        if (isHost() && (!api.myRoom.started || lateJoin)) announce(peerId);
       };
       room.onPeerLeave = (peerId) => {
         if (lobby !== room) return;
@@ -304,9 +325,10 @@
 
     api.join = (roomId) => {
       const room = api.rooms.get(roomId);
-      if (!room || room.started || api.status !== "live") return;
+      if (!room || (room.started && !lateJoin) || api.status !== "live") return;
       api.leave();
       api.myRoom = { ...room, members: [...room.members] };
+      api.lateJoining = !!room.started;
       send.roomjoin({ roomId }, room.host);
       onChange();
     };

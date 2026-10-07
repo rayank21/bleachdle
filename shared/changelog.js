@@ -7,6 +7,17 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T13:00",
+      title: { en: "Online Crew Roll: teams, reloads and late joins", fr: "Roll ton équipage en ligne : équipes, F5 et arrivées en cours de partie" },
+      items: [
+        { type: "new", game: "crew", en: "Team vs team: each team now fills a single board together, its players taking turns, and the host names the teams. Team results go on a new team leaderboard.", fr: "Équipe contre équipe : chaque équipe remplit maintenant un seul plateau ensemble, ses joueurs jouent chacun leur tour, et l'hôte choisit les noms d'équipe. Les résultats vont dans un nouveau classement des équipes." },
+        { type: "new", game: "crew", en: "Reloading the page (F5) during a match puts you back in it, even as the host.", fr: "Recharger la page (F5) pendant une partie te remet dedans, même si tu es l'hôte." },
+        { type: "new", game: "crew", en: "Join a match already under way, from your friends list or with the room's code: you roll several times in a row until you've caught up, then play in turn like everyone.", fr: "Rejoins une partie déjà en cours, depuis ta liste d'amis ou avec le code de la salle : tu enchaînes les tirages jusqu'à rattraper les autres, puis tu joues à ton tour comme tout le monde." },
+        { type: "fix", game: "crew", en: "Fixed the match freezing on the wrong player's turn (a tab in the background, a lost message): everyone now stays on the same turn.", fr: "Corrigé : la partie qui se bloquait sur le tour d'un autre joueur (onglet en arrière-plan, message perdu) ; tout le monde reste maintenant sur le même tour." },
+        { type: "new", game: "hunterxhunter", en: "Hunter × Hunter: Maha Zoldyck joins the game (Crew Roll: power 10, strategist 8).", fr: "Hunter × Hunter : Maha Zoldyck rejoint le jeu (Roll ton équipage : puissance 10, stratège 8)." },
+      ],
+    },
+    {
       at: "2026-10-07T11:10",
       title: { en: "Finding each other faster, dates in the chat", fr: "On se trouve plus vite, les dates dans le chat" },
       items: [

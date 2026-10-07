@@ -84,6 +84,7 @@
       roomClosed: "The host closed the room.",
       rejoining: "Getting you back into your match…",
       rejoined: "Back in the match!",
+      lateJoined: (n) => `${n} joins the match and will catch up!`,
       rejoinFailed: "Your match couldn't be found anymore.",
       invite: "Invite",
       inviteSent: (n) => `Invitation sent to ${n}`,
@@ -196,6 +197,7 @@
       roomClosed: "L'hôte a fermé la salle.",
       rejoining: "Retour dans ta partie…",
       rejoined: "De retour dans la partie !",
+      lateJoined: (n) => `${n} rejoint la partie et va rattraper son retard !`,
       rejoinFailed: "Impossible de retrouver ta partie.",
       invite: "Inviter",
       inviteSent: (n) => `Invitation envoyée à ${n}`,
@@ -1177,6 +1179,9 @@
         toast(why === "rejoin-failed" ? t("rejoinFailed") : t("roomClosed"));
       },
       onRejoined: (room, data) => askResume(room, data),
+      // A match under way can be joined (from a friend or a code): ask for it like after a reload.
+      lateJoin: true,
+      onLateJoined: (room) => askResume(room, { key: null }),
       onInvite: (room, from) => {
         if (match && !match.done) return;
         const g = GAMES.find((x) => x.id === room.game);
@@ -1424,7 +1429,7 @@
     if (mine && (mine.id === pendingJoin || mine.code === pendingJoin)) { pendingJoin = null; return; }
     const r = rooms.findRoom(pendingJoin);
     if (!r) return;
-    if (r.started || r.members.length >= r.size) { pendingJoin = null; toast(t("linkGone")); renderLobby(); return; }
+    if (r.started ? r.members.length >= 8 : r.members.length >= r.size) { pendingJoin = null; toast(t("linkGone")); renderLobby(); return; }
     if (!myName()) {
       if (!tryPendingJoin.asked) { tryPendingJoin.asked = true; toast(t("pickToJoin")); setTimeout(() => $("#lobbyName")?.focus(), 50); }
       return;
@@ -1524,7 +1529,7 @@
     const teams = data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null;
     // Team vs team: one board per team, its players take turns on it; the turns alternate between the teams.
     const keys = teams ? [0, 1].filter((k) => ids.some((id) => teams[id] === k)).map((k) => `team-${k}`) : ids;
-    let order = ids;
+    let order = [...ids];
     if (teams) {
       const side = [0, 1].map((k) => ids.filter((id) => teams[id] === k));
       order = [];
@@ -1574,7 +1579,17 @@
   // ── Turns ──
   const myTurn = () => !!match && match.current === rooms.selfId;
   const stillPlaying = (id) => match.active.has(id) && !match.finished.has(id);
+  // A player behind everyone else (joined late) plays again and again until caught up, then the usual turns resume.
+  function laggard() {
+    if (match.teams) return null;
+    const live = match.order.filter(stillPlaying);
+    if (live.length < 2) return null;
+    const count = (id) => filledOf(boardOf(id)).length;
+    return live.find((id) => count(id) < Math.min(...live.filter((x) => x !== id).map(count))) ?? null;
+  }
   function nextAfter(id) {
+    const lag = laggard();
+    if (lag) return lag;
     const o = match.order;
     const i = o.indexOf(id);
     for (let k = 1; k <= o.length; k++) { const x = o[(i + k) % o.length]; if (stillPlaying(x)) return x; }
@@ -1851,14 +1866,16 @@
   function onMatchMessage(type, d, from) {
     // Coming back after a reload: the first full state that answers my request rebuilds the match.
     if (type === "state") {
-      if (resume && !match && d && String(d.key) === resume.key) resumeMatch(d);
+      if (resume && !match && d && (resume.key == null || String(d.key) === resume.key)) resumeMatch(d);
       return;
     }
     if (type === "renamed") { renameInMatch(String(d.old ?? ""), String(d.now ?? "")); return; }
     if (!match || !match.ids.includes(from)) return;
     if (type === "beat") { onBeat(d, from); return; }
+    if (type === "joined") { addLatePlayer(d); return; }
     if (type === "want") {
-      if (String(d.key) === match.key) rooms.broadcast("state", matchState());
+      // A late joiner doesn't know the key yet.
+      if (d.key == null || String(d.key) === match.key) rooms.broadcast("state", matchState());
       return;
     }
     if (type === "rejoin") {
@@ -1960,6 +1977,21 @@
     }
   }
 
+  function addLatePlayer(d) {
+    const m = match;
+    const id = typeof d?.id === "string" ? d.id : null;
+    if (!m || m.done || !id || m.ids.includes(id)) return;
+    m.ids.push(id);
+    m.order.push(id);
+    m.names.set(id, cleanName(d.name) || "Player");
+    m.active.add(id);
+    if (m.teams) m.teams[id] = d.team === 1 ? 1 : 0;
+    if (!m.boards.has(boardKey(id))) m.boards.set(boardKey(id), makeSlots(m.g, m.pool));
+    toast(t("lateJoined")(m.names.get(id)));
+    // Redraw once nothing is moving on screen.
+    spectate(async () => { if (match === m && !m.rolling && !m.placing) { renderMatch(); renderMatchActions(); } });
+  }
+
   // ── Back after a reload ──
   // The whole match as I see it, for a player who reloaded their page.
   const pairsOf = (board) => board.map((x, i) => (x.char ? [i, x.char.id] : null)).filter(Boolean);
@@ -1993,13 +2025,14 @@
   // Back in the room after a reload: ask the others for the match, again until one answers.
   let resume = null;
   function askResume(room, data) {
-    if (!data?.key || match) return;
+    if (!data || match) return;
     if (mode !== "online") setMode("online");
-    resume = { room, data, key: String(data.key) };
+    const key = data.key == null ? null : String(data.key);
+    resume = { room, data, key };
     renderLobby();
     let n = 0;
     const ask = () => {
-      if (!resume || match || resume.key !== String(data.key)) return;
+      if (!resume || match || resume.key !== key) return;
       if (++n > 15) { resume = null; toast(t("rejoinFailed")); rooms.leave(); renderLobby(); return; }
       rooms.broadcast("want", { key: resume.key });
       setTimeout(ask, 2000);
