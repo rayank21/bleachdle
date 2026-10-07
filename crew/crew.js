@@ -8,7 +8,7 @@
   const GAMES = window.DLE_GAMES;
   const CREW = window.CREW_GAMES;
   const DEFAULT_POWER = window.CREW_DEFAULT_POWER;
-  const REROLLS = 5;
+  const REROLLS = 4;
   const ROOT = "../";
   const TRYSTERO = "https://cdn.jsdelivr.net/npm/trystero@0.25.4/+esm";
   const APP_ID = "bleachdle.rayank21.v1";
@@ -64,7 +64,7 @@
       again: "New crew",
       empty: "Empty",
       lobbyTitle: "Lobby",
-      lobbyHelp: "Create a room for 2 to 8 players, or join an open one. Players take turns: roll, place, and watch the others' picks live (5 rerolls each); the best crew wins.",
+      lobbyHelp: "Create a room for 2 to 8 players, or join an open one. Players take turns: roll, place, and watch the others' picks live (4 rerolls each); the best crew wins.",
       yourName: "Your name",
       saveName: "Save",
       nameSaved: "Name saved",
@@ -177,7 +177,7 @@
       again: "Nouvel équipage",
       empty: "Libre",
       lobbyTitle: "Lobby",
-      lobbyHelp: "Crée une salle de 2 à 8 joueurs, ou rejoins-en une. On joue chacun son tour : tire, place, et regarde les persos des autres en direct (5 relances chacun) : le meilleur équipage gagne.",
+      lobbyHelp: "Crée une salle de 2 à 8 joueurs, ou rejoins-en une. On joue chacun son tour : tire, place, et regarde les persos des autres en direct (4 relances chacun) : le meilleur équipage gagne.",
       yourName: "Ton pseudo",
       saveName: "OK",
       nameSaved: "Pseudo enregistré",
