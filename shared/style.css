@@ -250,6 +250,15 @@ body[data-game="haikyuu"] { --kanji: "飛"; }
 body[data-game="fireforce"] { --kanji: "炎"; }
 body[data-game="slime"] { --kanji: "転"; }
 body[data-game="onepunchman"] { --kanji: "拳"; }
+body[data-game="sololeveling"] { --kanji: "影"; }
+/* The seven newest anime: their accent and the colour of their backdrop. */
+body[data-game="demonslayer"] { --accent: #ff4d6d; --accent-strong: #ff7a92; --accent-rgb: 255, 77, 109; --tint-rgb: 30, 120, 90; }
+body[data-game="myheroacademia"] { --accent: #2ec5ff; --accent-strong: #66d6ff; --accent-rgb: 46, 197, 255; --tint-rgb: 30, 140, 90; }
+body[data-game="haikyuu"] { --accent: #ff8c00; --accent-strong: #ffa940; --accent-rgb: 255, 140, 0; --tint-rgb: 40, 40, 90; }
+body[data-game="fireforce"] { --accent: #ff5a1f; --accent-strong: #ff8150; --accent-rgb: 255, 90, 31; --tint-rgb: 200, 60, 10; }
+body[data-game="slime"] { --accent: #4fc3ff; --accent-strong: #80d4ff; --accent-rgb: 79, 195, 255; --tint-rgb: 40, 90, 200; }
+body[data-game="onepunchman"] { --accent: #ffd60a; --accent-strong: #ffe14d; --accent-rgb: 255, 214, 10; --tint-rgb: 200, 30, 30; }
+body[data-game="sololeveling"] { --accent: #7c6cff; --accent-strong: #a097ff; --accent-rgb: 124, 108, 255; --tint-rgb: 90, 40, 200; }
 .stat-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; }
 .stat {
   display: flex;
@@ -710,6 +719,13 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
 .game-card[data-game="jujutsukaisen"] { --accent-rgb: 164, 107, 255; }
 .game-card[data-game="blackclover"] { --accent-rgb: 53, 208, 127; }
 .game-card[data-game="attackontitan"] { --accent-rgb: 95, 168, 255; }
+.game-card[data-game="demonslayer"] { --accent-rgb: 255, 77, 109; }
+.game-card[data-game="myheroacademia"] { --accent-rgb: 46, 197, 255; }
+.game-card[data-game="haikyuu"] { --accent-rgb: 255, 140, 0; }
+.game-card[data-game="fireforce"] { --accent-rgb: 255, 90, 31; }
+.game-card[data-game="slime"] { --accent-rgb: 79, 195, 255; }
+.game-card[data-game="onepunchman"] { --accent-rgb: 255, 214, 10; }
+.game-card[data-game="sololeveling"] { --accent-rgb: 124, 108, 255; }
 .game-card:hover, .game-card:focus-visible { transform: translateY(-4px); border-color: rgba(var(--accent-rgb), 0.7); }
 .game-strip { display: grid; grid-template-columns: repeat(6, 1fr); height: 130px; }
 .game-strip span { background: center 15% / cover no-repeat; filter: grayscale(0.35); transition: filter 0.2s; }
@@ -1321,6 +1337,13 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .pf-stat[data-game="jujutsukaisen"] { --g-rgb: 164, 107, 255; }
 .pf-stat[data-game="blackclover"] { --g-rgb: 53, 208, 127; }
 .pf-stat[data-game="attackontitan"] { --g-rgb: 95, 168, 255; }
+.pf-stat[data-game="demonslayer"] { --g-rgb: 255, 77, 109; }
+.pf-stat[data-game="myheroacademia"] { --g-rgb: 46, 197, 255; }
+.pf-stat[data-game="haikyuu"] { --g-rgb: 255, 140, 0; }
+.pf-stat[data-game="fireforce"] { --g-rgb: 255, 90, 31; }
+.pf-stat[data-game="slime"] { --g-rgb: 79, 195, 255; }
+.pf-stat[data-game="onepunchman"] { --g-rgb: 255, 214, 10; }
+.pf-stat[data-game="sololeveling"] { --g-rgb: 124, 108, 255; }
 .pf-stat.is-empty { opacity: 0.5; }
 .pf-stat img { width: 36px; height: 36px; flex: none; border-radius: 50%; object-fit: cover; background: #fff; }
 .pf-stat-nums { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }

@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T23:59",
+      title: { en: "Solo Leveling arrives", fr: "Solo Leveling débarque" },
+      items: [
+        { type: "new", game: "sololeveling", en: "Sololevelingdle: guess the Solo Leveling character of the day among 56 (hunters, shadows, monsters and Monarchs), by race, hunter rank, class, affiliation, country and first arc, spoiler-free up to where you are.", fr: "Sololevelingdle : devine le perso Solo Leveling du jour parmi 56 (chasseurs, ombres, monstres et Monarques), par race, rang de chasseur, classe, affiliation, pays et premier arc, sans spoiler selon où tu en es." },
+        { type: "new", game: "crew", en: "Crew Roll and boosters: Solo Leveling with its own team (S-rank hunters, hunters, shadow soldiers, monster or Monarch, healer, strategist) and transformations for Jinwoo (Arise, with its clip), Beru, Ashborn and Antares.", fr: "Roll ton équipage et boosters : Solo Leveling avec son équipe (chasseurs de rang S, chasseurs, soldats de l'ombre, monstre ou Monarque, soigneur, stratège) et des transformations pour Jinwoo (Arise, avec son extrait), Beru, Ashborn et Antares." },
+        { type: "improved", en: "Demon Slayer, My Hero Academia, Haikyuu!!, Fire Force, Slime and One Punch Man get their own accent colours back.", fr: "Demon Slayer, My Hero Academia, Haikyuu!!, Fire Force, Slime et One Punch Man retrouvent leurs couleurs à eux." },
+      ],
+    },
+    {
       at: "2026-10-07T23:45",
       title: { en: "Cards: inventory, trades and 1v1 duels", fr: "Cartes : inventaire, échanges et duels 1v1" },
       items: [

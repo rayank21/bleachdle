@@ -146,6 +146,8 @@
     fireforce: [[() => [ember("255, 120, 30"), ember("255, 190, 60")], "rise", 52, [10, 22], 0.75, 0, 12], [() => [glow("40, 30, 30")], "rise", 18, [8, 16], 0.5, 0, 20]],
     slime: [[() => [bubble("110, 190, 255"), bubble("150, 230, 255")], "rise", 22, [12, 26], 0.75, 0, 22], [() => [glow("120, 200, 255")], "rise", 16, [5, 10], 0.5, 0, 14]],
     onepunchman: [[() => [glow("255, 225, 90"), glow("255, 255, 255")], "rise", 30, [5, 12], 0.55, 0, 16], [() => [ember("255, 200, 40")], "rise", 10, [12, 22], 0.5, 0, 6]],
+    // Solo Leveling: blue System sparks and the purple smoke of the shadows.
+    sololeveling: [[() => [glow("110, 140, 255"), glow("170, 110, 255")], "rise", 40, [5, 13], 0.6, 0, 18], [() => [ember("150, 100, 255")], "rise", 14, [12, 22], 0.55, 0, 8]],
   };
   const theme = THEMES[game] || THEMES.home;
   const rnd = (a, b) => a + Math.random() * (b - a);

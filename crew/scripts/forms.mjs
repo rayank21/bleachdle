@@ -162,6 +162,10 @@ const FILES = [
   ["bleach", "bleach", "kugo-ginjo", "File:Ep365GinjoBankai.png"],
   ["bleach", "bleach", "yoruichi-shihoin", "File:Ep56Shunkō3.png"],
   ["bleach", "bleach", "yoruichi-shihoin-2", "File:Shunkō- Raijin Senkei.png"],
+  ["solo-leveling", "sololeveling", "beru", "File:Ant King Anime2.png"],
+  ["solo-leveling", "sololeveling", "ashborn", "File:Ashborn22.jpg"],
+  ["solo-leveling", "sololeveling", "antares", "File:Antares Dragon Form.png"],
+  // sololeveling-sung-jinwoo: a frame of "Anime Episode 12 Jinwoo draws back his dagger.gif"
 ];
 // Small copies for avatars and lists: crew/assets/forms/sm/ (240 px wide), made from every form picture.
 // Pictures supplied by hand (not on the wiki): Rukia's and Tosen's forms, Ichigo's and Byakuya's later looks

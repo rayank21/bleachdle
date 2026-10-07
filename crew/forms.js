@@ -256,11 +256,19 @@
       garou: { arc: 3, name: { en: "Hero Hunter", fr: "Le Chasseur de héros" }, fx: "aura", c1: "255, 255, 255", c2: "20, 20, 30", kanji: "怪人", lightning: true },
       boros: { arc: 1, name: { en: "Meteoric Burst", fr: "Explosion météorique" }, fx: "aura", c1: "120, 220, 255", c2: "20, 0, 40", kanji: "ボロス", lightning: true },
     },
+    // Solo Leveling: Jinwoo's first "Arise", the Ant King, and two Monarchs in their true form.
+    sololeveling: {
+      "sung-jinwoo": { arc: 1, name: { en: "Shadow Extraction · Arise", fr: "Extraction d'ombre · Arise" }, fx: "domain", c1: "110, 150, 255", c2: "6, 6, 24", kanji: "起きろ", lightning: true },
+      beru: { arc: 3, name: { en: "Ant King", fr: "Roi des fourmis" }, fx: "aura", c1: "120, 200, 255", c2: "10, 20, 40", kanji: "蟻王", lightning: true },
+      ashborn: { arc: 4, name: { en: "Shadow Monarch", fr: "Monarque des Ombres" }, fx: "domain", c1: "170, 110, 255", c2: "4, 2, 14", kanji: "影の君主" },
+      antares: { arc: 4, name: { en: "Dragon form", fr: "Forme de dragon" }, fx: "pillar", c1: "255, 120, 40", c2: "30, 6, 0", kanji: "破滅の君主", lightning: true },
+    },
   };
 
   // Forms with an anime clip (crew/assets/clips/<game>-<id>.mp4), played in the transformation cinematic. Bleach uses
   // the cut-scenes of Rebirth of Souls (2025), its most recent animation.
   const CLIPS = {
+    sololeveling: ["sung-jinwoo"],
     demonslayer: ["yoriichi-tsugikuni", "kokushibo", "gyomei-himejima", "muzan-kibutsuji", "doma", "tanjiro-kamado", "kyojuro-rengoku", "akaza", "zenitsu-agatsuma"],
     myheroacademia: ["izuku-midoriya", "all-might", "endeavor", "all-for-one", "star-and-stripe", "tomura-shigaraki", "shoto-todoroki", "dabi", "katsuki-bakugo"],
     slime: ["rimuru-tempest", "diablo", "milim-nava", "guy-crimson", "luminous-valentine", "benimaru"],

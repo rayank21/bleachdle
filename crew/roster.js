@@ -458,6 +458,26 @@
         dr-genus:3 vaccine-man:4 mosquito-girl:4 carnage-kabuto:7 deep-sea-king:6 boros:10 melzargard:8 geryuganshoop:7 orochi:9
         gouketsu:8 psykos:9 elder-centipede:8 homeless-emperor:8 black-sperm:8`),
     },
+    sololeveling: {
+      slots: [
+        { label: { en: "S-Rank hunter", fr: "Chasseur de rang S" }, icon: "crown", count: 2, fits: (c) => has(c.race, "Human") && has(c.rank, "S-Rank", "National Level") },
+        { label: { en: "Hunter", fr: "Chasseur" }, icon: "sword", count: 2, fits: (c) => has(c.race, "Human") && !has(c.rank, "Unranked") },
+        { label: { en: "Shadow soldier", fr: "Soldat de l'ombre" }, icon: "mask", count: 2, fits: (c) => has(c.race, "Shadow") },
+        { label: { en: "Monster / Monarch", fr: "Monstre / Monarque" }, icon: "skull", count: 1, fits: (c) => !has(c.race, "Human", "Shadow") },
+        // Min Byung-Gyu is Korea's best healer; Beru later learns his healing.
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(parse("min-byung-gyu:10 lee-joohee:7 beru:7 sung-jinwoo:4")) },
+        // Go Gunhee and Woo Jinchul run the Association; Norma sees the future; Bellion and Igris command the shadows.
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+          score: role(parse("go-gunhee:9 ashborn:9 yogumunt:9 bellion:8 antares:8 woo-jinchul:7 norma-selner:7 choi-jong-in:7 igris:7 thomas-andre:6 adam-white:6 goto-ryuji:6 statue-of-god:6 kang-taeshik:5")) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      power: parse(`sung-jinwoo:10 sung-jinah:1 park-kyung-hye:1 sung-il-hwan:9 cha-hae-in:9 choi-jong-in:8 baek-yoonho:8 go-gunhee:8 woo-jinchul:6
+        kang-taeshik:5 yoo-jinho:3 yoo-myunghan:1 song-chi-yul:3 lee-joohee:3 kim-sangshik:2 han-song-yi:2 hwang-dongsuk:3 park-heejin:4 kim-chul:5
+        min-byung-gyu:7 lim-tae-gyu:7 ma-dongwook:8 hwang-dongsoo:8 thomas-andre:9 goto-ryuji:8 liu-zhigang:9 christopher-reed:9 siddharth-bachchan:9
+        lennart-niermann:9 norma-selner:2 adam-white:2 statue-of-god:7 kasaka:3 baruka:6 kargalgan:6 cerberus:5 vulcan:7 esil-radiru:5 kamish:9
+        igris:8 iron:6 tank:6 tusk:7 kaisel:6 beru:10 bellion:9 greed:7 jima:7 frost-monarch:9 rakan:9 ashborn:10 antares:10 querehsha:9 legia:9
+        tarnak:9 yogumunt:9`),
+    },
   });
   window.CREW_DEFAULT_POWER = DEFAULT_POWER;
 })();
