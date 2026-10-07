@@ -159,6 +159,9 @@ const FILES = [
   ["bleach", "bleach", "bazz-b", "File:Ep404BurnerFinger3.png"],
   ["bleach", "bleach", "uryu-ishida", "File:125Quincy - Letzt Stil.png"],
   ["bleach", "bleach", "kirio-hikifune", "File:Ep375HikifuneExplainsPurpose.png"],
+  ["bleach", "bleach", "kugo-ginjo", "File:Ep365GinjoBankai.png"],
+  ["bleach", "bleach", "yoruichi-shihoin", "File:Ep56Shunkō3.png"],
+  ["bleach", "bleach", "yoruichi-shihoin-2", "File:Shunkō- Raijin Senkei.png"],
 ];
 // Pictures supplied by hand (not on the wiki): Rukia's and Tosen's forms, Ichigo's and Byakuya's later looks
 // (bleach-ichigo-kurosaki-2, bleach-byakuya-kuchiki-2).

@@ -47,7 +47,7 @@
     bleach: {
       // Unohana and Orihime heal anything; Tenjiro's hot springs heal Captains in hours; Hikifune rebuilt Ichigo's body.
       healer: parse(`retsu-unohana:10 orihime-inoue:10 tenjiro-kirinji:10 isane-kotetsu:9 kirio-hikifune:9 hanataro-yamada:8 hachigen-ushoda:6
-        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:7 kisuke-urahara:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5 giselle-gewelle:3 senjumaru-shutara:7 izuru-kira:7 rukia-kuchiki:4 ryuken-ishida:7 uryu-ishida:6 kiyone-kotetsu:5`),
+        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:7 kisuke-urahara:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5 giselle-gewelle:3 senjumaru-shutara:7 izuru-kira:7 rukia-kuchiki:4 ryuken-ishida:7 uryu-ishida:6 kiyone-kotetsu:6`),
       // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge, Hikifune (12th Division before
       // Kisuke), Kukaku's fireworks cannon, Akon running the SRDI's lab. Strategists too: Yhwach sees the future,
       // Shunsui and Gin play their long games, Haschwalth runs the Sternritter.
@@ -95,9 +95,9 @@
       healer: parse(`mimosa-vermillion:10 witch-queen:9 william-vangeance:8 fana:7 charmy-pappitson:7 secre-swallowtail:7 lolopechka:7
         sister-lily:6 vanessa-enoteca:6 moris-libardirt:5 kirsch-vermillion:3 rades-spirito:9`),
       // Lucius planned everything; Marx and Damnatio serve the Wizard King; Zora sets traps. Engineers: Moris, the
-      // Diamond Kingdom's mad scientist; Henry reshapes the Black Bulls' hideout; Rades reanimates corpses.
+      // Diamond Kingdom's mad scientist, and Sally, the Eye of the Midnight Sun's; Henry reshapes the Black Bulls' hideout; Rades reanimates corpses.
       // Kaiser plans the Purple Orcas' battles; Nacht is the Black Bulls' spy; Fanzell trained Asta and leads the resistance.
-      strategist: parse(`lucius-zogratis:10 moris-libardirt:9 patry:9 kaiser-granvorka:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8
+      strategist: parse(`lucius-zogratis:10 sally:9 moris-libardirt:9 patry:9 kaiser-granvorka:9 julius-novachrono:8 marx-francois:8 damnatio-kira:8
         nacht-faust:8 zora-ideale:8 fanzell-kruger:7
         henry-legolant:8 klaus-lunettes:7 william-vangeance:7 fuegoleon-vermillion:7 licht:7 rades-spirito:6 gordon-agrippa:6 yami-sukehiro:6
         nozel-silva:6 finral-roulacase:5 sekke-bronzazza:4`),

@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T23:25",
+      title: { en: "Yoruichi and Ginjo transform", fr: "Yoruichi et Ginjô se transforment" },
+      items: [
+        { type: "new", game: "crew", en: "Bleach: Yoruichi gets her Shunkō (with its Rebirth of Souls clip), which becomes Raijin Senkei in the Thousand-Year Blood War; Ginjo gets his Fullbring powered by Ichigo's stolen power.", fr: "Bleach : Yoruichi a son Shunkô (avec son extrait de Rebirth of Souls), qui devient le Raijin Senkei dans la Guerre Sanglante de Mille Ans ; Ginjô a son Fullbring renforcé par le pouvoir volé à Ichigo." },
+        { type: "balance", game: "crew", en: "Kiyone Kotetsu is worth 6 as a healer; Black Clover: Sally is worth 9 as a strategist / engineer.", fr: "Kiyone Kotetsu vaut 6 en soigneuse ; Black Clover : Sally vaut 9 en stratège / ingénieur." },
+      ],
+    },
+    {
       at: "2026-10-07T17:40",
       title: { en: "Unzip your boosters, a fresh collection for everyone", fr: "Ouvre le zip de tes boosters, collection remise à zéro" },
       items: [

@@ -71,6 +71,9 @@
       "kenpachi-zaraki": { arc: 6, name: { en: "Bankai", fr: "Bankai" }, ...BANKAI, kanji: "卍解", lightning: true },
       yhwach: { arc: 6, name: { en: "The Almighty", fr: "The Almighty" }, fx: "domain", c1: "255, 40, 50", c2: "4, 4, 12", kanji: "全知全能" },
       "genryusai-yamamoto": { focus: "8% 20%", arc: 6, name: { en: "Bankai · Zanka no Tachi", fr: "Bankai · Zanka no Tachi" }, fx: "pillar", c1: "255, 120, 30", c2: "40, 6, 0", kanji: "残火の太刀" },
+      // Ginjo after stealing Ichigo's Fullbring: his Cross of Scaffold turns into a Bankai-like form (episode 365).
+      "kugo-ginjo": { arc: 5, name: { en: "Fullbring · Ichigo's power absorbed", fr: "Fullbring · pouvoir d'Ichigo absorbé" }, fx: "aura", c1: "120, 255, 190", c2: "10, 30, 24", kanji: "完現術", lightning: true },
+      "yoruichi-shihoin": { arc: 1, name: { en: "Shunkō", fr: "Shunkô" }, fx: "aura", c1: "200, 230, 255", c2: "60, 30, 110", kanji: "瞬閧", lightning: true, next: { arc: 6, name: { en: "Shunkō · Raijin Senkei", fr: "Shunkô · Raijin Senkei" }, c1: "255, 210, 60", c2: "60, 30, 0", kanji: "雷神戦形", clip: false } },
       "ichibe-hyosube": { arc: 6, name: { en: "Ichimonji · Shirafude", fr: "Ichimonji · Shirafude" }, fx: "domain", c1: "240, 240, 240", c2: "4, 4, 6", kanji: "一文字" },
     },
     naruto: {
@@ -265,7 +268,7 @@
     fireforce: ["shinra-kusakabe", "benimaru-shinmon", "dragon", "sho-kusakabe", "arthur-boyle", "joker"],
     onepunchman: ["saitama", "tatsumaki", "garou", "boros", "genos", "bang", "orochi"],
     onepiece: ["monkey-d-luffy", "gol-d-roger"],
-    bleach: ["kaname-tosen", "tier-harribel", "nelliel-tu-odelschwanck", "coyote-starrk", "genryusai-yamamoto", "grimmjow-jaegerjaquez", "ichigo-kurosaki", "sosuke-aizen", "renji-abarai", "rukia-kuchiki", "uryu-ishida", "byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach"],
+    bleach: ["kaname-tosen", "tier-harribel", "nelliel-tu-odelschwanck", "coyote-starrk", "genryusai-yamamoto", "grimmjow-jaegerjaquez", "ichigo-kurosaki", "sosuke-aizen", "renji-abarai", "rukia-kuchiki", "uryu-ishida", "byakuya-kuchiki", "toshiro-hitsugaya", "ulquiorra-cifer", "sajin-komamura", "mayuri-kurotsuchi", "kenpachi-zaraki", "yhwach", "yoruichi-shihoin"],
     jujutsukaisen: ["ryomen-sukuna", "mahito", "jogo", "aoi-todo", "toji-fushiguro"],
     hunterxhunter: ["gon-freecss", "killua-zoldyck"],
     attackontitan: ["annie-leonhart", "reiner-braun", "bertholdt-hoover", "ymir", "zeke-yeager", "lara-tybur", "dina-fritz", "levi"],
