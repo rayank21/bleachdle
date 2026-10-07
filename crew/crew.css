@@ -356,7 +356,7 @@
 
 /* On the board: a transformed character keeps a turning aura ring */
 .crew-slot.is-transformed .crew-face { position: relative; overflow: visible; border-color: transparent; background: conic-gradient(from 200deg, rgb(var(--fx1)), rgb(var(--fx2)), rgb(var(--fx1))) border-box; box-shadow: 0 0 22px rgba(var(--fx1), 0.7); }
-.crew-slot.is-transformed .crew-face img { border-radius: 50%; }
+.crew-slot.is-transformed .crew-face img { position: absolute; inset: 0; border-radius: 50%; }
 .crew-slot.is-transformed::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(60% 45% at 50% 38%, rgba(var(--fx1), 0.28), transparent 70%); animation: tf-throb 1s ease-in-out infinite alternate; }
 /* Transformation shots are scenes: they fill the card. The aura sits behind the card once transformed. */
 .reel-item.is-form .reel-fg { object-fit: cover; object-position: center 30%; }

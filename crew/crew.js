@@ -939,13 +939,19 @@
   }
 
   // One random character of the list. With the admin panel's luck (shared/admin.js, unlocked browsers only) above 1,
-  // stronger characters weigh more: a 10 comes up up to `luck` times as often, a 1 barely more than usual.
-  function draw(list) {
+  // characters worth more in the places still free weigh more.
+  function draw(list, slots = null) {
     const luck = Math.min(Math.max(Number(window.DLE_ADMIN_LUCK) || 1, 1), 5);
     if (luck === 1) return list[Math.floor(Math.random() * list.length)];
-    // Each 2.5 points of power above 5 multiplies the odds by `luck` (below 5 divides them): at ×5, about 4 draws in 5
-    // are a power 8 or more.
-    const weights = list.map((c) => luck ** (((c.power ?? DEFAULT_POWER) - 5) / 2.5));
+    // What a character is worth here: the most it would score in one of the places still free on the board (so a
+    // strong character useless in the missing roles doesn't count as strong). Each 2.5 points above 5 multiply the
+    // odds by `luck` (below 5 divide them): at ×5, most draws are worth 8 or more in a free place.
+    const open = slots ? openSlots(slots) : [];
+    const worth = (c) => {
+      const fit = open.filter((sl) => sl.def.fits(c));
+      return fit.length ? Math.max(...fit.map((sl) => pointsFor(sl, c))) : c.power ?? DEFAULT_POWER;
+    };
+    const weights = list.map((c) => luck ** ((Math.min(worth(c), 10) - 5) / 2.5));
     let r = Math.random() * weights.reduce((a, b) => a + b, 0);
     for (let i = 0; i < list.length; i++) if ((r -= weights[i]) < 0) return list[i];
     return list[list.length - 1];
@@ -962,7 +968,7 @@
     if (!list.length) return soloFinish();
     if (isReroll) solo.rerolls--;
     window.DLE_Profile?.count(isReroll ? "rerolls" : "rolls");
-    const pick = forced ?? draw(list);
+    const pick = forced ?? draw(list, solo.slots);
     const run = solo;
     run.rolling = true;
     run.rolled = null;
@@ -1738,7 +1744,7 @@
     if (!list.length) return markDone();
     if (isReroll && !free) run.rerolls--;
     window.DLE_Profile?.count(isReroll && !free ? "rerolls" : "rolls");
-    const pick = draw(list);
+    const pick = draw(list, myBoard());
     run.claims.set(rooms.selfId, pick.id);
     rooms.broadcast("claim", { charId: pick.id });
     run.rolling = true;
