@@ -1553,6 +1553,7 @@
     // Everyone picks the same first player from the match key.
     const seed = [...match.key].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
     setTurn(order[seed % order.length]);
+    startBeat(match);
   }
 
   // The board a player fills: their own, or their team's in team vs team.
@@ -1627,8 +1628,41 @@
   // Another player's roll and placement play out in my reel, one after the other.
   function spectate(task) {
     const run = match;
-    run.show = run.show.then(() => (match === run ? task() : null)).catch(() => {});
+    // A tab in the background pauses animations: never let one of them hold the turns for more than a few seconds.
+    run.show = run.show.then(() => (match === run ? Promise.race([task(), wait(document.hidden ? 300 : 7000)]) : null)).catch(() => {});
     return run.show;
+  }
+
+  // ── Keeping everyone on the same turn ──
+  // Every few seconds each player tells the room what they see: their board, whose turn it is and how many
+  // placements they know of. A player who missed something fills it in and takes the turn of whoever saw the most;
+  // on a tie, the host's view wins. A lost message or a stuck tab can't leave the room waiting on the wrong player.
+  function startBeat(run) {
+    clearInterval(run.beat);
+    run.beat = setInterval(() => {
+      if (match !== run || run.done) { clearInterval(run.beat); return; }
+      rooms.broadcast("beat", { key: run.key, current: run.current, moves: movesSeen(), board: myPairs(), finished: run.finished.has(rooms.selfId) });
+    }, 4000);
+  }
+
+  function onBeat(d, from) {
+    const run = match;
+    if (run.done || run.starting || String(d.key) !== run.key) return;
+    const before = movesSeen();
+    if (Array.isArray(d.board)) fillBoard(from, d.board);
+    if (d.finished === true && !run.finished.has(from)) {
+      for (const id of teammates(from)) run.finished.add(id);
+      renderScoreboard();
+      checkMatchEnd();
+      if (run.done) return;
+    }
+    const theirs = Number(d.moves) || 0;
+    const current = typeof d.current === "string" && run.ids.includes(d.current) ? d.current : null;
+    if (!current || current === run.current) return;
+    // Mid-turn (a roll spinning, a portrait flying) the views differ for a moment: don't fight over it.
+    if (run.rolling || run.placing || run.spectating || (myTurn() && run.rolled)) return;
+    const fromHost = from === run.room.host || from === rooms.myRoom?.host;
+    if (theirs > before || (theirs === before && fromHost)) setTurn(current);
   }
 
   function vsSplash(a, b) {
@@ -1822,6 +1856,7 @@
     }
     if (type === "renamed") { renameInMatch(String(d.old ?? ""), String(d.now ?? "")); return; }
     if (!match || !match.ids.includes(from)) return;
+    if (type === "beat") { onBeat(d, from); return; }
     if (type === "want") {
       if (String(d.key) === match.key) rooms.broadcast("state", matchState());
       return;
@@ -2016,6 +2051,7 @@
     toast(t("rejoined"));
     if (st.done) { finishMatch(); return; }
     setTurn(ids.includes(st.current) ? st.current : match.order.find((id) => match.active.has(id) && !match.finished.has(id)) ?? null);
+    startBeat(match);
     checkMatchEnd();
   }
 
