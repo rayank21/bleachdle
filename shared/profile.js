@@ -245,7 +245,7 @@
     }
     button.textContent = "";
     const face = el("span", "pf-btn-face");
-    if (session?.profile?.avatar) { const img = el("img"); img.src = avatarSrc(session.profile.avatar); img.alt = ""; face.append(img); }
+    if (session?.profile?.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(session.profile.avatar)); img.alt = ""; face.append(img); }
     else face.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
     button.append(face, el("span", "pf-btn-name", session?.profile?.name || t("profile")));
     const pending = friendState.requests.length + friendState.invites.length;
@@ -325,7 +325,7 @@
         const on = current?.game === game && current?.char === char;
         const b = el("button", `pf-avatar${on ? " is-active" : ""}`);
         b.type = "button";
-        const img = el("img"); img.src = portrait(game, char); img.alt = char; img.loading = "lazy";
+        const img = el("img"); window.DLE_SMALL_IMG(img, portrait(game, char)); img.alt = char; img.loading = "lazy";
         b.append(img);
         b.addEventListener("click", () => { current = { game, char }; onPick(current); draw(); });
         grid.append(b);
@@ -457,6 +457,10 @@
     ["podium", "crown", "gold", 1, (c) => c.podium, "Season podium", "Podium de saison", "Finish in a season's top 3", "Finis dans le top 3 d'une saison"],
   ];
   let lastBoard = null; // the latest leaderboard, for the season podium
+  // The rarest achievements, rarest first: the ones a player earned are shown next to their name in the online bar
+  // and the chat (at most 3), so everyone sees who got them.
+  const RARE = ["collfull", "podium", "roll1000", "win250", "streak15", "rankS"];
+  const MAX_BADGES = 3;
   function achContext(p) {
     const stats = Object.values(p.stats ?? {});
     const modes = (m) => stats.reduce((a, x) => a + (x?.[m]?.wins || 0), 0);
@@ -494,8 +498,35 @@
   }
   // A toast for each achievement unlocked since last time. The first time, the ones already earned are just noted.
   const ACH_SEEN = "dle:ach-seen";
+  // My rare achievements, as ids (rarest first).
+  function myBadges() {
+    if (!session?.profile) return [];
+    const done = new Set(achievements(session.profile).filter((a) => a.done).map((a) => a.id));
+    return RARE.filter((id) => done.has(id)).slice(0, MAX_BADGES);
+  }
+  // Someone's badges as they announced them (untrusted): known rare ids only, rarest first, no repeats.
+  const cleanBadges = (list) => (Array.isArray(list) ? RARE.filter((id) => list.includes(id)).slice(0, MAX_BADGES) : []);
+  // Small round badges for a list of ids, each titled with the achievement's name and how it's earned.
+  function badgeRow(ids, cls = "") {
+    const row = el("span", `rare-badges ${cls}`.trim());
+    for (const id of cleanBadges(ids)) {
+      const def = ACHIEVEMENTS.find((a) => a[0] === id);
+      const [, icon, tier, , , en, fr, howEn, howFr] = def;
+      const b = el("span", `rare-badge tier-${tier}`);
+      b.title = lang() === "fr" ? `${fr} · ${howFr}` : `${en} · ${howEn}`;
+      b.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="${ACH_ICONS[icon]}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      b.setAttribute("role", "img");
+      b.setAttribute("aria-label", b.title);
+      row.append(b);
+    }
+    return row.childElementCount ? row : null;
+  }
+  let lastBadges = "";
   function checkAchievements() {
     if (!session?.profile) return;
+    // The online bar and the chat show my rare badges: tell them when they change.
+    const badges = myBadges().join();
+    if (badges !== lastBadges) { lastBadges = badges; window.dispatchEvent(new Event("dle:badges")); }
     const done = achievements(session.profile).filter((a) => a.done);
     let seen = null;
     try { seen = JSON.parse(localStorage.getItem(ACH_SEEN) || "null"); } catch {}
@@ -682,7 +713,7 @@
         const f = el("img");
         f.loading = "lazy";
         f.decoding = "async";
-        f.src = portrait(best.anime, m.id);
+        window.DLE_SMALL_IMG(f, portrait(best.anime, m.id));
         f.alt = m.name;
         f.title = `${m.role}: ${m.name} (${m.points})`;
         faces.append(f);
@@ -884,7 +915,7 @@
   function friendRow(f, on) {
     const li = el("li", `pf-li pf-friend${on ? " is-online" : ""}`);
     const face = el("span", "pf-li-face");
-    if (f.avatar) { const img = el("img"); img.src = avatarSrc(f.avatar); img.alt = ""; face.append(img); }
+    if (f.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(f.avatar)); img.alt = ""; face.append(img); }
     const who = el("span", "pf-friend-who");
     who.append(el("span", "pf-li-name", f.name));
     if (on !== undefined) {
@@ -963,7 +994,7 @@
             list.forEach((r, i) => {
               const li = el("li", `top-${i + 1}`);
               const face = el("span", "pf-li-face");
-              if (r.avatar) { const img = el("img"); img.src = avatarSrc(r.avatar); img.alt = ""; face.append(img); }
+              if (r.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(r.avatar)); img.alt = ""; face.append(img); }
               li.append(el("span", "pf-pos", ["🥇", "🥈", "🥉"][i]), face, el("span", "pf-li-name", r.name), el("span", "pf-val", value(r)));
               ol.append(li);
             });
@@ -1010,10 +1041,10 @@
       const img = el("img");
       img.loading = "lazy";
       img.decoding = "async";
-      img.src = portrait(r.anime, m.id);
+      // A missing small copy falls back to the portrait (DLE_SMALL_IMG); a missing portrait drops the face.
+      img.onerror = () => { if (!img.src.includes("/sm/")) img.remove(); };
+      window.DLE_SMALL_IMG(img, portrait(r.anime, m.id));
       img.alt = "";
-      img.loading = "lazy";
-      img.onerror = () => img.remove();
       img.title = `${m.id.replace(/-/g, " ")} (${m.points})`;
       faces.append(img);
     }
@@ -1029,7 +1060,7 @@
       const li = el("li", `pf-li${r.id === session?.id ? " is-me" : ""}${i < 3 ? ` top-${i + 1}` : ""}`);
       li.style.animationDelay = `${i * 40}ms`;
       const face = el("span", "pf-li-face");
-      if (r.avatar) { const img = el("img"); img.src = avatarSrc(r.avatar); img.alt = ""; face.append(img); }
+      if (r.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(r.avatar)); img.alt = ""; face.append(img); }
       const who = el("span", "pf-li-who");
       who.append(el("span", "pf-li-name", r.name));
       const more = extra?.(r);
@@ -1055,6 +1086,7 @@
 
   window.DLE_Profile = {
     open, recordCrew, recordDuel, recordTeam, leaderboard, crewFaces, count, collect, collectionOf,
+    badges: myBadges, cleanBadges, badgeRow,
     // Admin panel: a random achievement's toast.
     testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },

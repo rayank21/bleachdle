@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T14:40",
+      title: { en: "Rare badges and a lighter site", fr: "Badges rares et site plus léger" },
+      items: [
+        { type: "new", en: "Your rarest achievements (gold ones: full collection, season podium, 1,000 rolls, 250 wins, a streak of 15, an S-rank crew) now show next to your name in the online bar and the chat, for everyone to see.", fr: "Tes succès les plus rares (les dorés : collection complète, podium de saison, 1 000 rolls, 250 victoires, série de 15, équipage de rang S) s'affichent maintenant à côté de ton pseudo dans la barre en ligne et le chat, aux yeux de tous." },
+        { type: "improved", en: "Links to the site shared on Discord, WhatsApp or elsewhere now show a preview picture for each anime.", fr: "Les liens du site partagés sur Discord, WhatsApp ou ailleurs affichent maintenant une image d'aperçu pour chaque anime." },
+        { type: "improved", en: "Faster pages: the logos and the small portraits (suggestions, tried names, background, profiles) weigh 3 to 10 times less.", fr: "Pages plus rapides : les logos et les petits portraits (suggestions, persos essayés, fond, profils) pèsent 3 à 10 fois moins lourd." },
+      ],
+    },
+    {
       at: "2026-10-07T13:00",
       title: { en: "Online Crew Roll: teams, reloads and late joins", fr: "Roll ton équipage en ligne : équipes, F5 et arrivées en cours de partie" },
       items: [

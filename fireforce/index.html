@@ -4,9 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fireforcedle</title>
-  <meta name="description" content="Guess the Fire Force character of the day. Pick how far you've watched the anime and play spoiler-free." />
+  <meta name="description" content="Devine le personnage Fire Force du jour parmi 29 persos, sans spoiler : choisis jusqu'où tu as vu l'anime. Mode infini, portrait flou et parties en ligne entre amis." />
+  <link rel="canonical" href="https://bleachdlenaim.netlify.app/fireforce/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bleachdle &amp; co" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:url" content="https://bleachdlenaim.netlify.app/fireforce/" />
+  <meta property="og:title" content="Fireforcedle · Devine le perso Fire Force du jour" />
+  <meta property="og:description" content="Devine le personnage Fire Force du jour parmi 29 persos, sans spoiler : choisis jusqu'où tu as vu l'anime. Mode infini, portrait flou et parties en ligne entre amis." />
+  <meta property="og:image" content="https://bleachdlenaim.netlify.app/assets/og/fireforce.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Fireforcedle · Devine le perso Fire Force du jour" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#0b0b0d" />
-  <link rel="icon" type="image/png" href="../assets/logos/fireforcedle.png" />
+  <link rel="icon" type="image/webp" href="../assets/logos/fireforcedle.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet" />
@@ -111,7 +124,7 @@
   <!-- Modals -->
   <dialog class="modal" id="arcModal">
     <div class="modal-inner">
-      <div class="onboard-logo"><img src="../assets/logos/fireforcedle.png" alt="" /></div>
+      <div class="onboard-logo"><img src="../assets/logos/fireforcedle.webp" alt="" /></div>
       <h2 data-i18n="arcTitle"></h2>
       <p class="muted" data-i18n="arcIntro"></p>
       <div class="arc-grid" id="arcGrid"></div>
@@ -159,6 +172,6 @@
   <script src="config.js"></script>
   <script src="data/descriptions.js" onerror="this.remove()"></script>
   <script src="../crew/roster.js"></script>
-  <script src="../shared/engine.js"></script>
+  <script type="module" src="../shared/engine.js"></script>
 </body>
 </html>

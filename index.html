@@ -4,9 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bleachdle</title>
-  <meta name="description" content="Daily anime character guessing games: Bleach, Hunter × Hunter, Dragon Ball and Naruto, spoiler-free for where you are in the anime." />
+  <meta name="description" content="Devine un personnage d'anime chaque jour, sans spoiler selon où tu en es : Bleach, Hunter × Hunter, Dragon Ball, Naruto, One Piece, Jujutsu Kaisen, Black Clover, Attack on Titan, Demon Slayer, My Hero Academia, Haikyuu!!, Fire Force, Tensura, One Punch Man. Plus Crew Roll, en solo ou en ligne avec tes amis." />
+  <link rel="canonical" href="https://bleachdlenaim.netlify.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Bleachdle &amp; co" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:url" content="https://bleachdlenaim.netlify.app/" />
+  <meta property="og:title" content="Bleachdle &amp; co · 14 jeux pour deviner des persos d'anime" />
+  <meta property="og:description" content="Devine un personnage d'anime chaque jour, sans spoiler selon où tu en es : Bleach, Hunter × Hunter, Dragon Ball, Naruto, One Piece, Jujutsu Kaisen, Black Clover, Attack on Titan, Demon Slayer, My Hero Academia, Haikyuu!!, Fire Force, Tensura, One Punch Man. Plus Crew Roll, en solo ou en ligne avec tes amis." />
+  <meta property="og:image" content="https://bleachdlenaim.netlify.app/assets/og/home.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Bleachdle &amp; co · 14 jeux pour deviner des persos d'anime" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#0b0b0d" />
-  <link rel="icon" type="image/png" href="assets/logos/bleachdle.png" />
+  <link rel="icon" type="image/webp" href="assets/logos/bleachdle.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet" />
@@ -73,7 +86,7 @@
         $("#crewCard").innerHTML = `<a class="crew-card" href="crew/"><span class="cat-logo cat-dice cat-sunny"><img src="assets/logos/sunny.webp" alt=""></span><span><b>${t.crewTitle}</b><small>${t.crewDesc}</small></span><span class="game-play">${t.play} <span aria-hidden="true">→</span></span></a>`;
         $("#gameGrid").innerHTML = GAMES.map((g) => `
           <a class="game-card" href="${g.path}" data-game="${g.id}">
-            <div class="game-strip">${g.featured.map((id) => `<span style="background-image:url('${g.path}assets/characters/${id}.webp')"></span>`).join("")}</div>
+            <div class="game-strip">${g.featured.map((id) => `<span style="background-image:url('${g.path}assets/characters/sm/${id}.webp')"></span>`).join("")}</div>
             <div class="game-body">
               <span class="game-logo">${logo(g)}</span>
               <div class="game-text">

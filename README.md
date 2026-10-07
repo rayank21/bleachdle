@@ -23,7 +23,7 @@ Plus **Crew Roll** (`crew/`): pick an anime, roll random characters and place th
 
 ## Play
 
-Open `index.html` (the category picker) in a browser; there is nothing to install. To publish, upload the whole folder to any static host (GitHub Pages, Netlify, Vercel…).
+Serve the folder with any static server and open it in a browser, e.g. `npx serve .` then http://localhost:3000/ (the game engine and Crew Roll are ES modules, which browsers don't run from a `file://` page). To publish, upload the whole folder to any static host (GitHub Pages, Netlify, Vercel…); profiles and the TURN relay need Netlify (`netlify/functions/`).
 
 ## Features
 
@@ -44,9 +44,11 @@ Rooms (`shared/rooms.js`) are peer to peer: players connect directly with [Tryst
 
 ```
 index.html             category picker
-shared/                game engine, styles, interface text, category list (games.js), online rooms and presence
-crew/                  Crew Roll (ratings and slots in roster.js)
-assets/logos/          one logo per category
+shared/                styles, interface text, category list (games.js), online rooms and presence, profiles
+shared/engine.js       the guessing game (ES module); its parts in shared/engine/ (core, stats, compare, render, guess, ui, race, play)
+crew/                  Crew Roll (ratings and slots in roster.js, forms.js); crew.js and its parts in crew/parts/ (ES modules)
+assets/logos/          one logo per category (webp)
+assets/og/             link preview pictures (1200×630), one per page
 bleach/                config.js, data/, assets/characters/, scripts/
 hunterxhunter/         config.js, data/, assets/characters/, scripts/
 ```
@@ -70,6 +72,13 @@ node blackclover/scripts/scrape.mjs
 node attackontitan/scripts/scrape.mjs
 # The newer games share one scraper; their attributes are curated in <game>/scripts/seed.mjs
 node scripts/simple-scrape.mjs demonslayer   # also myheroacademia, haikyuu, fireforce, slime, onepunchman
+```
+
+After a scrape, make the portraits' small copies (160 px, in `assets/characters/sm/`), used wherever a portrait is shown small; a missing one falls back to the full portrait:
+
+```
+npm install
+node scripts/thumbs.mjs            # or: node scripts/thumbs.mjs bleach
 ```
 
 ## Adding a category

@@ -105,19 +105,26 @@ function gameLogo(id) {
   return img;
 }
 
-function chip(name, gameId, isMe, isFriend) {
+// A player's rare achievements (shared/profile.js), shown after their name.
+const badgeRow = (ids) => window.DLE_Profile?.badgeRow?.(ids) ?? null;
+const cleanBadges = (list) => window.DLE_Profile?.cleanBadges?.(list) ?? [];
+const myBadges = () => window.DLE_Profile?.badges?.() ?? [];
+
+function chip(name, gameId, isMe, isFriend, badges = []) {
   const li = el("li", `presence-chip${isMe ? " is-me" : ""}${isFriend ? " is-friend" : ""}`);
   if (isFriend) li.title = t("friends");
   const logo = gameLogo(gameId);
   if (logo) li.append(logo);
   li.append(el("span", "presence-name", name));
+  const row = badgeRow(badges);
+  if (row) li.append(row);
   if (isMe) li.append(el("span", "presence-you", `(${t("you")})`));
   return li;
 }
 
 function myChip() {
   if (!editing) {
-    const li = chip(shownName(), game, true);
+    const li = chip(shownName(), game, true, false, myBadges());
     const btn = el("button", "presence-edit");
     btn.type = "button";
     btn.setAttribute("aria-label", t("edit"));
@@ -182,7 +189,7 @@ function render() {
   const list = el("ul", "presence-list");
   list.append(myChip());
   const others = [...peers.values()].sort((a, b) => isFriend(b) - isFriend(a) || a.name.localeCompare(b.name));
-  for (const p of others) list.append(chip(p.name, p.game, false, isFriend(p)));
+  for (const p of others) list.append(chip(p.name, p.game, false, isFriend(p), p.badges));
   bar.append(list);
 
   // Friends: how many are here, and a shortcut to the friends list (with join / invite buttons).
@@ -210,7 +217,7 @@ function render() {
 // ── Friends (profile.js keeps the list) ──
 const friendIds = () => window.DLE_Profile?.friendIds ?? [];
 const isFriend = (p) => !!p.pid && friendIds().includes(p.pid);
-const myInfo = () => ({ name: shownName(), game, pid: window.DLE_Profile?.current?.id ?? null, room: window.DLE_MY_ROOM ?? null });
+const myInfo = () => ({ name: shownName(), game, pid: window.DLE_Profile?.current?.id ?? null, room: window.DLE_MY_ROOM ?? null, badges: myBadges() });
 const cleanRoom = (r) => {
   if (!r || typeof r !== "object") return null;
   const code = String(r.code ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
@@ -259,6 +266,7 @@ const announce = () => sendInfo?.(myInfo());
 window.addEventListener("dle:room", announce);
 window.addEventListener("dle:profile", () => { announce(); render(); });
 window.addEventListener("dle:friends", render);
+window.addEventListener("dle:badges", () => { announce(); render(); });
 
 // For the friends list: who is here, where, and in which open room.
 window.DLE_Presence = {
@@ -311,7 +319,7 @@ async function joinLobby() {
     if (!name) return;
     const g = GAMES.some((x) => x.id === data?.game) ? data.game : "home";
     const pid = /^[a-z0-9]{10,20}$/.test(data?.pid ?? "") ? data.pid : null;
-    peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room) });
+    peers.set(peerId, { name, game: g, pid, room: cleanRoom(data?.room), badges: cleanBadges(data?.badges) });
     render();
     presenceChanged();
     renderChat();
@@ -396,6 +404,7 @@ function cleanMessage(m) {
     name: cleanName(m.name) || "Player",
     ts: Math.min(Number(m.ts) || realNow(), realNow() + 60000), // real time (shared/games.js), not a wrong local clock
     game: GAMES.some((x) => x.id === m.game) ? m.game : "home",
+    badges: cleanBadges(m.badges),
     mine: !!m.mine,
   };
 }
@@ -508,7 +517,10 @@ function renderChat({ scroll = false } = {}) {
       const time = el("time", null, clock(m.ts));
       time.dateTime = new Date(m.ts).toISOString();
       time.title = fullDate(m.ts);
-      meta.append(el("b", null, m.mine ? `${m.name} (${t("you")})` : m.name), time);
+      meta.append(el("b", null, m.mine ? `${m.name} (${t("you")})` : m.name));
+      const row = badgeRow(m.badges);
+      if (row) meta.append(row);
+      meta.append(time);
       li.append(meta);
     }
     li.append(el("p", "chat-text", m.text));
@@ -536,7 +548,7 @@ $c(".chat-form").addEventListener("submit", (e) => {
   const now = Date.now();
   if (!text || !sendChat || now - lastSent < 800) return;
   lastSent = now;
-  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now };
+  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now, badges: myBadges() };
   sendChat(msg);
   addMessage({ ...msg, mine: true });
   chatInput.value = "";
@@ -546,7 +558,8 @@ $c(".chat-form").addEventListener("submit", (e) => {
 function receive(data, peerId) {
   if (!allowed(peerId)) return;
   // Use the name their presence announced when we know it.
-  if (!addMessage({ ...data, name: peers.get(peerId)?.name || data?.name, mine: false })) return;
+  const from = peers.get(peerId);
+  if (!addMessage({ ...data, name: from?.name || data?.name, badges: from?.badges ?? data?.badges, mine: false })) return;
   renderChat();
   if (!chat.open) {
     chatToggle.classList.remove("bump");

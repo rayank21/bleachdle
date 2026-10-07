@@ -4,5 +4,8 @@
   "description": "Anime guessing games; Netlify Functions for player profiles.",
   "dependencies": {
     "@netlify/blobs": "^11.1.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
   }
 }

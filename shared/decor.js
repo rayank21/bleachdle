@@ -30,7 +30,8 @@
         const img = new Image();
         img.decoding = "async";
         img.onload = () => resolve(img);
-        img.onerror = () => resolve(null);
+        // A missing small copy (assets/characters/sm/): the full portrait instead.
+        img.onerror = () => (src.includes("/sm/") ? load(src.replace("/sm/", "/")).then(resolve) : resolve(null));
         img.src = src;
       }));
     }
@@ -146,7 +147,8 @@
   }
 
   window.DLE_BG = (urls) => {
-    grid = urls || [];
+    // The wall's cells are small and faded: the portraits' small copies are plenty.
+    grid = (urls || []).map((u) => window.DLE_THUMB?.(u) ?? u);
     schedule();
   };
 
