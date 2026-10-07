@@ -204,7 +204,11 @@
     if (!now) return;
     if (first == null) { first = now; return; }
     if (now <= first) return;
+    showUpdate();
+  }
+  function showUpdate() {
     warned = true;
+    document.querySelector(".fx-update")?.remove();
     const fr = (document.documentElement.lang || "").startsWith("fr");
     const bar = document.createElement("div");
     bar.className = "fx-update";
@@ -229,5 +233,5 @@
   setInterval(checkVersion, 120000);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) checkVersion(); });
 
-  window.DLE_FX = { play, flash, get muted() { return muted; } };
+  window.DLE_FX = { play, flash, showUpdate, sounds: Object.keys(SOUNDS), get muted() { return muted; } };
 })();

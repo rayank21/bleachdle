@@ -19,7 +19,10 @@
   // Weak machines (few cores or little memory): a lighter page, without the endless decorative animations.
   const cores = navigator.hardwareConcurrency || 8;
   const mem = navigator.deviceMemory || 8;
-  if (cores <= 4 || mem <= 4) document.documentElement.classList.add("lite");
+  // The admin panel can force it on ("1") or off ("0") to test both.
+  let forcedLite = null;
+  try { forcedLite = localStorage.getItem("dle:admin-lite"); } catch {}
+  if (forcedLite === "1" || (forcedLite !== "0" && (cores <= 4 || mem <= 4))) document.documentElement.classList.add("lite");
 
   function load(src) {
     if (!cache.has(src)) {

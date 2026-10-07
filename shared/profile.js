@@ -1042,6 +1042,8 @@
 
   window.DLE_Profile = {
     open, recordCrew, recordDuel, leaderboard, crewFaces, count, collect, collectionOf,
+    // Admin panel: a random achievement's toast.
+    testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get requests() { return friendState.requests; },

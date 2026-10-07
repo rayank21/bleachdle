@@ -109,9 +109,9 @@
   const gameKey = () => (settings.mode === "daily" ? `daily:${playKey()}${dateKey()}:${settings.arc}` : `endless:${playKey()}${settings.arc}`);
 
   // Each variant has its own character of the day.
-  function dailyTarget() {
+  function dailyTarget(d = new Date()) {
     const p = targetPool();
-    return p[hash(`${dateKey()}|${settings.arc}|${CFG.storage}${play() === "classic" ? "" : `|${play()}`}`) % p.length].id;
+    return p[hash(`${dateKey(d)}|${settings.arc}|${CFG.storage}${play() === "classic" ? "" : `|${play()}`}`) % p.length].id;
   }
   function randomTarget(exclude) {
     const p = targetPool().filter((c) => c.id !== exclude);
@@ -1468,6 +1468,39 @@
     else card.append(el("small", null, esc(clue ? t("hintIn")(at - n) : "—")));
     return card;
   }
+
+  // ── Admin panel hooks (shared/admin.js) ──
+  window.DLE_GAME = {
+    config: CFG,
+    get game() { return game; },
+    get settings() { return { ...settings }; },
+    get online() { return isOnline(); },
+    play,
+    view,
+    pool: () => targetPool().map((c) => view(c.id)),
+    // The character of the day in `days` days (negative: past days), for the current arc and variant.
+    dailyFor: (days) => dailyTarget(addDays(new Date(), days)),
+    setTarget(id) {
+      if (isOnline() || !byId.has(id)) return false;
+      game = { target: id, guesses: [], status: "playing", revealed: {} };
+      saveGame();
+      renderAll();
+      return true;
+    },
+    win() { if (game?.status === "playing") submitGuess(game.target); },
+    // n wrong guesses, one after the other (to watch the hints, the blur and the clues unlock).
+    wrong(n = 1) {
+      const left = pool().filter((c) => c.id !== game?.target && !game?.guesses.includes(c.id)).sort(() => Math.random() - 0.5).slice(0, n);
+      left.forEach((c, i) => setTimeout(() => { if (game?.status === "playing") submitGuess(c.id); }, i * 300));
+    },
+    reset() { if (isOnline()) return; store.set(gameKey(), null); startGame(); },
+    setArc(i) { settings.arc = i; saveSettings(); startGame(); },
+    resetStats() {
+      Object.assign(stats, { daily: emptyStats(), endless: emptyStats(), online: emptyStats(), history: {} });
+      saveStats();
+      renderAll();
+    },
+  };
 
   // ── Boot ──
   setupPlay();

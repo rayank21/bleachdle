@@ -930,16 +930,29 @@
     return solo.pool.filter((c) => !used.has(c.id) && c.id !== exclude && fitsIn(solo.slots, c));
   }
 
-  async function soloRoll(isReroll) {
+  // One random character of the list. With the admin panel's luck (shared/admin.js, unlocked browsers only) above 1,
+  // stronger characters weigh more: a 10 comes up up to `luck` times as often, a 1 barely more than usual.
+  function draw(list) {
+    const luck = Math.min(Math.max(Number(window.DLE_ADMIN_LUCK) || 1, 1), 5);
+    if (luck === 1) return list[Math.floor(Math.random() * list.length)];
+    const weights = list.map((c) => 1 + (luck - 1) * ((c.power ?? DEFAULT_POWER) / 10) ** 2);
+    let r = Math.random() * weights.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < list.length; i++) if ((r -= weights[i]) < 0) return list[i];
+    return list[list.length - 1];
+  }
+
+  // `forced`: a character picked in the admin panel instead of a random draw.
+  async function soloRoll(isReroll, forced = null) {
     // No draw while a portrait is still flying to its slot: that slot is not filled yet.
     if (solo.rolling || solo.placing || solo.done) return;
     let list = soloCandidates(solo.rolled?.id);
     // Rerolling the only character that still fits gives it back rather than ending the crew.
     if (!list.length && solo.rolled) list = soloCandidates();
+    if (!list.length && forced) list = [forced];
     if (!list.length) return soloFinish();
     if (isReroll) solo.rerolls--;
     window.DLE_Profile?.count(isReroll ? "rerolls" : "rolls");
-    const pick = list[Math.floor(Math.random() * list.length)];
+    const pick = forced ?? draw(list);
     const run = solo;
     run.rolling = true;
     run.rolled = null;
@@ -949,7 +962,7 @@
     if (solo !== run) return; // a new crew was started meanwhile
     run.rolling = false;
     // Safety net: a draw that no longer fits (or is already on the board) is redrawn for free.
-    if (!fitsIn(run.slots, pick) || filledOf(run.slots).some((x) => x.char.id === pick.id)) return soloRoll(false);
+    if (!forced && (!fitsIn(run.slots, pick) || filledOf(run.slots).some((x) => x.char.id === pick.id))) return soloRoll(false);
     run.rolled = pick;
     const fresh = window.DLE_Profile?.collect(run.g.id, pick.id);
     soloReel.hint(fresh ? `${t("newCard")} ${t("chooseSlot")}` : t("chooseSlot"));
@@ -1631,7 +1644,7 @@
     if (!list.length) return markDone();
     if (isReroll && !free) run.rerolls--;
     window.DLE_Profile?.count(isReroll && !free ? "rerolls" : "rolls");
-    const pick = list[Math.floor(Math.random() * list.length)];
+    const pick = draw(list);
     run.claims.set(rooms.selfId, pick.id);
     rooms.broadcast("claim", { charId: pick.id });
     run.rolling = true;
@@ -2288,6 +2301,49 @@
     relabel();
   }));
   document.querySelectorAll(".crew-mode [data-mode]").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+
+  // ── Admin panel hooks (shared/admin.js) ──
+  const soloIdle = () => mode === "solo" && solo && !solo.rolling && !solo.placing;
+  window.CREW_ADMIN = {
+    get game() { return currentGame; },
+    get solo() { return mode === "solo" ? solo : null; },
+    forms: () => Object.keys(window.CREW_FORMS?.[currentGame?.id] ?? {}),
+    roll(id) {
+      if (!soloIdle() || solo.done) return false;
+      const pick = solo.pool.find((c) => c.id === id);
+      if (!pick || filledOf(solo.slots).some((s) => s.char.id === id)) return false;
+      soloRoll(false, pick);
+      return true;
+    },
+    rerolls(n = 99) { if (!soloIdle()) return; solo.rerolls += n; renderSoloActions(); },
+    // Fills every open place: with the best character for it, or at random.
+    fill(best = true) {
+      if (!soloIdle() || solo.done) return;
+      solo.rolled = null;
+      for (const slot of openSlots(solo.slots)) {
+        const used = new Set(filledOf(solo.slots).map((s) => s.char.id));
+        const fits = solo.pool.filter((c) => !used.has(c.id) && slot.def.fits(c));
+        if (!fits.length) continue;
+        const c = best ? fits.reduce((a, b) => (pointsFor(slot, b) > pointsFor(slot, a) ? b : a)) : fits[Math.floor(Math.random() * fits.length)];
+        slot.char = c;
+        slot.points = pointsFor(slot, c);
+      }
+      if (!openSlots(solo.slots).length || !soloCandidates().length) solo.done = true;
+      renderSolo(false);
+    },
+    finish() { if (soloIdle() && !solo.done) { solo.rolled = null; solo.done = true; renderSolo(false); } },
+    restart() { if (currentGame && mode === "solo") startSolo(); },
+    // A transformation cinematic on its own, whatever the player's arc (`late`: the later look, when there is one).
+    async cinema(id, late = false) {
+      const g = currentGame;
+      const f = window.CREW_FORMS?.[g?.id]?.[id];
+      if (!f) return;
+      const data = await loadGame(g);
+      const c = makePool(g, data, data.config.arcs.length - 1).find((x) => x.id === id);
+      const form = c && formFor(g.id, c, late && f.next ? f.next.arc : f.arc);
+      if (form) await window.CREW_CINEMA?.play({ form, char: c, sub: subtitleOf(c) });
+    },
+  };
 
   renderCategories();
   applyLang();
