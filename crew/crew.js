@@ -943,7 +943,9 @@
   function draw(list) {
     const luck = Math.min(Math.max(Number(window.DLE_ADMIN_LUCK) || 1, 1), 5);
     if (luck === 1) return list[Math.floor(Math.random() * list.length)];
-    const weights = list.map((c) => 1 + (luck - 1) * ((c.power ?? DEFAULT_POWER) / 10) ** 2);
+    // Each 2.5 points of power above 5 multiplies the odds by `luck` (below 5 divides them): at ×5, about 4 draws in 5
+    // are a power 8 or more.
+    const weights = list.map((c) => luck ** (((c.power ?? DEFAULT_POWER) - 5) / 2.5));
     let r = Math.random() * weights.reduce((a, b) => a + b, 0);
     for (let i = 0; i < list.length; i++) if ((r -= weights[i]) < 0) return list[i];
     return list[list.length - 1];
