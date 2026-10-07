@@ -1135,6 +1135,9 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .chat-close:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
 .chat-list { flex: 1; overflow-y: auto; margin: 0; padding: 12px; list-style: none; display: flex; flex-direction: column; gap: 2px; overscroll-behavior: contain; }
 .chat-empty { margin: auto; color: var(--muted); font-size: 14px; text-align: center; }
+.chat-day { display: flex; align-items: center; gap: 10px; margin: 12px 0 4px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; }
+.chat-day::before, .chat-day::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.chat-day:first-child { margin-top: 0; }
 .chat-msg { max-width: 85%; align-self: flex-start; margin-top: 8px; animation: rise 0.25s ease both; }
 .chat-msg.is-grouped { margin-top: 0; }
 .chat-msg.is-mine { align-self: flex-end; text-align: right; }

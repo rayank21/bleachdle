@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T11:10",
+      title: { en: "Finding each other faster, dates in the chat", fr: "On se trouve plus vite, les dates dans le chat" },
+      items: [
+        { type: "fix", en: "Online: players who can't connect directly now find each other in about 15 seconds instead of more than a minute.", fr: "En ligne : les joueurs qui ne peuvent pas se connecter directement se trouvent maintenant en 15 secondes environ, au lieu de plus d'une minute." },
+        { type: "new", en: "Chat: each day starts with its date (Today, Yesterday, Sun 4 Oct…), and hovering a time shows the full date.", fr: "Chat : chaque jour commence par sa date (Aujourd'hui, Hier, dim. 4 oct.…), et l'heure affiche la date complète au survol." },
+      ],
+    },
+    {
       at: "2026-10-07T11:00",
       title: { en: "Play together even when the connection fails", fr: "Jouer ensemble même quand la connexion bloque" },
       items: [

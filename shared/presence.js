@@ -26,6 +26,8 @@ const T = {
     pick: "Pick a name",
     chat: "Live chat",
     chatEmpty: "No messages yet. Say hi!",
+    today: "Today",
+    yesterday: "Yesterday",
     say: (n) => `Message as ${n}…`,
     send: "Send",
     close: "Close",
@@ -47,6 +49,8 @@ const T = {
     pick: "Choisis un pseudo",
     chat: "Chat en direct",
     chatEmpty: "Aucun message pour l'instant. Dis bonjour !",
+    today: "Aujourd'hui",
+    yesterday: "Hier",
     say: (n) => `Écrire en tant que ${n}…`,
     send: "Envoyer",
     close: "Fermer",
@@ -437,6 +441,20 @@ function clock(ts) {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
+// The day a message was sent: "Today", "Yesterday", or a date ("Mon 6 Oct"), with the year when it isn't this one.
+const dayKey = (ts) => new Date(ts).toDateString();
+function dayLabel(ts) {
+  const d = new Date(ts);
+  const today = new Date();
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return t("today");
+  if (d.toDateString() === yesterday.toDateString()) return t("yesterday");
+  const opts = { weekday: "short", day: "numeric", month: "short" };
+  if (d.getFullYear() !== today.getFullYear()) opts.year = "numeric";
+  return d.toLocaleDateString(lang() === "fr" ? "fr-FR" : "en-GB", opts);
+}
+const fullDate = (ts) => new Date(ts).toLocaleString(lang() === "fr" ? "fr-FR" : "en-GB", { dateStyle: "full", timeStyle: "short" });
+
 function renderChat({ scroll = false } = {}) {
   const nearBottom = chatList.scrollHeight - chatList.scrollTop - chatList.clientHeight < 60;
   chatRoot.dataset.status = status;
@@ -460,13 +478,19 @@ function renderChat({ scroll = false } = {}) {
   if (!chat.messages.length) chatList.append(el("li", "chat-empty", t("chatEmpty")));
   let prev = null;
   for (const m of chat.messages) {
-    const grouped = prev && prev.name === m.name && prev.mine === m.mine && m.ts - prev.ts < 120000;
+    // A divider at each new day.
+    const newDay = !prev || dayKey(prev.ts) !== dayKey(m.ts);
+    if (newDay) chatList.append(el("li", "chat-day", dayLabel(m.ts)));
+    const grouped = !newDay && prev.name === m.name && prev.mine === m.mine && m.ts - prev.ts < 120000;
     const li = el("li", `chat-msg${m.mine ? " is-mine" : ""}${grouped ? " is-grouped" : ""}`);
     if (!grouped) {
       const meta = el("div", "chat-meta");
       const logo = gameLogo(m.game);
       if (logo) meta.append(logo);
-      meta.append(el("b", null, m.mine ? `${m.name} (${t("you")})` : m.name), el("time", null, clock(m.ts)));
+      const time = el("time", null, clock(m.ts));
+      time.dateTime = new Date(m.ts).toISOString();
+      time.title = fullDate(m.ts);
+      meta.append(el("b", null, m.mine ? `${m.name} (${t("you")})` : m.name), time);
       li.append(meta);
     }
     li.append(el("p", "chat-text", m.text));

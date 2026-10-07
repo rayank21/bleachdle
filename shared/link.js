@@ -13,8 +13,9 @@
   const NOBLE = "https://cdn.jsdelivr.net/npm/@noble/secp256k1@3.1.0/+esm";
   const KIND = 23517; // ephemeral events: relays pass them on without keeping them
   const BEAT = 15000; // "I'm here" on every channel
+  const FIRST_BEATS = [1500, 4000, 8000]; // and a few quick ones on arrival, while the sockets open
   const LOST = 45000; // a relay-only player silent this long has left
-  const GRACE = 6000; // time given to the direct link before falling back to the relays
+  const GRACE = 4000; // time given to the direct link before falling back to the relays
 
   const enc = new TextEncoder();
   const dec = new TextDecoder();
@@ -28,6 +29,7 @@
   const sockets = new Map(); // url → { ws, retry }
   const topics = new Map(); // topic → handler(content)
   const seen = new Set();
+  const outbox = []; // events signed while no socket was open yet, sent as soon as one opens
 
   async function ensureKeys() {
     if (keys) return keys;
@@ -49,6 +51,10 @@
     ws.onopen = () => {
       entry.retry = 0;
       for (const topic of topics.keys()) ws.send(req(topic));
+      // Events from before any socket was open; recent ones only (the others are stale).
+      const now = Date.now();
+      for (const { at, full } of outbox) if (now - at < 20000) ws.send(full);
+      setTimeout(() => { outbox.length = 0; }, 5000); // let the other sockets open and get them too
     };
     ws.onmessage = (e) => {
       let msg;
@@ -89,7 +95,9 @@
     const id = await sha256(JSON.stringify([0, ev.pubkey, ev.created_at, ev.kind, ev.tags, ev.content]));
     const full = JSON.stringify(["EVENT", { ...ev, id: hex(id), sig: hex(await schnorr.signAsync(new Uint8Array(id), secretKey)) }]);
     seen.add(hex(id));
-    for (const { ws } of sockets.values()) if (ws?.readyState === 1) ws.send(full);
+    let sent = false;
+    for (const { ws } of sockets.values()) if (ws?.readyState === 1) { ws.send(full); sent = true; }
+    if (!sent) { outbox.push({ at: Date.now(), full }); if (outbox.length > 60) outbox.shift(); }
   }
 
   // ── A channel: Trystero's room plus the relay fallback ──
@@ -166,6 +174,7 @@
 
     listen(topic, receive);
     beat(true);
+    const firsts = FIRST_BEATS.map((ms) => setTimeout(() => beat(true), ms));
     const beats = setInterval(() => beat(), BEAT);
     const sweep = setInterval(() => {
       const now = Date.now();
@@ -219,6 +228,7 @@
         await post({ f: self, a: "~bye" });
         closed = true;
         clearInterval(beats);
+        firsts.forEach(clearTimeout);
         clearInterval(sweep);
         clearTimeout(beatSoon);
         for (const t of waiting.values()) clearTimeout(t);
