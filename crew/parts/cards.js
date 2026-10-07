@@ -9,7 +9,10 @@ import { burst, sfx, tierOf } from "./fx.js";
 import { drawPack } from "./boosters.js";
 
 const PROFILE = () => window.DLE_Profile;
-const CV = { sub: "inv", anime: "all", dupesOnly: false, trade: null, mode: "pack" };
+const CV = { sub: "inv", anime: "all", dupesOnly: false, trade: null, mode: "pack", size: 2 };
+// A deck battle takes 2 to 8 players (free for all, or two teams); a pack battle is always 1v1.
+const SIZES = [2, 3, 4, 5, 6, 7, 8];
+const roomSize = () => (CV.mode === "deck" ? CV.size : 2);
 export let cardRooms = null;
 S.cardMatch = null;
 
@@ -366,7 +369,10 @@ export function ensureCardRooms() {
   if (cardRooms) return;
   cardRooms = window.DLE_Rooms.create({
     channel: "cards",
-    startData: (room) => ({ mode: room.meta?.play === "deck" ? "deck" : "pack", game: room.game, seed: Math.floor(Math.random() * 2 ** 31), key: Math.random().toString(36).slice(2, 10) }),
+    startData: (room) => ({
+      mode: room.meta?.play === "deck" ? "deck" : "pack", game: room.game, seed: Math.floor(Math.random() * 2 ** 31), key: Math.random().toString(36).slice(2, 10),
+      teams: room.meta?.play === "deck" && room.meta?.teams ? Object.fromEntries(room.members.map((m) => [m.id, cardRooms.teamOf(m.id, room) ?? 0])) : null,
+    }),
     onChange: () => { tryPendingCardJoin(); if (S.mode === "cards" && CV.sub === "duel" && !(S.cardMatch && !S.cardMatch.done)) renderCards(); else if (S.cardMatch) drawMatch(); },
     onStart: (room, data) => startMatch(room, data),
     onMessage: onMatchMessage,
@@ -435,7 +441,18 @@ function duelView(box) {
   }
   lobby.append(modes);
   if (CV.mode === "pack") lobby.append(animeRow());
-  else deckBuilder(lobby);
+  else {
+    const sizes = el("div", "cv-sizes");
+    sizes.append(el("span", "crew-setting-label", t("players")));
+    for (const n of SIZES) {
+      const b = el("button", `size-pick${n === CV.size ? " is-active" : ""}`, String(n));
+      b.type = "button";
+      b.addEventListener("click", () => { CV.size = n; renderCards(); });
+      sizes.append(b);
+    }
+    lobby.append(sizes, el("p", "muted cv-teams-note", t("cTeamsNote")));
+    deckBuilder(lobby);
+  }
 
   const create = el("button", "btn-primary", t("cCreate"));
   create.type = "button";
@@ -443,7 +460,7 @@ function duelView(box) {
     if (!myName()) { toast(t("pickName")); return; }
     if (CV.mode === "deck" && readDeck().length < DECK_SIZE) { toast(t("cDeckFirst")); return; }
     cardRooms.setProfile({ name: myName(), game: S.currentGame.id, arc: 0 });
-    cardRooms.createRoom({ game: S.currentGame.id, size: 2, play: CV.mode });
+    cardRooms.createRoom({ game: S.currentGame.id, size: roomSize(), play: CV.mode });
   });
   const code = el("form", "code-form");
   const input = el("input");
@@ -476,6 +493,7 @@ function duelView(box) {
     const host = r.members.find((m) => m.id === r.host);
     const label = el("span", "lobby-pname", t("roomOf")(host?.name ?? "Player"));
     label.append(el("small", "lobby-anime", r.meta?.play === "deck" ? t("cDeckBattle") : `${t("cPackBattle")} · ${g?.anime ?? ""}`));
+    li.append(el("span", "lobby-badge", `${r.members.length}/${r.size}`));
     const join = el("button", "btn-primary btn-small", t("join"));
     join.type = "button";
     join.addEventListener("click", () => {
@@ -498,8 +516,8 @@ function duelView(box) {
     inv.addEventListener("click", () => {
       if (!myName()) { toast(t("pickName")); return; }
       if (CV.mode === "deck" && readDeck().length < DECK_SIZE) { toast(t("cDeckFirst")); return; }
-      if (!cardRooms.myRoom) cardRooms.createRoom({ game: S.currentGame.id, size: 2, play: CV.mode });
-      if (cardRooms.invite(p.id, { game: S.currentGame.id, size: 2 })) toast(t("inviteSent")(p.name));
+      if (!cardRooms.myRoom) cardRooms.createRoom({ game: S.currentGame.id, size: roomSize(), play: CV.mode });
+      if (cardRooms.invite(p.id, { game: S.currentGame.id, size: roomSize() })) toast(t("inviteSent")(p.name));
     });
     chip.append(inv);
     chips.append(chip);
@@ -571,7 +589,7 @@ function roomCard(room) {
   const deck = room.meta?.play === "deck";
   if (g && !deck) { const img = el("img"); img.src = ROOT + g.logo; img.alt = ""; head.append(img); }
   const host = room.members.find((m) => m.id === room.host);
-  head.append(el("b", null, t("roomOf")(host?.name ?? "Player")), el("span", "lobby-badge", `${room.members.length}/2`));
+  head.append(el("b", null, t("roomOf")(host?.name ?? "Player")), el("span", "lobby-badge", `${room.members.length}/${room.size}`));
   card.append(head, el("p", "room-hint", deck ? t("cDeckBattle") : `${t("cPackBattle")} · ${g?.anime ?? ""}`));
   if (room.code) {
     const c = el("div", "room-code");
@@ -579,13 +597,15 @@ function roomCard(room) {
     card.append(c);
   }
   const list = el("ul", "room-members");
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < room.size; i++) {
     const m = room.members[i];
     const li = el("li", m ? "is-taken" : "is-free");
     li.append(el("span", "room-seat", String(i + 1)), m ? window.DLE_NAME(m.id === cardRooms.selfId ? `${m.name} (${t("you")})` : m.name, cardRooms.pidOf(m.id)) : el("span", null, t("freeSeat")));
     list.append(li);
   }
   card.append(list);
+  // Deck battles with 3 players or more can be played in two teams.
+  if (deck && room.size > 2) card.append(cardRooms.teamsBox());
   const actions = el("div", "roll-actions");
   if (cardRooms.isHost()) {
     const start = el("button", "btn-primary", t("start"));
@@ -608,16 +628,22 @@ function roomCard(room) {
 
 // ── Match ──
 function startMatch(room, data) {
-  const opp = room.members.find((m) => m.id !== cardRooms.selfId);
-  if (!opp) return;
-  // Both screens order the two players the same way (for the luck of each round).
+  const others = room.members.filter((m) => m.id !== cardRooms.selfId);
+  if (!others.length) return;
+  // Every screen orders the players the same way (for the luck of each round).
   const ids = room.members.map((m) => m.id).sort();
+  const opp = others[0];
+  const deck = data.mode === "deck";
+  const teams = deck && data.teams && typeof data.teams === "object" ? Object.fromEntries(ids.map((id) => [id, data.teams[id] === 1 ? 1 : 0])) : null;
   const m = {
-    key: String(data.key ?? ""), mode: data.mode === "deck" ? "deck" : "pack", game: GAMES.find((g) => g.id === data.game) ?? S.currentGame,
+    key: String(data.key ?? ""), mode: deck ? "deck" : "pack", game: GAMES.find((g) => g.id === data.game) ?? S.currentGame,
     seed: Number(data.seed) >>> 0, me: cardRooms.selfId, opp: opp.id, oppName: opp.name, side: ids.indexOf(cardRooms.selfId),
-    round: 0, score: [0, 0], done: false, log: [],
-    // pack: my and their packs per round · deck: both hands, the cards played per round
-    mine: [], theirs: [], hand: null, oppHand: null, plays: [[], []], busy: false,
+    round: 0, score: [0, 0], done: false, log: [], busy: false,
+    // pack battle (1v1): my and their packs per round
+    mine: [], theirs: [],
+    // deck battle: every player's hand and the card they played each round, their points (or the teams')
+    ids, names: new Map(room.members.map((x) => [x.id, x.name])), teams, teamNames: cardRooms.teamNames(room),
+    hands: new Map(), plays: new Map(ids.map((id) => [id, []])), points: new Map(ids.map((id) => [id, 0])), teamPts: [0, 0], active: new Set(ids),
   };
   S.cardMatch = m;
   CV.sub = "duel";
@@ -628,7 +654,7 @@ function startMatch(room, data) {
   else sendDeck();
 }
 
-const isMine = (from) => S.cardMatch && from === S.cardMatch.opp;
+const isMine = (from) => S.cardMatch && (S.cardMatch.mode === "deck" ? S.cardMatch.ids.includes(from) : from === S.cardMatch.opp);
 const cleanCard = (c, g) => (c && /^[a-z0-9-]{1,60}$/.test(c.id ?? "") ? {
   g: GAMES.some((x) => x.id === (g ?? c.g)) ? g ?? c.g : null, id: c.id, n: String(c.n ?? "").replace(/[\u0000-\u001f<>]/g, "").slice(0, 40) || "?",
   p: Math.min(10, Math.max(1, Math.round(+c.p || 1))), tier: ["common", "epic", "legend", "secret"].includes(c.tier) ? c.tier : "common", f: c.f === true, form: c.form === true,
@@ -637,19 +663,39 @@ const cleanCard = (c, g) => (c && /^[a-z0-9-]{1,60}$/.test(c.id ?? "") ? {
 function onMatchMessage(type, d, from) {
   const m = S.cardMatch;
   if (!m || m.done) return;
-  if (type === "left" && (d?.id === m.opp || from === m.opp)) { finish("forfeit"); return; }
+  if (type === "left") {
+    const who = d?.id ?? from;
+    if (m.mode === "pack") { if (who === m.opp) finish("forfeit"); return; }
+    playerLeft(who);
+    return;
+  }
   if (!isMine(from)) return;
-  if (type === "pack" && Number.isInteger(d.r) && d.r >= 0 && d.r < 3 && Array.isArray(d.cards)) {
+  if (type === "pack" && m.mode === "pack" && Number.isInteger(d.r) && d.r >= 0 && d.r < 3 && Array.isArray(d.cards)) {
     m.theirs[d.r] = d.cards.slice(0, 5).map((c) => cleanCard(c, m.game.id)).filter((c) => c?.g);
     tryRevealPack(d.r);
-  } else if (type === "deck" && Array.isArray(d.cards) && !m.oppHand) {
-    m.oppHand = d.cards.slice(0, DECK_SIZE).map((c) => cleanCard(c)).filter((c) => c?.g);
+  } else if (type === "deck" && m.mode === "deck" && Array.isArray(d.cards) && !m.hands.has(from)) {
+    m.hands.set(from, d.cards.slice(0, DECK_SIZE).map((c) => cleanCard(c)).filter((c) => c?.g));
     drawMatch();
-  } else if (type === "play" && Number.isInteger(d.r) && Number.isInteger(d.i) && d.r === m.round && m.plays[1][d.r] == null) {
-    if (d.i < 0 || d.i >= (m.oppHand?.length ?? 0) || m.plays[1].includes(d.i)) return;
-    m.plays[1][d.r] = d.i;
+    tryResolve();
+  } else if (type === "play" && m.mode === "deck" && Number.isInteger(d.r) && Number.isInteger(d.i) && d.r === m.round) {
+    const plays = m.plays.get(from);
+    if (!plays || plays[d.r] != null || d.i < 0 || d.i >= (m.hands.get(from)?.length ?? 0) || plays.includes(d.i)) return;
+    plays[d.r] = d.i;
+    drawMatch();
     tryResolve();
   }
+}
+
+// A player left a deck battle: the others play on without them, until one player (or one team) is left.
+function playerLeft(id) {
+  const m = S.cardMatch;
+  if (!m.active.has(id)) return;
+  m.active.delete(id);
+  const left = [...m.active];
+  const sides = m.teams ? new Set(left.map((x) => m.teams[x])) : null;
+  if (left.length < 2 || (sides && sides.size < 2)) { finish("forfeit"); return; }
+  drawMatch();
+  tryResolve();
 }
 
 // ── Pack battle: three rounds, both open a pack, the bigger total wins the round ──
@@ -698,7 +744,7 @@ async function tryRevealPack(r) {
   sendPack(m.round);
 }
 
-// ── Deck battle: five rounds, each plays a card, the stronger wins the round ──
+// ── Deck battle: five rounds, everyone plays a card, the strongest wins the round (or the strongest team) ──
 async function sendDeck() {
   const m = S.cardMatch;
   const deck = readDeck();
@@ -706,57 +752,88 @@ async function sendDeck() {
   // A deck short of cards is completed with my strongest ones.
   if (cards.length < DECK_SIZE) for (const c of await myCards()) { if (cards.length >= DECK_SIZE) break; if (!cards.some((x) => x.g === c.g && x.id === c.id)) cards.push(c); }
   if (S.cardMatch !== m) return;
-  m.hand = cards.slice(0, DECK_SIZE).map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: tierOf(c.p), form: hasForm(c.g, c.id) }));
-  cardRooms.broadcast("deck", { key: m.key, cards: m.hand });
+  m.hands.set(m.me, cards.slice(0, DECK_SIZE).map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: tierOf(c.p), form: hasForm(c.g, c.id) })));
+  cardRooms.broadcast("deck", { key: m.key, cards: m.hands.get(m.me) });
   drawMatch();
+  tryResolve();
 }
 
 function play(i) {
   const m = S.cardMatch;
-  if (!m || m.done || m.busy || !m.oppHand || m.plays[0][m.round] != null || m.plays[0].includes(i)) return;
-  m.plays[0][m.round] = i;
+  const mine = m?.plays.get(m.me);
+  if (!m || m.done || m.busy || !mine || mine[m.round] != null || mine.includes(i)) return;
+  mine[m.round] = i;
   cardRooms.broadcast("play", { r: m.round, i, key: m.key });
   sfx("place");
   drawMatch();
   tryResolve();
 }
 
+// Who still has to play this round (players still in the match).
+const waitingFor = (m) => [...m.active].filter((id) => m.plays.get(id)?.[m.round] == null);
+
 async function tryResolve() {
   const m = S.cardMatch;
-  const r = m?.round;
-  if (!m || m.busy || m.plays[0][r] == null || m.plays[1][r] == null) return;
+  if (!m || m.mode !== "deck" || m.busy || m.done) return;
+  const r = m.round;
+  const playing = [...m.active].filter((id) => m.hands.get(id)?.length);
+  if (playing.length < m.active.size || waitingFor(m).length) return;
   m.busy = true;
-  const mine = m.hand[m.plays[0][r]];
-  const theirs = m.oppHand[m.plays[1][r]];
-  const la = luck(m.seed, r, m.side);
-  const lb = luck(m.seed, r, 1 - m.side);
-  const a = strength(mine, la);
-  const b = strength(theirs, lb);
-  m.log.push({ mine, theirs, la, lb, a, b });
-  m.reveal = r;
-  drawMatch();
-  sfx("slash");
-  await wait(700);
-  if (a !== b) m.score[a > b ? 0 : 1]++;
-  sfx(a > b ? "win" : a < b ? "stamp" : "place");
-  m.reveal = null;
+  const rows = playing.map((id) => {
+    const c = m.hands.get(id)[m.plays.get(id)[r]];
+    const l = luck(m.seed, r, m.ids.indexOf(id));
+    return { id, c, l, s: strength(c, l) };
+  });
+  // Free for all: the strongest card scores (several if tied). Teams: the team with the larger total scores.
+  let winners = [];
+  let teamWin = null;
+  if (m.teams) {
+    const tot = [0, 1].map((k) => rows.filter((x) => m.teams[x.id] === k).reduce((a, x) => a + x.s, 0));
+    teamWin = tot[0] === tot[1] ? null : tot[0] > tot[1] ? 0 : 1;
+    if (teamWin != null) m.teamPts[teamWin]++;
+    winners = teamWin == null ? [] : rows.filter((x) => m.teams[x.id] === teamWin).map((x) => x.id);
+    m.log[r] = { rows, winners, teamWin, totals: tot };
+  } else {
+    const best = Math.max(...rows.map((x) => x.s));
+    winners = rows.filter((x) => x.s === best).map((x) => x.id);
+    for (const id of winners) m.points.set(id, m.points.get(id) + 1);
+    m.log[r] = { rows, winners };
+  }
   m.shown = r;
   drawMatch();
-  await wait(1700);
+  sfx("slash");
+  await wait(500);
+  sfx(winners.includes(m.me) ? "win" : winners.length ? "stamp" : "place");
+  await wait(2200);
   m.busy = false;
   m.shown = null;
   if (S.cardMatch !== m || m.done) return;
+  // Over after five rounds, or once the leader can't be caught.
   const left = DECK_SIZE - 1 - r;
-  if (left <= 0 || Math.abs(m.score[0] - m.score[1]) > left) { finish(); return; }
+  const pts = m.teams ? m.teamPts : [...m.active].map((id) => m.points.get(id));
+  const sorted = [...pts].sort((a, b) => b - a);
+  if (left <= 0 || sorted[0] - (sorted[1] ?? 0) > left) { finish(); return; }
   m.round++;
   drawMatch();
+  tryResolve();
 }
 
 function finish(why) {
   const m = S.cardMatch;
   if (!m || m.done) return;
   m.done = true;
-  m.result = why === "forfeit" ? "win" : m.score[0] > m.score[1] ? "win" : m.score[0] < m.score[1] ? "lose" : "draw";
+  if (m.mode === "deck") {
+    if (m.teams) {
+      const k = m.teams[m.me];
+      const left = [0, 1].filter((x) => [...m.active].some((id) => m.teams[id] === x));
+      m.result = why === "forfeit" ? (left.includes(k) ? "win" : "lose") : m.teamPts[k] > m.teamPts[1 - k] ? "win" : m.teamPts[k] < m.teamPts[1 - k] ? "lose" : "draw";
+    } else {
+      const pts = [...m.active].map((id) => m.points.get(id));
+      const best = Math.max(...pts);
+      const mine = m.points.get(m.me);
+      m.result = why === "forfeit" && m.active.size === 1 ? "win" : mine < best ? "lose" : pts.filter((x) => x === best).length > 1 ? "draw" : "win";
+    }
+  } else m.result = why === "forfeit" ? "win" : m.score[0] > m.score[1] ? "win" : m.score[0] < m.score[1] ? "lose" : "draw";
   m.forfeit = why === "forfeit";
   const P = PROFILE();
   P?.count?.("cardDuels", 1);
@@ -773,9 +850,11 @@ function drawMatch() {
   box.textContent = "";
   const board = el("div", `card cvm cvm-${m.mode}`);
   const top = el("div", "cvm-score");
-  top.append(el("span", "cvm-name", m.oppName), el("b", "cvm-pts", `${m.score[1]} – ${m.score[0]}`), el("span", "cvm-name is-me", myName() || t("you")));
+  if (m.mode === "pack") top.append(el("span", "cvm-name", m.oppName), el("b", "cvm-pts", `${m.score[1]} – ${m.score[0]}`), el("span", "cvm-name is-me", myName() || t("you")));
+  else if (m.teams) top.append(el("span", "cvm-name team-0", m.teamNames[0]), el("b", "cvm-pts", `${m.teamPts[0]} – ${m.teamPts[1]}`), el("span", "cvm-name team-1 is-left", m.teamNames[1]));
+  if (m.mode === "deck") board.append(top, scoreChips(m));
   const round = el("p", "cvm-round", m.done ? "" : m.mode === "pack" ? t("cRound")(m.round + 1, 3) : t("cRound")(m.round + 1, DECK_SIZE));
-  board.append(top, round);
+  board.append(...(m.mode === "pack" ? [top] : []), round);
 
   if (m.mode === "pack") {
     const r = m.round;
@@ -794,38 +873,47 @@ function drawMatch() {
       board.append(el("p", `cvm-verdict ${a > b ? "is-win" : a < b ? "is-lose" : ""}`, a > b ? t("cRoundWon") : a < b ? t("cRoundLost") : t("cRoundTie")));
     }
   } else {
-    // Their hand (backs), the arena, my hand.
-    const theirs = el("div", "cvm-hand is-theirs");
-    // Their cards still in hand, face down (the one played this round waits in the arena).
-    const used = m.plays[1].filter((x) => x != null).length;
-    for (let i = 0; i < (m.oppHand?.length ?? 0) - used; i++) theirs.append(backCard());
-    if (!m.oppHand) theirs.append(el("p", "muted cvm-wait", t("cWaitDeck")));
-    const arena = el("div", "cvm-arena");
+    // The arena: every player's card this round (hidden until everyone has played), then my hand.
     const r = m.round;
-    const entry = m.log[r];
-    const slot = (c, l, s, side) => {
-      const box = el("div", `cvm-slot is-${side}`);
-      if (!c) { box.append(el("span", "cvm-slot-empty", side === "me" ? t("cPlayCard") : m.plays[1][r] != null ? "✓" : "…")); return box; }
-      box.append(cardFace({ ...c, f: false }, false));
-      if (entry) box.append(el("span", "cvm-calc", `${c.p}×10${c.form ? " + ⚡8" : ""} + 🎲${l} = ${s}`));
-      return box;
-    };
-    const myPlayed = m.plays[0][r] != null ? m.hand[m.plays[0][r]] : null;
-    arena.append(slot(entry ? entry.theirs : null, entry?.lb, entry?.b, "opp"), el("span", "cvm-vs", t("vs")), slot(myPlayed, entry?.la, entry?.a, "me"));
-    if (entry && m.shown === r) arena.append(el("p", `cvm-verdict ${entry.a > entry.b ? "is-win" : entry.a < entry.b ? "is-lose" : ""}`, entry.a > entry.b ? t("cRoundWon") : entry.a < entry.b ? t("cRoundLost") : t("cRoundTie")));
+    const entry = m.shown === r ? m.log[r] : null;
+    const arena = el("div", `cvm-arena is-multi${m.ids.length > 4 ? " is-big" : ""}`);
+    for (const id of m.ids) {
+      const gone = !m.active.has(id);
+      const box = el("div", `cvm-slot${id === m.me ? " is-me" : ""}${m.teams ? ` team-${m.teams[id]}` : ""}${gone ? " has-left" : ""}${entry?.winners.includes(id) ? " is-winner" : ""}`);
+      box.append(window.DLE_NAME(id === m.me ? `${myName() || t("you")} (${t("you")})` : m.names.get(id) ?? "Player", cardRooms.pidOf(id), "cvm-slot-name"));
+      const row = entry?.rows.find((x) => x.id === id);
+      const played = m.plays.get(id)?.[r];
+      if (row) {
+        box.append(cardFace({ ...row.c, f: false }, false), el("span", "cvm-calc", `${row.c.p}×10${row.c.form ? " + ⚡8" : ""} + 🎲${row.l} = ${row.s}`));
+      } else if (id === m.me && played != null) {
+        box.append(cardFace({ ...m.hands.get(m.me)[played], f: false }, false));
+      } else {
+        box.append(el("span", "cvm-slot-empty", gone ? t("left") : !m.hands.has(id) ? t("cWaitDeck") : played != null ? "✓" : id === m.me ? t("cPlayCard") : "…"));
+      }
+      arena.append(box);
+    }
+    board.append(arena);
+    if (entry) {
+      const won = entry.winners.includes(m.me);
+      const text = m.teams ? (entry.teamWin == null ? t("cRoundTie") : `${t("teamWins")(m.teamNames[entry.teamWin])} (${entry.totals[0]} – ${entry.totals[1]})`)
+        : won ? (entry.winners.length > 1 ? t("cRoundShared") : t("cRoundWon")) : t("cRoundBy")(entry.winners.map((id) => m.names.get(id) ?? "?").join(", "));
+      board.append(el("p", `cvm-verdict ${won ? "is-win" : entry.winners.length ? "is-lose" : ""}`, text));
+    }
     const hand = el("div", "cvm-hand is-mine");
-    (m.hand ?? []).forEach((c, i) => {
-      if (m.plays[0].includes(i)) return;
+    const mine = m.plays.get(m.me) ?? [];
+    (m.hands.get(m.me) ?? []).forEach((c, i) => {
+      if (mine.includes(i)) return;
       const b = el("button", "cvm-play");
       b.type = "button";
-      b.disabled = m.done || m.busy || !m.oppHand || m.plays[0][r] != null;
+      b.disabled = m.done || m.busy || mine[r] != null;
       b.append(cardFace({ ...c, f: false }));
       b.addEventListener("click", () => play(i));
       hand.append(b);
     });
-    board.append(theirs, arena, hand);
-    if (!m.done && m.oppHand && m.plays[0][r] == null) board.append(el("p", "cvm-hint", t("cPickPlay")));
-    else if (!m.done && m.plays[0][r] != null && m.plays[1][r] == null) board.append(el("p", "cvm-hint", t("cWaitPlay")(m.oppName)));
+    board.append(hand);
+    const waiting = waitingFor(m).filter((id) => id !== m.me);
+    if (!m.done && !m.busy && mine[r] == null) board.append(el("p", "cvm-hint", t("cPickPlay")));
+    else if (!m.done && !m.busy && waiting.length) board.append(el("p", "cvm-hint", t("cWaitPlay")(waiting.map((id) => m.names.get(id) ?? "?").join(", "))));
   }
 
   if (m.done) {
@@ -848,6 +936,18 @@ function drawMatch() {
   }
   box.append(board);
   return board;
+}
+
+// Deck battle: every player's points (or each team's members under its score).
+function scoreChips(m) {
+  const row = el("div", "cvm-chips");
+  for (const id of m.ids) {
+    const chip = el("span", `cvm-chip${id === m.me ? " is-me" : ""}${m.teams ? ` team-${m.teams[id]}` : ""}${m.active.has(id) ? "" : " has-left"}`);
+    chip.append(window.DLE_NAME(m.names.get(id) ?? "Player", cardRooms.pidOf(id)));
+    if (!m.teams) chip.append(el("b", null, String(m.points.get(id))));
+    row.append(chip);
+  }
+  return row;
 }
 
 // A pack card, face down until the round is revealed.

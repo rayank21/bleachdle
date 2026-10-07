@@ -852,3 +852,23 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
   .cv-side { width: 110px; }
   .cvm-cards { gap: 4px; }
 }
+
+/* Deck battles for up to 8 players, free for all or in two teams. */
+.cv-sizes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.cv-teams-note { margin: 0; font-size: 13px; }
+.cvm-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.cvm-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; font-size: 13px; font-weight: 800; background: rgba(255, 255, 255, 0.06); border: 1px solid var(--line); }
+.cvm-chip b { min-width: 18px; padding: 0 6px; border-radius: 99px; text-align: center; color: #1a1205; background: #ffd34d; }
+.cvm-chip.is-me { border-color: rgba(255, 211, 77, 0.7); }
+.cvm-chip.has-left, .cvm-slot.has-left { opacity: 0.45; }
+.cvm-chip.team-0, .cvm-slot.team-0 .cvm-slot-name { box-shadow: inset 0 -2px 0 #ff4b5c; }
+.cvm-chip.team-1, .cvm-slot.team-1 .cvm-slot-name { box-shadow: inset 0 -2px 0 #4b9dff; }
+.cvm-name.team-0 { color: #ff7a85; }
+.cvm-name.team-1 { color: #7ab6ff; text-align: left; }
+.cvm-arena.is-multi { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
+.cvm-arena.is-multi .cvm-slot { width: clamp(96px, 18vw, 150px); }
+.cvm-arena.is-multi.is-big .cvm-slot { width: clamp(80px, 11vw, 124px); }
+.cvm-arena.is-multi .cvm-slot > .tcg, .cvm-arena.is-multi .cvm-slot-empty { width: 100%; }
+.cvm-slot-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 900; padding-bottom: 2px; }
+.cvm-slot.is-me .cvm-slot-name { color: #ffd34d; }
+.cvm-slot.is-winner > .tcg { box-shadow: 0 0 0 3px #7dffb0, 0 0 26px rgba(80, 255, 150, 0.55); }

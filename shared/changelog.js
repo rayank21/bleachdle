@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T00:20",
+      title: { en: "Deck battles up to 8 players, in teams too", fr: "Batailles de decks jusqu'à 8, en équipes aussi" },
+      items: [
+        { type: "new", game: "crew", en: "Deck battles now take 2 to 8 players: everyone plays a card each round and the strongest wins it. From 3 players, the host can split the room into two teams; the team with the larger total wins the round.", fr: "Les batailles de decks se jouent maintenant de 2 à 8 joueurs : chacun joue une carte par manche et la plus forte l'emporte. À partir de 3 joueurs, l'hôte peut faire deux équipes ; l'équipe au plus gros total gagne la manche." },
+      ],
+    },
+    {
       at: "2026-10-07T23:59",
       title: { en: "Solo Leveling arrives", fr: "Solo Leveling débarque" },
       items: [
