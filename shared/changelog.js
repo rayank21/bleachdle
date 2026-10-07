@@ -7,6 +7,16 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T11:00",
+      title: { en: "Play together even when the connection fails", fr: "Jouer ensemble même quand la connexion bloque" },
+      items: [
+        { type: "fix", en: "Online: when two players can't connect directly (same box, different networks, strict Wi-Fi), the game now goes through a relay instead: you see each other, chat and play anyway. It can take up to 20 seconds to find each other the first time.", fr: "En ligne : quand deux joueurs n'arrivent pas à se connecter directement (même box, réseaux différents, Wi-Fi strict), le jeu passe maintenant par un relais : vous vous voyez, vous chattez et vous jouez quand même. Il faut parfois jusqu'à 20 secondes pour se trouver la première fois." },
+        { type: "new", game: "fireforce", en: "Crew Roll Fire Force: a new 2nd generation slot, for the pyrokinetics who bend flames (Maki, Hibana, Hinawa, Karim, Haumea, Benimaru).", fr: "Roll ton équipage Fire Force : nouvelle place 2e génération, pour les pyrokinésistes qui manipulent les flammes (Maki, Hibana, Hinawa, Karim, Haumea, Benimaru)." },
+        { type: "balance", game: "haikyuu", en: "Crew Roll Haikyuu!!: the Miya twins are worth 10 at their own position, Atsumu as setter and Osamu as spiker.", fr: "Roll ton équipage Haikyuu!! : les jumeaux Miya valent 10 à leur poste, Atsumu passeur et Osamu attaquant." },
+        { type: "balance", game: "crew", en: "Crew Roll: ratings rebalanced for the six new anime (fewer 10s, fairer gaps): Upper Moons by rank, pro heroes spread out, Watchdog Man and Amai Mask up, Clayman down, Yuuki and Chloe up…", fr: "Roll ton équipage : notes rééquilibrées pour les six nouveaux animes (moins de 10, écarts plus justes) : Lunes supérieures selon leur rang, héros pros mieux répartis, Watchdog Man et Amai Mask en hausse, Clayman en baisse, Yuuki et Chloe en hausse…" },
+      ],
+    },
+    {
       at: "2026-10-07T00:30",
       title: { en: "Sharper, smoother clips and a lighter background", fr: "Des extraits plus nets et plus fluides, un fond plus léger" },
       items: [

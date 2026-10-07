@@ -346,11 +346,11 @@
             gyomei-himejima:6 nakime:6 tanjiro-kamado:6 giyu-tomioka:5 obanai-iguro:5 hotaru-haganezuka:4`)) },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
-      power: parse(`tanjiro-kamado:9 nezuko-kamado:7 zenitsu-agatsuma:7 inosuke-hashibira:7 kanao-tsuyuri:7 genya-shinazugawa:7 murata:3 aoi-kanzaki:2
-        sabito:6 makomo:5 giyu-tomioka:9 shinobu-kocho:8 kyojuro-rengoku:9 tengen-uzui:9 mitsuri-kanroji:8 muichiro-tokito:9 gyomei-himejima:10
-        sanemi-shinazugawa:9 obanai-iguro:8 kanae-kocho:8 sakonji-urokodaki:7 jigoro-kuwajima:7 shinjuro-rengoku:7 yoriichi-tsugikuni:10
-        kagaya-ubuyashiki:2 senjuro-rengoku:2 hotaru-haganezuka:3 kotetsu:1 makio:4 suma:3 hinatsuru:4 tamayo:6 yushiro:5 muzan-kibutsuji:10
-        kokushibo:10 doma:10 akaza:9 hantengu:9 gyokko:8 daki:7 gyutaro:9 nakime:8 rui:7 enmu:6 kyogai:4 susamaru:4 yahaba:4 hand-demon:3`),
+      power: parse(`tanjiro-kamado:9 nezuko-kamado:7 zenitsu-agatsuma:7 inosuke-hashibira:7 kanao-tsuyuri:7 genya-shinazugawa:6 murata:3 aoi-kanzaki:2
+        sabito:6 makomo:4 giyu-tomioka:9 shinobu-kocho:7 kyojuro-rengoku:9 tengen-uzui:8 mitsuri-kanroji:8 muichiro-tokito:9 gyomei-himejima:10
+        sanemi-shinazugawa:9 obanai-iguro:8 kanae-kocho:7 sakonji-urokodaki:6 jigoro-kuwajima:6 shinjuro-rengoku:6 yoriichi-tsugikuni:10
+        kagaya-ubuyashiki:2 senjuro-rengoku:2 hotaru-haganezuka:3 kotetsu:1 makio:4 suma:3 hinatsuru:4 tamayo:5 yushiro:4 muzan-kibutsuji:10
+        kokushibo:10 doma:9 akaza:9 hantengu:8 gyokko:7 daki:6 gyutaro:8 nakime:7 rui:6 enmu:5 kyogai:4 susamaru:4 yahaba:4 hand-demon:3`),
     },
 
     myheroacademia: {
@@ -370,10 +370,10 @@
       power: parse(`izuku-midoriya:10 katsuki-bakugo:9 shoto-todoroki:9 ochaco-uraraka:7 tenya-iida:7 eijiro-kirishima:7 momo-yaoyorozu:7
         tsuyu-asui:6 denki-kaminari:6 kyoka-jiro:5 fumikage-tokoyami:7 mina-ashido:6 minoru-mineta:3 yuga-aoyama:5 mezo-shoji:5 hanta-sero:5
         rikido-sato:5 koji-koda:3 toru-hagakure:3 mashirao-ojiro:4 neito-monoma:6 itsuka-kendo:6 tetsutetsu-tetsutetsu:6 hitoshi-shinso:6
-        mirio-togata:9 tamaki-amajiki:8 nejire-hado:8 eri:5 all-might:10 shota-aizawa:8 present-mic:6 midnight:6 cementoss:7 nezu:3
-        recovery-girl:2 endeavor:10 hawks:9 best-jeanist:8 mirko:8 edgeshot:8 gran-torino:8 sir-nighteye:7 fatgum:7 star-and-stripe:10
-        lady-nagant:8 tomura-shigaraki:10 all-for-one:10 kurogiri:7 dabi:9 himiko-toga:7 twice:7 mr-compress:6 spinner:6 magne:6
-        gigantomachia:9 muscular:7 stain:8 overhaul:8 re-destro:8`),
+        mirio-togata:9 tamaki-amajiki:7 nejire-hado:7 eri:6 all-might:10 shota-aizawa:8 present-mic:6 midnight:6 cementoss:7 nezu:3
+        recovery-girl:2 endeavor:9 hawks:8 best-jeanist:7 mirko:8 edgeshot:7 gran-torino:7 sir-nighteye:6 fatgum:6 star-and-stripe:9
+        lady-nagant:7 tomura-shigaraki:10 all-for-one:10 kurogiri:7 dabi:9 himiko-toga:7 twice:8 mr-compress:6 spinner:6 magne:6
+        gigantomachia:9 muscular:7 stain:7 overhaul:8 re-destro:8`),
     },
 
     // A volleyball team: one setter, two spikers, two middle blockers, a libero, the captain and the bench.
@@ -382,8 +382,8 @@
         { label: { en: "Captain", fr: "Capitaine" }, icon: "crown", role: "captain", count: 1, score: leader,
           fits: (c) => ["daichi-sawamura", "toru-oikawa", "tetsuro-kuroo", "kotaro-bokuto", "wakatoshi-ushijima", "shinsuke-kita", "yuji-terushima",
             "kenji-futakuchi", "korai-hoshiumi", "chikara-ennoshita"].includes(c.id) },
-        { label: { en: "Setter", fr: "Passeur" }, icon: "star", count: 1, fits: (c) => c.position === "Setter" },
-        { label: { en: "Spiker", fr: "Attaquant" }, icon: "bolt", count: 2, fits: (c) => ["Wing Spiker", "Opposite"].includes(c.position) },
+        { label: { en: "Setter", fr: "Passeur" }, icon: "star", count: 1, fits: (c) => c.position === "Setter", score: rated({ "atsumu-miya": 10 }) },
+        { label: { en: "Spiker", fr: "Attaquant" }, icon: "bolt", count: 2, fits: (c) => ["Wing Spiker", "Opposite"].includes(c.position), score: rated({ "osamu-miya": 10 }) },
         { label: { en: "Middle Blocker", fr: "Central" }, icon: "shield", count: 2, fits: (c) => c.position === "Middle Blocker" },
         { label: { en: "Libero", fr: "Libéro" }, icon: "eye", count: 1, fits: (c) => c.position === "Libero" },
         { label: { en: "Coach / Manager", fr: "Coach / Manager" }, icon: "book", count: 1, fits: (c) => ["Coach", "Advisor", "Manager", "Supporter"].includes(c.position),
@@ -406,14 +406,17 @@
         { label: { en: "Other company", fr: "Autre brigade" }, icon: "shield", count: 1, fits: (c) => has(c.aff, "Company 1", "Company 3", "Company 4", "Company 5", "Company 7") },
         { label: { en: "White Clad", fr: "Hommes en blanc" }, icon: "skull", count: 1, fits: (c) => has(c.aff, "White Clad") || c.role === "Pillar" },
         { label: { en: "Adolla Burst", fr: "Adolla Burst" }, icon: "eye", count: 1, fits: (c) => c.adolla === "Yes" },
+        // Second generation: they bend existing flames (Maki, Hibana, Hinawa, Karim, Haumea; Benimaru is both).
+        { label: { en: "2nd generation", fr: "2e génération" }, icon: "bolt", count: 1, fits: (c) => /Second/.test(c.gen ?? ""),
+          score: rated({ "benimaru-shinmon": 10, "haumea": 9 }) },
         // Vulcan builds Company 8's gear, Licht studies combustion, Giovanni his insect weapons; Joker plays everyone.
         { label: { en: "Scientist / Strategist", fr: "Scientifique / Stratège" }, icon: "flask", role: "strategist", count: 1, fits: anyone,
           score: role(parse("vulcan-joseph:10 viktor-licht:10 giovanni:8 joker:8 akitaru-obi:7 takehisa-hinawa:7 kurono:6 haumea:6 leonard-burns:6 iris:4")) },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
-      power: parse(`shinra-kusakabe:10 arthur-boyle:9 akitaru-obi:7 takehisa-hinawa:6 maki-oze:7 iris:2 tamaki-kotatsu:6 viktor-licht:3
-        vulcan-joseph:3 ogun-montgomery:7 lisa-isaribi:6 hibana:7 benimaru-shinmon:10 konro-sagamiya:6 leonard-burns:9 karim-flam:7
-        rekka-hoshimiya:7 giovanni:7 joker:9 sho-kusakabe:10 haumea:9 charon:8 arrow:6 assault:6 dragon:10 yona:7 inca-kasugatani:5
+      power: parse(`shinra-kusakabe:10 arthur-boyle:9 akitaru-obi:7 takehisa-hinawa:6 maki-oze:7 iris:3 tamaki-kotatsu:6 viktor-licht:3
+        vulcan-joseph:3 ogun-montgomery:7 lisa-isaribi:6 hibana:7 benimaru-shinmon:10 konro-sagamiya:7 leonard-burns:9 karim-flam:7
+        rekka-hoshimiya:7 giovanni:7 joker:9 sho-kusakabe:9 haumea:9 charon:8 arrow:6 assault:6 dragon:10 yona:7 inca-kasugatani:6
         nataku-son:8 kurono:7`),
     },
 
@@ -430,10 +433,10 @@
             elmesia-el-ru-sarion:8 clayman:7 shuna:7 laplace:6 hakuro:6 rigurd:5 fuze:5`)) },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
-      power: parse(`rimuru-tempest:10 veldora-tempest:10 benimaru:9 shuna:6 shion:8 souei:8 hakuro:8 kurobe:3 ranga:8 rigurd:4 gobta:5 rigur:5
-        gabiru:6 geld:8 kaijin:3 treyni:6 diablo:10 testarossa:9 ultima:9 carrera:9 mjurran:5 milim-nava:10 carrion:8 frey:8 clayman:7
-        guy-crimson:10 leon-cromwell:9 ramiris:4 luminous-valentine:10 dino:8 dagruel:9 shizu:7 hinata-sakaguchi:9 masayuki-honjo:2
-        yuuki-kagurazaka:8 chloe-aubert:7 fuze:4 youm:5 gazel-dwargo:8 elmesia-el-ru-sarion:6 edmaris:2 razen:6 gelmud:3 phobio:5
+      power: parse(`rimuru-tempest:10 veldora-tempest:10 benimaru:9 shuna:6 shion:8 souei:7 hakuro:7 kurobe:3 ranga:8 rigurd:4 gobta:5 rigur:5
+        gabiru:7 geld:8 kaijin:3 treyni:6 diablo:10 testarossa:9 ultima:9 carrera:9 mjurran:5 milim-nava:10 carrion:8 frey:7 clayman:6
+        guy-crimson:10 leon-cromwell:9 ramiris:4 luminous-valentine:9 dino:8 dagruel:9 shizu:6 hinata-sakaguchi:9 masayuki-honjo:3
+        yuuki-kagurazaka:9 chloe-aubert:9 fuze:4 youm:5 gazel-dwargo:8 elmesia-el-ru-sarion:6 edmaris:2 razen:6 gelmud:3 phobio:5
         laplace:6 footman:5`),
     },
 
@@ -449,10 +452,10 @@
           score: role(parse("child-emperor:10 metal-knight:10 dr-genus:9 psykos:9 king:8 bang:7 sitch:6 amai-mask:6 atomic-samurai:6 fubuki:6")) },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
-      power: parse(`saitama:10 genos:8 mumen-rider:3 king:2 tatsumaki:10 fubuki:7 bang:9 atomic-samurai:9 child-emperor:7 metal-knight:9
-        zombieman:7 drive-knight:8 pig-god:7 superalloy-darkshine:8 watchdog-man:8 flashy-flash:8 metal-bat:8 tank-top-master:7
-        puri-puri-prisoner:7 amai-mask:7 stinger:5 iaian:6 death-gatling:5 snek:4 sitch:1 sonic:8 garou:10 charanko:3 suiryu:8
-        dr-genus:3 vaccine-man:4 mosquito-girl:4 carnage-kabuto:6 deep-sea-king:6 boros:10 melzargard:8 geryuganshoop:7 orochi:9
+      power: parse(`saitama:10 genos:8 mumen-rider:2 king:1 tatsumaki:10 fubuki:7 bang:9 atomic-samurai:8 child-emperor:7 metal-knight:8
+        zombieman:6 drive-knight:8 pig-god:7 superalloy-darkshine:8 watchdog-man:9 flashy-flash:8 metal-bat:8 tank-top-master:6
+        puri-puri-prisoner:6 amai-mask:8 stinger:5 iaian:6 death-gatling:5 snek:4 sitch:1 sonic:7 garou:10 charanko:3 suiryu:8
+        dr-genus:3 vaccine-man:4 mosquito-girl:4 carnage-kabuto:7 deep-sea-king:6 boros:10 melzargard:8 geryuganshoop:7 orochi:9
         gouketsu:8 psykos:9 elder-centipede:8 homeless-emperor:8 black-sperm:8`),
     },
   });
