@@ -12,8 +12,8 @@
     fr: { title: "Chat de la salle", say: "Écris à la salle…", send: "Envoyer", empty: "Seuls les joueurs de cette salle voient ces messages." },
   };
   const TEAM_T = {
-    en: { mode: "Team vs team", on: "On", off: "Off", names: ["Red team", "Blue team"], swap: "Switch", hostOnly: "The host turns teams on or off.", empty: "Nobody yet" },
-    fr: { mode: "Équipe contre équipe", on: "Oui", off: "Non", names: ["Équipe rouge", "Équipe bleue"], swap: "Changer", hostOnly: "L'hôte active ou non les équipes.", empty: "Personne" },
+    en: { mode: "Team vs team", on: "On", off: "Off", names: ["Red team", "Blue team"], swap: "Switch", hostOnly: "The host turns teams on or off.", empty: "Nobody yet", rename: "Team name (the team leaderboard uses it)" },
+    fr: { mode: "Équipe contre équipe", on: "Oui", off: "Non", names: ["Équipe rouge", "Équipe bleue"], swap: "Changer", hostOnly: "L'hôte active ou non les équipes.", empty: "Personne", rename: "Nom de l'équipe (sert au classement des équipes)" },
   };
   const teamLang = () => TEAM_T[window.DLE_LANG?.get() === "fr" ? "fr" : "en"];
   // Room options set by the host: the game variant played and the teams (0 = red, 1 = blue).
@@ -22,7 +22,9 @@
     const ids = new Set(members.map((x) => x.id));
     const team = {};
     for (const [id, v] of Object.entries(m?.team ?? {})) if (ids.has(id) && (v === 0 || v === 1)) team[id] = v;
-    return { play: PLAYS.includes(m?.play) ? m.play : "classic", teams: m?.teams === true, team };
+    // Team names chosen by the host ("" = the default red / blue name).
+    const names = [0, 1].map((k) => cleanName(Array.isArray(m?.names) ? m.names[k] : ""));
+    return { play: PLAYS.includes(m?.play) ? m.play : "classic", teams: m?.teams === true, team, names };
   }
 
   // Room codes: 5 characters, no 0/O or 1/I to mix up.
@@ -417,6 +419,7 @@
       const meta = (api.myRoom.meta ??= { play: "classic", teams: false, team: {} });
       if (PLAYS.includes(patch.play)) meta.play = patch.play;
       if (typeof patch.teams === "boolean") meta.teams = patch.teams;
+      if (Array.isArray(patch.names)) meta.names = [0, 1].map((k) => cleanName(patch.names[k] ?? meta.names?.[k] ?? ""));
       for (const m of api.myRoom.members) placeInTeam(m.id);
       announce();
       onChange();
@@ -429,7 +432,8 @@
       else if (id === api.selfId) { room.meta.team[id] = team === 1 ? 1 : 0; send.msg({ roomId: room.id, type: "team", data: { team } }, room.host); onChange(); }
     };
     api.teamOf = (id, room = api.myRoom) => (room?.meta?.teams ? room.meta.team[id] ?? 0 : null);
-    api.teamNames = () => teamLang().names;
+    // The room's team names, the default red / blue ones where the host chose none.
+    api.teamNames = (room = api.myRoom) => teamLang().names.map((d, k) => room?.meta?.names?.[k] || d);
 
     // The teams panel of the room card: the host turns teams on or off and can move anyone; a player can switch.
     api.teamsBox = () => {
@@ -460,10 +464,29 @@
       for (const k of [0, 1]) {
         const col = document.createElement("div");
         col.className = `team-col team-${k}`;
-        const h = document.createElement("b");
-        h.className = "team-name";
-        h.textContent = L.names[k];
-        col.append(h);
+        const names = api.teamNames(room);
+        if (isHost()) {
+          // The host names the teams (saved when the field is left or Enter is pressed).
+          const input = document.createElement("input");
+          input.className = "team-name team-name-input";
+          input.maxLength = MAX_NAME;
+          input.value = room.meta?.names?.[k] || "";
+          input.placeholder = L.names[k];
+          input.title = L.rename;
+          input.setAttribute("aria-label", L.rename);
+          input.addEventListener("change", () => {
+            const next = [0, 1].map((x) => room.meta?.names?.[x] || "");
+            next[k] = cleanName(input.value);
+            api.setMeta({ names: next });
+          });
+          input.addEventListener("keydown", (e) => { if (e.key === "Enter") input.blur(); });
+          col.append(input);
+        } else {
+          const h = document.createElement("b");
+          h.className = "team-name";
+          h.textContent = names[k];
+          col.append(h);
+        }
         const list = document.createElement("ul");
         const mine = room.members.filter((m) => api.teamOf(m.id) === k);
         if (!mine.length) { const li = document.createElement("li"); li.className = "team-empty"; li.textContent = L.empty; list.append(li); }

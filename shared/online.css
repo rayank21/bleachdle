@@ -214,6 +214,9 @@
 .team-col { --team-rgb: 229, 38, 46; padding: 10px; border-radius: 12px; background: linear-gradient(180deg, rgba(var(--team-rgb), 0.2), rgba(var(--team-rgb), 0.04)); border: 1px solid rgba(var(--team-rgb), 0.45); animation: rise 0.3s ease both; }
 .team-col.team-1 { --team-rgb: 45, 125, 255; }
 .team-name { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; color: rgb(var(--team-rgb)); filter: brightness(1.35); }
+.team-name-input { width: 100%; padding: 5px 8px; border-radius: 8px; border: 1px dashed rgba(var(--team-rgb), 0.7); background: rgba(var(--team-rgb), 0.08); font: inherit; font-size: 13px; text-transform: none; letter-spacing: 0; }
+.team-name-input::placeholder { color: rgb(var(--team-rgb)); opacity: 0.8; text-transform: uppercase; letter-spacing: 0.8px; }
+.team-name-input:focus { outline: none; border-style: solid; filter: none; color: var(--text); }
 .team-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
 .team-col li { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 6px 8px; border-radius: 8px; background: rgba(0, 0, 0, 0.25); font-weight: 700; font-size: 13.5px; animation: slot-in 0.3s ease both; }
 .team-col li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

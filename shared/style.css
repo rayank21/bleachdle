@@ -1310,6 +1310,8 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .pf-players { margin: 0; text-align: center; }
 .pf-board { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .pf-col { min-width: 0; }
+.pf-col-wide { grid-column: 1 / -1; }
+.pf-li-sub { display: block; color: var(--muted); font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pf-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .pf-li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); animation: rise 0.35s ease both; }
 .pf-li.is-me { border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.12); }

@@ -188,6 +188,23 @@ async function update(body) {
       if (v) p.counters[k] = (p.counters[k] ?? 0) + v;
     }
   }
+  // A team match just ended: the team's result, kept under its name (a player keeps at most 30 teams).
+  if (body.team != null && typeof body.team === "object") {
+    const name = cleanName(body.team.name);
+    if (name) {
+      p.teams ??= {};
+      const key = name.toLowerCase();
+      const t = (p.teams[key] ??= { name, wins: 0, played: 0, best: 0 });
+      t.name = name;
+      t.played++;
+      if (body.team.won === true) t.wins++;
+      const score = Math.min(10, Math.max(0, Number(body.team.score) || 0));
+      if (score > t.best) t.best = Math.round(score * 10) / 10;
+      t.at = Date.now();
+      const keys = Object.keys(p.teams).sort((a, b) => (p.teams[b].at ?? 0) - (p.teams[a].at ?? 0));
+      for (const k of keys.slice(30)) delete p.teams[k];
+    }
+  }
   // A Crew Roll online match just ended.
   if (body.duel != null) {
     p.crew.duels = (p.crew.duels ?? 0) + 1;
@@ -241,7 +258,23 @@ async function leaderboard() {
   // The podiums of the last finished seasons.
   const past = [...new Set(all.flatMap((p) => Object.keys(p.seasons ?? {})))].filter((id) => id < now).sort().reverse().slice(0, 3);
   const podiums = past.map((id) => { const b = seasonBoard(id, 3); return { id, crews: b.crews, wins: b.wins }; });
-  return json({ crews, byAnime, wins, players: all.length, season, podiums });
+  // Teams: every member records the same match, so a team counts the best record among its members.
+  const teamMap = new Map();
+  for (const p of all) {
+    for (const t of Object.values(p.teams ?? {})) {
+      const key = String(t.name ?? "").toLowerCase();
+      if (!key) continue;
+      const row = teamMap.get(key) ?? { name: t.name, wins: 0, played: 0, best: 0, members: [] };
+      row.wins = Math.max(row.wins, t.wins || 0);
+      row.played = Math.max(row.played, t.played || 0);
+      row.best = Math.max(row.best, t.best || 0);
+      if (!row.members.includes(p.name)) row.members.push(p.name);
+      teamMap.set(key, row);
+    }
+  }
+  const teams = [...teamMap.values()].filter((r) => r.played > 0).sort((a, b) => b.wins - a.wins || b.best - a.best).slice(0, 20)
+    .map((r) => ({ ...r, members: r.members.slice(0, 6) }));
+  return json({ crews, byAnime, wins, teams, players: all.length, season, podiums });
 }
 
 // ── Friends: mutual, after a request. Each profile keeps `friends` and the `requests` it received. ──

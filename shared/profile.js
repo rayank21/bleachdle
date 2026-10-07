@@ -21,7 +21,7 @@
       ovTime: "Time played", ovFav: (a) => `favourite: ${a}`,
       stats: "Stats", wins: "wins", played: "played", streak: "best streak", crew: "Best crew", crewNone: "No crew yet: play Crew Roll!",
       crews: (n) => `${n} crew${n > 1 ? "s" : ""} built`, recovery: "Recovery code", recoveryHelp: "Keep it secret: it logs into your profile on another device.",
-      show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
+      show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topTeams: "Best teams (team vs team)", teamWins: (w, p) => `${w} win${w > 1 ? "s" : ""} / ${p}`, topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
       empty: "Nobody yet: be the first!", taken: "This name is taken.", badName: "2 to 20 characters.", badCode: "Unknown code.",
       duels: (n, w) => `${n} online match${n > 1 ? "es" : ""} · ${w} won`,
       offline: "Profiles are unavailable right now.", logoutConfirm: "Log out? Keep your recovery code to come back.",
@@ -47,7 +47,7 @@
       ovTime: "Temps de jeu", ovFav: (a) => `préféré : ${a}`,
       stats: "Stats", wins: "victoires", played: "parties", streak: "meilleure série", crew: "Meilleur équipage", crewNone: "Pas encore d'équipage : joue à Roll ton équipage !",
       crews: (n) => `${n} équipage${n > 1 ? "s" : ""} construit${n > 1 ? "s" : ""}`, recovery: "Code de récupération", recoveryHelp: "Garde-le secret : il connecte ton profil sur un autre appareil.",
-      show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
+      show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topTeams: "Meilleures équipes (équipe contre équipe)", teamWins: (w, p) => `${w} victoire${w > 1 ? "s" : ""} / ${p}`, topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
       empty: "Personne pour l'instant : sois le premier !", taken: "Ce pseudo est déjà pris.", badName: "2 à 20 caractères.", badCode: "Code inconnu.",
       duels: (n, w) => `${n} match${n > 1 ? "s" : ""} en ligne · ${w} gagné${w > 1 ? "s" : ""}`,
       offline: "Les profils sont indisponibles pour l'instant.", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
@@ -208,6 +208,12 @@
       const { profile } = await api({ action: "update", id: session.id, token: session.token, crew });
       adopt(profile);
     } catch {}
+  }
+
+  // A team vs team match: the team's name and result, for the team leaderboard.
+  async function recordTeam(team) {
+    if (!session || !team?.name) return;
+    try { const { profile } = await api({ action: "update", id: session.id, token: session.token, team }); adopt(profile); } catch {}
   }
 
   // A Crew Roll online match: counted on the profile, and its wins on the leaderboard.
@@ -984,6 +990,13 @@
         chips.append(chip(g.id, img, g.anime));
       }
       cols.append(crewsCol, winsCol);
+      // Teams (all time): their members under the name.
+      if (data.teams?.length) {
+        const teamsCol = boardList(t("topTeams"), data.teams, (r) => el("span", "pf-val", t("teamWins")(r.wins, r.played)),
+          (r) => el("span", "pf-li-sub", r.members.join(" · ")));
+        teamsCol.classList.add("pf-col-wide");
+        cols.append(teamsCol);
+      }
       draw();
     }).catch(() => { status.textContent = t("offline"); });
     return box;
@@ -1041,7 +1054,7 @@
   else init();
 
   window.DLE_Profile = {
-    open, recordCrew, recordDuel, leaderboard, crewFaces, count, collect, collectionOf,
+    open, recordCrew, recordDuel, recordTeam, leaderboard, crewFaces, count, collect, collectionOf,
     // Admin panel: a random achievement's toast.
     testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },
