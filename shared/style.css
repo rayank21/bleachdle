@@ -139,6 +139,12 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
 }
 /* Category switcher: one logo + name per anime */
 .categories { display: flex; align-items: center; gap: 6px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+/* Too many animes for one row: the strip scrolls (mouse wheel too) and "Roll ton équipage" stays pinned at its end. */
+.categories .cat.cat-crew { position: sticky; right: 0; z-index: 1; background: rgba(10, 10, 12, 0.97); box-shadow: -14px 0 12px -4px rgba(10, 10, 12, 0.97); }
+@media (max-width: 1700px) {
+  .categories .cat.is-current { gap: 0; padding: 4px; }
+  .categories .cat.is-current .cat-name { display: none; }
+}
 .cat {
   display: flex;
   align-items: center;

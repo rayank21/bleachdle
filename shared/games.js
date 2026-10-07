@@ -90,3 +90,21 @@ window.DLE_TURN = (() => {
     }
   })());
 })();
+
+// The anime strip in the header scrolls sideways when it doesn't fit: the mouse wheel scrolls it too, and the
+// current anime is brought into view once the strip is drawn.
+(() => {
+  document.addEventListener("wheel", (e) => {
+    const nav = e.target.closest?.(".categories");
+    if (!nav || nav.scrollWidth <= nav.clientWidth || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    nav.scrollLeft += e.deltaY;
+  }, { passive: false });
+  const reveal = () => {
+    const nav = document.querySelector(".categories");
+    const cur = nav?.querySelector(".cat.is-current:not(.cat-crew)");
+    if (!cur || nav.scrollWidth <= nav.clientWidth) return;
+    nav.scrollLeft = cur.offsetLeft - nav.offsetLeft - nav.clientWidth / 2 + cur.offsetWidth / 2;
+  };
+  addEventListener("load", () => setTimeout(reveal, 50));
+})();
