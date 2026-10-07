@@ -31,6 +31,7 @@ export function setMode(m) {
     if (m === "index" && S.currentGame) renderIndex();
   }
   renderPicker();
+  window.dispatchEvent(new Event("dle:admin-refresh"));
 }
 
 // ── Header & language ──

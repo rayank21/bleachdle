@@ -593,5 +593,7 @@
     return true;
   }
   addEventListener("hashchange", readHash);
+  // Crew Roll: another anime or mode changes the pool, the forms and the title.
+  addEventListener("dle:admin-refresh", () => render());
   if (!readHash() && ls.get(UNLOCK) === KEY_HASH) start();
 })();

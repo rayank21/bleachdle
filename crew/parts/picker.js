@@ -50,6 +50,7 @@ export async function selectGame(id, { quiet = false } = {}) {
   document.body.dataset.game = S.currentGame.id;
   renderPicker();
   await renderArcChip();
+  window.dispatchEvent(new Event("dle:admin-refresh"));
   if (quiet) return;
   if (S.mode === "index") renderIndex();
   else if (S.mode === "solo") startSolo();

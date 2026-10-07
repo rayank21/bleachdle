@@ -17,6 +17,7 @@ export async function startSolo() {
   const pool = makePool(g, data, arc);
   solo = { g, pool, arc, slots: makeSlots(g, pool), rolled: null, rerolls: REROLLS, done: false, rolling: false };
   renderSolo(true);
+  window.dispatchEvent(new Event("dle:admin-refresh"));
 }
 
 export function soloCandidates(exclude) {
