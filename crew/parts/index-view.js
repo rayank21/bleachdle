@@ -157,6 +157,16 @@ function ixCard({ c, tier, scores, best, form }, roles, sorted, n, mine = true) 
   img.alt = "";
   top.append(img, el("span", "ix-tier", t("tiers")[tier]), el("span", "ix-power", String(c.power)));
   if (!mine) top.append(el("span", "ix-lock", `🔒 ${t("notDrawn")}`));
+  // A card I own can go in my profile's showcase.
+  else if (window.DLE_Profile?.toggleShowcase) {
+    const P = window.DLE_Profile;
+    const g = S.currentGame.id;
+    const star = el("button", `ix-show${P.inShowcase(g, c.id) ? " is-on" : ""}`, "★");
+    star.type = "button";
+    star.title = star.ariaLabel = t("bShow").replace("★ ", "");
+    star.addEventListener("click", () => star.classList.toggle("is-on", P.toggleShowcase({ g, id: c.id, n: c.name, p: c.power, f: false })));
+    top.append(star);
+  }
   // A transformation: tap the portrait to see it.
   if (form) {
     const tag = el("button", "ix-form", `⚡ ${form.name[S.lang]}`);

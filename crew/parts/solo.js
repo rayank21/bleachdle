@@ -111,6 +111,7 @@ function soloFinish() {
   // Saved once per crew to the player's profile (best crew and leaderboard).
   if (!solo.recorded) {
     solo.recorded = true;
+    setTimeout(() => window.DLE_Profile?.earnBooster?.(1, "crew"), 1600);
     const avg = average(solo.slots);
     window.DLE_Profile?.recordCrew({
       anime: solo.g.id,

@@ -35,6 +35,7 @@ export function recordWin(n) {
   }
   s.max = Math.max(s.max, s.streak);
   saveStats();
+  window.DLE_Profile?.earnBooster?.(1, "win"); // every win gives a Crew Roll booster
 }
 
 export function recordGiveUp() {

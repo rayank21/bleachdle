@@ -7,7 +7,8 @@
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
 //   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}, add?: {rolls, rerolls, guesses, seconds, …},
-//                      collect?: {anime: [character ids drawn in Crew Roll]}}
+//                      collect?: {anime: [character ids drawn in Crew Roll]}, showcase?: [{g, id, n, p, f}] (3 cards at most)}
+//   Boosters: add.boostEarn (packs earned) and add.boostOpen (packs opened); the stock is the difference.
 //
 // Seasons: every month (Paris time) has its own leaderboard: the wins earned and the best crews built that month.
 //   POST /api/profile {action: "friends", id, token}                  my friends and friend requests
@@ -23,7 +24,7 @@ const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
 // Activity counters sent as increments (rolls, rerolls, guesses, seconds played), capped per request.
-const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500 };
+const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500, boostEarn: 60, boostOpen: 60 };
 const MAX_COLLECTION = 400; // cards kept per anime
 const SEASONS_KEPT = 6; // months of season results kept on a profile
 // The current season: "2026-10", the month in Paris.
@@ -91,8 +92,19 @@ function cleanCrew(c) {
 
 const publicView = (p) => ({
   id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew, counters: p.counters ?? {},
-  collection: p.collection ?? {}, seasons: p.seasons ?? {},
+  collection: p.collection ?? {}, seasons: p.seasons ?? {}, showcase: p.showcase ?? [],
 });
+
+// Profile showcase: up to 3 cards of the player's collection, shown to whoever opens the profile.
+function cleanShowcase(list) {
+  return (Array.isArray(list) ? list : []).slice(0, 3).map((c) => ({
+    g: GAMES.includes(c?.g) ? c.g : null,
+    id: /^[a-z0-9-]{1,60}$/.test(c?.id ?? "") ? c.id : null,
+    n: String(c?.n ?? "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 40),
+    p: Math.min(10, Math.max(1, Math.round(+c?.p || 1))),
+    f: c?.f === true,
+  })).filter((c) => c.g && c.id && c.n);
+}
 
 // Crew Roll collection: the ids drawn, added to what the profile already has.
 function addCollection(p, add) {
@@ -181,6 +193,7 @@ async function update(body) {
     }
   }
   if (body.collect && typeof body.collect === "object") addCollection(p, body.collect);
+  if (body.showcase != null) p.showcase = cleanShowcase(body.showcase);
   if (body.add && typeof body.add === "object") {
     p.counters ??= {};
     for (const [k, cap] of Object.entries(COUNTERS)) {

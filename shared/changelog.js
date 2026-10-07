@@ -7,6 +7,16 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T17:00",
+      title: { en: "Boosters, chat reactions and your showcase", fr: "Boosters, réactions au chat et ta vitrine" },
+      items: [
+        { type: "new", game: "crew", en: "Boosters! A new Crew Roll tab with a pack for every anime: tear it open, flip 5 cards (the last one Epic or better) and watch the rare ones explode. New cards join your collection. Commons, Epics, Legendaries… and Secret cards, shown in their transformation.", fr: "Les boosters ! Un nouvel onglet dans Roll ton équipage avec un booster pour chaque anime : déchire-le, retourne 5 cartes (la dernière au moins Épique) et regarde les rares exploser. Les nouvelles cartes rejoignent ta collection. Communes, Épiques, Légendaires… et des cartes Secrètes, dans leur transformation." },
+        { type: "new", en: "Earning boosters: 3 as a welcome gift, 1 a day, 1 per win in any game and 1 per crew built (10 at most in stock).", fr: "Pour gagner des boosters : 3 en cadeau de bienvenue, 1 par jour, 1 par victoire dans n'importe quel jeu et 1 par équipage construit (10 maximum en stock)." },
+        { type: "new", en: "Chat reactions: react to a message with an emoji, and send big reactions (⚡ button) that fly across everyone's screen.", fr: "Réactions au chat : réagis à un message avec un émoji, et envoie des grosses réactions (bouton ⚡) qui traversent l'écran de tout le monde." },
+        { type: "new", en: "Profile showcase: pick your 3 favourite cards (★ in the Crew Roll index or after a booster). Click a name in the online bar or in your friends to see their profile and showcase.", fr: "Vitrine de profil : choisis tes 3 cartes préférées (★ dans l'Index de Roll ton équipage ou après un booster). Clique sur un pseudo dans la barre en ligne ou dans tes amis pour voir son profil et sa vitrine." },
+      ],
+    },
+    {
       at: "2026-10-07T15:30",
       title: { en: "Transformations like in the anime", fr: "Des transformations comme dans l'anime" },
       items: [

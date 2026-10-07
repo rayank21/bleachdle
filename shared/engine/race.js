@@ -169,9 +169,11 @@ function finishRace() {
   // Online races count in the stats (and on the profile): played, and won when I finished first.
   const top = raceRanking()[0];
   stats.online.played++;
+  const winsBefore = stats.online.wins;
   if (S.race.teams) { const sc = teamScores(); const mine = S.race.teams[rooms?.selfId] ?? 0; if (sc[mine] > sc[1 - mine]) stats.online.wins++; }
   else if (top?.id === rooms?.selfId && top.found) stats.online.wins++;
   saveStats();
+  if (stats.online.wins > winsBefore) window.DLE_Profile?.earnBooster?.(1, "duel");
   renderRace();
   if (S.game) renderResult();
 }

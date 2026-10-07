@@ -36,6 +36,11 @@
       achievements: (a, b) => `Achievements · ${a} / ${b}`, unlocked: "Achievement unlocked!", collection: "Crew Roll collection",
       collectionSub: (a, b) => `${a} / ${b} cards drawn`, season: (m) => `Season · ${m}`, allTime: "All time", seasonEnds: (d) => `ends in ${d} day${d > 1 ? "s" : ""}`,
       champions: (m) => `Champions of ${m}`, seasonCrews: "Best crews this month", seasonWins: "Most wins this month",
+      boostGot: (n) => `+${n} booster${n > 1 ? "s" : ""}`, boostOpen: "Open",
+      boostWhy: { welcome: "Welcome gift!", daily: "Daily booster", win: "Victory reward", crew: "Crew built", duel: "Online win" },
+      boosters: (n) => `${n} booster${n > 1 ? "s" : ""} to open`, boostersGo: "Open my boosters",
+      showcase: "Showcase", showcaseHelp: "Pick 3 cards from your collection (Crew Roll index, ★ button): everyone sees them on your profile.",
+      showAdd: "Add a card", showRemove: "Take out", seeProfile: "See profile", back: "Back", playerCards: (n) => `${n} cards collected`,
     },
     fr: {
       profile: "Profil", create: "Crée ton profil", createSub: "Tes stats et ton meilleur équipage, sauvegardés en ligne et affichés au classement.",
@@ -62,6 +67,11 @@
       achievements: (a, b) => `Succès · ${a} / ${b}`, unlocked: "Succès débloqué !", collection: "Collection Roll ton équipage",
       collectionSub: (a, b) => `${a} / ${b} cartes tirées`, season: (m) => `Saison · ${m}`, allTime: "Tout temps", seasonEnds: (d) => `fin dans ${d} jour${d > 1 ? "s" : ""}`,
       champions: (m) => `Champions de ${m}`, seasonCrews: "Meilleurs équipages du mois", seasonWins: "Plus de victoires du mois",
+      boostGot: (n) => `+${n} booster${n > 1 ? "s" : ""}`, boostOpen: "Ouvrir",
+      boostWhy: { welcome: "Cadeau de bienvenue !", daily: "Booster du jour", win: "Récompense de victoire", crew: "Équipage construit", duel: "Victoire en ligne" },
+      boosters: (n) => `${n} booster${n > 1 ? "s" : ""} à ouvrir`, boostersGo: "Ouvrir mes boosters",
+      showcase: "Vitrine", showcaseHelp: "Choisis 3 cartes de ta collection (Index de Roll ton équipage, bouton ★) : tout le monde les voit sur ton profil.",
+      showAdd: "Ajouter une carte", showRemove: "Retirer", seeProfile: "Voir le profil", back: "Retour", playerCards: (n) => `${n} cartes collectionnées`,
     },
   };
   const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -198,6 +208,145 @@
     return isNew;
   }
 
+  // ── Boosters ──
+  // Packs of 5 Crew Roll cards, opened on the Crew Roll page (crew/parts/boosters.js). Earned: 3 on the first visit,
+  // 1 a day, 1 per win and per crew built, with a capped stock. Kept as two counters (earned, opened), so a profile
+  // carries them across devices; without a profile they wait in this browser like the other counters.
+  const BOOST_MAX = 10;
+  const BOOST_DAY = "dle:boost-day";
+  function boosters() {
+    const c = session?.profile?.counters ?? {};
+    const p = pending();
+    return Math.max(0, (c.boostEarn || 0) + (p.boostEarn || 0) - (c.boostOpen || 0) - (p.boostOpen || 0));
+  }
+  function earnBooster(n = 1, why = "win") {
+    const k = Math.min(n, BOOST_MAX - boosters());
+    if (k <= 0) return 0;
+    count("boostEarn", k);
+    window.dispatchEvent(new Event("dle:boosters"));
+    boostToast(k, why);
+    return k;
+  }
+  function openBooster() {
+    if (boosters() < 1) return false;
+    count("boostOpen", 1);
+    window.dispatchEvent(new Event("dle:boosters"));
+    return true;
+  }
+  const parisDay = () => new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris" }).format(new Date());
+  function dailyBooster() {
+    let last = null;
+    try { last = localStorage.getItem(BOOST_DAY); } catch {}
+    const day = parisDay();
+    if (last === day) return;
+    try { localStorage.setItem(BOOST_DAY, day); } catch {}
+    earnBooster(last ? 1 : 3, last ? "daily" : "welcome");
+  }
+  setTimeout(dailyBooster, 2500);
+  const PACK_PATH = "M5 3h14l-1 2 1 2v12l-1 2 1 2H5l1-2-1-2V7l1-2z";
+  function boostToast(n, why) {
+    document.querySelector(".boost-toast")?.remove();
+    const box = el("a", "boost-toast");
+    box.href = `${ROOT}crew/#boosters`;
+    const pack = el("span", "boost-toast-pack");
+    pack.innerHTML = `<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><defs><linearGradient id="btp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".5" stop-color="#ff8a3d"/><stop offset="1" stop-color="#e5262e"/></linearGradient></defs><path d="${PACK_PATH}" fill="url(#btp)" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 9h8M8 12h8M8 15h5" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/></svg>`;
+    const text = el("span", "boost-toast-text");
+    text.append(el("b", null, t("boostGot")(n)), el("span", null, t("boostWhy")[why] ?? ""));
+    box.append(pack, text, el("span", "boost-toast-go", t("boostOpen")));
+    document.body.append(box);
+    window.DLE_FX?.play("powerup");
+    setTimeout(() => box.classList.add("is-out"), 4600);
+    setTimeout(() => box.remove(), 5100);
+  }
+
+  // ── Trading cards: one look for boosters, the showcase and the collection ──
+  const tierOfPower = (p) => (p >= 9 ? "legend" : p >= 7 ? "epic" : "common");
+  const formSrc = (g, id) => `${ROOT}crew/assets/forms/${g}-${id}.webp`;
+  // c: { g (anime), id, n (name), p (power), f (shown in its transformation), img? }
+  function cardEl(c, { small = false, tilt = true } = {}) {
+    const tier = c.f ? "secret" : tierOfPower(c.p);
+    const game = gameOf(c.g);
+    const card = el("div", `tcg tcg-${tier}${small ? " is-small" : ""}`);
+    card.dataset.game = c.g;
+    const art = el("div", "tcg-art");
+    const img = el("img");
+    img.alt = "";
+    img.decoding = "async";
+    img.src = c.img || (c.f ? formSrc(c.g, c.id) : portrait(c.g, c.id));
+    // A tall full-body picture shows the head, a wide one its middle.
+    img.addEventListener("load", () => { if (img.naturalHeight > img.naturalWidth * 1.15) img.style.objectPosition = "50% 6%"; }, { once: true });
+    art.append(img);
+    const top = el("div", "tcg-top");
+    if (game) { const logo = el("img", "tcg-logo"); logo.src = ROOT + game.logo; logo.alt = ""; top.append(logo); }
+    top.append(el("span", "tcg-power", String(c.p)));
+    const plate = el("div", "tcg-plate");
+    const stars = el("span", "tcg-stars", "★".repeat({ common: 1, epic: 2, legend: 3, secret: 4 }[tier]));
+    plate.append(el("b", "tcg-name", c.n), el("span", "tcg-sub", `${game?.anime ?? ""}`), stars);
+    card.append(art, el("i", "tcg-holo"), el("i", "tcg-frame"), top, plate, el("i", "tcg-glare"));
+    if (tilt && matchMedia("(hover: hover)").matches) {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        card.style.setProperty("--rx", `${(0.5 - y) * 16}deg`);
+        card.style.setProperty("--ry", `${(x - 0.5) * 20}deg`);
+        card.style.setProperty("--mx", `${x * 100}%`);
+        card.style.setProperty("--my", `${y * 100}%`);
+        card.classList.add("is-tilting");
+      });
+      card.addEventListener("pointerleave", () => { card.classList.remove("is-tilting"); card.style.removeProperty("--rx"); card.style.removeProperty("--ry"); });
+    }
+    return card;
+  }
+
+  // ── Showcase: 3 cards picked from the collection, on the profile for everyone to see ──
+  const showcase = () => session?.profile?.showcase ?? [];
+  const sameCard = (a, b) => a.g === b.g && a.id === b.id;
+  async function saveShowcase(list) {
+    if (!session) return false;
+    const before = session.profile.showcase;
+    session.profile.showcase = list;
+    window.dispatchEvent(new Event("dle:showcase"));
+    try { const { profile } = await api({ action: "update", id: session.id, token: session.token, showcase: list }); adopt(profile); }
+    catch { session.profile.showcase = before; window.dispatchEvent(new Event("dle:showcase")); return false; }
+    if (dialog?.open && tab === "profile" && !editing) render();
+    return true;
+  }
+  // Adds the card (the oldest one leaves when the showcase is full) or takes it out. Returns whether it is in now.
+  function toggleShowcase(c) {
+    if (!session) { open("profile"); return false; }
+    const list = showcase();
+    const has = list.some((x) => sameCard(x, c));
+    const next = has ? list.filter((x) => !sameCard(x, c)) : [...list, { g: c.g, id: c.id, n: c.n, p: c.p, f: !!c.f }].slice(-3);
+    saveShowcase(next);
+    return !has;
+  }
+  function showcaseView(p, mine) {
+    const list = p.showcase ?? [];
+    const box = el("div", "pf-showcase");
+    for (let i = 0; i < 3; i++) {
+      const c = list[i];
+      const slot = el("div", `pf-show-slot${c ? "" : " is-empty"}`);
+      if (c) {
+        slot.append(cardEl(c));
+        if (mine) {
+          const rm = el("button", "pf-show-rm", "✕");
+          rm.type = "button";
+          rm.title = rm.ariaLabel = t("showRemove");
+          rm.addEventListener("click", () => saveShowcase(list.filter((x) => !sameCard(x, c))));
+          slot.append(rm);
+        }
+      } else if (mine) {
+        const add = el("a", "pf-show-add");
+        add.href = `${ROOT}crew/#index`;
+        add.append(el("span", "pf-show-plus", "+"), el("span", null, t("showAdd")));
+        slot.append(add);
+      } else slot.append(el("span", "pf-show-none", "?"));
+      box.append(slot);
+    }
+    return box;
+  }
+
   // Time played: every half minute the page is in front.
   setInterval(() => { if (!document.hidden) count("seconds", 30); }, 30000);
   window.addEventListener("pagehide", () => flushCounters(true));
@@ -218,6 +367,7 @@
 
   // A Crew Roll online match: counted on the profile, and its wins on the leaderboard.
   async function recordDuel(won) {
+    if (won) earnBooster(1, "duel");
     if (!session) return;
     try { const { profile } = await api({ action: "update", id: session.id, token: session.token, duel: { won: !!won } }); adopt(profile); } catch {}
   }
@@ -296,6 +446,7 @@
     }
     inner.append(close, tabs);
     if (tab === "board") inner.append(boardView());
+    else if (tab === "player") inner.append(playerView());
     else if (tab === "friends") inner.append(friendsView());
     else if (!session) inner.append(createView());
     else if (editing) inner.append(editView());
@@ -702,6 +853,15 @@
     hero.append(face, who);
     box.append(hero);
 
+    // Boosters waiting, and the showcase.
+    const n = boosters();
+    const boost = el("a", `pf-boost${n ? " has-some" : ""}`);
+    boost.href = `${ROOT}crew/#boosters`;
+    boost.innerHTML = `<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="${PACK_PATH}" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 9h8M8 12h8M8 15h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+    boost.append(el("b", null, t("boosters")(n)), el("span", "pf-boost-go", `${t("boostersGo")} →`));
+    box.append(boost);
+    box.append(el("h3", "pf-h", t("showcase")), showcaseView(p, true), el("p", "muted pf-help", t("showcaseHelp")));
+
     box.append(el("h3", "pf-h", t("myStats")), overview(p));
     box.append(...achievementsView(p));
     box.append(...collectionView());
@@ -727,29 +887,7 @@
     box.append(grid);
 
     // Best Crew Roll crew.
-    box.append(el("h3", "pf-h", t("crew")));
-    const best = p.crew?.best;
-    if (!best) box.append(el("p", "muted", p.crew?.duels ? t("duels")(p.crew.duels, p.crew.duelWins || 0) : t("crewNone")));
-    else {
-      const card = el("div", "pf-crew");
-      const rank = el("div", `crew-rank rank-${best.rank} pf-rank`, best.rank);
-      const info = el("div", "pf-crew-info");
-      info.append(el("b", "pf-crew-score", `${best.score.toFixed(1)} / 10`), el("span", "muted", `${gameOf(best.anime)?.anime || ""} · ${t("crews")(p.crew.played || 1)}`));
-      if (p.crew.duels) info.append(el("span", "muted", t("duels")(p.crew.duels, p.crew.duelWins || 0)));
-      const faces = el("div", "pf-crew-faces");
-      for (const m of best.members) {
-        const f = el("img");
-        f.loading = "lazy";
-        f.decoding = "async";
-        window.DLE_SMALL_IMG(f, portrait(best.anime, m.id));
-        f.alt = m.name;
-        f.title = `${m.role}: ${m.name} (${m.points})`;
-        faces.append(f);
-      }
-      info.append(faces);
-      card.append(rank, info);
-      box.append(card);
-    }
+    box.append(el("h3", "pf-h", t("crew")), bestCrew(p));
 
     // Recovery code and log out.
     box.append(el("h3", "pf-h", t("recovery")));
@@ -770,6 +908,65 @@
     out.type = "button";
     out.addEventListener("click", () => logout());
     box.append(row, el("p", "muted pf-help", t("recoveryHelp")), out);
+    return box;
+  }
+
+  function bestCrew(p) {
+    const best = p.crew?.best;
+    if (!best) return el("p", "muted", p.crew?.duels ? t("duels")(p.crew.duels, p.crew.duelWins || 0) : t("crewNone"));
+    const card = el("div", "pf-crew");
+    const rank = el("div", `crew-rank rank-${best.rank} pf-rank`, best.rank);
+    const info = el("div", "pf-crew-info");
+    info.append(el("b", "pf-crew-score", `${best.score.toFixed(1)} / 10`), el("span", "muted", `${gameOf(best.anime)?.anime || ""} · ${t("crews")(p.crew.played || 1)}`));
+    if (p.crew.duels) info.append(el("span", "muted", t("duels")(p.crew.duels, p.crew.duelWins || 0)));
+    const faces = el("div", "pf-crew-faces");
+    for (const m of best.members) {
+      const f = el("img");
+      f.loading = "lazy";
+      f.decoding = "async";
+      window.DLE_SMALL_IMG(f, portrait(best.anime, m.id));
+      f.alt = m.name;
+      f.title = `${m.role}: ${m.name} (${m.points})`;
+      faces.append(f);
+    }
+    info.append(faces);
+    card.append(rank, info);
+    return card;
+  }
+
+  // Someone else's profile (a friend, a name in the online bar): their showcase, best crew and numbers.
+  let player = null; // { id, profile | null (loading) | false (not found) }
+  let tabBefore = "profile";
+  async function openPlayer(id) {
+    if (!/^[a-z0-9]{10,20}$/.test(id ?? "")) return;
+    if (session?.id === id) { open("profile"); return; }
+    if (tab !== "player") tabBefore = dialog?.open ? tab : "profile";
+    player = { id, profile: null };
+    open("player");
+    try {
+      const res = await fetch(`${API}?id=${encodeURIComponent(id)}`);
+      const data = await res.json();
+      if (player?.id === id) player.profile = res.ok ? data.profile : false;
+    } catch { if (player?.id === id) player.profile = false; }
+    if (dialog?.open && tab === "player") render();
+  }
+  function playerView() {
+    const box = el("div", "pf-view pf-player");
+    const back = el("button", "link-btn pf-back", `← ${t("back")}`);
+    back.type = "button";
+    back.addEventListener("click", () => { tab = tabBefore; render(); });
+    box.append(back);
+    const p = player?.profile;
+    if (p === null) { box.append(el("p", "muted", "…")); return box; }
+    if (!p) { box.append(el("p", "muted", t("offline"))); return box; }
+    const hero = el("div", "pf-hero");
+    const face = el("div", "pf-hero-face");
+    if (p.avatar) { const img = el("img"); img.src = avatarSrc(p.avatar); img.alt = ""; face.append(img); }
+    const who = el("div", "pf-who");
+    const cards = Object.values(p.collection ?? {}).reduce((a, l) => a + (l?.length || 0), 0);
+    who.append(window.DLE_NAME ? window.DLE_NAME(p.name, p.id, "pf-name") : el("h2", "pf-name", p.name), el("p", "muted pf-since", `${t("since")(new Date(p.created).toLocaleDateString(lang()))} · ${t("playerCards")(cards)}`));
+    hero.append(face, who);
+    box.append(hero, el("h3", "pf-h", t("showcase")), showcaseView(p, false), el("h3", "pf-h", t("crew")), bestCrew(p), el("h3", "pf-h", t("stats")), overview(p));
     return box;
   }
 
@@ -945,7 +1142,12 @@
     const face = el("span", "pf-li-face");
     if (f.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(f.avatar)); img.alt = ""; face.append(img); }
     const who = el("span", "pf-friend-who");
-    who.append(el("span", "pf-li-name", f.name));
+    const name = el("button", "pf-li-name pf-li-link", f.name);
+    name.type = "button";
+    name.title = t("seeProfile");
+    if (f.id) name.addEventListener("click", () => openPlayer(f.id));
+    else name.disabled = true;
+    who.append(name);
     if (on !== undefined) {
       const where = on?.room ? t("inRoom")(on.room.code)
         : on ? t("onlineIn")(on.game === "home" ? t("home") : gameOf(on.game)?.brand ?? t("crewRoll")) : t("offlineNow");
@@ -1168,6 +1370,9 @@
   window.DLE_Profile = {
     open, recordCrew, recordDuel, recordTeam, leaderboard, crewFaces, count, collect, collectionOf,
     badges: myBadges, cleanBadges, badgeRow, rankOf, nameEl,
+    // Boosters, trading cards, showcase, other players' profiles.
+    boosters, earnBooster, openBooster, card: cardEl, showcase, toggleShowcase, openPlayer,
+    inShowcase: (g, id) => showcase().some((x) => x.g === g && x.id === id),
     // Admin panel: a random achievement's toast.
     testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },

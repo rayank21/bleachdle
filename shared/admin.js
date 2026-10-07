@@ -329,6 +329,7 @@
       luck.append(o);
     }
     luck.addEventListener("change", () => toast(`Chance ${setLuck(Number(luck.value)) === 1 ? "normale" : `×${luck.value}`}`));
+    s.append(row(btn("+5 boosters", () => { const n = window.DLE_Profile?.earnBooster?.(5, "welcome") ?? 0; toast(n ? `+${n} boosters` : "Stock de boosters plein (10)"); })));
     s.append(el("span", "adm-label", "Chance aux tirages (solo et en ligne)"), row(luck),
       note("Un perso noté 10 sort jusqu'à ce nombre de fois plus souvent ; les persos faibles ne bougent presque pas."));
     const solo = C.solo;

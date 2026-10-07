@@ -12,6 +12,23 @@ import { renderSolo, renderSoloActions, solo, soloCandidates, soloRoll, startSol
 import { ensureRooms, renderLobby, rooms } from "./parts/lobby.js";
 import { renderMatch, renderScoreboard } from "./parts/match.js";
 import { renderIndex } from "./parts/index-view.js";
+import { renderBoosters } from "./parts/boosters.js";
+
+// The Boosters tab shows how many packs wait.
+function renderBoostTab() {
+  const b = document.querySelector('.crew-mode [data-mode="boosters"]');
+  if (!b) return;
+  const n = window.DLE_Profile?.boosters?.() ?? 0;
+  b.textContent = t("boosters");
+  if (n) b.append(el("span", "boost-tab-n", String(n)));
+}
+window.addEventListener("dle:boosters", () => { renderBoostTab(); if (S.mode === "boosters" && !document.querySelector(".bopen")) renderBoosters(); });
+window.addEventListener("dle:profile", renderBoostTab);
+// Links from the profile and the booster toast (#boosters, #index) switch the mode on this page too.
+window.addEventListener("hashchange", () => {
+  const m = location.hash.slice(1);
+  if (m === "boosters" || m === "index") setMode(m);
+});
 
 // ── Modes ──
 export function setMode(m) {
@@ -24,13 +41,16 @@ export function setMode(m) {
   $("#soloView").hidden = m !== "solo";
   $("#duelView").hidden = m !== "online";
   $("#indexView").hidden = m !== "index";
+  $("#boostView").hidden = m !== "boosters";
   if (m === "online") { ensureRooms(); if (S.match) renderMatch(); else renderLobby(); }
   else {
     if (rooms?.myRoom && !S.match) rooms.leave();
     if (m === "solo" && S.currentGame && !solo) startSolo();
     if (m === "index" && S.currentGame) renderIndex();
+    if (m === "boosters") renderBoosters();
   }
   renderPicker();
+  renderBoostTab();
   window.dispatchEvent(new Event("dle:admin-refresh"));
 }
 
@@ -69,6 +89,7 @@ function applyLang() {
   $("#crewBrandIcon").replaceChildren(sunny);
   $("#crewScoreLabel").textContent = t("score");
   document.querySelectorAll(".crew-mode [data-mode]").forEach((b) => (b.textContent = t(b.dataset.mode)));
+  renderBoostTab();
   document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === S.lang));
 }
 
@@ -150,6 +171,6 @@ if (joinHash) {
 }
 let backToMatch = false;
 try { backToMatch = !!sessionStorage.getItem("dle:rejoin:crew"); } catch {}
-S.mode = location.hash === "#online" || joinHash || backToMatch ? "online" : location.hash === "#index" ? "index" : "solo";
+S.mode = location.hash === "#online" || joinHash || backToMatch ? "online" : location.hash === "#index" ? "index" : location.hash === "#boosters" ? "boosters" : "solo";
 setMode(S.mode);
 selectGame(S.currentGame.id);

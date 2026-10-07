@@ -16,7 +16,8 @@ export function renderPicker() {
   const box = $("#animePicker");
   box.textContent = "";
   // Online, the lobby is the same for every anime: the anime is picked when creating a room.
-  const online = S.mode === "online";
+  // Boosters show every anime's pack at once.
+  const online = S.mode === "online" || S.mode === "boosters";
   $("#crewPickWrap").hidden = online;
   $("#crewArcWrap").hidden = online;
   for (const g of GAMES) {
@@ -54,6 +55,7 @@ export async function selectGame(id, { quiet = false } = {}) {
   if (quiet) return;
   if (S.mode === "index") renderIndex();
   else if (S.mode === "solo") startSolo();
+  else if (S.mode === "boosters") return;
   else {
     // From the end-of-match screen, the host goes back to the room with the new anime.
     if (S.match?.done) { if (rooms?.myRoom) backToRoom(); else S.match = null; }

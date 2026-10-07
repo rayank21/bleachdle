@@ -28,7 +28,7 @@ const T = {
     save: "Save",
     pick: "Pick a name",
     chat: "Live chat",
-    chatEmpty: "No messages yet. Say hi!",
+    chatEmpty: "No messages yet. Say hi!", react: "React", boomHelp: "Big reaction (everyone sees it)",
     today: "Today",
     yesterday: "Yesterday",
     say: (n) => `Message as ${n}…`,
@@ -54,7 +54,7 @@ const T = {
     save: "OK",
     pick: "Choisis un pseudo",
     chat: "Chat en direct",
-    chatEmpty: "Aucun message pour l'instant. Dis bonjour !",
+    chatEmpty: "Aucun message pour l'instant. Dis bonjour !", react: "Réagir", boomHelp: "Grosse réaction (tout le monde la voit)",
     today: "Aujourd'hui",
     yesterday: "Hier",
     say: (n) => `Écrire en tant que ${n}…`,
@@ -134,6 +134,11 @@ function chip(name, gameId, isMe, isFriend, badges = [], pid = null) {
   const row = badgeRow(badges);
   if (row) li.append(row);
   if (isMe) li.append(el("span", "presence-you", `(${t("you")})`));
+  // Someone with a profile: a click opens it (their showcase, best crew, numbers).
+  else if (pid && window.DLE_Profile?.openPlayer) {
+    li.classList.add("has-profile");
+    li.addEventListener("click", () => window.DLE_Profile.openPlayer(pid));
+  }
   return li;
 }
 
@@ -349,6 +354,12 @@ async function joinLobby() {
   sendChat = (m) => chatMsg.send(m);
   chatMsg.onMessage = mine((data, { peerId }) => receive(data, peerId));
   chatLog.onMessage = mine((data, { peerId }) => receiveHistory(data, peerId));
+  const react = room.makeAction("react");
+  sendReact = (d) => react.send(d);
+  react.onMessage = mine((data, { peerId }) => receiveReact(data, peerId));
+  const big = room.makeAction("boom");
+  sendBoom = (d) => big.send(d);
+  big.onMessage = mine((data, { peerId }) => receiveBoom(data, peerId));
   room.onPeerJoin = (peerId) => {
     if (lobby !== room) return;
     clearTimeout(gone.get(peerId));
@@ -423,13 +434,46 @@ function cleanMessage(m) {
     game: GAMES.some((x) => x.id === m.game) ? m.game : "home",
     badges: cleanBadges(m.badges),
     pid: cleanPid(m.pid),
+    reacts: cleanReacts(m.reacts),
     mine: !!m.mine,
   };
 }
 
+// ── Reactions: an emoji under a message (who reacted, by name), and big ones that fly across everyone's screen ──
+const REACTS = ["😂", "🔥", "💀", "😮", "❤️", "👍"];
+const BOOMS = ["🔥", "😂", "💀", "🎉", "😱", "👑", "💯", "🤯"];
+function cleanReacts(r) {
+  const out = {};
+  if (!r || typeof r !== "object") return out;
+  for (const e of REACTS) {
+    const names = Array.isArray(r[e]) ? [...new Set(r[e].map(cleanName).filter(Boolean))].slice(0, 30) : [];
+    if (names.length) out[e] = names;
+  }
+  return out;
+}
+// Adds or removes one name's reaction; true when something changed.
+function setReact(m, e, name, on) {
+  if (!m || !REACTS.includes(e) || !name) return false;
+  const list = m.reacts[e] ?? [];
+  const has = list.some((n) => n.toLowerCase() === name.toLowerCase());
+  if (has === on) return false;
+  m.reacts[e] = on ? [...list, name].slice(0, 30) : list.filter((n) => n.toLowerCase() !== name.toLowerCase());
+  if (!m.reacts[e].length) delete m.reacts[e];
+  return true;
+}
+const saveChat = () => { try { sessionStorage.setItem("dle:chat", JSON.stringify(chat.messages)); } catch {} };
+
 function addMessage(raw, { quiet = false } = {}) {
   const m = cleanMessage(raw);
-  if (!m || chat.seen.has(m.id)) return false;
+  if (!m) return false;
+  // Known already (history from someone else): only its reactions can be new.
+  if (chat.seen.has(m.id)) {
+    const known = chat.messages.find((x) => x.id === m.id);
+    let changed = false;
+    if (known) for (const [e, names] of Object.entries(m.reacts)) for (const n of names) changed = setReact(known, e, n, true) || changed;
+    if (changed) saveChat();
+    return changed;
+  }
   chat.seen.add(m.id);
   chat.messages.push(m);
   chat.messages.sort((a, b) => a.ts - b.ts);
@@ -465,7 +509,9 @@ chatRoot.innerHTML = `
       <button class="chat-close" type="button"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
     </header>
     <ol class="chat-list" aria-live="polite"></ol>
+    <div class="chat-booms" hidden></div>
     <form class="chat-form">
+      <button class="chat-boom" type="button"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M13 2 3 14h9l-1 8 10-12h-9z" fill="currentColor"/></svg></button>
       <input class="chat-input" autocomplete="off" maxlength="${CHAT_MAX}" />
       <button class="chat-send" type="submit"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 12l16-8-6 16-2.5-6.5L4 12z" fill="currentColor"/></svg></button>
     </form>
@@ -513,6 +559,7 @@ function renderChat({ scroll = false } = {}) {
   chatInput.disabled = status === "offline";
   chatInput.setAttribute("aria-label", t("chat"));
   chatToggle.setAttribute("aria-label", t("chat"));
+  $c(".chat-boom").title = $c(".chat-boom").ariaLabel = t("boomHelp");
   chatToggle.setAttribute("aria-expanded", chat.open);
   chatToggle.title = t("chat");
   const badge = $c(".chat-badge");
@@ -542,6 +589,26 @@ function renderChat({ scroll = false } = {}) {
       li.append(meta);
     }
     li.append(el("p", "chat-text", m.text));
+    // Reactions under the message (mine highlighted, a click toggles mine), and the button to add one.
+    const me = shownName().toLowerCase();
+    const reacts = el("div", "chat-reacts");
+    for (const e of REACTS) {
+      const names = m.reacts[e];
+      if (!names?.length) continue;
+      const chipBtn = el("button", `chat-react${names.some((n) => n.toLowerCase() === me) ? " is-mine" : ""}`);
+      chipBtn.type = "button";
+      chipBtn.title = names.join(", ");
+      chipBtn.append(el("span", "chat-react-e", e), el("b", null, String(names.length)));
+      chipBtn.addEventListener("click", () => toggleReact(m, e));
+      reacts.append(chipBtn);
+    }
+    const add = el("button", "chat-react-add");
+    add.type = "button";
+    add.title = add.ariaLabel = t("react");
+    add.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM8.5 14.5s1.3 2 3.5 2 3.5-2 3.5-2M9 9.5h.01M15 9.5h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+    add.addEventListener("click", (ev) => { ev.stopPropagation(); reactPicker(add, m); });
+    reacts.append(add);
+    li.append(reacts);
     chatList.append(li);
     prev = m;
   }
@@ -557,6 +624,15 @@ function setChatOpen(open) {
 }
 
 chatToggle.addEventListener("click", () => setChatOpen(!chat.open));
+// The ⚡ button: a row of big reactions that fly across everyone's screen.
+const boomRow = $c(".chat-booms");
+for (const e of BOOMS) {
+  const b = el("button", null, e);
+  b.type = "button";
+  b.addEventListener("click", () => sendBig(e));
+  boomRow.append(b);
+}
+$c(".chat-boom").addEventListener("click", () => { boomRow.hidden = !boomRow.hidden; $c(".chat-boom").classList.toggle("is-on", !boomRow.hidden); });
 $c(".chat-close").addEventListener("click", () => setChatOpen(false));
 chatRoot.addEventListener("keydown", (e) => { if (e.key === "Escape" && chat.open) setChatOpen(false); });
 
@@ -572,6 +648,77 @@ $c(".chat-form").addEventListener("submit", (e) => {
   chatInput.value = "";
   renderChat({ scroll: true });
 });
+
+// The six reactions, in a small bubble above the message.
+function reactPicker(anchor, m) {
+  document.querySelector(".chat-picker")?.remove();
+  const pick = el("div", "chat-picker");
+  for (const e of REACTS) {
+    const b = el("button", null, e);
+    b.type = "button";
+    b.addEventListener("click", () => { pick.remove(); toggleReact(m, e); });
+    pick.append(b);
+  }
+  anchor.closest(".chat-msg").append(pick);
+  const away = (ev) => { if (!pick.contains(ev.target)) { pick.remove(); document.removeEventListener("pointerdown", away, true); } };
+  setTimeout(() => document.addEventListener("pointerdown", away, true));
+}
+let sendReact = null;
+let lastReact = 0;
+function toggleReact(m, e) {
+  const now = Date.now();
+  if (now - lastReact < 250) return;
+  lastReact = now;
+  const name = shownName();
+  const on = !(m.reacts[e] ?? []).some((n) => n.toLowerCase() === name.toLowerCase());
+  if (!setReact(m, e, name, on)) return;
+  saveChat();
+  sendReact?.({ id: m.id, e, on });
+  window.DLE_FX?.play(on ? "place" : "whoosh");
+  renderChat();
+}
+function receiveReact(data, peerId) {
+  if (!allowed(peerId)) return;
+  const name = peers.get(peerId)?.name || cleanName(data?.name);
+  const m = chat.messages.find((x) => x.id === String(data?.id ?? ""));
+  if (setReact(m, data?.e, name, data?.on === true)) { saveChat(); renderChat(); }
+}
+
+// Big reactions: an emoji bursts up from the bottom of every screen, with the sender's name.
+let sendBoom = null;
+let lastBoom = 0;
+function boom(e, name, mine) {
+  if (!BOOMS.includes(e)) return;
+  const lite = document.documentElement.classList.contains("lite");
+  const layer = el("div", "boom");
+  const main = el("div", "boom-main");
+  main.style.left = `${15 + Math.random() * 70}%`;
+  main.append(el("span", "boom-e", e), el("span", "boom-name", mine ? t("you") : name));
+  layer.append(main);
+  // A spray of small copies rising around it.
+  for (let i = 0; i < (lite ? 5 : 14); i++) {
+    const s = el("span", "boom-small", e);
+    s.style.left = `${Math.random() * 100}%`;
+    s.style.setProperty("--d", `${Math.random() * 0.9}s`);
+    s.style.setProperty("--s", (0.6 + Math.random() * 0.9).toFixed(2));
+    s.style.setProperty("--x", `${(Math.random() - 0.5) * 160}px`);
+    layer.append(s);
+  }
+  document.body.append(layer);
+  window.DLE_FX?.play("whoosh");
+  setTimeout(() => layer.remove(), 3600);
+}
+function sendBig(e) {
+  const now = Date.now();
+  if (now - lastBoom < 1500) return;
+  lastBoom = now;
+  sendBoom?.({ e });
+  boom(e, shownName(), true);
+}
+function receiveBoom(data, peerId) {
+  if (!allowed(peerId)) return;
+  boom(data?.e, peers.get(peerId)?.name || "?", false);
+}
 
 function receive(data, peerId) {
   if (!allowed(peerId)) return;
