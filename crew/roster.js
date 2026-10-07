@@ -58,7 +58,7 @@
       // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
       // Machi sews severed limbs back with Nen threads; Kurapika's Holy Chain heals.
       healer: parse("leorio-paradinight:10 alluka-zoldyck:10 neferpitou:9 cheadle-yorkshire:8 machi-komacine:9 kurapika:8 biscuit-krueger:7 shaiapouf:4 senritsu:6 morel-mackernasey:5"),
-      strategist: parse(`pariston-hill:10 komugi:9 meruem:9 ging-freecss:10 shaiapouf:8 morel-mackernasey:8 genthru:8 shalnark:8 kurapika:8
+      strategist: parse(`pariston-hill:10 maha-zoldyck:8 komugi:9 meruem:9 ging-freecss:10 shaiapouf:8 morel-mackernasey:8 genthru:8 shalnark:8 kurapika:8
         chrollo-lucilfer:8 killua-zoldyck:7 milluki-zoldyck:7 knov:7 cheadle-yorkshire:7 isaac-netero:7 mizaistom-nana:7 tsezguerra:6
         welfin:6 kite:6 illumi-zoldyck:6 pakunoda:5`),
     },
@@ -167,7 +167,7 @@
         { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone, score: role(ROLES.hunterxhunter.strategist) },
       ],
       power: parse(`gon-freecss:10 killua-zoldyck:8 kurapika:8 leorio-paradinight:4 hisoka:9 illumi-zoldyck:8 kite:7 mito-freecss:1 isaac-netero:10
-        satotz:5 menchi:4 buhara:4 hanzo:5 pokkle:3 tonpa:1 bodoro:2 ponzu:3 lippo:4 beans:1 silva-zoldyck:9 zeno-zoldyck:10 kikyo-zoldyck:5
+        satotz:5 menchi:4 buhara:4 hanzo:5 pokkle:3 tonpa:1 bodoro:2 ponzu:3 lippo:4 beans:1 silva-zoldyck:9 zeno-zoldyck:10 maha-zoldyck:10 kikyo-zoldyck:5
         milluki-zoldyck:3 kalluto-zoldyck:6 gotoh:5 canary:3 wing:6 zushi:3 gido:3 riehlvelt:3 sadaso:2 kastro:4 chrollo-lucilfer:10 uvogin:8
         nobunaga-hazama:7 feitan-portor:8 phinks-magcub:7 shalnark:6 franklin-bordeau:7 machi-komacine:6 pakunoda:5 shizuku-murasaki:6
         bonolenov-ndongo:5 kortopi:4 neon-nostrade:2 light-nostrade:1 senritsu:5 basho:5 squala:3 dalzollene:3 zepile:2 biscuit-krueger:8

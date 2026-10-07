@@ -42,6 +42,8 @@ export const seed = [
   // ── Zoldyck Family ──
   { wiki: "Silva Zoldyck", species: H, aff: ZF, nenFrom: 3 },
   { wiki: "Zeno Zoldyck", species: H, aff: ZF, nenFrom: 3 },
+  // The great-grandfather: a cameo in the 2011 anime (episode 141); no Nen shown. Portrait cropped from his 1999 design.
+  { wiki: "Maha Zoldyck", species: H, aff: ZF, age: 115, hair: ["Bald"], nen: ["Unknown"] },
   { wiki: "Kikyo Zoldyck", species: H, aff: ZF },
   { wiki: "Milluki Zoldyck", species: H, aff: ZF },
   { wiki: "Kalluto Zoldyck", species: H, aff: { 1: ZF, 3: [...ZF, ...PT] }, nenFrom: 5 },

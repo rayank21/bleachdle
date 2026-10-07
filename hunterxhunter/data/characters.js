@@ -499,6 +499,28 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/zeno-zoldyck.webp"
  },
  {
+  "id": "maha-zoldyck",
+  "name": "Maha Zoldyck",
+  "gender": "M",
+  "species": [
+   "Human"
+  ],
+  "age": 115,
+  "hair": [
+   "Bald"
+  ],
+  "nen": [
+   "Unknown"
+  ],
+  "aff": [
+   "Zoldyck Family"
+  ],
+  "arc": 6,
+  "ability": null,
+  "nenFrom": null,
+  "image": "assets/characters/maha-zoldyck.webp"
+ },
+ {
   "id": "kikyo-zoldyck",
   "name": "Kikyo Zoldyck",
   "gender": "F",
