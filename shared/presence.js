@@ -241,12 +241,14 @@ const myInfo = () => ({ name: shownName(), game, pid: window.DLE_Profile?.curren
 const cleanRoom = (r) => {
   if (!r || typeof r !== "object") return null;
   const code = String(r.code ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
-  const channel = r.channel === "crew" ? "crew" : r.channel === "race" ? "race" : null;
+  const channel = ["crew", "race", "cards"].includes(r.channel) ? r.channel : null;
   const g = GAMES.find((x) => x.id === r.game);
-  return code && channel && (channel === "crew" || g) ? { code, channel, game: g?.id ?? null } : null;
+  return code && channel && (channel !== "race" || g) ? { code, channel, game: g?.id ?? null } : null;
 };
 // The page that opens a room: Crew Roll, or the guessing game of a race room.
 function roomUrl(room) {
+  // A card duel opens Crew Roll's cards tab.
+  if (room.channel === "cards") return `${root}crew/index.html#cards=${room.code}`;
   const page = room.channel === "crew" ? "crew/" : GAMES.find((g) => g.id === room.game)?.path;
   return page ? `${root}${page}index.html#join=${room.code}` : null;
 }

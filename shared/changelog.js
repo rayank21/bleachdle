@@ -7,6 +7,18 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T23:45",
+      title: { en: "Cards: inventory, trades and 1v1 duels", fr: "Cartes : inventaire, échanges et duels 1v1" },
+      items: [
+        { type: "new", game: "crew", en: "A new Cards tab in Crew Roll. Inventory: all your booster cards with their duplicates (×2, ×3…). Duplicates are now counted.", fr: "Un nouvel onglet Cartes dans Roll ton équipage. Inventaire : toutes tes cartes de boosters avec leurs doublons (×2, ×3…). Les doublons sont maintenant comptés." },
+        { type: "new", game: "crew", en: "Trades with your friends: offer one of your cards for one of theirs (or as a gift). They accept or decline from their Cards tab; a duplicate leaves first, so your collection keeps the card.", fr: "Échanges avec tes amis : propose une de tes cartes contre une des siennes (ou en cadeau). Il accepte ou refuse depuis son onglet Cartes ; un doublon part en premier, ta collection garde la carte." },
+        { type: "new", game: "crew", en: "1v1 card duels online: Pack battle (both open a pack of the same anime, three rounds, pure luck) and Deck battle (5 cards of your collection, one per round: power, transformation bonus and a roll of the dice). The winner gets a booster.", fr: "Duels de cartes 1v1 en ligne : Bataille de boosters (vous ouvrez chacun un booster du même anime, en trois manches, que la chance) et Bataille de decks (5 cartes de ta collection, une par manche : puissance, bonus de transformation et un lancer de dé). Le gagnant reçoit un booster." },
+        { type: "new", game: "crew", en: "Open 2, 5, 10 or all your boosters at once; your stock shows out of its maximum (10).", fr: "Ouvre 2, 5, 10 ou tous tes boosters d'un coup ; ton stock s'affiche sur son maximum (10)." },
+        { type: "improved", en: "A character with a transformation now shows it on its cards, in the showcase and as a profile picture.", fr: "Un perso qui a une transformation l'affiche maintenant sur ses cartes, dans la vitrine et en photo de profil." },
+        { type: "improved", en: "Team leaderboard: each team's win rate and its record against every team it met (wins, draws, losses).", fr: "Classement des équipes : le pourcentage de victoires de chaque équipe et son bilan contre chaque équipe affrontée (victoires, nuls, défaites)." },
+      ],
+    },
+    {
       at: "2026-10-07T23:25",
       title: { en: "Yoruichi and Ginjo transform", fr: "Yoruichi et Ginjô se transforment" },
       items: [

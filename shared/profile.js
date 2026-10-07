@@ -21,7 +21,7 @@
       ovTime: "Time played", ovFav: (a) => `favourite: ${a}`,
       stats: "Stats", wins: "wins", played: "played", streak: "best streak", crew: "Best crew", crewNone: "No crew yet: play Crew Roll!",
       crews: (n) => `${n} crew${n > 1 ? "s" : ""} built`, recovery: "Recovery code", recoveryHelp: "Keep it secret: it logs into your profile on another device.",
-      show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topTeams: "Best teams (team vs team)", teamWins: (w, p) => `${w} win${w > 1 ? "s" : ""} / ${p}`, topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
+      show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topTeams: "Best teams (team vs team)", teamWins: (w, p) => `${w} win${w > 1 ? "s" : ""} / ${p}`, winRate: (r) => `${r} % wins`, h2h: (n) => `Head to head (${n})`, h2hRow: (w, d, l) => `${w}W ${d}D ${l}L`, topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
       empty: "Nobody yet: be the first!", taken: "This name is taken.", badName: "2 to 20 characters.", badCode: "Unknown code.",
       duels: (n, w) => `${n} online match${n > 1 ? "es" : ""} · ${w} won`,
       offline: "Profiles are unavailable right now.", logoutConfirm: "Log out? Keep your recovery code to come back.",
@@ -41,6 +41,7 @@
       boosters: (n) => `${n} booster${n > 1 ? "s" : ""} to open`, boostersGo: "Open my boosters",
       showcase: "Showcase", showcaseHelp: "Pick 3 cards from your collection (Crew Roll index, ★ button): everyone sees them on your profile.",
       showAdd: "Add a card", showRemove: "Take out", seeProfile: "See profile", back: "Back", playerCards: (n) => `${n} cards collected`,
+      tradeDone: (n) => `${n} accepted your trade!`, tradeDoneSub: "The card is in your collection.", cardDuel: "Card duel",
     },
     fr: {
       profile: "Profil", create: "Crée ton profil", createSub: "Tes stats et ton meilleur équipage, sauvegardés en ligne et affichés au classement.",
@@ -52,7 +53,7 @@
       ovTime: "Temps de jeu", ovFav: (a) => `préféré : ${a}`,
       stats: "Stats", wins: "victoires", played: "parties", streak: "meilleure série", crew: "Meilleur équipage", crewNone: "Pas encore d'équipage : joue à Roll ton équipage !",
       crews: (n) => `${n} équipage${n > 1 ? "s" : ""} construit${n > 1 ? "s" : ""}`, recovery: "Code de récupération", recoveryHelp: "Garde-le secret : il connecte ton profil sur un autre appareil.",
-      show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topTeams: "Meilleures équipes (équipe contre équipe)", teamWins: (w, p) => `${w} victoire${w > 1 ? "s" : ""} / ${p}`, topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
+      show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topTeams: "Meilleures équipes (équipe contre équipe)", teamWins: (w, p) => `${w} victoire${w > 1 ? "s" : ""} / ${p}`, winRate: (r) => `${r} % de victoires`, h2h: (n) => `Face-à-face (${n})`, h2hRow: (w, d, l) => `${w}V ${d}N ${l}D`, topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
       empty: "Personne pour l'instant : sois le premier !", taken: "Ce pseudo est déjà pris.", badName: "2 à 20 caractères.", badCode: "Code inconnu.",
       duels: (n, w) => `${n} match${n > 1 ? "s" : ""} en ligne · ${w} gagné${w > 1 ? "s" : ""}`,
       offline: "Les profils sont indisponibles pour l'instant.", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
@@ -72,6 +73,7 @@
       boosters: (n) => `${n} booster${n > 1 ? "s" : ""} à ouvrir`, boostersGo: "Ouvrir mes boosters",
       showcase: "Vitrine", showcaseHelp: "Choisis 3 cartes de ta collection (Index de Roll ton équipage, bouton ★) : tout le monde les voit sur ton profil.",
       showAdd: "Ajouter une carte", showRemove: "Retirer", seeProfile: "Voir le profil", back: "Retour", playerCards: (n) => `${n} cartes collectionnées`,
+      tradeDone: (n) => `${n} a accepté ton échange !`, tradeDoneSub: "La carte est dans ta collection.", cardDuel: "Duel de cartes",
     },
   };
   const lang = () => (window.DLE_LANG?.get() === "fr" ? "fr" : "en");
@@ -85,7 +87,31 @@
   };
   const gameOf = (id) => GAMES.find((g) => g.id === id);
   const portrait = (game, char) => { const g = gameOf(game); return g ? `${ROOT}${g.path}assets/characters/${char}.webp` : ""; };
-  const avatarSrc = (a) => (a ? portrait(a.game, a.char) : "");
+  // Characters with a transformation (crew/forms.js, loaded on every page) show it on their cards and as avatars.
+  const formOf = (game, char) => window.CREW_FORMS?.[game]?.[char] ?? null;
+  const formSrc = (g, id) => `${ROOT}crew/assets/forms/${g}-${id}.webp`;
+  const avatarSrc = (a) => (!a ? "" : formOf(a.game, a.char) ? formSrc(a.game, a.char) : portrait(a.game, a.char));
+  // Frames a transformation picture in a circle or a card: on the form's focus, else on the head of a tall one.
+  function frameForm(img, focus) {
+    const set = () => { img.style.objectPosition = focus || (img.naturalHeight > img.naturalWidth * 1.15 ? "50% 6%" : ""); };
+    if (img.complete && img.naturalWidth) set();
+    else img.addEventListener("load", set, { once: true });
+  }
+  // An avatar <img>: the small copy of the picture, framed when it is a transformation.
+  function avatarImg(img, a) {
+    window.DLE_SMALL_IMG(img, avatarSrc(a));
+    const f = a && formOf(a.game, a.char);
+    if (f) frameForm(img, f.focus);
+    return img;
+  }
+  // Crew Roll loads crew/forms.js itself (after this file): only other pages fetch it, once the page is parsed.
+  function loadForms() {
+    if (window.CREW_FORMS) return;
+    const sc = document.createElement("script");
+    sc.src = `${ROOT}crew/forms.js`;
+    sc.onload = () => { renderButton(); if (dialog?.open) render(); window.dispatchEvent(new Event("dle:forms")); };
+    document.head.append(sc);
+  }
 
   // ── Saved session ──
   let session = null; // { id, token, profile }
@@ -170,10 +196,11 @@
     const add = pending();
     // A profile made after some rolls gets this browser's whole collection.
     const collectNow = session && !session.collectionSent ? readJSON(COLLECTION) : readJSON(PENDING_COLLECT);
-    if (!session || (!Object.keys(add).length && !Object.keys(collectNow).length)) return;
-    try { localStorage.removeItem(PENDING); localStorage.removeItem(PENDING_COLLECT); } catch {}
+    const dupesNow = readJSON(PENDING_DUPES);
+    if (!session || (!Object.keys(add).length && !Object.keys(collectNow).length && !Object.keys(dupesNow).length)) return;
+    try { localStorage.removeItem(PENDING); localStorage.removeItem(PENDING_COLLECT); localStorage.removeItem(PENDING_DUPES); } catch {}
     try {
-      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add, cards: collectNow }) });
+      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add, cards: collectNow, dupes: dupesNow }) });
       if (!res.ok) throw new Error();
       session.collectionSent = true;
       saveSession();
@@ -186,6 +213,9 @@
       const pend = readJSON(PENDING_COLLECT);
       for (const [g, ids] of Object.entries(collectNow)) pend[g] = [...new Set([...(pend[g] ?? []), ...ids])];
       writeJSON(PENDING_COLLECT, pend);
+      const pd = readJSON(PENDING_DUPES);
+      for (const [g, m] of Object.entries(dupesNow)) for (const [id, n] of Object.entries(m)) { pd[g] ??= {}; pd[g][id] = (pd[g][id] ?? 0) + n; }
+      writeJSON(PENDING_DUPES, pd);
     }
   }
   // Crew Roll collection: every character drawn, per anime. This browser keeps its own copy (it works without a
@@ -196,9 +226,23 @@
   try { localStorage.removeItem("dle:collection"); localStorage.removeItem("dle:pending-collect"); } catch {}
   const readJSON = (k) => { try { return JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch { return {}; } };
   const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  // With a profile the server's list is the truth once it has this browser's cards (a card traded away leaves it);
+  // the cards not sent yet are added. Without a profile, this browser's own list.
+  const serverHasMine = () => !!session && !!session.collectionSent;
   function collectionOf(game) {
-    return new Set([...(readJSON(COLLECTION)[game] ?? []), ...(session?.profile?.collection?.[game] ?? [])]);
+    const server = session?.profile?.collection?.[game] ?? [];
+    const here = serverHasMine() ? readJSON(PENDING_COLLECT)[game] ?? [] : readJSON(COLLECTION)[game] ?? [];
+    return new Set([...here, ...server]);
   }
+  // Extra copies of a card (duplicates from boosters or trades), the same way.
+  const DUPES = "dle:dupes";
+  const PENDING_DUPES = "dle:pending-dupes";
+  function dupesOf(game, id) {
+    const pend = readJSON(PENDING_DUPES)[game]?.[id] ?? 0;
+    if (serverHasMine()) return (session.profile.dupes?.[game]?.[id] ?? 0) + pend;
+    return Math.max(readJSON(DUPES)[game]?.[id] ?? 0, (session?.profile?.dupes?.[game]?.[id] ?? 0) + pend);
+  }
+  const copiesOf = (game, id) => (collectionOf(game).has(id) ? 1 + dupesOf(game, id) : 0);
   // Returns true the first time this card is drawn.
   function collect(game, id) {
     if (!game || !id) return false;
@@ -206,6 +250,16 @@
     const local = readJSON(COLLECTION);
     local[game] = [...new Set([...(local[game] ?? []), id])];
     writeJSON(COLLECTION, local);
+    if (!isNew) {
+      for (const k of [DUPES, PENDING_DUPES]) {
+        const d = readJSON(k);
+        d[game] ??= {};
+        d[game][id] = (d[game][id] ?? 0) + 1;
+        writeJSON(k, d);
+      }
+      clearTimeout(countTimer);
+      countTimer = setTimeout(flushCounters, 4000);
+    }
     if (isNew) {
       const pend = readJSON(PENDING_COLLECT);
       pend[game] = [...new Set([...(pend[game] ?? []), id])];
@@ -236,9 +290,9 @@
     boostToast(k, why);
     return k;
   }
-  function openBooster() {
-    if (boosters() < 1) return false;
-    count("boostOpen", 1);
+  function openBooster(n = 1) {
+    if (n < 1 || boosters() < n) return false;
+    count("boostOpen", n);
     window.dispatchEvent(new Event("dle:boosters"));
     return true;
   }
@@ -270,7 +324,6 @@
 
   // ── Trading cards: one look for boosters, the showcase and the collection ──
   const tierOfPower = (p) => (p >= 9 ? "legend" : p >= 7 ? "epic" : "common");
-  const formSrc = (g, id) => `${ROOT}crew/assets/forms/${g}-${id}.webp`;
   // c: { g (anime), id, n (name), p (power), f (shown in its transformation), img? }
   function cardEl(c, { small = false, tilt = true } = {}) {
     const tier = c.f ? "secret" : tierOfPower(c.p);
@@ -281,9 +334,11 @@
     const img = el("img");
     img.alt = "";
     img.decoding = "async";
-    img.src = c.img || (c.f ? formSrc(c.g, c.id) : portrait(c.g, c.id));
-    // A tall full-body picture shows the head, a wide one its middle.
-    img.addEventListener("load", () => { if (img.naturalHeight > img.naturalWidth * 1.15) img.style.objectPosition = "50% 6%"; }, { once: true });
+    const form = formOf(c.g, c.id);
+    img.src = c.img || (c.f || form ? formSrc(c.g, c.id) : portrait(c.g, c.id));
+    if (form) card.classList.add("has-form");
+    // A tall full-body picture shows the head, a wide one its middle (or the form's own focus).
+    frameForm(img, form?.focus);
     art.append(img);
     const top = el("div", "tcg-top");
     if (game) { const logo = el("img", "tcg-logo"); logo.src = ROOT + game.logo; logo.alt = ""; top.append(logo); }
@@ -292,6 +347,7 @@
     const stars = el("span", "tcg-stars", "★".repeat({ common: 1, epic: 2, legend: 3, secret: 4 }[tier]));
     plate.append(el("b", "tcg-name", c.n), el("span", "tcg-sub", `${game?.anime ?? ""}`), stars);
     card.append(art, el("i", "tcg-holo"), el("i", "tcg-frame"), top, plate, el("i", "tcg-glare"));
+    if (c.copies > 1) card.append(el("span", "tcg-copies", `×${c.copies}`));
     if (tilt && matchMedia("(hover: hover)").matches) {
       card.addEventListener("pointermove", (e) => {
         const r = card.getBoundingClientRect();
@@ -356,6 +412,49 @@
     return box;
   }
 
+  // ── Trades with friends (one card for one card, or a gift): offers wait on the server until answered ──
+  let tradeState = { in: [], out: [], done: [] };
+  function setTrades(data) {
+    const list = (x) => (Array.isArray(x) ? x : []);
+    tradeState = { in: list(data?.in), out: list(data?.out), done: list(data?.done) };
+    if (data?.profile) adopt(data.profile);
+    // My offers that were accepted since last time: said once.
+    let seen = [];
+    try { seen = JSON.parse(localStorage.getItem("dle:trades-seen") || "[]"); } catch {}
+    for (const d of tradeState.done) {
+      if (seen.includes(d.tid)) continue;
+      seen.push(d.tid);
+      tradeToast(d);
+    }
+    try { localStorage.setItem("dle:trades-seen", JSON.stringify(seen.slice(-40))); } catch {}
+    renderButton();
+    window.dispatchEvent(new Event("dle:trades"));
+  }
+  async function tradeCall(body) {
+    if (!session) throw Object.assign(new Error("auth"), { code: "auth" });
+    const data = await api({ ...body, id: session.id, token: session.token });
+    setTrades(data);
+    return data;
+  }
+  const loadTrades = () => (session ? tradeCall({ action: "trades" }).catch(() => {}) : Promise.resolve());
+  function tradeToast(d) {
+    const box = el("div", "boost-toast trade-toast");
+    box.append(el("span", "boost-toast-pack", "⇄"));
+    const text = el("span", "boost-toast-text");
+    text.append(el("b", null, t("tradeDone")(d.to?.name ?? "")), el("span", null, t("tradeDoneSub")));
+    box.append(text);
+    document.body.append(box);
+    window.DLE_FX?.play("win");
+    setTimeout(() => box.classList.add("is-out"), 4600);
+    setTimeout(() => box.remove(), 5100);
+  }
+  // A friend's public profile (their cards), for choosing what to ask for.
+  async function profileOf(id) {
+    const res = await fetch(`${API}?id=${encodeURIComponent(id)}`);
+    if (!res.ok) throw new Error("profile");
+    return (await res.json()).profile;
+  }
+
   // Time played: every half minute the page is in front.
   setInterval(() => { if (!document.hidden) count("seconds", 30); }, 30000);
   window.addEventListener("pagehide", () => flushCounters(true));
@@ -404,10 +503,10 @@
     }
     button.textContent = "";
     const face = el("span", "pf-btn-face");
-    if (session?.profile?.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(session.profile.avatar)); img.alt = ""; face.append(img); }
+    if (session?.profile?.avatar) { const img = avatarImg(el("img"), session.profile.avatar); img.alt = ""; face.append(img); }
     else face.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
     button.append(face, el("span", "pf-btn-name", session?.profile?.name || t("profile")));
-    const pending = friendState.requests.length + friendState.invites.length;
+    const pending = friendState.requests.length + friendState.invites.length + tradeState.in.length;
     if (pending) button.append(el("span", "pf-btn-badge", String(pending)));
     button.title = t("profile");
   }
@@ -485,7 +584,7 @@
         const on = current?.game === game && current?.char === char;
         const b = el("button", `pf-avatar${on ? " is-active" : ""}`);
         b.type = "button";
-        const img = el("img"); window.DLE_SMALL_IMG(img, portrait(game, char)); img.alt = char; img.loading = "lazy";
+        const img = avatarImg(el("img"), { game, char }); img.alt = char; img.loading = "lazy";
         b.append(img);
         b.addEventListener("click", () => { current = { game, char }; onPick(current); draw(); });
         grid.append(b);
@@ -506,7 +605,7 @@
     box.append(el("h2", "pf-title", t("create")), el("p", "pf-sub muted", t("createSub")));
     let avatar = { game: GAMES[0]?.id, char: GAMES[0]?.featured?.[0] };
     const preview = el("div", "pf-hero-face");
-    const pimg = el("img"); pimg.alt = ""; pimg.src = avatarSrc(avatar);
+    const pimg = el("img"); pimg.alt = ""; avatarImg(pimg, avatar);
     preview.append(pimg);
     const name = el("input", "pf-input");
     name.maxLength = 20;
@@ -524,7 +623,7 @@
         render();
       } catch (e) { showError(err, e); go.disabled = false; go.textContent = t("save"); }
     });
-    box.append(preview, label(t("name"), name), label(t("avatar"), avatarPicker(avatar, (a) => { avatar = a; pimg.src = avatarSrc(a); pimg.classList.remove("pf-pop"); void pimg.offsetWidth; pimg.classList.add("pf-pop"); })), err, go);
+    box.append(preview, label(t("name"), name), label(t("avatar"), avatarPicker(avatar, (a) => { avatar = a; avatarImg(pimg, a); pimg.classList.remove("pf-pop"); void pimg.offsetWidth; pimg.classList.add("pf-pop"); })), err, go);
 
     // Log in with a recovery code.
     const sep = el("p", "pf-sep", t("have"));
@@ -554,7 +653,7 @@
     const box = el("div", "pf-view");
     let avatar = p.avatar;
     const preview = el("div", "pf-hero-face");
-    const pimg = el("img"); pimg.alt = ""; pimg.src = avatarSrc(avatar);
+    const pimg = el("img"); pimg.alt = ""; avatarImg(pimg, avatar);
     preview.append(pimg);
     const name = el("input", "pf-input");
     name.maxLength = 20;
@@ -576,7 +675,7 @@
       } catch (e) { showError(err, e); save.disabled = false; }
     });
     row.append(cancel, save);
-    box.append(preview, label(t("name"), name), label(t("avatar"), avatarPicker(avatar, (a) => { avatar = a; pimg.src = avatarSrc(a); pimg.classList.remove("pf-pop"); void pimg.offsetWidth; pimg.classList.add("pf-pop"); })), err, row);
+    box.append(preview, label(t("name"), name), label(t("avatar"), avatarPicker(avatar, (a) => { avatar = a; avatarImg(pimg, a); pimg.classList.remove("pf-pop"); void pimg.offsetWidth; pimg.classList.add("pf-pop"); })), err, row);
     return box;
   }
 
@@ -852,7 +951,7 @@
     const box = el("div", "pf-view");
     const hero = el("div", "pf-hero");
     const face = el("div", "pf-hero-face");
-    if (p.avatar) { const img = el("img"); img.src = avatarSrc(p.avatar); img.alt = ""; face.append(img); }
+    if (p.avatar) { const img = avatarImg(el("img"), p.avatar); img.alt = ""; face.append(img); }
     const who = el("div", "pf-who");
     who.append(el("h2", "pf-name", p.name), el("p", "muted pf-since", t("since")(new Date(p.created).toLocaleDateString(lang()))));
     const edit = el("button", "btn-ghost pf-edit", t("edit"));
@@ -867,7 +966,7 @@
     const boost = el("a", `pf-boost${n ? " has-some" : ""}`);
     boost.href = `${ROOT}crew/#boosters`;
     boost.innerHTML = `<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="${PACK_PATH}" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 9h8M8 12h8M8 15h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`;
-    boost.append(el("b", null, t("boosters")(n)), el("span", "pf-boost-go", `${t("boostersGo")} →`));
+    boost.append(el("b", null, t("boosters")(n)), el("span", "pf-boost-max", `${n} / ${BOOST_MAX}`), el("span", "pf-boost-go", `${t("boostersGo")} →`));
     box.append(boost);
     box.append(el("h3", "pf-h", t("showcase")), showcaseView(p, true), el("p", "muted pf-help", t("showcaseHelp")));
 
@@ -970,7 +1069,7 @@
     if (!p) { box.append(el("p", "muted", t("offline"))); return box; }
     const hero = el("div", "pf-hero");
     const face = el("div", "pf-hero-face");
-    if (p.avatar) { const img = el("img"); img.src = avatarSrc(p.avatar); img.alt = ""; face.append(img); }
+    if (p.avatar) { const img = avatarImg(el("img"), p.avatar); img.alt = ""; face.append(img); }
     const who = el("div", "pf-who");
     const cards = Object.values(p.collection ?? {}).reduce((a, l) => a + (l?.length || 0), 0);
     who.append(window.DLE_NAME ? window.DLE_NAME(p.name, p.id, "pf-name") : el("h2", "pf-name", p.name), el("p", "muted pf-since", `${t("since")(new Date(p.created).toLocaleDateString(lang()))} · ${t("playerCards")(cards)}`));
@@ -1014,7 +1113,7 @@
     if (!session) return;
     try { await friendCall({ action: "invite-clear", from }); } catch {}
   }
-  const roomPlace = (room) => (room.channel === "crew" ? t("crewRoll") : gameOf(room.game)?.brand ?? "");
+  const roomPlace = (room) => (room.channel === "crew" ? t("crewRoll") : room.channel === "cards" ? t("cardDuel") : gameOf(room.game)?.brand ?? "");
 
   async function loadFriends() {
     if (!session) return;
@@ -1149,7 +1248,7 @@
   function friendRow(f, on) {
     const li = el("li", `pf-li pf-friend${on ? " is-online" : ""}`);
     const face = el("span", "pf-li-face");
-    if (f.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(f.avatar)); img.alt = ""; face.append(img); }
+    if (f.avatar) { const img = avatarImg(el("img"), f.avatar); img.alt = ""; face.append(img); }
     const who = el("span", "pf-friend-who");
     const name = el("button", "pf-li-name pf-li-link", f.name);
     name.type = "button";
@@ -1233,7 +1332,7 @@
             list.forEach((r, i) => {
               const li = el("li", `top-${i + 1}`);
               const face = el("span", "pf-li-face");
-              if (r.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(r.avatar)); img.alt = ""; face.append(img); }
+              if (r.avatar) { const img = avatarImg(el("img"), r.avatar); img.alt = ""; face.append(img); }
               li.append(el("span", "pf-pos", ["🥇", "🥈", "🥉"][i]), face, el("span", "pf-li-name", r.name), el("span", "pf-val", value(r)));
               ol.append(li);
             });
@@ -1262,8 +1361,30 @@
       cols.append(crewsCol, winsCol);
       // Teams (all time): their members under the name.
       if (data.teams?.length) {
-        const teamsCol = boardList(t("topTeams"), data.teams, (r) => el("span", "pf-val", t("teamWins")(r.wins, r.played)),
-          (r) => el("span", "pf-li-sub", r.members.join(" · ")));
+        // Each team: its wins, its win rate, and its record against every team it met.
+        const teamsCol = boardList(t("topTeams"), data.teams, (r) => {
+          const v = el("span", "pf-val pf-team-val");
+          v.append(el("b", null, t("teamWins")(r.wins, r.played)), el("small", "pf-rate", t("winRate")(Math.round((r.wins / Math.max(1, r.played)) * 100))));
+          return v;
+        }, (r) => {
+          const box = el("span", "pf-team-more");
+          box.append(el("span", "pf-li-sub", r.members.join(" · ")));
+          const vs = Array.isArray(r.vs) ? r.vs : [];
+          if (vs.length) {
+            const det = el("details", "pf-h2h");
+            det.append(el("summary", null, t("h2h")(vs.length)));
+            const ul = el("ul");
+            for (const o of vs) {
+              const lost = Math.max(0, o.played - o.wins - (o.draws || 0));
+              const li = el("li", o.wins > lost ? "is-up" : o.wins < lost ? "is-down" : "");
+              li.append(el("span", null, `vs ${o.name}`), el("b", null, t("h2hRow")(o.wins, o.draws || 0, lost)), el("small", null, `${Math.round((o.wins / Math.max(1, o.played)) * 100)} %`));
+              ul.append(li);
+            }
+            det.append(ul);
+            box.append(det);
+          }
+          return box;
+        });
         teamsCol.classList.add("pf-col-wide");
         cols.append(teamsCol);
       }
@@ -1299,7 +1420,7 @@
       const li = el("li", `pf-li${r.id === session?.id ? " is-me" : ""}${i < 3 ? ` top-${i + 1}` : ""}`);
       li.style.animationDelay = `${i * 40}ms`;
       const face = el("span", "pf-li-face");
-      if (r.avatar) { const img = el("img"); window.DLE_SMALL_IMG(img, avatarSrc(r.avatar)); img.alt = ""; face.append(img); }
+      if (r.avatar) { const img = avatarImg(el("img"), r.avatar); img.alt = ""; face.append(img); }
       const who = el("span", "pf-li-who");
       who.append(nameEl(r.name, r.id, "pf-li-name"));
       const more = extra?.(r);
@@ -1365,13 +1486,14 @@
   }
 
   function init() {
+    loadForms();
     renderButton();
     loadTop();
     setInterval(() => { if (!document.hidden) loadTop(); }, TOP_TTL);
-    if (session) { refresh(); syncStats(); loadFriends(); }
-    // New requests and new friends show up without reloading.
-    setInterval(() => { if (session && !document.hidden) loadFriends(); }, 45000);
-    document.addEventListener("visibilitychange", () => { if (session && !document.hidden) loadFriends(); });
+    if (session) { refresh(); syncStats(); loadFriends(); loadTrades(); }
+    // New requests, new friends and trade offers show up without reloading.
+    setInterval(() => { if (session && !document.hidden) { loadFriends(); loadTrades(); } }, 45000);
+    document.addEventListener("visibilitychange", () => { if (session && !document.hidden) { loadFriends(); loadTrades(); } });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
@@ -1380,12 +1502,15 @@
     open, recordCrew, recordDuel, recordTeam, leaderboard, crewFaces, count, collect, collectionOf,
     badges: myBadges, cleanBadges, badgeRow, rankOf, nameEl,
     // Boosters, trading cards, showcase, other players' profiles.
-    boosters, earnBooster, openBooster, card: cardEl, showcase, toggleShowcase, openPlayer,
+    boosters, earnBooster, openBooster, card: cardEl, showcase, toggleShowcase, openPlayer, BOOST_MAX,
+    // Duplicates and trades; transformation pictures for avatars.
+    copiesOf, dupesOf, profileOf, trades: () => tradeState, tradeCall, loadTrades, avatarImg, formSrc, formOf,
     inShowcase: (g, id) => showcase().some((x) => x.g === g && x.id === id),
     // Admin panel: a random achievement's toast.
     testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },
     get friendIds() { return friendState.friends.map((f) => f.id); },
+    get friends() { return friendState.friends; },
     get requests() { return friendState.requests; },
     get invites() { return friendState.invites; },
   };

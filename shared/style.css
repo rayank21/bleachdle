@@ -848,7 +848,7 @@ body.crew-page, body.crew-page[data-game] {
 .crew-settings { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
 .crew-setting { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .crew-setting-label { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
-.crew-mode { width: 390px; max-width: 100%; padding: 3px; grid-template-columns: repeat(3, 1fr) 1.25fr; }
+.crew-mode { width: 480px; max-width: 100%; padding: 3px; grid-template-columns: repeat(3, 1fr) 1.25fr 1fr; }
 .crew-mode button { padding: 6px 4px; font-size: 14px; white-space: nowrap; }
 .crew-page .mode-tabs button.is-active { background: var(--accent); color: #fff; }
 .anime-picker { display: flex; gap: 6px; }
@@ -1801,3 +1801,17 @@ img.cl-game-crew { background: #5ed3c6; }
 @keyframes boom-rise { 0% { transform: translateY(0) scale(0.4); opacity: 0; } 18% { transform: translateY(-48vh) scale(1.15); opacity: 1; } 30% { transform: translateY(-52vh) scale(1); } 80% { opacity: 1; } 100% { transform: translateY(-110vh) scale(0.9); opacity: 0; } }
 @keyframes boom-wobble { from { transform: rotate(-10deg); } to { transform: rotate(10deg); } }
 @keyframes boom-float { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(var(--x), -105vh) scale(1); opacity: 0; } }
+
+/* Booster stock out of the maximum in the profile; copies of a card. */
+.pf-boost-max { padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 900; color: var(--muted); background: rgba(255, 255, 255, 0.06); }
+.tcg-copies { position: absolute; left: 4cqw; top: 15cqw; z-index: 5; padding: 0.6cqw 2.6cqw; border-radius: 99px; font-size: 6cqw; font-weight: 900; color: #fff; background: rgba(0, 0, 0, 0.7); box-shadow: 0 0 0 0.5cqw rgba(255, 255, 255, 0.35); }
+/* Team leaderboard: win rate and head-to-head records. */
+.pf-team-val { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.pf-rate { font-size: 11px; font-weight: 800; color: var(--muted); }
+.pf-team-more { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pf-h2h summary { cursor: pointer; font-size: 12px; font-weight: 800; color: #ffd34d; }
+.pf-h2h ul { max-width: 300px; margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.pf-h2h li { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; font-size: 12px; color: var(--muted); }
+.pf-h2h li b { color: var(--text); }
+.pf-h2h li.is-up b { color: #7dffb0; }
+.pf-h2h li.is-down b { color: #ff7a85; }

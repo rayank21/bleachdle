@@ -163,6 +163,7 @@ const FILES = [
   ["bleach", "bleach", "yoruichi-shihoin", "File:Ep56Shunkō3.png"],
   ["bleach", "bleach", "yoruichi-shihoin-2", "File:Shunkō- Raijin Senkei.png"],
 ];
+// Small copies for avatars and lists: crew/assets/forms/sm/ (240 px wide), made from every form picture.
 // Pictures supplied by hand (not on the wiki): Rukia's and Tosen's forms, Ichigo's and Byakuya's later looks
 // (bleach-ichigo-kurosaki-2, bleach-byakuya-kuchiki-2).
 // node crew/scripts/forms.mjs <game/id> … downloads only those.

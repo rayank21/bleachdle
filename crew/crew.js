@@ -13,6 +13,7 @@ import { ensureRooms, renderLobby, rooms } from "./parts/lobby.js";
 import { renderMatch, renderScoreboard } from "./parts/match.js";
 import { renderIndex } from "./parts/index-view.js";
 import { renderBoosters } from "./parts/boosters.js";
+import { ensureCardRooms, joinCardsByCode, leaveCards, renderCards } from "./parts/cards.js";
 
 // The Boosters tab shows how many packs wait.
 function renderBoostTab() {
@@ -24,11 +25,23 @@ function renderBoostTab() {
 }
 window.addEventListener("dle:boosters", () => { renderBoostTab(); if (S.mode === "boosters" && !document.querySelector(".bopen")) renderBoosters(); });
 window.addEventListener("dle:profile", renderBoostTab);
-// Links from the profile and the booster toast (#boosters, #index) switch the mode on this page too.
+// Links from the profile and the booster toast (#boosters, #index, #cards) switch the mode on this page too.
 window.addEventListener("hashchange", () => {
   const m = location.hash.slice(1);
-  if (m === "boosters" || m === "index") setMode(m);
+  if (m === "boosters" || m === "index" || m === "cards") setMode(m);
 });
+// The cards tab asks for a mode or an anime (a duel starting, the anime of a pack battle).
+window.addEventListener("crew:mode", (e) => setMode(e.detail));
+window.addEventListener("crew:game", (e) => selectGame(e.detail));
+window.addEventListener("dle:trades", () => renderCardsTab());
+// The Cards tab shows how many trade offers wait.
+function renderCardsTab() {
+  const b = document.querySelector('.crew-mode [data-mode="cards"]');
+  if (!b) return;
+  const n = window.DLE_Profile?.trades?.().in.length ?? 0;
+  b.textContent = t("cards");
+  if (n) b.append(el("span", "boost-tab-n", String(n)));
+}
 
 // ── Modes ──
 export function setMode(m) {
@@ -42,15 +55,19 @@ export function setMode(m) {
   $("#duelView").hidden = m !== "online";
   $("#indexView").hidden = m !== "index";
   $("#boostView").hidden = m !== "boosters";
+  $("#cardsView").hidden = m !== "cards";
   if (m === "online") { ensureRooms(); if (S.match) renderMatch(); else renderLobby(); }
   else {
     if (rooms?.myRoom && !S.match) rooms.leave();
     if (m === "solo" && S.currentGame && !solo) startSolo();
     if (m === "index" && S.currentGame) renderIndex();
     if (m === "boosters") renderBoosters();
+    if (m !== "cards") leaveCards();
+    if (m === "cards") renderCards();
   }
   renderPicker();
   renderBoostTab();
+  renderCardsTab();
   window.dispatchEvent(new Event("dle:admin-refresh"));
 }
 
@@ -90,6 +107,7 @@ function applyLang() {
   $("#crewScoreLabel").textContent = t("score");
   document.querySelectorAll(".crew-mode [data-mode]").forEach((b) => (b.textContent = t(b.dataset.mode)));
   renderBoostTab();
+  renderCardsTab();
   document.querySelectorAll("[data-lang]").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === S.lang));
 }
 
@@ -102,6 +120,7 @@ async function relabel() {
   if (S.mode === "solo" && solo && !solo.rolling) renderSolo(false);
   if (S.mode === "index") renderIndex();
   if (S.mode === "online") { if (S.match) renderScoreboard(); else renderLobby(); }
+  if (S.mode === "cards") renderCards();
 }
 
 document.querySelectorAll("[data-lang]").forEach((b) => b.addEventListener("click", () => {
@@ -169,8 +188,11 @@ if (joinHash) {
   // Give up after a while if the host is gone.
   setTimeout(() => { if (S.pendingJoin === key && !rooms?.myRoom) { S.pendingJoin = null; toast(t("linkGone")); renderLobby(); } }, 25000);
 }
+// A card duel invitation: crew/#cards=<room code>.
+const cardsHash = location.hash.match(/^#cards=([A-Za-z0-9]{4,6})$/);
+if (cardsHash) { ensureCardRooms(); joinCardsByCode(cardsHash[1].toUpperCase()); }
 let backToMatch = false;
 try { backToMatch = !!sessionStorage.getItem("dle:rejoin:crew"); } catch {}
-S.mode = location.hash === "#online" || joinHash || backToMatch ? "online" : location.hash === "#index" ? "index" : location.hash === "#boosters" ? "boosters" : "solo";
+S.mode = location.hash === "#online" || joinHash || backToMatch ? "online" : location.hash === "#index" ? "index" : location.hash === "#boosters" ? "boosters" : location.hash.startsWith("#cards") ? "cards" : "solo";
 setMode(S.mode);
 selectGame(S.currentGame.id);

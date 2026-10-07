@@ -17,7 +17,8 @@
   };
   const teamLang = () => TEAM_T[window.DLE_LANG?.get() === "fr" ? "fr" : "en"];
   // Room options set by the host: the game variant played and the teams (0 = red, 1 = blue).
-  const PLAYS = ["classic", "blur", "desc"];
+  // Card duels (channel "cards"): a pack battle or a deck battle.
+  const PLAYS = ["classic", "blur", "desc", "pack", "deck"];
   function cleanMeta(m, members) {
     const ids = new Set(members.map((x) => x.id));
     const team = {};

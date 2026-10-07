@@ -15,6 +15,11 @@ const PACKS = {
 };
 const PROFILE = () => window.DLE_Profile;
 const stock = () => PROFILE()?.boosters?.() ?? 0;
+const MAX = () => PROFILE()?.BOOST_MAX ?? 10;
+// How many packs a click opens: 1, 2, 5, 10 or all of them.
+const QTYS = [1, 2, 5, 10, "all"];
+let qty = 1;
+const howMany = () => (qty === "all" ? stock() : qty);
 
 // ════════════════════ SHELF ════════════════════
 let shelfTimer = null;
@@ -30,12 +35,24 @@ export function renderBoosters() {
   const count = el("div", `bshop-stock${n ? " has-some" : ""}`);
   const stack = el("span", "bshop-stack");
   for (let i = 0; i < Math.min(n, 5); i++) { const p = el("i"); p.style.setProperty("--i", i); stack.append(p); }
-  count.append(stack, el("b", null, t("bStock")(n)));
+  count.append(stack, el("b", null, t("bStock")(n)), el("span", "bshop-max", `${n} / ${MAX()}`));
+  // Open several at once.
+  const qtys = el("div", "bshop-qty");
+  qtys.append(el("span", "crew-setting-label", t("bQty")));
+  for (const q of QTYS) {
+    const need = q === "all" ? 2 : q;
+    const b = el("button", `bshop-qty-btn${qty === q ? " is-active" : ""}`, q === "all" ? t("bAll") : `×${q}`);
+    b.type = "button";
+    b.disabled = q !== 1 && n < need;
+    b.addEventListener("click", () => { qty = q; renderBoosters(); });
+    qtys.append(b);
+  }
+  if (qty !== 1 && n < (qty === "all" ? 2 : qty)) qty = 1;
   const next = el("span", "bshop-next");
   const tick = () => { next.textContent = t("bNext")(untilParisMidnight()); };
   tick();
   shelfTimer = setInterval(() => { if (!view.isConnected || S.mode !== "boosters") clearInterval(shelfTimer); else tick(); }, 30000);
-  left.append(count, el("p", "bshop-how", t("bHow")), next, el("p", "muted bshop-rates", t("bRates")));
+  left.append(count, qtys, el("p", "bshop-how", t("bHow")), next, el("p", "muted bshop-rates", t("bRates")));
   hero.append(left);
   view.append(hero);
 
@@ -48,11 +65,13 @@ export function renderBoosters() {
     pack.classList.toggle("is-empty", !n);
     const btn = el("button", "bshop-pack-btn");
     btn.type = "button";
-    btn.title = `${t("bOpen")} · ${g.anime}`;
+    btn.title = `${t("bOpen")}${howMany() > 1 ? ` ×${howMany()}` : ""} · ${g.anime}`;
     btn.append(pack);
     btn.addEventListener("click", () => {
       if (!stock()) { pack.classList.remove("is-nope"); void pack.offsetWidth; pack.classList.add("is-nope"); toast(t("bNone")); sfx("stamp"); return; }
-      openPack(g, pack);
+      const k = Math.min(howMany(), stock());
+      if (k > 1) openMany(g, pack, k);
+      else openPack(g, pack);
     });
     const meta = el("div", "bshop-meta");
     const bar = el("span", "bshop-bar");
@@ -104,7 +123,7 @@ const pickTier = (last) => {
   if (last) return r < 0.2 ? "legend" : "epic";
   return r < 0.04 ? "legend" : r < 0.25 ? "epic" : "common";
 };
-async function drawPack(g) {
+export async function drawPack(g) {
   const data = await loadGame(g);
   const arc = playerArc(data.config) ?? data.config.arcs.length - 1;
   const pool = makePool(g, data, arc);
@@ -265,6 +284,105 @@ async function openPack(g, fromPack) {
 
 const frame2 = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
+// Several packs of the same anime at once: one zip for the whole stack, then every card dealt into a grid and turned
+// over in a quick wave (the rare ones still get their moment), and a summary of what came out.
+async function openMany(g, fromPack, n) {
+  if (opening || !PROFILE()?.openBooster?.(n)) return;
+  opening = true;
+  let packs = [];
+  try { packs = await Promise.all(Array.from({ length: n }, () => drawPack(g))); } catch { opening = false; return; }
+  const rank = { common: 0, epic: 1, legend: 2, secret: 3 };
+  const cards = packs.flat();
+  for (const c of cards) c.isNew = !!PROFILE()?.collect?.(g.id, c.id);
+  // Commons first, the best at the end, so the wave builds up.
+  cards.sort((a, b) => rank[a.tier] - rank[b.tier] || a.p - b.p);
+
+  const [c1, c2] = PACKS[g.id] ?? ["255, 80, 80", "20, 4, 6"];
+  const root = el("div", "bopen is-many");
+  root.style.setProperty("--p1", c1);
+  root.style.setProperty("--p2", c2);
+  const rays = el("div", "bopen-rays");
+  const flash = el("div", "bopen-flash");
+  const stage = el("div", "bopen-stage");
+  const hint = el("p", "bopen-hint", t("bTapMany")(n));
+  const pack = packEl(g);
+  pack.classList.add("is-big", "is-stack");
+  pack.style.setProperty("--stack", Math.min(n, 6));
+  stage.append(pack);
+  const grid = el("div", "bopen-grid");
+  const foot = el("div", "bopen-foot");
+  root.append(rays, stage, grid, hint, foot, flash);
+  document.body.append(root);
+  document.documentElement.classList.add("bopen-lock");
+  sfx("whoosh");
+  const from = fromPack?.getBoundingClientRect();
+  await frame2();
+  const to = pack.getBoundingClientRect();
+  if (from && from.width) {
+    const dx = from.left + from.width / 2 - (to.left + to.width / 2);
+    const dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    await pack.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${from.width / to.width}) rotate(-6deg)` }, { transform: "none" }], { duration: 600, easing: "cubic-bezier(.2,.9,.3,1)" }).finished.catch(() => {});
+  }
+  pack.classList.add("is-idle");
+  await new Promise((resolve) => {
+    const go = () => { stage.removeEventListener("click", go); hint.removeEventListener("click", go); resolve(); };
+    stage.addEventListener("click", go);
+    hint.addEventListener("click", go);
+  });
+  hint.textContent = "";
+  pack.classList.remove("is-idle");
+  root.style.setProperty("--charge", 1);
+  pack.querySelector(".bpack-tab")?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: "forwards" });
+  pack.querySelector(".bpack-spark").animate([{ left: "0%", opacity: 1 }, { left: "100%", opacity: 0 }], { duration: 500, fill: "forwards" });
+  pack.querySelector(".bpack-gap").animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 500, fill: "forwards" });
+  sfx("rise", { dur: 0.5 });
+  await wait(500);
+  pack.querySelector(".bpack-top").animate([{ opacity: 1 }, { transform: "translate(170px, -260px) rotate(42deg)", opacity: 0 }], { duration: 600, fill: "forwards" });
+  flash.animate([{ opacity: 0 }, { opacity: 0.85 }, { opacity: 0 }], { duration: 520, easing: "ease-out" });
+  const r = pack.getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + r.height * 0.15, { count: 70, spread: 320, color: c1 });
+  sfx("slash");
+  await wait(350);
+  stage.animate([{ opacity: 1 }, { opacity: 0, transform: "scale(0.6)" }], { duration: 380, fill: "forwards" });
+  await wait(300);
+  stage.remove();
+
+  // The grid: every card face down, then turned over one after the other.
+  const faces = cards.map((c, i) => cardSlot(c, i));
+  grid.append(...faces.map((f) => f.node));
+  faces.forEach((f, i) => f.node.animate([{ opacity: 0, transform: "translateY(30px) scale(0.8)" }, { opacity: 1, transform: "none" }], { duration: 320, delay: Math.min(i, 40) * 18, easing: "cubic-bezier(.2,.9,.3,1)", fill: "backwards" }));
+  await wait(Math.min(faces.length, 40) * 18 + 300);
+  let fast = false;
+  const skip = el("button", "btn-ghost bopen-all", t("bSkip"));
+  skip.type = "button";
+  skip.addEventListener("click", () => { fast = true; skip.disabled = true; });
+  foot.append(skip);
+  for (const f of faces) {
+    if (fast) { f.node.classList.add("is-flipped", "is-shown"); continue; }
+    const big = f.card.tier === "legend" || f.card.tier === "secret";
+    f.node.scrollIntoView?.({ block: "nearest", behavior: "smooth" });
+    await reveal(f, root, flash, !big);
+    await wait(big ? 650 : f.card.tier === "epic" ? 180 : 70);
+  }
+  skip.remove();
+
+  const fresh = cards.filter((c) => c.isNew).length;
+  const by = (tr) => cards.filter((c) => c.tier === tr).length;
+  const sum = el("p", `bopen-sum${fresh ? " has-new" : ""}`, t("bSummary")(fresh));
+  const detail = el("p", "bopen-detail", t("bManyDetail")(cards.length, by("epic"), by("legend"), by("secret")));
+  const close = el("button", "btn-primary", t("bDone"));
+  close.type = "button";
+  close.addEventListener("click", () => {
+    root.classList.add("is-out");
+    setTimeout(() => { root.remove(); document.documentElement.classList.remove("bopen-lock"); }, 320);
+    opening = false;
+    if (S.mode === "boosters") renderBoosters();
+  });
+  foot.append(sum, detail, close);
+  close.focus({ preventScroll: true });
+  if (fresh) sfx("win");
+}
+
 // A card in the row: its back, its face, its tag (new / duplicate) and the showcase button.
 function cardSlot(card, i) {
   const node = el("div", `bcard tier-${card.tier}`);
@@ -276,7 +394,8 @@ function cardSlot(card, i) {
   const face = PROFILE()?.card?.({ ...card }) ?? el("div");
   front.append(face);
   inner.append(back, front);
-  const tag = el("span", `bcard-tag${card.isNew ? " is-new" : ""}`, card.isNew ? t("bNew") : t("bDupe"));
+  const copies = PROFILE()?.copiesOf?.(card.g, card.id) ?? 1;
+  const tag = el("span", `bcard-tag${card.isNew ? " is-new" : ""}`, card.isNew ? t("bNew") : `${t("bDupe")} ×${copies}`);
   const show = el("button", "bcard-show", PROFILE()?.inShowcase?.(card.g, card.id) ? t("bShowOn") : t("bShow"));
   show.type = "button";
   show.addEventListener("click", (e) => {

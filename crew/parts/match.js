@@ -635,7 +635,9 @@ export function finishMatch() {
     text = draw ? t("teamDraw") : t("teamWins")(rooms.teamNames()[sc[0] > sc[1] ? 0 : 1]);
     // The team leaderboard: only teams the host named (the default red / blue are everyone's).
     const chosen = rooms.myRoom?.meta?.names?.[mineK] || S.match.room?.meta?.names?.[mineK];
-    if (chosen) window.DLE_Profile?.recordTeam?.({ name: chosen, won: kind === "win", score: sc[mineK] });
+    // The other team's name too (named or not), for the head-to-head records; a draw is neither won nor lost.
+    const rival = rooms.myRoom?.meta?.names?.[1 - mineK] || S.match.room?.meta?.names?.[1 - mineK] || "";
+    if (chosen) window.DLE_Profile?.recordTeam?.({ name: chosen, won: kind === "win", draw: kind === "draw", score: sc[mineK], vs: rival });
   }
   window.DLE_Profile?.recordDuel(kind === "win");
   const actions = [[t("leave"), "btn-ghost", leaveMatch]];

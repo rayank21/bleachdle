@@ -36,7 +36,7 @@ window.DLE_CREW_LINK = (root, label) =>
 
 // A portrait's small copy (160 px wide, made by scripts/thumbs.mjs), for the places that show it small. Anything
 // that isn't a character portrait (Crew Roll forms…) is returned as is.
-window.DLE_THUMB = (url) => String(url ?? "").replace(/assets\/characters\/([^/]+\.webp)$/, "assets/characters/sm/$1");
+window.DLE_THUMB = (url) => String(url ?? "").replace(/assets\/(characters|forms)\/([^/]+\.webp)$/, "assets/$1/sm/$2");
 // On an <img> showing a small copy: falls back to the full portrait if the small copy is missing.
 window.DLE_THUMB_FALLBACK = "if(this.src.includes('/sm/')){this.onerror=null;this.src=this.src.replace('/sm/','/')}";
 window.DLE_SMALL_IMG = (img, url) => {

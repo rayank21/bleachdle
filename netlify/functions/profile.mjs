@@ -16,6 +16,13 @@
 //   POST /api/profile {action: "friend-accept" | "friend-remove", id, token, other}
 //   POST /api/profile {action: "friend-invite", id, token, other, room}  invite a friend into my room, even offline
 //   POST /api/profile {action: "invite-clear", id, token, from}           drop an invitation I got
+//
+// Cards: p.cards[anime] lists the different cards got from boosters, p.dupes[anime][id] the extra copies of each.
+//   update {dupes: {anime: {id: n}}}                                       copies got again (counted, not listed twice)
+//   POST /api/profile {action: "trades", id, token}                        trade offers I got and sent
+//   POST /api/profile {action: "trade-offer", id, token, other, give: {g, id}, want: {g, id} | null}   to a friend
+//   POST /api/profile {action: "trade-answer", id, token, tid, accept}     accept (the cards change hands) or decline
+//   POST /api/profile {action: "trade-cancel", id, token, tid}             take back an offer I sent
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
@@ -24,8 +31,11 @@ const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
 // Activity counters sent as increments (rolls, rerolls, guesses, seconds played), capped per request.
-const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500, boostEarn: 60, boostOpen: 60 };
+const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500, boostEarn: 60, boostOpen: 60, cardDuels: 50, cardWins: 50 };
 const MAX_COLLECTION = 400; // cards kept per anime
+const MAX_DUPES = 99; // extra copies kept per card
+const MAX_TRADES = 20; // offers kept per profile, received and sent
+const TRADE_TTL = 7 * 24 * 3600 * 1000; // an unanswered offer is dropped after a week
 const SEASONS_KEPT = 6; // months of season results kept on a profile
 // The current season: "2026-10", the month in Paris.
 const seasonId = (d = new Date()) => new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit" }).format(d).slice(0, 7);
@@ -93,7 +103,7 @@ function cleanCrew(c) {
 const publicView = (p) => ({
   id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew, counters: p.counters ?? {},
   // The collection is the cards from boosters (p.cards); the old Crew Roll draw lists (p.collection) no longer count.
-  collection: p.cards ?? {}, seasons: p.seasons ?? {}, showcase: owned(p, p.showcase),
+  collection: p.cards ?? {}, dupes: p.dupes ?? {}, seasons: p.seasons ?? {}, showcase: owned(p, p.showcase),
 });
 
 // Only cards the player got from a booster can be in the showcase.
@@ -119,6 +129,43 @@ function addCards(p, add) {
     if (!ok.length) continue;
     p.cards[g] = [...new Set([...(p.cards[g] ?? []), ...ok])].slice(0, MAX_COLLECTION);
   }
+}
+
+// Copies got again: counted per card, for cards the profile has.
+function addDupes(p, add) {
+  for (const g of GAMES) {
+    const src = add?.[g];
+    if (!src || typeof src !== "object") continue;
+    for (const [id, n] of Object.entries(src)) {
+      const k = Math.min(20, num(n));
+      if (!k || !/^[a-z0-9-]{1,60}$/.test(id) || !(p.cards?.[g] ?? []).includes(id)) continue;
+      p.dupes ??= {};
+      p.dupes[g] ??= {};
+      p.dupes[g][id] = Math.min(MAX_DUPES, (p.dupes[g][id] ?? 0) + k);
+    }
+  }
+}
+// How many copies of a card the profile has; taking one leaves the card when a copy remains.
+const copies = (p, c) => ((p.cards?.[c.g] ?? []).includes(c.id) ? 1 + (p.dupes?.[c.g]?.[c.id] ?? 0) : 0);
+function takeCard(p, c) {
+  const extra = p.dupes?.[c.g]?.[c.id] ?? 0;
+  if (extra > 0) {
+    if (extra > 1) p.dupes[c.g][c.id] = extra - 1;
+    else delete p.dupes[c.g][c.id];
+    return;
+  }
+  p.cards[c.g] = (p.cards[c.g] ?? []).filter((x) => x !== c.id);
+  // The last copy leaves the showcase too.
+  p.showcase = (p.showcase ?? []).filter((x) => !(x.g === c.g && x.id === c.id));
+}
+function giveCard(p, c) {
+  p.cards ??= {};
+  const list = p.cards[c.g] ?? [];
+  if (list.includes(c.id)) {
+    p.dupes ??= {};
+    p.dupes[c.g] ??= {};
+    p.dupes[c.g][c.id] = Math.min(MAX_DUPES, (p.dupes[c.g][c.id] ?? 0) + 1);
+  } else p.cards[c.g] = [...list, c.id].slice(0, MAX_COLLECTION);
 }
 
 // This month's entry; older months beyond SEASONS_KEPT are dropped.
@@ -199,6 +246,7 @@ async function update(body) {
   // body.collect (Crew Roll draws, sent by pages from before boosters) is ignored, and the old lists are dropped.
   delete p.collection;
   if (body.cards && typeof body.cards === "object") addCards(p, body.cards);
+  if (body.dupes && typeof body.dupes === "object") addDupes(p, body.dupes);
   if (body.showcase != null) p.showcase = owned(p, cleanShowcase(body.showcase));
   if (body.add && typeof body.add === "object") {
     p.counters ??= {};
@@ -217,6 +265,19 @@ async function update(body) {
       t.name = name;
       t.played++;
       if (body.team.won === true) t.wins++;
+      else if (body.team.draw === true) t.draws = (t.draws ?? 0) + 1;
+      // Head to head: the record against each team met (by name; the unnamed red / blue teams don't count).
+      const rival = cleanName(body.team.vs);
+      if (rival && rival.toLowerCase() !== key) {
+        t.vs ??= {};
+        const v = (t.vs[rival.toLowerCase()] ??= { name: rival, wins: 0, draws: 0, played: 0 });
+        v.name = rival;
+        v.played++;
+        if (body.team.won === true) v.wins++;
+        else if (body.team.draw === true) v.draws++;
+        const rivals = Object.keys(t.vs).sort((a, b) => t.vs[b].played - t.vs[a].played);
+        for (const k of rivals.slice(20)) delete t.vs[k];
+      }
       const score = Math.min(10, Math.max(0, Number(body.team.score) || 0));
       if (score > t.best) t.best = Math.round(score * 10) / 10;
       t.at = Date.now();
@@ -283,16 +344,21 @@ async function leaderboard() {
     for (const t of Object.values(p.teams ?? {})) {
       const key = String(t.name ?? "").toLowerCase();
       if (!key) continue;
-      const row = teamMap.get(key) ?? { name: t.name, wins: 0, played: 0, best: 0, members: [] };
-      row.wins = Math.max(row.wins, t.wins || 0);
-      row.played = Math.max(row.played, t.played || 0);
+      const row = teamMap.get(key) ?? { name: t.name, wins: 0, draws: 0, played: 0, best: 0, members: [], vs: {} };
+      // The member who played the most matches has the fullest record of the team.
+      if ((t.played || 0) > row.played) { row.wins = t.wins || 0; row.draws = t.draws || 0; row.played = t.played || 0; }
       row.best = Math.max(row.best, t.best || 0);
+      for (const [k, v] of Object.entries(t.vs ?? {})) {
+        if (!row.vs[k] || (v.played || 0) > row.vs[k].played) row.vs[k] = { name: v.name, wins: v.wins || 0, draws: v.draws || 0, played: v.played || 0 };
+      }
       if (!row.members.includes(p.name)) row.members.push(p.name);
       teamMap.set(key, row);
     }
   }
-  const teams = [...teamMap.values()].filter((r) => r.played > 0).sort((a, b) => b.wins - a.wins || b.best - a.best).slice(0, 20)
-    .map((r) => ({ ...r, members: r.members.slice(0, 6) }));
+  // Ranked by wins, then by win rate; each with its record against every team it met.
+  const rate = (r) => r.wins / Math.max(1, r.played);
+  const teams = [...teamMap.values()].filter((r) => r.played > 0).sort((a, b) => b.wins - a.wins || rate(b) - rate(a) || b.best - a.best).slice(0, 20)
+    .map((r) => ({ ...r, members: r.members.slice(0, 6), vs: Object.values(r.vs).sort((a, b) => b.played - a.played).slice(0, 12) }));
   return json({ crews, byAnime, wins, teams, players: all.length, season, podiums });
 }
 
@@ -310,9 +376,9 @@ async function friendsView(p) {
 const freshInvites = (p) => (Array.isArray(p.invites) ? p.invites : []).filter((i) => Date.now() - i.at < INVITE_TTL);
 function cleanRoom(r) {
   const code = String(r?.code ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
-  const channel = r?.channel === "crew" || r?.channel === "race" ? r.channel : null;
+  const channel = ["crew", "race", "cards"].includes(r?.channel) ? r.channel : null;
   const game = GAMES.includes(r?.game) ? r.game : null;
-  return code && channel && (channel === "crew" || game) ? { code, channel, game } : null;
+  return code && channel && (channel !== "race" || game) ? { code, channel, game } : null;
 }
 
 async function friendInvite(body) {
@@ -393,6 +459,84 @@ async function friendRemove(body) {
   return friendsView(p);
 }
 
+// ── Trades between friends: one card for one card (or a gift). The offer waits on both profiles; when the friend
+// accepts, both still need their card, then each card changes hands (a duplicate goes first). ──
+const cleanCard = (c) => (c && GAMES.includes(c.g) && /^[a-z0-9-]{1,60}$/.test(c.id ?? "") ? { g: c.g, id: c.id } : null);
+const freshTrades = (list) => (Array.isArray(list) ? list : []).filter((x) => Date.now() - x.at < TRADE_TTL);
+// done: my offers that were accepted (the page tells me once).
+const tradesView = (p, extra = {}) => json({ in: freshTrades(p.tradesIn), out: freshTrades(p.tradesOut), done: freshTrades(p.tradesDone), ...extra });
+
+async function trades(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  return tradesView(p, { profile: publicView(p) });
+}
+
+async function tradeOffer(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const give = cleanCard(body.give);
+  const want = body.want == null ? null : cleanCard(body.want);
+  if (!give || (body.want != null && !want)) return fail("card");
+  const other = ids(p.friends).includes(body.other) ? await readProfile(body.other) : null;
+  if (!other || !ids(other.friends).includes(p.id)) return fail("friend", 403);
+  if (!copies(p, give)) return fail("mine", 409);
+  if (want && !copies(other, want)) return fail("theirs", 409);
+  const offer = { tid: randomBytes(6).toString("hex"), from: mini(p), to: mini(other), give, want, at: Date.now() };
+  p.tradesOut = [...freshTrades(p.tradesOut), offer].slice(-MAX_TRADES);
+  other.tradesIn = [...freshTrades(other.tradesIn), offer].slice(-MAX_TRADES);
+  const s = store();
+  await s.setJSON(`p/${other.id}`, other);
+  await s.setJSON(`p/${p.id}`, p);
+  return tradesView(p);
+}
+
+async function tradeAnswer(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const offer = freshTrades(p.tradesIn).find((x) => x.tid === body.tid);
+  if (!offer) return fail("gone", 404);
+  const other = await readProfile(offer.from.id);
+  const drop = (q) => {
+    q.tradesIn = freshTrades(q.tradesIn).filter((x) => x.tid !== offer.tid);
+    q.tradesOut = freshTrades(q.tradesOut).filter((x) => x.tid !== offer.tid);
+  };
+  drop(p);
+  let error = null;
+  if (other) {
+    drop(other);
+    if (body.accept === true) {
+      // Both cards must still be there (a card may have been traded away meanwhile).
+      if (!copies(other, offer.give)) error = "theirs";
+      else if (offer.want && !copies(p, offer.want)) error = "mine";
+      else {
+        takeCard(other, offer.give);
+        giveCard(p, offer.give);
+        if (offer.want) { takeCard(p, offer.want); giveCard(other, offer.want); }
+        const done = { ...offer, done: Date.now() };
+        other.tradesDone = [...(other.tradesDone ?? []), done].slice(-10);
+      }
+    }
+    await store().setJSON(`p/${other.id}`, other);
+  } else if (body.accept === true) error = "theirs";
+  await store().setJSON(`p/${p.id}`, p);
+  if (error) return fail(error, 409);
+  return tradesView(p, { profile: publicView(p) });
+}
+
+async function tradeCancel(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const offer = freshTrades(p.tradesOut).find((x) => x.tid === body.tid);
+  p.tradesOut = freshTrades(p.tradesOut).filter((x) => x.tid !== body.tid);
+  await store().setJSON(`p/${p.id}`, p);
+  if (offer) {
+    const other = await readProfile(offer.to.id);
+    if (other) { other.tradesIn = freshTrades(other.tradesIn).filter((x) => x.tid !== offer.tid); await store().setJSON(`p/${other.id}`, other); }
+  }
+  return tradesView(p);
+}
+
 export default async (req) => {
   try {
     if (req.method === "GET") {
@@ -414,6 +558,10 @@ export default async (req) => {
     if (body.action === "friend-remove") return friendRemove(body);
     if (body.action === "friend-invite") return friendInvite(body);
     if (body.action === "invite-clear") return inviteClear(body);
+    if (body.action === "trades") return trades(body);
+    if (body.action === "trade-offer") return tradeOffer(body);
+    if (body.action === "trade-answer") return tradeAnswer(body);
+    if (body.action === "trade-cancel") return tradeCancel(body);
     return fail("action");
   } catch (e) {
     console.error(e);
