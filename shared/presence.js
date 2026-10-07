@@ -277,8 +277,10 @@ let trystero = null;
 let turn = []; // TURN relays, used when the direct link fails
 let lobby = null;
 let lastRelink = 0;
-function joinLobby() {
-  const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS }, turnConfig: turn }, "lobby");
+async function joinLobby() {
+  // Direct links, with the Nostr relays as a fallback when they fail (shared/link.js).
+  const config = { appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS }, turnConfig: turn };
+  const room = window.DLE_Link ? await window.DLE_Link.join(trystero, config, "lobby") : trystero.joinRoom(config, "lobby");
   lobby = room;
   const mine = (fn) => (data, meta) => { if (lobby === room) fn(data, meta); };
   const info = room.makeAction("info");
@@ -324,14 +326,14 @@ async function relink() {
   const old = lobby;
   lobby = null;
   try { await old.leave(); } catch {}
-  joinLobby();
+  await joinLobby();
 }
 
 async function connect() {
   try {
     trystero = await import(TRYSTERO);
     turn = (await window.DLE_TURN?.()) ?? [];
-    joinLobby();
+    await joinLobby();
     status = "live";
     tries = 0;
     // Say who I am again now and then: someone who missed it (lost message, link back up) still sees me.

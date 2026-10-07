@@ -150,8 +150,11 @@
     let turn = []; // TURN relays, used when the direct link fails
     let lobby = null;
     let relinking = false;
-    function joinLobby() {
-      const room = trystero.joinRoom({ appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS }, turnConfig: turn }, `${channel}-lobby`);
+    async function joinLobby() {
+      // Direct links, with the Nostr relays as a fallback when they fail (shared/link.js).
+      const config = { appId: APP_ID, relayConfig: { urls: window.DLE_RELAYS }, turnConfig: turn };
+      const name = `${channel}-lobby`;
+      const room = window.DLE_Link ? await window.DLE_Link.join(trystero, config, name) : trystero.joinRoom(config, name);
       lobby = room;
       for (const name of ["hello", "roominfo", "roomjoin", "roomleave", "roomstart", "msg", "invite"]) {
         const action = room.makeAction(name);
@@ -185,7 +188,7 @@
       const old = lobby;
       lobby = null;
       try { await old.leave(); } catch {}
-      joinLobby();
+      await joinLobby();
       relinking = false;
     }
     const peerGone = (peerId) => {
@@ -206,7 +209,7 @@
         trystero = await import(TRYSTERO);
         api.selfId = trystero.selfId;
         turn = (await window.DLE_TURN?.()) ?? [];
-        joinLobby();
+        await joinLobby();
         api.status = "live";
         tries = 0;
         send.hello(api.profile);
