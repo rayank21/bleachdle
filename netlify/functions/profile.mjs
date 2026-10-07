@@ -7,7 +7,7 @@
 //   POST /api/profile {action: "create", name, avatar}
 //   POST /api/profile {action: "login", code}
 //   POST /api/profile {action: "update", id, token, name?, avatar?, stats?, crew?, duel?: {won}, add?: {rolls, rerolls, guesses, seconds, …},
-//                      collect?: {anime: [character ids drawn in Crew Roll]}, showcase?: [{g, id, n, p, f}] (3 cards at most)}
+//                      cards?: {anime: [character ids got from boosters]}, showcase?: [{g, id, n, p, f}] (3 cards at most)}
 //   Boosters: add.boostEarn (packs earned) and add.boostOpen (packs opened); the stock is the difference.
 //
 // Seasons: every month (Paris time) has its own leaderboard: the wins earned and the best crews built that month.
@@ -92,8 +92,12 @@ function cleanCrew(c) {
 
 const publicView = (p) => ({
   id: p.id, name: p.name, avatar: p.avatar, created: p.created, stats: p.stats, crew: p.crew, counters: p.counters ?? {},
-  collection: p.collection ?? {}, seasons: p.seasons ?? {}, showcase: p.showcase ?? [],
+  // The collection is the cards from boosters (p.cards); the old Crew Roll draw lists (p.collection) no longer count.
+  collection: p.cards ?? {}, seasons: p.seasons ?? {}, showcase: owned(p, p.showcase),
 });
+
+// Only cards the player got from a booster can be in the showcase.
+const owned = (p, list) => (Array.isArray(list) ? list : []).filter((c) => (p.cards?.[c?.g] ?? []).includes(c?.id));
 
 // Profile showcase: up to 3 cards of the player's collection, shown to whoever opens the profile.
 function cleanShowcase(list) {
@@ -106,14 +110,14 @@ function cleanShowcase(list) {
   })).filter((c) => c.g && c.id && c.n);
 }
 
-// Crew Roll collection: the ids drawn, added to what the profile already has.
-function addCollection(p, add) {
-  p.collection ??= {};
+// Card collection: the ids got from boosters, added to what the profile already has.
+function addCards(p, add) {
+  p.cards ??= {};
   for (const g of GAMES) {
     const list = Array.isArray(add?.[g]) ? add[g] : [];
     const ok = list.map((x) => String(x)).filter((x) => /^[a-z0-9-]{1,60}$/.test(x));
     if (!ok.length) continue;
-    p.collection[g] = [...new Set([...(p.collection[g] ?? []), ...ok])].slice(0, MAX_COLLECTION);
+    p.cards[g] = [...new Set([...(p.cards[g] ?? []), ...ok])].slice(0, MAX_COLLECTION);
   }
 }
 
@@ -192,8 +196,10 @@ async function update(body) {
       if (!season.bests[c.anime] || c.score > season.bests[c.anime].score) season.bests[c.anime] = c;
     }
   }
-  if (body.collect && typeof body.collect === "object") addCollection(p, body.collect);
-  if (body.showcase != null) p.showcase = cleanShowcase(body.showcase);
+  // body.collect (Crew Roll draws, sent by pages from before boosters) is ignored, and the old lists are dropped.
+  delete p.collection;
+  if (body.cards && typeof body.cards === "object") addCards(p, body.cards);
+  if (body.showcase != null) p.showcase = owned(p, cleanShowcase(body.showcase));
   if (body.add && typeof body.add === "object") {
     p.counters ??= {};
     for (const [k, cap] of Object.entries(COUNTERS)) {

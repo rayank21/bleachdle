@@ -258,8 +258,7 @@ async function matchRoll(isReroll, free = false) {
     return matchRoll(false, true);
   }
   run.rolled = pick;
-  const fresh = window.DLE_Profile?.collect(run.g.id, pick.id);
-  S.matchReel.hint(fresh ? `${t("newCard")} ${t("chooseSlot")}` : t("chooseSlot"));
+  S.matchReel.hint(t("chooseSlot"));
   renderBoard($("#duelMine"), myBoard(), { rolled: pick, onPlace: matchPlace });
   renderMatchActions();
 }

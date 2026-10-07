@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T17:40",
+      title: { en: "Unzip your boosters, a fresh collection for everyone", fr: "Ouvre le zip de tes boosters, collection remise à zéro" },
+      items: [
+        { type: "improved", game: "crew", en: "Opening a booster: one click unzips it along the dotted line, then the cards come out one by one and turn over by themselves (Skip to speed up).", fr: "Ouvrir un booster : un clic ouvre le zip le long des pointillés, puis les cartes sortent une par une et se retournent toutes seules (Passer pour accélérer)." },
+        { type: "balance", en: "Your collection now only holds the cards you get from boosters: Crew Roll draws no longer count. Every collection starts from zero, with 3 boosters to get going.", fr: "Ta collection ne contient plus que les cartes obtenues en booster : les tirages de Roll ton équipage ne comptent plus. Toutes les collections repartent de zéro, avec 3 boosters pour démarrer." },
+      ],
+    },
+    {
       at: "2026-10-07T17:00",
       title: { en: "Boosters, chat reactions and your showcase", fr: "Boosters, réactions au chat et ta vitrine" },
       items: [

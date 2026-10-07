@@ -67,8 +67,8 @@ export async function soloRoll(isReroll, forced = null) {
   // Safety net: a draw that no longer fits (or is already on the board) is redrawn for free.
   if (!forced && (!fitsIn(run.slots, pick) || filledOf(run.slots).some((x) => x.char.id === pick.id))) return soloRoll(false);
   run.rolled = pick;
-  const fresh = window.DLE_Profile?.collect(run.g.id, pick.id);
-  soloReel.hint(fresh ? `${t("newCard")} ${t("chooseSlot")}` : t("chooseSlot"));
+  // Draws no longer fill the collection: only booster cards do.
+  soloReel.hint(t("chooseSlot"));
   renderBoard($("#crewBoard"), run.slots, { rolled: pick, onPlace: soloPlace });
   renderSoloActions();
 }

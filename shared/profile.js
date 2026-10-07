@@ -33,8 +33,8 @@
       remove: "Remove", removeConfirm: (n) => `Remove ${n} from your friends?`, home: "home page", crewRoll: "Crew Roll",
       inviteHelp: "Open a room (Crew Roll or an online race) to invite your friends.",
       invites: "Invitations", invitesYou: (g, code) => `invites you · ${g} · room ${code}`, invitedOffline: "Invited! They'll see it when they come back.",
-      achievements: (a, b) => `Achievements · ${a} / ${b}`, unlocked: "Achievement unlocked!", collection: "Crew Roll collection",
-      collectionSub: (a, b) => `${a} / ${b} cards drawn`, season: (m) => `Season · ${m}`, allTime: "All time", seasonEnds: (d) => `ends in ${d} day${d > 1 ? "s" : ""}`,
+      achievements: (a, b) => `Achievements · ${a} / ${b}`, unlocked: "Achievement unlocked!", collection: "Card collection (boosters)",
+      collectionSub: (a, b) => `${a} / ${b} cards from boosters`, season: (m) => `Season · ${m}`, allTime: "All time", seasonEnds: (d) => `ends in ${d} day${d > 1 ? "s" : ""}`,
       champions: (m) => `Champions of ${m}`, seasonCrews: "Best crews this month", seasonWins: "Most wins this month",
       boostGot: (n) => `+${n} booster${n > 1 ? "s" : ""}`, boostOpen: "Open",
       boostWhy: { welcome: "Welcome gift!", daily: "Daily booster", win: "Victory reward", crew: "Crew built", duel: "Online win" },
@@ -64,8 +64,8 @@
       remove: "Retirer", removeConfirm: (n) => `Retirer ${n} de tes amis ?`, home: "accueil", crewRoll: "Roll ton équipage",
       inviteHelp: "Ouvre une salle (Roll ton équipage ou une course en ligne) pour inviter tes amis.",
       invites: "Invitations", invitesYou: (g, code) => `t'invite · ${g} · salle ${code}`, invitedOffline: "Invité ! Il le verra en revenant.",
-      achievements: (a, b) => `Succès · ${a} / ${b}`, unlocked: "Succès débloqué !", collection: "Collection Roll ton équipage",
-      collectionSub: (a, b) => `${a} / ${b} cartes tirées`, season: (m) => `Saison · ${m}`, allTime: "Tout temps", seasonEnds: (d) => `fin dans ${d} jour${d > 1 ? "s" : ""}`,
+      achievements: (a, b) => `Succès · ${a} / ${b}`, unlocked: "Succès débloqué !", collection: "Collection de cartes (boosters)",
+      collectionSub: (a, b) => `${a} / ${b} cartes obtenues en booster`, season: (m) => `Saison · ${m}`, allTime: "Tout temps", seasonEnds: (d) => `fin dans ${d} jour${d > 1 ? "s" : ""}`,
       champions: (m) => `Champions de ${m}`, seasonCrews: "Meilleurs équipages du mois", seasonWins: "Plus de victoires du mois",
       boostGot: (n) => `+${n} booster${n > 1 ? "s" : ""}`, boostOpen: "Ouvrir",
       boostWhy: { welcome: "Cadeau de bienvenue !", daily: "Booster du jour", win: "Récompense de victoire", crew: "Équipage construit", duel: "Victoire en ligne" },
@@ -91,6 +91,13 @@
   let session = null; // { id, token, profile }
   try { session = JSON.parse(localStorage.getItem(KEY) || "null"); } catch {}
   const saveSession = () => { try { session ? localStorage.setItem(KEY, JSON.stringify(session)) : localStorage.removeItem(KEY); } catch {} };
+  // A profile saved before the booster-only collection still lists every Crew Roll draw: cleared until the server answers.
+  if (session?.profile && !session.cardsOnly) {
+    session.profile.collection = {};
+    session.profile.showcase = [];
+    session.cardsOnly = true;
+    saveSession();
+  }
 
   async function api(body) {
     const res = await fetch(API, body ? { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) } : undefined);
@@ -114,7 +121,7 @@
 
   function adopt(profile, token) {
     const sent = token ? false : !!session?.collectionSent;
-    session = { id: profile.id, token: token ?? session?.token, profile, collectionSent: sent };
+    session = { id: profile.id, token: token ?? session?.token, profile, collectionSent: sent, cardsOnly: true };
     if (!sent) { clearTimeout(countTimer); countTimer = setTimeout(flushCounters, 1500); }
     saveSession();
     // The profile name is the name in the online bar and the lobbies too.
@@ -166,7 +173,7 @@
     if (!session || (!Object.keys(add).length && !Object.keys(collectNow).length)) return;
     try { localStorage.removeItem(PENDING); localStorage.removeItem(PENDING_COLLECT); } catch {}
     try {
-      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add, collect: collectNow }) });
+      const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add, cards: collectNow }) });
       if (!res.ok) throw new Error();
       session.collectionSent = true;
       saveSession();
@@ -183,8 +190,10 @@
   }
   // Crew Roll collection: every character drawn, per anime. This browser keeps its own copy (it works without a
   // profile); new cards wait in PENDING_COLLECT until the profile has them.
-  const COLLECTION = "dle:collection";
-  const PENDING_COLLECT = "dle:pending-collect";
+  const COLLECTION = "dle:cards";
+  const PENDING_COLLECT = "dle:pending-cards";
+  // Before boosters, every Crew Roll draw went into the collection: those lists are gone (cards come from boosters only).
+  try { localStorage.removeItem("dle:collection"); localStorage.removeItem("dle:pending-collect"); } catch {}
   const readJSON = (k) => { try { return JSON.parse(localStorage.getItem(k) || "{}") || {}; } catch { return {}; } };
   const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
   function collectionOf(game) {
@@ -213,7 +222,7 @@
   // 1 a day, 1 per win and per crew built, with a capped stock. Kept as two counters (earned, opened), so a profile
   // carries them across devices; without a profile they wait in this browser like the other counters.
   const BOOST_MAX = 10;
-  const BOOST_DAY = "dle:boost-day";
+  const BOOST_DAY = "dle:boost-day2"; // new key with the booster-only collection: everyone gets the welcome gift again
   function boosters() {
     const c = session?.profile?.counters ?? {};
     const p = pending();
@@ -629,7 +638,7 @@
     ["crew25", "shield", "silver", 25, (c) => c.crews, "Builder", "Bâtisseur", "Build 25 crews", "Construis 25 équipages"],
     ["rankS", "star", "gold", 1, (c) => c.rankS, "S rank", "Rang S", "Build an S-rank crew", "Construis un équipage de rang S"],
     ["duel10", "swords", "silver", 10, (c) => c.onlineWins, "Duelist", "Duelliste", "Win 10 online games", "Gagne 10 parties en ligne"],
-    ["coll100", "cards", "silver", 100, (c) => c.cards, "Collector", "Collectionneur", "Draw 100 different cards", "Tire 100 cartes différentes"],
+    ["coll100", "cards", "silver", 100, (c) => c.cards, "Collector", "Collectionneur", "Get 100 different cards from boosters", "Obtiens 100 cartes différentes en booster"],
     ["collfull", "cards", "gold", 1, (c) => c.fullAnime, "Completionist", "Complétiste", "Complete an anime's collection", "Complète la collection d'un animé"],
     ["friend", "heart", "bronze", 1, (c) => c.friends, "Not alone", "Pas tout seul", "Add a friend", "Ajoute un ami"],
     ["time10", "clock", "silver", 10, (c) => c.hours, "Marathon", "Marathon", "Play for 10 hours", "Joue 10 heures"],

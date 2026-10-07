@@ -91,7 +91,10 @@ function packEl(g) {
   face.alt = "";
   face.onerror = () => face.remove();
   body.append(el("span", "bpack-kanji", kanji), face, el("i", "bpack-foil"), logo, el("span", "bpack-name", g.anime), el("span", "bpack-count", "5 ✦"));
-  pack.append(el("div", "bpack-top"), body, el("div", "bpack-bottom"));
+  // The zip: a dotted tear line under the cap, with its pull tab; the spark and the gap light up when it tears.
+  const zip = el("div", "bpack-zip");
+  zip.append(el("i", "bpack-gap"), el("i", "bpack-spark"), el("span", "bpack-tab"));
+  pack.append(body, el("div", "bpack-top"), zip, el("div", "bpack-bottom"));
   return pack;
 }
 
@@ -172,68 +175,68 @@ async function openPack(g, fromPack) {
   }
   pack.classList.add("is-idle");
 
-  // Tap: three hits charge it, the third tears the top off.
-  let hits = 0;
+  // One click: a spark runs along the dotted line and unzips the pack, the cap lifts, then flies off.
   await new Promise((resolve) => {
-    const hitIt = () => {
-      hits++;
-      pack.classList.remove("is-idle");
-      pack.animate([{ transform: "scale(1)" }, { transform: `scale(${1.04 + hits * 0.03}) rotate(${hits % 2 ? -4 : 4}deg)` }, { transform: "scale(1)" }], { duration: 260, easing: "ease-out" });
-      root.style.setProperty("--charge", hits / 3);
-      sfx(hits < 3 ? "slam" : "slash");
-      if (hits >= 3) { stage.removeEventListener("click", hitIt); resolve(); }
-    };
-    stage.addEventListener("click", hitIt);
-    hint.addEventListener("click", hitIt);
+    const go = () => { stage.removeEventListener("click", go); hint.removeEventListener("click", go); resolve(); };
+    stage.addEventListener("click", go);
+    hint.addEventListener("click", go);
   });
   hint.textContent = "";
-  // Tear.
+  pack.classList.remove("is-idle");
+  root.style.setProperty("--charge", 1);
+  const ZIP = 650;
+  const zipEase = "cubic-bezier(.55,0,.45,1)";
   const top = pack.querySelector(".bpack-top");
-  top.animate([{ transform: "none", opacity: 1 }, { transform: "translate(140px, -220px) rotate(38deg)", opacity: 0 }], { duration: 650, easing: "cubic-bezier(.3,.6,.4,1)", fill: "forwards" });
+  pack.querySelector(".bpack-tab")?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: "forwards" });
+  pack.querySelector(".bpack-spark").animate([{ left: "0%", opacity: 1 }, { left: "100%", opacity: 1, offset: 0.92 }, { left: "100%", opacity: 0 }], { duration: ZIP, easing: zipEase, fill: "forwards" });
+  pack.querySelector(".bpack-gap").animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: ZIP, easing: zipEase, fill: "forwards" });
+  top.animate([{ transform: "none" }, { transform: "translateY(-5%) rotate(4deg)" }], { duration: ZIP, easing: zipEase, fill: "forwards" });
+  pack.animate([{ transform: "none" }, { transform: "translateX(-2px) rotate(-0.6deg)" }, { transform: "translateX(2px) rotate(0.6deg)" }, { transform: "none" }], { duration: 160, iterations: Math.ceil(ZIP / 160) });
+  sfx("rise", { dur: ZIP / 1000 });
+  await wait(ZIP);
+  top.animate([{ transform: "translateY(-5%) rotate(4deg)", opacity: 1 }, { transform: "translate(170px, -260px) rotate(42deg)", opacity: 0 }], { duration: 650, easing: "cubic-bezier(.3,.6,.4,1)", fill: "forwards" });
   pack.classList.add("is-torn");
   flash.animate([{ opacity: 0 }, { opacity: 0.85 }, { opacity: 0 }], { duration: 520, easing: "ease-out" });
   const r = pack.getBoundingClientRect();
-  burst(r.left + r.width / 2, r.top + 30, { count: 50, spread: 260, color: c1 });
-  sfx("impact");
-  await wait(380);
-  // The cards rise out of the pack, then the pack drops away and the cards fan out face down.
-  const faces = cards.map((c, i) => cardSlot(c, i));
-  row.append(...faces.map((f) => f.node));
-  row.classList.add("is-dealing");
-  faces.forEach((f, i) => {
-    f.node.animate([
-      { transform: `translate(${(2 - i) * 100}%, 40vh) scale(0.6)`, opacity: 0 },
-      { transform: `translate(${(2 - i) * 100}%, -6vh) scale(0.75)`, opacity: 1, offset: 0.45 },
-      { transform: "none", opacity: 1 },
-    ], { duration: 900, delay: 120 + i * 90, easing: "cubic-bezier(.2,.9,.25,1)", fill: "backwards" });
-  });
-  pack.animate([{ transform: "none", opacity: 1 }, { transform: "translateY(60vh) rotate(8deg)", opacity: 0 }], { duration: 700, delay: 150, easing: "cubic-bezier(.5,0,.8,.4)", fill: "forwards" });
-  sfx("whoosh");
-  await wait(1100);
-  stage.remove();
-  row.classList.remove("is-dealing");
-  hint.textContent = t("bFlip");
+  burst(r.left + r.width / 2, r.top + r.height * 0.15, { count: 50, spread: 260, color: c1 });
+  sfx("slash");
+  await wait(420);
 
-  // Flip one by one, or all at once.
-  let left = faces.length;
-  const all = el("button", "btn-ghost bopen-all", t("bFlipAll"));
-  all.type = "button";
-  foot.append(all);
-  let finished;
-  const done = new Promise((res) => (finished = res));
-  const flip = (f) => {
-    if (f.flipped) return;
+  // The pack slides down; the cards come out of it one by one, land in the row and turn over.
+  root.classList.add("is-dealing");
+  const faces = cards.map((c, i) => cardSlot(c, i));
+  for (const f of faces) f.node.style.opacity = "0";
+  row.append(...faces.map((f) => f.node));
+  const low = Math.min(window.innerHeight * 0.3, 270);
+  await stage.animate([{ transform: "none" }, { transform: `translateY(${low}px) scale(0.6)` }], { duration: 520, easing: "cubic-bezier(.2,.9,.3,1)", fill: "forwards" }).finished.catch(() => {});
+  let fast = false;
+  const skip = el("button", "btn-ghost bopen-all", t("bSkip"));
+  skip.type = "button";
+  skip.addEventListener("click", () => { fast = true; skip.disabled = true; });
+  foot.append(skip);
+  for (const f of faces) {
+    const pr = pack.getBoundingClientRect();
+    const nr = f.node.getBoundingClientRect();
+    const dx = pr.left + pr.width / 2 - (nr.left + nr.width / 2);
+    const dy = pr.top + pr.height * 0.35 - (nr.top + nr.height / 2);
+    f.node.style.opacity = "";
+    pack.animate([{ transform: "none" }, { transform: "scale(1.05, 0.96)" }, { transform: "none" }], { duration: 260, easing: "ease-out" });
+    sfx("whoosh");
+    await f.node.animate([
+      { transform: `translate(${dx}px, ${dy}px) scale(0.42)`, opacity: 0 },
+      { transform: `translate(${dx}px, ${dy - nr.height * 0.55}px) scale(0.6)`, opacity: 1, offset: 0.3 },
+      { transform: `translate(${dx * 0.35}px, ${-30}px) scale(1.05) rotate(${dx > 0 ? -6 : 6}deg)`, offset: 0.75 },
+      { transform: "none", opacity: 1 },
+    ], { duration: fast ? 280 : 680, easing: "cubic-bezier(.25,.8,.3,1)" }).finished.catch(() => {});
     f.flipped = true;
-    reveal(f, root, flash);
-    if (--left === 0) finished();
-  };
-  faces.forEach((f) => f.node.addEventListener("click", () => flip(f)));
-  all.addEventListener("click", async () => {
-    all.disabled = true;
-    for (const f of faces) { if (!f.flipped) { flip(f); await wait(f.card.tier === "legend" || f.card.tier === "secret" ? 900 : 320); } }
-  });
-  await done;
-  await wait(700);
+    await reveal(f, root, flash, fast);
+    await wait(fast ? 110 : f.card.tier === "common" ? 380 : 700);
+  }
+  skip.remove();
+  stage.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" });
+  await wait(500);
+  stage.remove();
+  root.classList.remove("is-dealing");
 
   // Summary.
   hint.textContent = "";
@@ -289,14 +292,14 @@ function cardSlot(card, i) {
 
 // The flip, louder for rarer cards: an epic bursts purple, a legendary flashes gold and shakes the screen,
 // a secret one (a transformation) flashes every colour.
-async function reveal(f, root, flash) {
+async function reveal(f, root, flash, fast = false) {
   const { node, card } = f;
   const big = card.tier === "legend" || card.tier === "secret";
   if (big) {
     // A beat of suspense: the back glows and trembles before it turns.
     node.classList.add("is-charging");
-    sfx("rise", { dur: 0.6 });
-    await wait(650);
+    sfx("rise", { dur: fast ? 0.3 : 0.6 });
+    await wait(fast ? 320 : 650);
     node.classList.remove("is-charging");
   }
   node.classList.add("is-flipped");
