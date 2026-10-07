@@ -7,6 +7,16 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-07T15:30",
+      title: { en: "Transformations like in the anime", fr: "Des transformations comme dans l'anime" },
+      items: [
+        { type: "new", game: "crew", en: "Transformations now play like an anime: cinema bars, impact frames, speed lines, a shockwave, the kanji slamming down, and sound on every beat.", fr: "Les transformations se jouent comme dans un anime : bandes cinéma, impact frames, lignes de vitesse, onde de choc, le kanji qui s'écrase, et du son à chaque temps fort." },
+        { type: "new", game: "crew", en: "15 new transformations with their anime clip: Tanjiro, Zenitsu, Rengoku, Akaza, Bakugo, Todoroki, Dabi, Hinata, Nishinoya, Arthur, Joker, Benimaru, Genos, Bang, Orochi.", fr: "15 nouvelles transformations avec leur extrait de l'anime : Tanjiro, Zenitsu, Rengoku, Akaza, Bakugo, Todoroki, Dabi, Hinata, Nishinoya, Arthur, Joker, Benimaru, Genos, Bang, Orochi." },
+        { type: "improved", game: "crew", en: "Clips for the transformations that had none in the newest anime: Gyomei, Muzan, Doma, Shigaraki, Kageyama, Oikawa, Bokuto, Ushijima, Atsumu, Shinra, Benimaru, Sho, Dragon, Veldora, Milim, Guy, Luminous.", fr: "Des extraits pour les transformations qui n'en avaient pas dans les derniers animes : Gyomei, Muzan, Doma, Shigaraki, Kageyama, Oikawa, Bokuto, Ushijima, Atsumu, Shinra, Benimaru, Shô, Dragon, Veldora, Milim, Guy, Luminous." },
+        { type: "new", game: "onepiece", en: "From Egghead, Rob Lucci awakens: his transformation opens on his clash with Luffy in Gear 5.", fr: "À partir d'Egghead, Rob Lucci s'éveille : sa transformation s'ouvre sur son choc avec Luffy en Gear 5." },
+      ],
+    },
+    {
       at: "2026-10-07T14:55",
       title: { en: "The top 3 shine, drop rates in the index", fr: "Le top 3 brille, taux de drop dans l'index" },
       items: [
