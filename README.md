@@ -4,7 +4,7 @@ Daily anime character guessing games (Wordle-style), in English and French. Each
 
 | Category | Page | Characters |
 | --- | --- | --- |
-| **Bleachdle** (Bleach) | `bleach/` | 98 |
+| **Bleachdle** (Bleach) | `bleach/` | 108 |
 | **Hunterdle** (Hunter × Hunter) | `hunterxhunter/` | 92 |
 | **Dragonballdle** (Dragon Ball, Z, Super) | `dragonball/` | 82 |
 | **Narutodle** (Naruto, Shippūden) | `naruto/` | 93 |

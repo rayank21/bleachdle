@@ -47,12 +47,12 @@
     bleach: {
       // Unohana and Orihime heal anything; Tenjiro's hot springs heal Captains in hours; Hikifune rebuilt Ichigo's body.
       healer: parse(`retsu-unohana:10 orihime-inoue:10 tenjiro-kirinji:10 isane-kotetsu:9 kirio-hikifune:9 hanataro-yamada:8 hachigen-ushoda:6
-        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:7 kisuke-urahara:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5 giselle-gewelle:3 senjumaru-shutara:7 izuru-kira:7 rukia-kuchiki:4 ryuken-ishida:7 uryu-ishida:6 kiyone-kotetsu:6`),
+        nelliel-tu-odelschwanck:7 isshin-kurosaki:6 tessai-tsukabishi:7 kisuke-urahara:5 mayuri-kurotsuchi:8 nemu-kurotsuchi:5 giselle-gewelle:3 senjumaru-shutara:7 izuru-kira:7 rukia-kuchiki:4 ryuken-ishida:7 uryu-ishida:6 kiyone-kotetsu:6 momo-hinamori:6`),
       // Inventors and researchers: the Hogyoku, the SRDI, Szayel's lab, Oetsu's forge, Hikifune (12th Division before
       // Kisuke), Kukaku's fireworks cannon, Akon running the SRDI's lab. Strategists too: Yhwach sees the future,
       // Shunsui and Gin play their long games, Haschwalth runs the Sternritter.
       engineer: parse(`kisuke-urahara:10 mayuri-kurotsuchi:10 sosuke-aizen:9 szayelaporro-granz:9 oetsu-nimaiya:9 akon:8 kirio-hikifune:7
-        senjumaru-shutara:9 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:6 tessai-tsukabishi:5 uryu-ishida:7 yhwach:9 shunsui-kyoraku:7 jugram-haschwalth:7 gin-ichimaru:6 askin-nakk-le-vaar:6 jushiro-ukitake:6 shukuro-tsukishima:8 kugo-ginjo:7 ichibe-hyosube:8 ryuken-ishida:7 hachigen-ushoda:6`),
+        senjumaru-shutara:9 kukaku-shiba:7 nemu-kurotsuchi:6 yukio-hans-vorarlberna:8 tessai-tsukabishi:5 uryu-ishida:7 yhwach:9 shunsui-kyoraku:7 jugram-haschwalth:7 gin-ichimaru:6 askin-nakk-le-vaar:6 jushiro-ukitake:6 shukuro-tsukishima:8 kugo-ginjo:7 ichibe-hyosube:8 ryuken-ishida:7 hachigen-ushoda:6`),
     },
     hunterxhunter: {
       // Leorio studies medicine; Nanika heals with a wish; Pitou operates as Doctor Blythe; Bisky's massages.
@@ -125,14 +125,15 @@
   window.CREW_GAMES = {
     bleach: {
       slots: [
-        { label: { en: "Shinigami", fr: "Shinigami" }, icon: "sword", count: 3, fits: (c) => has(c.race, "Shinigami", "Hybrid"),
+        { label: { en: "Shinigami", fr: "Shinigami" }, icon: "sword", count: 2, fits: (c) => has(c.race, "Shinigami", "Hybrid"),
           score: rated({ "kaname-tosen": 8, "tessai-tsukabishi": 7, "kiyone-kotetsu": 3, "sentaro-kotsubaki": 3, "zennosuke-kurumadani": 2 }) },
         // Tosen took a Hollow's power (Resurrección) against Komamura.
         { label: { en: "Arrancar", fr: "Arrancar" }, icon: "skull", count: 2, fits: (c) => has(c.race, "Arrancar", "Hollow") || c.id === "kaname-tosen",
           score: rated({ "kaname-tosen": 9 }) },
         // Ichigo inherited a Quincy's blood from his mother and wears a Hollow mask like the Visored.
-        { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 1, fits: (c) => has(c.race, "Quincy") || c.id === "ichigo-kurosaki",
-          score: rated({ "uryu-ishida": 9, "lille-barro": 8, "ichigo-kurosaki": 10 }) },
+        // Gerard and Pernida are the Soul King's heart and left arm, in Yhwach's royal guard.
+        { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 2, fits: (c) => has(c.race, "Quincy") || c.id === "ichigo-kurosaki",
+          score: rated({ "uryu-ishida": 10, "lille-barro": 8, "ichigo-kurosaki": 10, "gerard-valkyrie": 10, "pernida-parnkgjas": 9 }) },
         { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") || c.id === "ichigo-kurosaki",
           score: rated({ "ichigo-kurosaki": 10, "shinji-hirako": 9, "rojuro-otoribashi": 7, "mashiro-kuna": 4 }) },
         // Humans, wandering souls and Fullbringers; Isshin, Ryuken and Masaki live as humans in Karakura.
@@ -153,7 +154,7 @@
         wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:9 shukuro-tsukishima:8 riruka-dokugamine:4
         yukio-hans-vorarlberna:5 jackie-tristan:4 giriko-kutsuzawa:5 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
         bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:8 quilge-opie:6
-        gremmy-thoumeaux:9 lille-barro:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3 dordoni-alessandro-del-socaccio:5 cirucci-sanderwicci:5 gantenbainne-mosqueda:5 kiyone-kotetsu:3 sentaro-kotsubaki:3 zennosuke-kurumadani:2 ikumi-unagiya:2`),
+        gremmy-thoumeaux:9 lille-barro:9 pernida-parnkgjas:9 gerard-valkyrie:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3 dordoni-alessandro-del-socaccio:5 cirucci-sanderwicci:5 gantenbainne-mosqueda:5 kiyone-kotetsu:3 sentaro-kotsubaki:3 zennosuke-kurumadani:2 ikumi-unagiya:2`),
     },
 
     hunterxhunter: {

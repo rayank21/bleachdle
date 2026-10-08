@@ -1867,6 +1867,44 @@ window.DLE_CHARACTERS = [
   "image": "assets/characters/lille-barro.webp"
  },
  {
+  "id": "pernida-parnkgjas",
+  "name": "Pernida Parnkgjas",
+  "gender": "Unknown",
+  "race": [
+   "Quincy"
+  ],
+  "age": "Unknown",
+  "hair": [
+   "Unknown"
+  ],
+  "height": 150,
+  "residence": [
+   "Wandenreich"
+  ],
+  "arc": 6,
+  "affiliation": "Schutzstaffel",
+  "image": "assets/characters/pernida-parnkgjas.webp"
+ },
+ {
+  "id": "gerard-valkyrie",
+  "name": "Gerard Valkyrie",
+  "gender": "M",
+  "race": [
+   "Quincy"
+  ],
+  "age": "Unknown",
+  "hair": [
+   "Blonde"
+  ],
+  "height": 222,
+  "residence": [
+   "Wandenreich"
+  ],
+  "arc": 6,
+  "affiliation": "Schutzstaffel",
+  "image": "assets/characters/gerard-valkyrie.webp"
+ },
+ {
   "id": "ichibe-hyosube",
   "name": "Ichibē Hyōsube",
   "gender": "M",

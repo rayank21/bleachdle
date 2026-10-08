@@ -1,6 +1,6 @@
 // Categories of the site. Paths are relative to the site root.
 window.DLE_GAMES = [
-  { id: "bleach", storage: "bleachdle", brand: "Bleachdle", anime: "Bleach", path: "bleach/", logo: "assets/logos/bleachdle.webp", count: 106, arcs: 7,
+  { id: "bleach", storage: "bleachdle", brand: "Bleachdle", anime: "Bleach", path: "bleach/", logo: "assets/logos/bleachdle.webp", count: 108, arcs: 7,
     featured: ["ichigo-kurosaki", "rukia-kuchiki", "sosuke-aizen", "kenpachi-zaraki", "byakuya-kuchiki", "ulquiorra-cifer"] },
   { id: "hunterxhunter", storage: "hunterdle", brand: "Hunterdle", anime: "Hunter × Hunter", path: "hunterxhunter/", logo: "assets/logos/hunterdle.webp", count: 93, arcs: 7,
     featured: ["gon-freecss", "killua-zoldyck", "kurapika", "hisoka", "chrollo-lucilfer", "meruem"] },

@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T04:10",
+      title: { en: "Bleach: Pernida and Gerard, two Quincy slots", fr: "Bleach : Pernida et Gerard, deux places Quincy" },
+      items: [
+        { type: "new", game: "bleach", en: "Two new characters from Yhwach's royal guard: Pernida Parnkgjas and Gerard Valkyrie (108 in all).", fr: "Deux nouveaux persos de la garde royale de Yhwach : Pernida Parnkgjas et Gerard Valkyrie (108 en tout)." },
+        { type: "balance", game: "crew", en: "Bleach team: one Shinigami slot becomes a second Quincy slot. Quincy: Uryu 10, Gerard Valkyrie 10, Pernida 9. Momo Hinamori healer 6, Yukio engineer 8.", fr: "Équipe Bleach : une place Shinigami devient une deuxième place Quincy. Quincy : Uryû 10, Gerard Valkyrie 10, Pernida 9. Momo Hinamori soigneuse 6, Yukio ingénieur 8." },
+      ],
+    },
+    {
       at: "2026-10-08T03:50",
       title: { en: "My Hero Academia: Star and Stripe at 10", fr: "My Hero Academia : Star and Stripe à 10" },
       items: [
