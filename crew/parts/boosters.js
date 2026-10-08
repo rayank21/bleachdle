@@ -263,9 +263,6 @@ async function openPack(g, fromPack) {
   foot.textContent = "";
   const fresh = cards.filter((c) => c.isNew).length;
   const sum = el("p", `bopen-sum${fresh ? " has-new" : ""}`, t("bSummary")(fresh));
-  const again = el("button", "btn-primary", `${t("bAgain")} (${stock()})`);
-  again.type = "button";
-  again.disabled = !stock();
   const close = el("button", "btn-ghost", t("bDone"));
   close.type = "button";
   const end = (next) => {
@@ -273,14 +270,35 @@ async function openPack(g, fromPack) {
     setTimeout(() => { root.remove(); document.documentElement.classList.remove("bopen-lock"); }, 320);
     opening = false;
     if (S.mode === "boosters") renderBoosters();
-    if (next) setTimeout(() => openPack(g, null), 360);
+    if (next) setTimeout(() => openAgain(g, next), 360);
   };
-  again.addEventListener("click", () => end(true));
   close.addEventListener("click", () => end(false));
   root.addEventListener("keydown", (e) => { if (e.key === "Escape") end(false); });
-  foot.append(sum, again, close);
+  foot.append(sum, againRow(end), close);
   close.focus({ preventScroll: true });
   if (fresh) sfx("win");
+}
+
+// After an opening: open more of the same anime right away, 1, 2, 5, 10 or all of them (what the stock allows).
+function againRow(end) {
+  const n = stock();
+  const row = el("div", "bopen-again");
+  if (!n) { row.append(el("span", "muted", t("bNone"))); return row; }
+  row.append(el("span", "bopen-again-label", `${t("bAgain")} (${n})`));
+  for (const q of QTYS) {
+    const k = q === "all" ? n : q;
+    if (k > n || (q === "all" && (n < 2 || QTYS.includes(n)))) continue;
+    const b = el("button", q === 1 ? "btn-primary btn-small" : "btn-ghost btn-small", q === "all" ? `${t("bAll")} ×${n}` : `×${q}`);
+    b.type = "button";
+    b.addEventListener("click", () => { qty = q; end(k); });
+    row.append(b);
+  }
+  return row;
+}
+function openAgain(g, k) {
+  const n = Math.min(k, stock());
+  if (n > 1) openMany(g, null, n);
+  else if (n === 1) openPack(g, null);
 }
 
 const frame2 = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -371,15 +389,18 @@ async function openMany(g, fromPack, n) {
   const by = (tr) => cards.filter((c) => c.tier === tr).length;
   const sum = el("p", `bopen-sum${fresh ? " has-new" : ""}`, t("bSummary")(fresh));
   const detail = el("p", "bopen-detail", t("bManyDetail")(cards.length, by("epic"), by("legend"), by("secret")));
-  const close = el("button", "btn-primary", t("bDone"));
+  const close = el("button", "btn-ghost", t("bDone"));
   close.type = "button";
-  close.addEventListener("click", () => {
+  const end = (next) => {
     root.classList.add("is-out");
     setTimeout(() => { root.remove(); document.documentElement.classList.remove("bopen-lock"); }, 320);
     opening = false;
     if (S.mode === "boosters") renderBoosters();
-  });
-  foot.append(sum, detail, close);
+    if (next) setTimeout(() => openAgain(g, next), 360);
+  };
+  close.addEventListener("click", () => end(false));
+  root.addEventListener("keydown", (e) => { if (e.key === "Escape") end(false); });
+  foot.append(sum, detail, againRow(end), close);
   close.focus({ preventScroll: true });
   if (fresh) sfx("win");
 }

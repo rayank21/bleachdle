@@ -23,6 +23,12 @@
 //   POST /api/profile {action: "trade-offer", id, token, other, give: {g, id}, want: {g, id} | null}   to a friend
 //   POST /api/profile {action: "trade-answer", id, token, tid, accept}     accept (the cards change hands) or decline
 //   POST /api/profile {action: "trade-cancel", id, token, tid}             take back an offer I sent
+//
+// Private messages between friends (the last 100 of each pair, in the "social" store) and voice messages:
+//   POST /api/profile {action: "dm-send", id, token, to, text?, voice?: id, dur?}   a message to a friend
+//   POST /api/profile {action: "dm-list", id, token, with}                 the conversation (and marks it read)
+//   POST /api/profile {action: "voice-up", id, token, mime, data (base64)}  a voice message (30 s, ~300 KB at most)
+//   GET  /api/profile?voice=…                                               its audio
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
@@ -31,7 +37,7 @@ const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
 // Activity counters sent as increments (rolls, rerolls, guesses, seconds played), capped per request.
-const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500, boostEarn: 60, boostOpen: 60, cardDuels: 50, cardWins: 50 };
+const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500, boostEarn: 60, boostOpen: 60, cardDuels: 50, cardWins: 50, chats: 300, voice: 30, voiceMsgs: 100 };
 const MAX_COLLECTION = 400; // cards kept per anime
 const MAX_DUPES = 99; // extra copies kept per card
 const MAX_TRADES = 20; // offers kept per profile, received and sent
@@ -359,7 +365,10 @@ async function leaderboard() {
   const rate = (r) => r.wins / Math.max(1, r.played);
   const teams = [...teamMap.values()].filter((r) => r.played > 0).sort((a, b) => b.wins - a.wins || rate(b) - rate(a) || b.best - a.best).slice(0, 20)
     .map((r) => ({ ...r, members: r.members.slice(0, 6), vs: Object.values(r.vs).sort((a, b) => b.played - a.played).slice(0, 12) }));
-  return json({ crews, byAnime, wins, teams, players: all.length, season, podiums });
+  // Netlify's CDN keeps it 20 seconds (and serves the last copy while it refreshes): a phone gets it at once.
+  return new Response(JSON.stringify({ crews, byAnime, wins, teams, players: all.length, season, podiums }), {
+    headers: { "content-type": "application/json", "cache-control": "public, max-age=0, must-revalidate", "netlify-cdn-cache-control": "public, s-maxage=20, stale-while-revalidate=120" },
+  });
 }
 
 // ── Friends: mutual, after a request. Each profile keeps `friends` and the `requests` it received. ──
@@ -370,7 +379,8 @@ async function friendsView(p) {
   const s = store();
   const load = async (list) => (await Promise.all(ids(list).map((id) => s.get(`p/${id}`, { type: "json" })))).filter(Boolean).map(mini);
   const [friends, requests] = await Promise.all([load(p.friends), load(p.requests)]);
-  return json({ friends, requests, invites: freshInvites(p) });
+  // Unread private messages, per friend.
+  return json({ friends, requests, invites: freshInvites(p), unread: p.dmUnread ?? {} });
 }
 
 const freshInvites = (p) => (Array.isArray(p.invites) ? p.invites : []).filter((i) => Date.now() - i.at < INVITE_TTL);
@@ -515,6 +525,8 @@ async function tradeAnswer(body) {
         if (offer.want) { takeCard(p, offer.want); giveCard(other, offer.want); }
         const done = { ...offer, done: Date.now() };
         other.tradesDone = [...(other.tradesDone ?? []), done].slice(-10);
+        // Trades made, for the achievements (both sides).
+        for (const q of [p, other]) { q.counters ??= {}; q.counters.trades = (q.counters.trades || 0) + 1; }
       }
     }
     await store().setJSON(`p/${other.id}`, other);
@@ -537,18 +549,89 @@ async function tradeCancel(body) {
   return tradesView(p);
 }
 
+// ── Private messages and voice messages ──
+const social = () => getStore({ name: "social", consistency: "strong" });
+const DM_KEEP = 100;
+const dmKey = (a, b) => `dm/${[a, b].sort().join("-")}`;
+const cleanText = (s) => String(s ?? "").replace(/[\u0000-\u001f]/g, " ").replace(/\s+/g, " ").trim().slice(0, 300);
+const VOICE_ID = /^[a-f0-9]{16}$/;
+// At most `n` actions of a kind per `ms` (timestamps kept on the profile).
+function limited(p, key, n, ms) {
+  const now = Date.now();
+  p[key] = (Array.isArray(p[key]) ? p[key] : []).filter((t) => now - t < ms);
+  if (p[key].length >= n) return true;
+  p[key].push(now);
+  return false;
+}
+
+async function dmSend(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const other = ids(p.friends).includes(body.to) ? await readProfile(body.to) : null;
+  if (!other || !ids(other.friends).includes(p.id)) return fail("friend", 403);
+  const text = cleanText(body.text);
+  const voice = VOICE_ID.test(body.voice ?? "") ? { id: body.voice, dur: Math.min(60, Math.max(1, Math.round(+body.dur || 1))) } : null;
+  if (!text && !voice) return fail("empty");
+  if (limited(p, "dmRate", 20, 60000)) return fail("slow", 429);
+  const msg = { mid: randomBytes(6).toString("hex"), from: p.id, text, voice, at: Date.now() };
+  const s = social();
+  const key = dmKey(p.id, other.id);
+  const list = (await s.get(key, { type: "json" })) ?? [];
+  list.push(msg);
+  await s.setJSON(key, list.slice(-DM_KEEP));
+  other.dmUnread = { ...(other.dmUnread ?? {}), [p.id]: Math.min(99, (other.dmUnread?.[p.id] || 0) + 1) };
+  await store().setJSON(`p/${other.id}`, other);
+  await store().setJSON(`p/${p.id}`, p);
+  return json({ msg });
+}
+
+async function dmList(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  if (typeof body.with !== "string" || !ids(p.friends).includes(body.with)) return fail("friend", 403);
+  const messages = (await social().get(dmKey(p.id, body.with), { type: "json" })) ?? [];
+  if (p.dmUnread?.[body.with]) {
+    delete p.dmUnread[body.with];
+    await store().setJSON(`p/${p.id}`, p);
+  }
+  return json({ messages });
+}
+
+async function voiceUp(body) {
+  const p = await authed(body.id, body.token);
+  if (!p) return fail("auth", 401);
+  const mime = /^audio\/(webm|ogg|mp4|mpeg|aac|x-m4a)(;.*)?$/.test(body.mime ?? "") ? body.mime.split(";")[0] : null;
+  const data = typeof body.data === "string" && body.data.length <= 420000 && /^[A-Za-z0-9+/=]+$/.test(body.data) ? body.data : null;
+  if (!mime || !data) return fail("voice");
+  if (limited(p, "voiceRate", 40, 3600000)) return fail("slow", 429);
+  const id = randomBytes(8).toString("hex");
+  await social().set(`vm/${id}`, Buffer.from(data, "base64"), { metadata: { mime, by: p.id, at: Date.now() } });
+  await store().setJSON(`p/${p.id}`, p);
+  return json({ id });
+}
+
+async function voiceGet(id) {
+  if (!VOICE_ID.test(id ?? "")) return fail("voice");
+  const r = await social().getWithMetadata(`vm/${id}`, { type: "arrayBuffer" });
+  if (!r) return fail("not found", 404);
+  return new Response(r.data, { headers: { "content-type": r.metadata?.mime || "audio/webm", "cache-control": "public, max-age=604800, immutable" } });
+}
+
 export default async (req) => {
   try {
     if (req.method === "GET") {
       const url = new URL(req.url);
       if (url.searchParams.has("leaderboard")) return leaderboard();
+      if (url.searchParams.has("voice")) return voiceGet(url.searchParams.get("voice"));
       const p = await readProfile(url.searchParams.get("id"));
       return p ? json({ profile: publicView(p) }) : fail("not found", 404);
     }
     if (req.method !== "POST") return fail("method", 405);
     const text = await req.text();
-    if (text.length > 20000) return fail("too large", 413);
+    // Voice messages are bigger than the rest.
+    if (text.length > 440000) return fail("too large", 413);
     const body = JSON.parse(text || "{}");
+    if (text.length > 20000 && body.action !== "voice-up") return fail("too large", 413);
     if (body.action === "create") return create(body);
     if (body.action === "login") return login(body);
     if (body.action === "update") return update(body);
@@ -562,6 +645,9 @@ export default async (req) => {
     if (body.action === "trade-offer") return tradeOffer(body);
     if (body.action === "trade-answer") return tradeAnswer(body);
     if (body.action === "trade-cancel") return tradeCancel(body);
+    if (body.action === "dm-send") return dmSend(body);
+    if (body.action === "dm-list") return dmList(body);
+    if (body.action === "voice-up") return voiceUp(body);
     return fail("action");
   } catch (e) {
     console.error(e);

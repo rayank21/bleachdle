@@ -80,6 +80,9 @@
       const r = api.myRoom;
       const seat = r && (r.started ? lateJoin && r.members.length < 8 : r.members.length < r.size);
       const mine = seat ? { code: r.code, channel, game: r.game, started: !!r.started } : null;
+      // The room I'm in (even full or playing): its voice channel in the chat.
+      if (r?.code) window.DLE_IN_ROOM = { code: r.code, channel };
+      else if (window.DLE_IN_ROOM?.channel === channel) window.DLE_IN_ROOM = null;
       if (JSON.stringify(mine) !== published) {
         published = JSON.stringify(mine);
         window.DLE_MY_ROOM = mine;
@@ -264,6 +267,12 @@
       await joinLobby();
       relinking = false;
     }
+    // Back from a phone's sleep or a network change (shared/link.js): a fresh handshake, then hello again.
+    window.addEventListener("dle:wake", async () => {
+      if (!lobby) return;
+      await relink();
+      send.hello?.(helloData());
+    });
     const peerGone = (peerId) => {
       api.peers.delete(peerId);
       for (const [id, r] of api.rooms) if (r.host === peerId) api.rooms.delete(id);

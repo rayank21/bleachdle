@@ -55,6 +55,7 @@
   function openSocket(url) {
     const entry = sockets.get(url) ?? { ws: null, retry: 0 };
     sockets.set(url, entry);
+    if (entry.ws && entry.ws.readyState <= 1) return; // already open or opening
     let ws;
     try { ws = new WebSocket(url); } catch { return; }
     entry.ws = ws;
@@ -256,8 +257,29 @@
     };
   }
 
+  // Back from a phone's sleep, a tab in the background or a network change: the sockets may be dead (or waiting up to
+  // 30 s for their next try). Open them again right away; after a real absence, close and reopen them all (a socket
+  // can look open and be dead), then tell the pages (dle:wake) so their channels shake hands again.
+  let hiddenAt = 0;
+  function wake(long) {
+    if (!topics.size) return;
+    for (const [url, entry] of sockets) {
+      if (long && entry.ws) { const old = entry.ws; entry.ws = null; old.onclose = null; try { old.close(); } catch {} }
+      entry.retry = 0;
+      openSocket(url);
+    }
+    statusChanged();
+    if (long) window.dispatchEvent(new Event("dle:wake"));
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) { hiddenAt = Date.now(); return; }
+    wake(hiddenAt > 0 && Date.now() - hiddenAt > 15000);
+  });
+  window.addEventListener("online", () => wake(true));
+  window.addEventListener("pageshow", (e) => { if (e.persisted) wake(true); });
+
   // No relay reachable for a while: this browser is cut off (ad blocker, antivirus, network filter).
   const blocked = () => startedAt > 0 && Date.now() - startedAt > 12000 && openCount() === 0;
 
-  window.DLE_Link = { join, blocked, relays: openCount };
+  window.DLE_Link = { join, blocked, relays: openCount, wake: () => wake(true) };
 })();

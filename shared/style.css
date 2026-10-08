@@ -223,7 +223,8 @@ body[data-game="attackontitan"] .hero-title { font-size: 30px; white-space: nowr
 /* ── Layout ─────────────────────────────────────────────────── */
 .page { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 26px 16px 40px; }
 .card {
-  background: var(--surface);
+  /* a wash of the anime's colour at the top of every panel */
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.07), transparent 140px), var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   /* a thin line of the anime's colour along the top edge */
@@ -548,6 +549,9 @@ body[data-game="sololeveling"] { --accent: #7c6cff; --accent-strong: #a097ff; --
 .modal {
   width: min(100% - 32px, 620px);
   max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 24px); /* phones: the visible height, without the address bar */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -822,14 +826,17 @@ body[data-game="hunterxhunter"] .hero-title { font-size: 31px; white-space: nowr
 .presence-badge, .pf-btn-badge { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--wrong, #e5262e); color: #fff; font-size: 11px; font-weight: 900; }
 
 /* ── Crew Roll ──────────────────────────────────────────────── */
-/* Black and red whatever the anime picked. */
-body.crew-page, body.crew-page[data-game] {
+/* Black and red before an anime is picked; then the colours of the anime picked (purple for Solo Leveling, orange for
+   Naruto…), on the buttons, frames, glows and the background tint. */
+body.crew-page[data-game="crew"] {
   --accent: #e5262e;
   --accent-strong: #ff4b52;
   --accent-rgb: 229, 38, 46;
   --tint-rgb: 150, 10, 20;
 }
-.crew-page .btn-primary { color: #fff; }
+/* Light colours take dark text. */
+body.crew-page[data-game="hunterxhunter"], body.crew-page[data-game="onepunchman"], body.crew-page[data-game="bleach"], body.crew-page[data-game="haikyuu"] { --on-accent: #141414; }
+.crew-page .btn-primary { color: var(--on-accent, #fff); }
 .crew-page .page { gap: 16px; }
 .cat-dice { display: grid; place-items: center; background: var(--surface-3); color: var(--text); }
 .icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -866,7 +873,7 @@ body.crew-page, body.crew-page[data-game] {
 .crew-setting-label { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
 .crew-mode { width: 480px; max-width: 100%; padding: 3px; grid-template-columns: repeat(3, 1fr) 1.25fr 1fr; }
 .crew-mode button { padding: 6px 4px; font-size: 14px; white-space: nowrap; }
-.crew-page .mode-tabs button.is-active { background: var(--accent); color: #fff; }
+.crew-page .mode-tabs button.is-active { background: var(--accent); color: var(--on-accent, #fff); }
 .anime-picker { display: flex; gap: 6px; }
 .anime-pick {
   display: flex;
@@ -1072,6 +1079,9 @@ a.arc-chip { text-decoration: none; }
   .crew-bar .arc-chip { width: 100%; justify-content: center; }
   .anime-picker { overflow-x: auto; scrollbar-width: none; }
   .crew-mode { width: 100%; }
+  /* The five modes take the whole width (they overlapped the arc). */
+  .crew-settings > .crew-setting:has(.crew-mode) { grid-column: 1 / -1; }
+  .crew-mode button { font-size: 12.5px; padding: 6px 2px; }
   .crew-bar .arc-chip { max-width: 100%; }
   .crew-board { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
   .crew-slot { padding: 32px 6px 10px; }
@@ -1838,3 +1848,98 @@ img.cl-game-crew { background: #5ed3c6; }
 .pf-h2h li b { color: var(--text); }
 .pf-h2h li.is-up b { color: #7dffb0; }
 .pf-h2h li.is-down b { color: #ff7a85; }
+
+/* ── Chat: tabs (general / private / voice), private messages, voice messages and live voice ── */
+.chat-panel { height: min(520px, calc(100dvh - 110px)); }
+.chat-tabs { display: flex; gap: 4px; padding: 6px 8px; border-bottom: 1px solid var(--line); background: rgba(0, 0, 0, 0.2); }
+.chat-tab { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 4px; border: 0; border-radius: 9px; background: none; color: var(--muted); font: 800 12.5px var(--font); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.chat-tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+.chat-tab.is-active { color: var(--text); background: rgba(var(--accent-rgb), 0.18); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.45); }
+.chat-tab.is-live span::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: #2fd067; box-shadow: 0 0 0 3px rgba(47, 208, 103, 0.25); vertical-align: 1px; }
+.chat-tab-badge { display: inline-grid; place-items: center; min-width: 17px; height: 17px; padding: 0 5px; border-radius: 999px; background: var(--wrong, #e5262e); color: #fff; font-size: 10.5px; font-weight: 900; }
+.chat-dmhead { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.chat-dmhead[hidden], .chat-voice[hidden], .chat-list[hidden], .chat-form[hidden], .chat-boom[hidden] { display: none; }
+.chat-dm-back { width: 30px; height: 30px; flex: none; border: 0; border-radius: 50%; background: var(--surface-2); color: var(--text); font-size: 20px; line-height: 1; cursor: pointer; }
+.chat-dm-name { font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-dm-state { margin-left: auto; color: var(--muted); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.chat-dm-state.is-online { color: #2fd067; }
+.chat-dm-state.is-away { color: #f2bf2a; }
+.chat-friend { list-style: none; }
+.chat-friend-btn { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px; border: 0; border-radius: 12px; background: none; color: var(--text); text-align: left; font: inherit; cursor: pointer; }
+.chat-friend-btn:hover { background: rgba(255, 255, 255, 0.05); }
+.chat-friend-face { position: relative; width: 36px; height: 36px; flex: none; border-radius: 50%; background: var(--surface-3); }
+.chat-friend-face img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.chat-friend-dot { position: absolute; right: -1px; bottom: -1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid #141418; background: #6b6b74; }
+.chat-friend-btn.is-online .chat-friend-dot { background: #2fd067; }
+.chat-friend-btn.is-away .chat-friend-dot { background: #f2bf2a; }
+.chat-friend-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.chat-friend-who b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-friend-who small { color: var(--muted); font-size: 12px; }
+.chat-warn { color: #ffb36b; font-size: 13px; }
+.chat-mic { display: grid; place-items: center; width: 42px; height: 42px; flex: none; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-2); color: var(--text); cursor: pointer; transition: transform 0.15s, color 0.15s; }
+.chat-mic:hover { transform: scale(1.06); color: #ff6b81; }
+.chat-form { position: relative; }
+.chat-rec { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; padding: 10px; background: #141418; }
+.chat-rec[hidden] { display: none; }
+.chat-rec-dot { width: 12px; height: 12px; flex: none; border-radius: 50%; background: #ff3b50; animation: pulse 1s ease-in-out infinite; }
+.chat-rec-label { font-weight: 800; font-size: 13px; }
+.chat-rec-time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+.chat-rec-cancel { margin-left: auto; }
+.chat-rec-send { display: grid; place-items: center; width: 42px; height: 42px; flex: none; border: 0; border-radius: 50%; background: #ff3b50; color: #fff; cursor: pointer; }
+.chat-voice-msg { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 10px; border-radius: 14px; background: var(--surface-3); max-width: 100%; }
+.chat-msg.is-mine .chat-voice-msg { background: rgba(var(--accent-rgb), 0.25); }
+.chat-audio { height: 34px; width: min(210px, 52vw); }
+.chat-voice-dur { color: var(--muted); font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.chat-voice { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px; }
+.chat-voice-help { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
+.chat-voice-join { width: 100%; }
+.chat-voice-title { margin: 4px 0 0; font-size: 15px; font-weight: 900; }
+.chat-voice-people { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.chat-voice-person { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); transition: border-color 0.15s, box-shadow 0.15s; }
+.chat-voice-person.is-speaking { border-color: #2fd067; box-shadow: 0 0 0 2px rgba(47, 208, 103, 0.35), 0 0 18px rgba(47, 208, 103, 0.25); }
+.chat-voice-person.is-muted { opacity: 0.7; }
+.chat-voice-ring { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: rgba(0, 0, 0, 0.35); font-size: 13px; }
+.chat-voice-name { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-voice-actions { display: flex; gap: 8px; margin-top: auto; }
+.chat-voice-actions > * { flex: 1; }
+.chat-voice-actions .is-on { border-color: #ff6b81; color: #ff6b81; }
+.voice-pill { padding: 7px 12px; border: 1px solid rgba(47, 208, 103, 0.6); border-radius: 999px; background: #141418; color: var(--text); font: 900 13px var(--font); cursor: pointer; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5); transition: box-shadow 0.15s; }
+.voice-pill[hidden] { display: none; }
+.voice-pill.is-speaking { box-shadow: 0 0 0 3px rgba(47, 208, 103, 0.45), 0 10px 26px rgba(0, 0, 0, 0.5); }
+.voice-pill.is-muted { border-color: rgba(255, 107, 129, 0.6); }
+
+/* Away */
+.presence-chip.is-away { opacity: 0.7; }
+.presence-away { font-size: 12px; }
+.presence-status-btn { display: grid; place-items: center; padding: 3px; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+.presence-status-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.08); }
+.presence-status-btn.is-away { color: #f2bf2a; }
+.pf-friend.is-away .pf-dot { background: #f2bf2a; }
+
+/* Connection test */
+.presence-conn { display: flex; align-items: center; gap: 6px; flex: none; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--muted); font: 700 12.5px var(--font); white-space: nowrap; cursor: pointer; }
+.presence-conn:hover { color: var(--text); border-color: rgba(var(--accent-rgb), 0.6); }
+.presence[data-status="offline"] .presence-conn { color: #ff9b9b; border-color: rgba(255, 90, 90, 0.6); }
+.conn-modal { width: min(100% - 32px, 520px); }
+.conn-verdict { margin: 8px 0 14px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); font-weight: 700; line-height: 1.45; }
+.conn-verdict.is-ok { border-color: #2fd067; background: rgba(47, 208, 103, 0.08); }
+.conn-verdict.is-bad { border-color: #ff5a5a; background: rgba(255, 90, 90, 0.08); }
+.conn-list { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; padding: 0; list-style: none; }
+.conn-list li { display: grid; grid-template-columns: 14px 1fr auto; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; }
+.conn-list li > span { display: flex; flex-direction: column; }
+.conn-list small { color: var(--muted); font-size: 12px; }
+.conn-dot { width: 10px; height: 10px; border-radius: 50%; background: #6b6b74; }
+.conn-list .is-ok .conn-dot { background: #2fd067; }
+.conn-list .is-warn .conn-dot { background: #f2bf2a; }
+.conn-list .is-bad .conn-dot { background: #ff5a5a; }
+.conn-v { font-variant-numeric: tabular-nums; }
+.conn-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Friends: message button */
+.pf-dm { position: relative; display: inline-flex; align-items: center; gap: 4px; }
+.pf-dm-badge { min-width: 17px; height: 17px; padding: 0 5px; display: inline-grid; place-items: center; border-radius: 999px; background: var(--wrong, #e5262e); color: #fff; font-size: 10.5px; font-weight: 900; }
+.pf-retry { margin-left: 6px; }
+@media (max-width: 640px) {
+  .presence-conn span { display: none; }
+}
+.conn-actions a { display: inline-flex; align-items: center; text-decoration: none; color: var(--text); }

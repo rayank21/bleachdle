@@ -7,6 +7,23 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T03:30",
+      title: { en: "Private messages, voice chat, away status and a connection test", fr: "Messages privés, chat vocal, mode absent et test de connexion" },
+      items: [
+        { type: "new", en: "The chat has three tabs: General, Private and Voice. Write to your friends in private (they get the messages even if they were away, with an unread count), from the chat or the Message button in your friends list.", fr: "Le chat a trois onglets : Général, Privé et Vocal. Écris à tes amis en privé (ils reçoivent les messages même s'ils étaient absents, avec le nombre de non-lus), depuis le chat ou le bouton Message de ta liste d'amis." },
+        { type: "new", en: "Voice messages (up to 30 s) in the general chat and in private: tap the microphone, talk, send.", fr: "Messages vocaux (30 s max) dans le chat général et en privé : appuie sur le micro, parle, envoie." },
+        { type: "new", en: "Live voice chat: join the general voice channel, or your room's during an online game. Mute yourself, see who is talking; a small bubble stays above the chat button.", fr: "Chat vocal en direct : rejoins le vocal général, ou celui de ta salle pendant une partie en ligne. Coupe ton micro, vois qui parle ; une petite bulle reste au-dessus du bouton du chat." },
+        { type: "new", en: "Away mode: the moon next to your name sets you away (others see 💤); you also go away by yourself after 5 minutes elsewhere.", fr: "Mode absent : la lune à côté de ton pseudo te met absent (les autres voient 💤) ; tu passes aussi absent tout seul après 5 minutes ailleurs." },
+        { type: "new", en: "A Connection button in the online bar tests everything at once (internet, relays, server, direct link, players found), with Reconnect and the full diagnostic.", fr: "Un bouton Connexion dans la barre du haut teste tout d'un coup (internet, relais, serveur, connexion directe, joueurs trouvés), avec Reconnecter et le diagnostic complet." },
+        { type: "new", en: "18 new achievements: boosters, card duels, trades, copies, showcase, friends, chat, voice, collection and all anime.", fr: "18 nouveaux succès : boosters, duels de cartes, échanges, exemplaires, vitrine, amis, chat, vocal, collection et tous les animes." },
+        { type: "improved", game: "crew", en: "Crew Roll takes the colours of the anime you pick (buttons, frames, the draw), and every panel gets a touch of the anime's colour.", fr: "Roll ton équipage prend les couleurs de l'anime choisi (boutons, cadres, tirage), et chaque panneau a une touche de la couleur de l'anime." },
+        { type: "improved", game: "crew", en: "After opening boosters, open more right away: ×1, ×2, ×5, ×10 or all.", fr: "Après une ouverture de boosters, rouvre directement : ×1, ×2, ×5, ×10 ou tout." },
+        { type: "fix", en: "New cards and boosters no longer vanish for a while from the inventory after a page change (they wait for the server to confirm them).", fr: "Les nouvelles cartes et les boosters ne disparaissent plus un moment de l'inventaire après un changement de page (ils attendent que le serveur les confirme)." },
+        { type: "fix", en: "Phones: the leaderboard loads more reliably (retries, a Try again button), the friends window no longer jumps while you scroll, the connection comes back on its own after the phone sleeps, and the modes no longer overlap the arc in Crew Roll.", fr: "Téléphone : le classement se charge mieux (nouveaux essais, bouton Réessayer), la fenêtre d'amis ne saute plus pendant que tu défiles, la connexion revient toute seule après une mise en veille, et les modes ne chevauchent plus l'arc dans Roll ton équipage." },
+        { type: "improved", en: "Smoother pages: the online bar and the chat are no longer rebuilt every time a player announces themselves.", fr: "Pages plus fluides : la barre en ligne et le chat ne sont plus reconstruits à chaque signal d'un joueur." },
+      ],
+    },
+    {
       at: "2026-10-08T02:30",
       title: { en: "Solo Leveling: new characters, new forms, rebalanced team", fr: "Solo Leveling : nouveaux persos, transformations et équipe rééquilibrée" },
       items: [

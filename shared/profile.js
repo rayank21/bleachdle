@@ -24,11 +24,11 @@
       show: "Show", copy: "Copy", copied: "Copied!", board: "Leaderboard", topTeams: "Best teams (team vs team)", teamWins: (w, p) => `${w} win${w > 1 ? "s" : ""} / ${p}`, winRate: (r) => `${r} % wins`, h2h: (n) => `Head to head (${n})`, h2hRow: (w, d, l) => `${w}W ${d}D ${l}L`, topCrews: "Best crews", topWins: "Most wins", allAnime: "All", players: (n) => `${n} player${n > 1 ? "s" : ""}`,
       empty: "Nobody yet: be the first!", taken: "This name is taken.", badName: "2 to 20 characters.", badCode: "Unknown code.",
       duels: (n, w) => `${n} online match${n > 1 ? "es" : ""} · ${w} won`,
-      offline: "Profiles are unavailable right now.", logoutConfirm: "Log out? Keep your recovery code to come back.",
+      offline: "Profiles are unavailable right now.", retry: "Try again", logoutConfirm: "Log out? Keep your recovery code to come back.",
       friends: "Friends", addFriend: "Add a friend", friendName: "Their name", add: "Add", requests: "Friend requests",
       accept: "Accept", decline: "Decline", noFriends: "No friends yet: add one by their profile name.",
       needProfile: "Create a profile to add friends and join them in one click.", sent: (n) => `Request sent to ${n}.`,
-      nobody: "No profile with this name.", self: "That's you!", onlineIn: (g) => `Online · ${g}`, offlineNow: "Offline",
+      nobody: "No profile with this name.", self: "That's you!", onlineIn: (g) => `Online · ${g}`, offlineNow: "Offline", awayIn: (g) => `Away · ${g}`, message: "Message",
       inRoom: (code) => `Waiting in room ${code}`, joinRoom: "Join", invite: "Invite", invitedOk: "Invited!",
       remove: "Remove", removeConfirm: (n) => `Remove ${n} from your friends?`, home: "home page", crewRoll: "Crew Roll",
       inviteHelp: "Open a room (Crew Roll or an online race) to invite your friends.",
@@ -56,11 +56,11 @@
       show: "Afficher", copy: "Copier", copied: "Copié !", board: "Classement", topTeams: "Meilleures équipes (équipe contre équipe)", teamWins: (w, p) => `${w} victoire${w > 1 ? "s" : ""} / ${p}`, winRate: (r) => `${r} % de victoires`, h2h: (n) => `Face-à-face (${n})`, h2hRow: (w, d, l) => `${w}V ${d}N ${l}D`, topCrews: "Meilleurs équipages", topWins: "Plus de victoires", allAnime: "Tous", players: (n) => `${n} joueur${n > 1 ? "s" : ""}`,
       empty: "Personne pour l'instant : sois le premier !", taken: "Ce pseudo est déjà pris.", badName: "2 à 20 caractères.", badCode: "Code inconnu.",
       duels: (n, w) => `${n} match${n > 1 ? "s" : ""} en ligne · ${w} gagné${w > 1 ? "s" : ""}`,
-      offline: "Les profils sont indisponibles pour l'instant.", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
+      offline: "Les profils sont indisponibles pour l'instant.", retry: "Réessayer", logoutConfirm: "Se déconnecter ? Garde ton code de récupération pour revenir.",
       friends: "Amis", addFriend: "Ajouter un ami", friendName: "Son pseudo", add: "Ajouter", requests: "Demandes d'ami",
       accept: "Accepter", decline: "Refuser", noFriends: "Pas encore d'amis : ajoute-en un avec son pseudo de profil.",
       needProfile: "Crée un profil pour ajouter des amis et les rejoindre en un clic.", sent: (n) => `Demande envoyée à ${n}.`,
-      nobody: "Aucun profil avec ce pseudo.", self: "C'est toi !", onlineIn: (g) => `En ligne · ${g}`, offlineNow: "Hors ligne",
+      nobody: "Aucun profil avec ce pseudo.", self: "C'est toi !", onlineIn: (g) => `En ligne · ${g}`, offlineNow: "Hors ligne", awayIn: (g) => `Absent · ${g}`, message: "Message",
       inRoom: (code) => `Attend dans la salle ${code}`, joinRoom: "Rejoindre", invite: "Inviter", invitedOk: "Invité !",
       remove: "Retirer", removeConfirm: (n) => `Retirer ${n} de tes amis ?`, home: "accueil", crewRoll: "Roll ton équipage",
       inviteHelp: "Ouvre une salle (Roll ton équipage ou une course en ligne) pour inviter tes amis.",
@@ -147,9 +147,11 @@
     return out;
   }
 
-  function adopt(profile, token) {
+  // startedAt: when the request that brought this profile left (to know which sent batches it already includes).
+  function adopt(profile, token, startedAt = 0) {
     const sent = token ? false : !!session?.collectionSent;
     session = { id: profile.id, token: token ?? session?.token, profile, collectionSent: sent, cardsOnly: true };
+    settleBatches(profile, startedAt);
     if (!sent) { clearTimeout(countTimer); countTimer = setTimeout(flushCounters, 1500); }
     saveSession();
     // The profile name is the name in the online bar and the lobbies too.
@@ -169,7 +171,8 @@
     if (!session) return;
     clearTimeout(syncTimer);
     syncTimer = setTimeout(async () => {
-      try { const { profile } = await api({ action: "update", id: session.id, token: session.token, stats: localStats() }); adopt(profile); } catch (e) { if (e.status === 401) logout(true); }
+      const at = Date.now();
+      try { const { profile } = await api({ action: "update", id: session.id, token: session.token, stats: localStats() }); adopt(profile, undefined, at); } catch (e) { if (e.status === 401) logout(true); }
     }, 1200);
   }
   window.addEventListener("dle:stats", syncStats);
@@ -201,13 +204,18 @@
     const dupesNow = readJSON(PENDING_DUPES);
     if (!session || (!Object.keys(add).length && !Object.keys(collectNow).length && !Object.keys(dupesNow).length)) return;
     try { localStorage.removeItem(PENDING); localStorage.removeItem(PENDING_COLLECT); localStorage.removeItem(PENDING_DUPES); } catch {}
+    // Until the server's profile shows them, what was sent still counts here (a page left mid-request, or a profile
+    // read too early on the next page, would otherwise hide the new cards and boosters for a while).
+    const batch = keepBatch(add, collectNow, dupesNow);
+    const at = Date.now();
     try {
       const res = await fetch(API, { method: "POST", keepalive, headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "update", id: session.id, token: session.token, add, cards: collectNow, dupes: dupesNow }) });
       if (!res.ok) throw new Error();
       session.collectionSent = true;
       saveSession();
-      if (!keepalive) adopt((await res.json()).profile);
+      if (!keepalive) { dropBatch(batch); adopt((await res.json()).profile, undefined, at); }
     } catch {
+      dropBatch(batch);
       // Not sent: put them back for next time.
       const back = pending();
       for (const [k, v] of Object.entries(add)) back[k] = (back[k] || 0) + v;
@@ -233,14 +241,40 @@
   const serverHasMine = () => !!session && !!session.collectionSent;
   function collectionOf(game) {
     const server = session?.profile?.collection?.[game] ?? [];
-    const here = serverHasMine() ? readJSON(PENDING_COLLECT)[game] ?? [] : readJSON(COLLECTION)[game] ?? [];
+    const here = serverHasMine() ? [...(readJSON(PENDING_COLLECT)[game] ?? []), ...batches().flatMap((b) => b.cards[game] ?? [])] : readJSON(COLLECTION)[game] ?? [];
     return new Set([...here, ...server]);
   }
+
+  // Sent batches the server's profile doesn't show yet: { id, at, add: {k: n}, base: {k: n}, cards, dupes, dbase }.
+  // A batch goes once a profile has all of it, once a profile read well after it was sent comes in, or after 3 minutes.
+  const BATCHES = "dle:inflight";
+  const batches = () => { try { const l = JSON.parse(localStorage.getItem(BATCHES) || "[]"); return Array.isArray(l) ? l.filter((b) => Date.now() - b.at < 180000) : []; } catch { return []; } };
+  const saveBatches = (l) => { try { l.length ? localStorage.setItem(BATCHES, JSON.stringify(l)) : localStorage.removeItem(BATCHES); } catch {} };
+  function keepBatch(add, cards, dupes) {
+    const pc = session?.profile?.counters ?? {};
+    const pd = session?.profile?.dupes ?? {};
+    const b = { id: Math.random().toString(36).slice(2), at: Date.now(), add, cards, dupes, base: {}, dbase: {} };
+    for (const k of Object.keys(add)) b.base[k] = pc[k] || 0;
+    for (const [g, m] of Object.entries(dupes)) for (const id of Object.keys(m)) { b.dbase[g] ??= {}; b.dbase[g][id] = pd[g]?.[id] ?? 0; }
+    saveBatches([...batches(), b]);
+    return b.id;
+  }
+  const dropBatch = (id) => saveBatches(batches().filter((b) => b.id !== id));
+  function settleBatches(profile, startedAt) {
+    const list = batches();
+    if (!list.length) return;
+    const c = profile.counters ?? {};
+    const has = (b) => Object.entries(b.add).every(([k, n]) => (c[k] || 0) >= (b.base[k] || 0) + n)
+      && Object.entries(b.cards).every(([g, ids]) => ids.every((id) => profile.collection?.[g]?.includes(id)))
+      && Object.entries(b.dupes).every(([g, m]) => Object.entries(m).every(([id, n]) => (profile.dupes?.[g]?.[id] ?? 0) >= (b.dbase[g]?.[id] ?? 0) + n));
+    saveBatches(list.filter((b) => !(has(b) || (startedAt && startedAt - b.at > 8000))));
+  }
+  const unsentCount = (k) => (pending()[k] || 0) + batches().reduce((a, b) => a + (b.add[k] || 0), 0);
   // Extra copies of a card (duplicates from boosters or trades), the same way.
   const DUPES = "dle:dupes";
   const PENDING_DUPES = "dle:pending-dupes";
   function dupesOf(game, id) {
-    const pend = readJSON(PENDING_DUPES)[game]?.[id] ?? 0;
+    const pend = (readJSON(PENDING_DUPES)[game]?.[id] ?? 0) + batches().reduce((a, b) => a + (b.dupes[game]?.[id] ?? 0), 0);
     if (serverHasMine()) return (session.profile.dupes?.[game]?.[id] ?? 0) + pend;
     return Math.max(readJSON(DUPES)[game]?.[id] ?? 0, (session?.profile?.dupes?.[game]?.[id] ?? 0) + pend);
   }
@@ -281,8 +315,7 @@
   const BOOST_DAY = "dle:boost-day2"; // new key with the booster-only collection: everyone gets the welcome gift again
   function boosters() {
     const c = session?.profile?.counters ?? {};
-    const p = pending();
-    return Math.max(0, (c.boostEarn || 0) + (p.boostEarn || 0) - (c.boostOpen || 0) - (p.boostOpen || 0));
+    return Math.max(0, (c.boostEarn || 0) + unsentCount("boostEarn") - (c.boostOpen || 0) - unsentCount("boostOpen"));
   }
   function earnBooster(n = 1, why = "win") {
     const k = Math.min(n, BOOST_MAX - boosters());
@@ -524,6 +557,9 @@
     if (!dialog) {
       dialog = el("dialog", "modal pf-modal");
       dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+      dialog.addEventListener("touchstart", () => { touching = true; }, { passive: true });
+      dialog.addEventListener("touchend", () => { setTimeout(() => { touching = false; }, 400); }, { passive: true });
+      dialog.addEventListener("touchcancel", () => { touching = false; }, { passive: true });
       document.body.append(dialog);
     }
     tab = which;
@@ -536,12 +572,17 @@
 
   async function refresh() {
     try {
+      const at = Date.now();
       const res = await fetch(`${API}?id=${encodeURIComponent(session.id)}`);
-      if (res.ok) { adopt((await res.json()).profile); if (dialog?.open && tab === "profile" && !editing) render(); }
+      if (res.ok) { adopt((await res.json()).profile, undefined, at); if (dialog?.open && tab === "profile" && !editing) render(); }
     } catch {}
   }
 
+  // A redraw of the same tab keeps where the window was scrolled (live updates of the friends list used to throw a
+  // phone back up or down mid-scroll).
+  let shownTab = null;
   function render() {
+    const keep = shownTab === tab && dialog ? dialog.scrollTop : 0;
     const inner = el("div", "modal-inner pf-inner");
     const close = el("button", "modal-close", "✕");
     close.type = "button";
@@ -562,6 +603,19 @@
     else if (editing) inner.append(editView());
     else inner.append(profileView());
     dialog.replaceChildren(inner);
+    if (keep) dialog.scrollTop = keep;
+    shownTab = tab;
+  }
+  // Live updates (players coming and going): at most one redraw every 2 s, and none while a finger is on the window.
+  let liveTimer = null;
+  let touching = false;
+  function liveRender() {
+    if (liveTimer) return;
+    liveTimer = setTimeout(function again() {
+      if (touching) { liveTimer = setTimeout(again, 600); return; }
+      liveTimer = null;
+      if (dialog?.open && tab === "friends") render();
+    }, 2000);
   }
 
   // Avatar picker: anime tabs, then that anime's featured characters.
@@ -695,6 +749,12 @@
     heart: "M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-3 4.5 4.5 0 0 1 8 3c0 6-8 11-8 11z",
     clock: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v6l4 2",
     crown: "M3 18h18M4 8l4 4 4-7 4 7 4-4-2 10H6z",
+    pack: "M5 3h14l-1 4H6zM6 7h12v14H6zM9 12h6M12 9v6",
+    swap: "M4 8h14l-4-4M20 16H6l4 4",
+    chat: "M4 5h16v11H9l-5 4z",
+    mic: "M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3",
+    copies: "M8 4h11v14H8zM5 7v13h11",
+    gallery: "M3 5h18v14H3zM8 9v6M12 9v6M16 9v6",
   };
   // Tier emblems, like ranked crests: a metal shield with the icon engraved on a dark core. Bronze is the bare shield,
   // silver grows wings, gold adds a crown and a gem. Locked ones are plain iron.
@@ -733,7 +793,8 @@
     ["streak15", "flame", "gold", 15, (c) => c.streak, "Unstoppable", "Inarrêtable", "A streak of 15 wins", "Une série de 15 victoires"],
     ["oneshot", "eye", "silver", 1, (c) => c.oneShot, "At first sight", "Du premier coup", "Find a character on the first guess", "Trouve un perso au premier essai"],
     ["modes", "eye", "bronze", 2, (c) => c.modes, "Sharp eye", "Œil de lynx", "Win a Blurred game and a Description game", "Gagne une partie Flou et une Description"],
-    ["world", "globe", "silver", 8, (c) => c.animePlayed, "World tour", "Tour du monde", "Play all 8 anime", "Joue aux 8 animes"],
+    ["world", "globe", "silver", 8, (c) => c.animePlayed, "World tour", "Tour du monde", "Play 8 different anime", "Joue à 8 animes différents"],
+    ["worldall", "globe", "gold", GAMES.length, (c) => c.animePlayed, "Otaku", "Otaku", `Play all ${GAMES.length} anime`, `Joue aux ${GAMES.length} animes`],
     ["roll100", "dice", "bronze", 100, (c) => c.rolls, "Roller", "Rouleur", "Roll 100 times", "Fais 100 rolls"],
     ["roll1000", "dice", "gold", 1000, (c) => c.rolls, "Roll addict", "Accro au roll", "Roll 1,000 times", "Fais 1 000 rolls"],
     ["crew25", "shield", "silver", 25, (c) => c.crews, "Builder", "Bâtisseur", "Build 25 crews", "Construis 25 équipages"],
@@ -741,7 +802,20 @@
     ["duel10", "swords", "silver", 10, (c) => c.onlineWins, "Duelist", "Duelliste", "Win 10 online games", "Gagne 10 parties en ligne"],
     ["coll100", "cards", "silver", 100, (c) => c.cards, "Collector", "Collectionneur", "Get 100 different cards from boosters", "Obtiens 100 cartes différentes en booster"],
     ["collfull", "cards", "gold", 1, (c) => c.fullAnime, "Completionist", "Complétiste", "Complete an anime's collection", "Complète la collection d'un animé"],
+    ["coll400", "cards", "gold", 400, (c) => c.cards, "Archivist", "Archiviste", "Get 400 different cards from boosters", "Obtiens 400 cartes différentes en booster"],
+    ["boost25", "pack", "bronze", 25, (c) => c.boosters, "Unboxer", "Déballeur", "Open 25 boosters", "Ouvre 25 boosters"],
+    ["boost200", "pack", "gold", 200, (c) => c.boosters, "Pack addict", "Accro aux boosters", "Open 200 boosters", "Ouvre 200 boosters"],
+    ["copies5", "copies", "silver", 5, (c) => c.copies, "Hoarder", "Accumulateur", "Own 5 copies of the same card", "Possède 5 exemplaires de la même carte"],
+    ["showcase", "gallery", "bronze", 3, (c) => c.showcase, "On display", "En vitrine", "Fill your showcase with 3 cards", "Remplis ta vitrine avec 3 cartes"],
+    ["cardwin1", "swords", "bronze", 1, (c) => c.cardWins, "First duel", "Premier duel", "Win a card duel", "Gagne un duel de cartes"],
+    ["cardwin25", "swords", "gold", 25, (c) => c.cardWins, "Card master", "Maître des cartes", "Win 25 card duels", "Gagne 25 duels de cartes"],
+    ["trade1", "swap", "bronze", 1, (c) => c.trades, "Dealer", "Négociant", "Make a trade with a friend", "Fais un échange avec un ami"],
+    ["trade10", "swap", "silver", 10, (c) => c.trades, "Merchant", "Marchand", "Make 10 trades", "Fais 10 échanges"],
     ["friend", "heart", "bronze", 1, (c) => c.friends, "Not alone", "Pas tout seul", "Add a friend", "Ajoute un ami"],
+    ["friend10", "heart", "silver", 10, (c) => c.friends, "Popular", "Populaire", "Have 10 friends", "Aie 10 amis"],
+    ["chat100", "chat", "bronze", 100, (c) => c.chats, "Chatterbox", "Bavard", "Send 100 chat messages", "Envoie 100 messages dans le chat"],
+    ["voice1", "mic", "bronze", 1, (c) => c.voice, "On air", "À l'antenne", "Join a voice chat", "Rejoins un chat vocal"],
+    ["voicemsg10", "mic", "silver", 10, (c) => c.voiceMsgs, "Voice notes", "Notes vocales", "Send 10 voice messages", "Envoie 10 messages vocaux"],
     ["time10", "clock", "silver", 10, (c) => c.hours, "Marathon", "Marathon", "Play for 10 hours", "Joue 10 heures"],
     ["podium", "crown", "gold", 1, (c) => c.podium, "Season podium", "Podium de saison", "Finish in a season's top 3", "Finis dans le top 3 d'une saison"],
   ];
@@ -776,6 +850,9 @@
       friends: friendState.friends.length,
       hours: Math.floor((c.seconds || 0) / 3600),
       podium,
+      boosters: c.boostOpen || 0, cardWins: c.cardWins || 0, trades: c.trades || 0, chats: c.chats || 0, voice: c.voice || 0, voiceMsgs: c.voiceMsgs || 0,
+      showcase: (p.showcase ?? []).length,
+      copies: Math.max(0, ...GAMES.flatMap((g) => Object.values(p.dupes?.[g.id] ?? {}).map((n) => (n || 0) + 1))),
     };
   }
   function achievements(p) {
@@ -1088,7 +1165,7 @@
   const invited = new Map(); // friend id → { code of the room they were invited to, button text }
   function setFriends(data) {
     const list = (x) => (Array.isArray(x) ? x : []);
-    friendState = { friends: list(data?.friends), requests: list(data?.requests), invites: list(data?.invites) };
+    friendState = { friends: list(data?.friends), requests: list(data?.requests), invites: list(data?.invites), unread: data?.unread && typeof data.unread === "object" ? data.unread : {} };
     renderButton();
     announceInvites();
     window.dispatchEvent(new Event("dle:friends"));
@@ -1235,6 +1312,15 @@
         });
         li.append(inv);
       }
+      // A private message (the chat opens on our conversation), with the unread count.
+      const dm = el("button", "btn-ghost btn-small pf-dm");
+      dm.type = "button";
+      dm.title = t("message");
+      dm.innerHTML = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>`;
+      const unread = friendState.unread?.[f.id] || 0;
+      if (unread) dm.append(el("span", "pf-dm-badge", String(unread)));
+      dm.addEventListener("click", () => { dialog.close(); window.DLE_Chat?.openDm(f); });
+      li.append(dm);
       const rm = el("button", "pf-remove", "✕");
       rm.type = "button";
       rm.title = rm.ariaLabel = t("remove");
@@ -1248,7 +1334,7 @@
 
   // A friend's line: avatar, name, and where they are when they're online.
   function friendRow(f, on) {
-    const li = el("li", `pf-li pf-friend${on ? " is-online" : ""}`);
+    const li = el("li", `pf-li pf-friend${on ? " is-online" : ""}${on?.away ? " is-away" : ""}`);
     const face = el("span", "pf-li-face");
     if (f.avatar) { const img = avatarImg(el("img"), f.avatar); img.alt = ""; face.append(img); }
     const who = el("span", "pf-friend-who");
@@ -1260,22 +1346,29 @@
     who.append(name);
     if (on !== undefined) {
       const where = on?.room ? t("inRoom")(on.room.code)
-        : on ? t("onlineIn")(on.game === "home" ? t("home") : gameOf(on.game)?.brand ?? t("crewRoll")) : t("offlineNow");
+        : on ? t(on.away ? "awayIn" : "onlineIn")(on.game === "home" ? t("home") : gameOf(on.game)?.brand ?? t("crewRoll")) : t("offlineNow");
       who.append(el("span", "pf-friend-where", where));
     }
     li.append(el("span", "pf-dot"), face, who);
     return li;
   }
   // Live updates while the friends tab is open (someone comes online, opens a room…).
-  window.addEventListener("dle:presence", () => { if (dialog?.open && tab === "friends") render(); });
-  window.addEventListener("dle:room", () => { if (dialog?.open && tab === "friends") render(); });
+  window.addEventListener("dle:presence", () => { if (dialog?.open && tab === "friends") liveRender(); });
+  window.addEventListener("dle:room", () => { if (dialog?.open && tab === "friends") liveRender(); });
 
   // One fetch shared by the profile window and the Crew Roll index, kept for a minute.
   let boardCache = null;
   function leaderboard() {
     if (!boardCache || Date.now() - boardCache.at > 60000) {
       const at = Date.now();
-      boardCache = { at, data: fetch(`${API}?leaderboard=1`).then((r) => (r.ok ? r.json() : Promise.reject())).then((d) => { lastBoard = d; checkAchievements(); return d; }) };
+      // A slow phone network: give up on a try after 12 s, and try 3 times in all.
+      const once = () => {
+        const ctl = new AbortController();
+        const timer = setTimeout(() => ctl.abort(), 12000);
+        return fetch(`${API}?leaderboard=1`, { signal: ctl.signal }).then((r) => (r.ok ? r.json() : Promise.reject())).finally(() => clearTimeout(timer));
+      };
+      const tries = (n) => once().catch((e) => (n > 1 ? new Promise((r) => setTimeout(r, 1500)).then(() => tries(n - 1)) : Promise.reject(e)));
+      boardCache = { at, data: tries(3).then((d) => { lastBoard = d; checkAchievements(); return d; }) };
       boardCache.data.catch(() => { if (boardCache?.at === at) boardCache = null; });
     }
     return boardCache.data;
@@ -1296,6 +1389,7 @@
     const cols = el("div", "pf-board");
     box.append(status, scopes, podium, chips, cols);
     leaderboard().then((data) => {
+      if (!data || !Array.isArray(data.crews)) throw new Error("board");
       const season = data.season;
       if (!season) boardScope = "all";
       status.textContent = t("players")(data.players);
@@ -1391,7 +1485,14 @@
         cols.append(teamsCol);
       }
       draw();
-    }).catch(() => { status.textContent = t("offline"); });
+    }).catch(() => {
+      // Nothing came (or it broke): say so, with a button to try again.
+      status.textContent = t("offline");
+      const again = el("button", "btn-ghost btn-small pf-retry", t("retry"));
+      again.type = "button";
+      again.addEventListener("click", () => { boardCache = null; box.replaceWith(boardView()); });
+      status.append(" ", again);
+    });
     return box;
   }
   const crewValue = (r) => { const v = el("span", "pf-val"); v.append(el("i", `pf-mini-rank rank-${r.rank}`, r.rank), ` ${r.score.toFixed(1)}`); return v; };
@@ -1511,6 +1612,11 @@
     // Admin panel: a random achievement's toast.
     testAchievement() { if (!session?.profile) return false; const list = achievements(session.profile); achToast(list[Math.floor(Math.random() * list.length)]); return true; },
     get current() { return session?.profile ?? null; },
+    // The chat (presence.js): private messages and voice messages go through the profile API.
+    call: (action, body = {}) => (session ? api({ ...body, action, id: session.id, token: session.token }) : Promise.reject(new Error("auth"))),
+    get dmUnread() { return friendState.unread ?? {}; },
+    clearUnread(id) { if (friendState.unread?.[id]) { delete friendState.unread[id]; window.dispatchEvent(new Event("dle:friends")); } },
+    reloadFriends: () => loadFriends(),
     get friendIds() { return friendState.friends.map((f) => f.id); },
     get friends() { return friendState.friends; },
     get requests() { return friendState.requests; },
