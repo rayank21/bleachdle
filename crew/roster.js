@@ -364,14 +364,14 @@
           score: role(parse("recovery-girl:10 eri:9 overhaul:8 all-for-one:5 momo-yaoyorozu:4")) },
         { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
           score: role(parse(`nezu:10 all-for-one:10 sir-nighteye:9 tomura-shigaraki:8 momo-yaoyorozu:8 izuku-midoriya:8 shota-aizawa:7 hawks:7
-            katsuki-bakugo:7 overhaul:7 re-destro:7 tenya-iida:6 best-jeanist:6 lady-nagant:6`)) },
+            katsuki-bakugo:7 overhaul:7 re-destro:7 tenya-iida:6 best-jeanist:6 lady-nagant:6 star-and-stripe:9 all-might:9 fumikage-tokoyami:6`)) },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
       power: parse(`izuku-midoriya:10 katsuki-bakugo:9 shoto-todoroki:9 ochaco-uraraka:7 tenya-iida:7 eijiro-kirishima:7 momo-yaoyorozu:7
         tsuyu-asui:6 denki-kaminari:6 kyoka-jiro:5 fumikage-tokoyami:7 mina-ashido:6 minoru-mineta:3 yuga-aoyama:5 mezo-shoji:5 hanta-sero:5
         rikido-sato:5 koji-koda:3 toru-hagakure:3 mashirao-ojiro:4 neito-monoma:6 itsuka-kendo:6 tetsutetsu-tetsutetsu:6 hitoshi-shinso:6
         mirio-togata:9 tamaki-amajiki:7 nejire-hado:7 eri:6 all-might:10 shota-aizawa:8 present-mic:6 midnight:6 cementoss:7 nezu:3
-        recovery-girl:2 endeavor:9 hawks:8 best-jeanist:7 mirko:8 edgeshot:7 gran-torino:7 sir-nighteye:6 fatgum:6 star-and-stripe:9
+        recovery-girl:2 endeavor:9 hawks:8 best-jeanist:7 mirko:8 edgeshot:7 gran-torino:7 sir-nighteye:6 fatgum:6 star-and-stripe:10
         lady-nagant:7 tomura-shigaraki:10 all-for-one:10 kurogiri:7 dabi:9 himiko-toga:7 twice:8 mr-compress:6 spinner:6 magne:6
         gigantomachia:9 muscular:7 stain:7 overhaul:8 re-destro:8`),
     },

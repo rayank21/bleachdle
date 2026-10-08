@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T03:50",
+      title: { en: "My Hero Academia: Star and Stripe at 10", fr: "My Hero Academia : Star and Stripe à 10" },
+      items: [
+        { type: "balance", game: "crew", en: "My Hero Academia team: Star and Stripe goes up to 10 in power and 9 as strategist; All Might strategist 9, Fumikage Tokoyami strategist 6.", fr: "Équipe My Hero Academia : Star and Stripe passe à 10 en puissance et 9 en stratège ; All Might stratège 9, Fumikage Tokoyami stratège 6." },
+      ],
+    },
+    {
       at: "2026-10-08T03:30",
       title: { en: "Private messages, voice chat, away status and a connection test", fr: "Messages privés, chat vocal, mode absent et test de connexion" },
       items: [
