@@ -898,3 +898,23 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 .cvm-rows.is-multi .cvm-row.is-turn { border-color: rgba(255, 211, 77, 0.8); box-shadow: 0 0 20px rgba(255, 211, 77, 0.25); }
 .cvm-row.is-turn .cvm-row-label { color: #ffd34d; }
 .cvm-hint.is-turn { color: #ffd34d; animation: rise 0.35s ease both; }
+
+/* Booster battles: each card turns over big in the middle of the screen, then flies to its row. */
+.bspot { position: fixed; inset: 0; z-index: 1250; display: grid; place-items: center; pointer-events: none; background: radial-gradient(55% 50% at 50% 50%, rgba(var(--p1), 0.32), rgba(6, 6, 10, 0.86) 72%); animation: bopen-in 0.25s ease both; transition: background 0.4s; }
+.bspot.tier-legend { background: radial-gradient(55% 50% at 50% 50%, rgba(255, 200, 60, 0.4), rgba(6, 6, 10, 0.9) 72%); }
+.bspot.tier-secret { background: radial-gradient(55% 50% at 50% 50%, rgba(120, 220, 255, 0.4), rgba(6, 6, 10, 0.9) 72%); }
+.bspot.is-out { background: transparent; }
+.bspot .bspot-card { width: clamp(170px, 44vw, 280px); cursor: default; }
+.cv-budget { margin: 2px 0 0; font-weight: 800; color: var(--accent-strong, #ffd34d); }
+.cv-budget.is-tight { color: #ffb347; }
+.cv-rules, .cvm-rules { margin: 4px 0 10px; font-size: 0.82rem; line-height: 1.45; }
+.cvm-rules { text-align: center; color: var(--muted, #aab); }
+.cvm-round.is-double { color: #ffd34d; font-weight: 900; text-shadow: 0 0 12px rgba(255, 200, 60, 0.6); }
+
+/* Sharing a crew: the picture, then the ways to send it. */
+.share-dlg { width: min(560px, calc(100vw - 32px)); }
+.share-shot { display: grid; place-items: center; margin: 14px auto 16px; width: min(100%, 380px); aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: #0c0c12; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.share-shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.share-shot.is-loading::after { content: ""; width: 36px; height: 36px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: var(--accent, #ff4b4b); animation: share-spin 0.8s linear infinite; }
+@keyframes share-spin { to { rotate: 360deg; } }
+.share-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }

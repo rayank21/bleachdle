@@ -375,7 +375,7 @@
     if (form) card.classList.add("has-form");
     // A tall full-body picture shows the head, a wide one its middle (or the form's own focus).
     frameForm(img, formFocus(form));
-    art.append(img);
+    art.append(img, el("i", "tcg-aura"));
     const top = el("div", "tcg-top");
     if (game) { const logo = el("img", "tcg-logo"); logo.src = ROOT + game.logo; logo.alt = ""; top.append(logo); }
     top.append(el("span", "tcg-power", String(c.p)));
@@ -900,6 +900,27 @@
     const fresh = seen ? done.filter((a) => !seen.includes(a.id)) : [];
     try { localStorage.setItem(ACH_SEEN, JSON.stringify(done.map((a) => a.id).concat(seen ?? []).filter((x, i, l) => l.indexOf(x) === i))); } catch {}
     fresh.forEach((a, i) => setTimeout(() => achToast(a), i * 4800));
+    // The live chat announces them (shared/presence.js), with my new records.
+    for (const a of fresh) {
+      const def = ACHIEVEMENTS.find((x) => x[0] === a.id);
+      if (def) feat({ k: "ach", tier: a.tier, en: def[5], fr: def[6] });
+    }
+    checkRecords(session.profile);
+  }
+  // Personal records: best Crew Roll crew and best win streak. The first look only notes them.
+  const RECORDS = "dle:records";
+  const feat = (detail) => window.dispatchEvent(new CustomEvent("dle:feat", { detail }));
+  function checkRecords(p) {
+    const now = { crew: p.crew?.best?.score ?? 0, rank: p.crew?.best?.rank ?? "", anime: p.crew?.best?.anime ?? "", streak: achContext(p).streak };
+    let before = null;
+    try { before = JSON.parse(localStorage.getItem(RECORDS) || "null"); } catch {}
+    try { localStorage.setItem(RECORDS, JSON.stringify({ crew: Math.max(now.crew, before?.crew ?? 0), streak: Math.max(now.streak, before?.streak ?? 0) })); } catch {}
+    if (!before) return;
+    if (now.crew > (before.crew ?? 0) + 1e-9) {
+      const anime = gameOf(now.anime)?.anime ?? "";
+      feat({ k: "rec", tier: now.rank === "S" ? "gold" : "silver", en: `new best crew: ${now.crew.toFixed(1)}/10 (rank ${now.rank})${anime ? ` with ${anime}` : ""}`, fr: `nouveau record d'équipage : ${now.crew.toFixed(1)}/10 (rang ${now.rank})${anime ? ` avec ${anime}` : ""}` });
+    }
+    if (now.streak > (before.streak ?? 0) && now.streak >= 3) feat({ k: "rec", tier: now.streak >= 10 ? "gold" : "silver", en: `new best streak: ${now.streak} wins in a row`, fr: `nouvelle meilleure série : ${now.streak} victoires d'affilée` });
   }
   function achBadge(a) {
     const b = el("span", `ach-badge tier-${a.tier}${a.done ? " is-done" : ""}`);

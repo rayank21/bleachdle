@@ -1,12 +1,12 @@
 // Cards: the collection as an inventory (duplicates counted), trades with friends, and 1v1 card duels online.
 //   Pack battle: both players open a free pack of the same anime, three times; the stronger pack wins each round.
-//   Deck battle: each brings 5 cards of their collection and plays one per round; the stronger card wins the round.
+//   Deck battle: each brings 5 cards (35 power at most) and plays one per round, with combos, the underdog rule and a double last round.
 // Duels use their own online rooms (shared/rooms.js, channel "cards"), like Crew Roll's online mode.
 
 import { S } from "./state.js";
 import { $, CREW, DEFAULT_POWER, GAMES, ROOT, displayName, el, loadGame, t, toast, wait } from "./base.js";
 import { burst, sfx, tierOf } from "./fx.js";
-import { drawPack, packEl } from "./boosters.js";
+import { drawPack, packColours, packEl, spotlight } from "./boosters.js";
 
 const PROFILE = () => window.DLE_Profile;
 const CV = { sub: "inv", anime: "all", dupesOnly: false, trade: null, mode: "pack", size: 2 };
@@ -356,7 +356,25 @@ const myName = () => { try { return window.DLE_Rooms.cleanName(localStorage.getI
 // Points of a pack card: its power, plus its rarity.
 const BONUS = { common: 0, epic: 2, legend: 4, secret: 8 };
 const packScore = (cards) => cards.reduce((a, c) => a + c.p + (BONUS[c.tier] ?? 0), 0);
-// A card's strength in a deck battle: power ×10, +8 when it transforms, + the round's luck (0–9, same on both screens).
+// Deck battle rules. A deck is 5 cards whose powers add up to 35 at most, so it mixes strong and weaker cards.
+// A card's strength in a round: power ×10, +8 when it transforms, + the round's luck (0–9, same on every screen),
+// +6 when it is from the same anime as the card that player played the round before (combo), and the underdog:
+// the weakest card on the table, when it is 4 or more below the strongest, gets the gap back ×10.
+// The last round is worth 2 points.
+const BUDGET = 35;
+const COMBO = 6;
+const UNDERDOG_GAP = 4;
+const deckPower = (cards) => cards.reduce((a, c) => a + (c?.p ?? 0), 0);
+// The cards that still fit a deck (leaving at least 1 power for each empty place after this one).
+const fitsBudget = (deck, c, minP = 1) => deckPower(deck) + c.p + Math.max(0, DECK_SIZE - deck.length - 1) * minP <= BUDGET;
+// The best deck under the budget: the strongest card that still leaves room for the others, place after place.
+function bestDeck(all) {
+  const minP = Math.min(...all.map((c) => c.p));
+  const deck = [];
+  for (const c of all) { if (deck.length >= DECK_SIZE) break; if (fitsBudget(deck, c, minP)) deck.push(c); }
+  return deck;
+}
+const roundPoints = (m, r) => (m.mode === "deck" && r === DECK_SIZE - 1 ? 2 : 1);
 function luck(seed, round, side) {
   let x = (seed ^ (round * 0x9e3779b1) ^ (side * 0x85ebca77)) >>> 0;
   x = Math.imul(x ^ (x >>> 16), 0x45d9f3b) >>> 0;
@@ -549,11 +567,15 @@ async function deckBuilder(box) {
   box.append(wrap);
   const all = await myCards();
   const owned = new Set(all.map((c) => `${c.g}/${c.id}`));
+  const full = (d) => all.find((x) => x.g === d.g && x.id === d.id);
   let deck = readDeck().filter((d) => owned.has(`${d.g}/${d.id}`));
+  while (deck.length && deckPower(deck.map(full)) > BUDGET) deck.pop();
   saveDeck(deck);
+  const minP = all.length ? Math.min(...all.map((c) => c.p)) : 1;
   const draw = () => {
     wrap.textContent = "";
-    wrap.append(el("h3", "cv-h", t("cMyDeck")(deck.length, DECK_SIZE)));
+    const used = deckPower(deck.map(full));
+    wrap.append(el("h3", "cv-h", t("cMyDeck")(deck.length, DECK_SIZE)), el("p", `cv-budget${used > BUDGET - 5 ? " is-tight" : ""}`, t("cBudget")(used, BUDGET)), el("p", "muted cv-rules", t("cDeckRules")));
     if (all.length < DECK_SIZE) { wrap.append(el("p", "muted", t("cDeckNeed")(DECK_SIZE))); return; }
     const slots = el("div", "cv-deck-slots");
     for (let i = 0; i < DECK_SIZE; i++) {
@@ -570,10 +592,10 @@ async function deckBuilder(box) {
     }
     const auto = el("button", "btn-ghost btn-small", t("cDeckAuto"));
     auto.type = "button";
-    auto.addEventListener("click", () => { deck = all.slice(0, DECK_SIZE).map((c) => ({ g: c.g, id: c.id })); saveDeck(deck); draw(); });
+    auto.addEventListener("click", () => { deck = bestDeck(all).map((c) => ({ g: c.g, id: c.id })); saveDeck(deck); draw(); });
     wrap.append(slots, auto);
     if (deck.length < DECK_SIZE) {
-      const free = all.filter((c) => !deck.some((d) => d.g === c.g && d.id === c.id));
+      const free = all.filter((c) => !deck.some((d) => d.g === c.g && d.id === c.id) && fitsBudget(deck.map(full), c, minP));
       wrap.append(pickGrid(free, (c) => { if (deck.length < DECK_SIZE) { deck = [...deck, { g: c.g, id: c.id }]; saveDeck(deck); draw(); } }));
     }
   };
@@ -701,24 +723,25 @@ function playerLeft(id) {
 }
 
 // Scores a round. Free for all: the best score wins (several if tied). Teams: the team with the larger total wins.
-function scoreRound(m, rows) {
+function scoreRound(m, rows, pts = 1) {
   if (m.teams) {
     const totals = [0, 1].map((k) => rows.filter((x) => m.teams[x.id] === k).reduce((a, x) => a + x.s, 0));
     const teamWin = totals[0] === totals[1] ? null : totals[0] > totals[1] ? 0 : 1;
-    if (teamWin != null) m.teamPts[teamWin]++;
+    if (teamWin != null) m.teamPts[teamWin] += pts;
     return { rows, teamWin, totals, winners: teamWin == null ? [] : rows.filter((x) => m.teams[x.id] === teamWin).map((x) => x.id) };
   }
   const best = Math.max(...rows.map((x) => x.s));
   const winners = rows.filter((x) => x.s === best).map((x) => x.id);
   // Everyone tied: nobody scores.
   if (winners.length === rows.length && rows.length > 1) return { rows, winners: [] };
-  for (const id of winners) m.points.set(id, m.points.get(id) + 1);
+  for (const id of winners) m.points.set(id, m.points.get(id) + pts);
   return { rows, winners };
 }
 
 // Over after the last round, or once the leader can't be caught.
 function isOver(m, r) {
-  const left = ROUNDS(m) - 1 - r;
+  let left = 0;
+  for (let i = r + 1; i < ROUNDS(m); i++) left += roundPoints(m, i);
   const pts = m.teams ? m.teamPts : [...m.active].map((id) => m.points.get(id));
   const sorted = [...pts].sort((a, b) => b - a);
   return left <= 0 || sorted[0] - (sorted[1] ?? 0) > left;
@@ -728,7 +751,7 @@ function isOver(m, r) {
 // then the bigger total wins the round ──
 async function sendPack(r) {
   const m = S.cardMatch;
-  const cards = await drawPack(m.game);
+  const cards = await drawPack(m.game, { battle: true });
   if (S.cardMatch !== m || m.done) return;
   m.packs.get(m.me)[r] = cards.map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: c.tier, f: c.f }));
   cardRooms.broadcast("pack", { r, key: m.key, cards: m.packs.get(m.me)[r] });
@@ -790,18 +813,15 @@ async function runOpenings() {
     m.anim.torn = true;
     drawMatch();
     await wait(350);
-    // The cards turn over one by one.
+    // The cards turn over one by one, each in the spotlight (never skipped), then land in the row.
     for (let i = 0; i < cards.length; i++) {
       if (S.cardMatch !== m || m.done) return;
+      await spotlight(cards[i], row()?.querySelector(".cvm-cards")?.children[i], packColours(m.game.id));
+      if (S.cardMatch !== m || m.done) return;
       m.anim.n = i + 1;
-      const node = row()?.querySelector(".cvm-cards")?.children[i];
-      const tier = cards[i].tier;
-      if (node) {
-        node.classList.add("is-flipped");
-        if (tier === "legend" || tier === "secret") { const b = node.getBoundingClientRect(); burst(b.left + b.width / 2, b.top + b.height / 2, { count: 40, spread: 200, gold: tier === "legend", color: tier === "secret" ? "120, 230, 255" : null }); }
-      }
-      sfx(tier === "legend" || tier === "secret" ? "impact" : tier === "epic" ? "shimmer" : "place");
-      await wait(tier === "legend" || tier === "secret" ? 900 : 550);
+      row()?.querySelector(".cvm-cards")?.children[i]?.classList.add("is-flipped");
+      sfx("place");
+      await wait(150);
     }
     m.revealed.add(id);
     m.anim = null;
@@ -850,9 +870,14 @@ async function packStep() {
 async function sendDeck() {
   const m = S.cardMatch;
   const deck = readDeck();
-  const cards = (await cardsOf(deck, () => 1)).filter((c) => PROFILE()?.collectionOf?.(c.g)?.has(c.id));
-  // A deck short of cards is completed with my strongest ones.
-  if (cards.length < DECK_SIZE) for (const c of await myCards()) { if (cards.length >= DECK_SIZE) break; if (!cards.some((x) => x.g === c.g && x.id === c.id)) cards.push(c); }
+  let cards = (await cardsOf(deck, () => 1)).filter((c) => PROFILE()?.collectionOf?.(c.g)?.has(c.id));
+  while (deckPower(cards) > BUDGET) cards.pop();
+  // A deck short of cards is completed with my strongest ones that still fit the budget.
+  if (cards.length < DECK_SIZE) {
+    const all = await myCards();
+    const minP = Math.min(...all.map((c) => c.p));
+    for (const c of all) { if (cards.length >= DECK_SIZE) break; if (!cards.some((x) => x.g === c.g && x.id === c.id) && fitsBudget(cards, c, minP)) cards.push(c); }
+  }
   if (S.cardMatch !== m) return;
   m.hands.set(m.me, cards.slice(0, DECK_SIZE).map((c) => ({ g: c.g, id: c.id, n: c.n, p: c.p, tier: tierOf(c.p), form: hasForm(c.g, c.id) })));
   cardRooms.broadcast("deck", { key: m.key, cards: m.hands.get(m.me) });
@@ -882,11 +907,17 @@ async function tryResolve() {
   if (playing.length < m.active.size || waitingFor(m).length) return;
   m.busy = true;
   const rows = playing.map((id) => {
-    const c = m.hands.get(id)[m.plays.get(id)[r]];
+    const hand = m.hands.get(id);
+    const c = hand[m.plays.get(id)[r]];
+    const before = r ? hand[m.plays.get(id)[r - 1]] : null;
     const l = luck(m.seed, r, m.ids.indexOf(id));
-    return { id, c, l, s: strength(c, l) };
+    return { id, c, l, combo: before && before.g === c.g ? COMBO : 0, under: 0 };
   });
-  m.log[r] = scoreRound(m, rows);
+  const top = Math.max(...rows.map((x) => x.c.p));
+  const low = Math.min(...rows.map((x) => x.c.p));
+  if (rows.length > 1 && top - low >= UNDERDOG_GAP) for (const x of rows) if (x.c.p === low) x.under = (top - low) * 10;
+  for (const x of rows) x.s = strength(x.c, x.l) + x.combo + x.under;
+  m.log[r] = scoreRound(m, rows, roundPoints(m, r));
   const { winners } = m.log[r];
   m.shown = r;
   drawMatch();
@@ -935,7 +966,8 @@ function drawMatch() {
   const board = el("div", `card cvm cvm-${m.mode}`);
   const top = el("div", "cvm-score");
   if (m.teams) top.append(el("span", "cvm-name team-0", m.teamNames[0]), el("b", "cvm-pts", `${m.teamPts[0]} – ${m.teamPts[1]}`), el("span", "cvm-name team-1 is-left", m.teamNames[1]));
-  board.append(top, scoreChips(m), el("p", "cvm-round", m.done ? "" : t("cRound")(m.round + 1, ROUNDS(m))));
+  board.append(top, scoreChips(m), el("p", `cvm-round${roundPoints(m, m.round) > 1 ? " is-double" : ""}`, m.done ? "" : `${t("cRound")(m.round + 1, ROUNDS(m))}${roundPoints(m, m.round) > 1 ? ` · ${t("cDouble")}` : ""}`));
+  if (m.mode === "deck" && !m.done) board.append(el("p", "cvm-rules", t("cDeckRules")));
 
   if (m.mode === "pack") {
     // One row per player (mine last); the packs stay face down until everyone has opened theirs.
@@ -991,7 +1023,7 @@ function drawMatch() {
       const row = entry?.rows.find((x) => x.id === id);
       const played = m.plays.get(id)?.[r];
       if (row) {
-        box.append(cardFace({ ...row.c, f: false }, false), el("span", "cvm-calc", `${row.c.p}×10${row.c.form ? " + ⚡8" : ""} + 🎲${row.l} = ${row.s}`));
+        box.append(cardFace({ ...row.c, f: false }, false), el("span", "cvm-calc", `${row.c.p}×10${row.c.form ? " + ⚡8" : ""}${row.combo ? ` + 🔗${row.combo}` : ""}${row.under ? ` + 🐺${row.under}` : ""} + 🎲${row.l} = ${row.s}`));
       } else if (id === m.me && played != null) {
         box.append(cardFace({ ...m.hands.get(m.me)[played], f: false }, false));
       } else {

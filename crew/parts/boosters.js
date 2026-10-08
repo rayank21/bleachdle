@@ -14,6 +14,7 @@ const PACKS = {
   slime: ["79, 195, 255", "4, 17, 29", "転"], onepunchman: ["255, 214, 10", "26, 20, 0", "拳"],
   sololeveling: ["124, 108, 255", "8, 6, 24", "影"],
 };
+export const packColours = (id) => PACKS[id];
 const PROFILE = () => window.DLE_Profile;
 const stock = () => PROFILE()?.boosters?.() ?? 0;
 const MAX = () => PROFILE()?.BOOST_MAX ?? 10;
@@ -119,12 +120,19 @@ export function packEl(g) {
 }
 
 // ════════════════════ DRAW ════════════════════
-const pickTier = (last) => {
-  const r = Math.random();
-  if (last) return r < 0.2 ? "legend" : "epic";
-  return r < 0.04 ? "legend" : r < 0.25 ? "epic" : "common";
+// Rates per card. Battle packs (booster battles) are richer: more epics and legendaries, a better last card, and
+// transformations twice as often.
+export const RATES = {
+  shop: { legend: 0.04, epic: 0.21, lastLegend: 0.2, secret: 0.045 },
+  battle: { legend: 0.1, epic: 0.3, lastLegend: 0.4, secret: 0.09 },
 };
-export async function drawPack(g) {
+const pickTier = (last, rates) => {
+  const r = Math.random();
+  if (last) return r < rates.lastLegend ? "legend" : "epic";
+  return r < rates.legend ? "legend" : r < rates.legend + rates.epic ? "epic" : "common";
+};
+export async function drawPack(g, { battle = false } = {}) {
+  const rates = battle ? RATES.battle : RATES.shop;
   const data = await loadGame(g);
   const arc = playerArc(data.config) ?? data.config.arcs.length - 1;
   const pool = makePool(g, data, arc);
@@ -134,7 +142,7 @@ export async function drawPack(g) {
   const taken = new Set();
   const out = [];
   for (let i = 0; i < 5; i++) {
-    const tier = pickTier(i === 4);
+    const tier = pickTier(i === 4, rates);
     let c = null;
     for (const tr of order[tier]) {
       const left = byTier[tr].filter((x) => !taken.has(x.id));
@@ -144,7 +152,7 @@ export async function drawPack(g) {
     taken.add(c.id);
     // Secret: a strong card shown in its transformation (about 1 card in 100).
     const form = c.power >= 7 ? formFor(g.id, c, arc) : null;
-    const secret = !!form && Math.random() < 0.045;
+    const secret = !!form && Math.random() < rates.secret;
     out.push({ g: g.id, id: c.id, n: c.name, p: c.power, f: secret, img: secret ? form.image : c.image, tier: secret ? "secret" : tierOf(c.power) });
   }
   // Rarest last: the best card comes at the end of the row.
@@ -458,4 +466,38 @@ async function reveal(f, root, flash, fast = false) {
     root.animate([{ translate: "0 0" }, { translate: "-10px 6px" }, { translate: "8px -5px" }, { translate: "-4px 2px" }, { translate: "0 0" }], { duration: 360 });
   }
   setTimeout(() => node.classList.add("is-shown"), 500);
+}
+
+// One card in the spotlight (booster battles): it comes up big in the middle of the screen, face down, turns over with
+// its rarity's effects, stays a moment, then flies to its place in the player's row. Never skipped.
+export async function spotlight(card, target, colours) {
+  const [c1, c2] = colours ?? ["255, 80, 80", "20, 4, 6"];
+  const root = el("div", `bspot tier-${card.tier}`);
+  root.style.setProperty("--p1", c1);
+  root.style.setProperty("--p2", c2);
+  const flash = el("div", "bopen-flash");
+  const node = el("div", `bcard bspot-card tier-${card.tier}`);
+  const inner = el("div", "bcard-inner");
+  const back = el("div", "bcard-back");
+  back.append(el("span", "bcard-back-mark", "✦"), el("i", "bcard-back-shine"));
+  const front = el("div", "bcard-front");
+  front.append(PROFILE()?.card?.({ g: card.g, id: card.id, n: card.n, p: card.p, f: card.f }) ?? el("div"));
+  inner.append(back, front);
+  node.append(inner);
+  root.append(node, flash);
+  document.body.append(root);
+  sfx("whoosh");
+  await node.animate([{ transform: "translateY(60px) scale(0.5) rotate(-8deg)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 380, easing: "cubic-bezier(.2,.9,.3,1)" }).finished.catch(() => {});
+  await wait(card.tier === "common" ? 200 : 420);
+  await reveal({ node, card }, root, flash, false);
+  await wait({ common: 900, epic: 1300, legend: 1900, secret: 2200 }[card.tier] ?? 900);
+  const to = target?.isConnected ? target.getBoundingClientRect() : null;
+  const from = node.getBoundingClientRect();
+  root.classList.add("is-out");
+  if (to && to.width) {
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    await node.animate([{ transform: "none" }, { transform: `translate(${dx}px, ${dy}px) scale(${to.width / from.width})` }], { duration: 420, easing: "cubic-bezier(.5,0,.3,1)", fill: "forwards" }).finished.catch(() => {});
+  } else await wait(300);
+  root.remove();
 }

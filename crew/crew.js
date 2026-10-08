@@ -14,6 +14,7 @@ import { renderMatch, renderScoreboard } from "./parts/match.js";
 import { renderIndex } from "./parts/index-view.js";
 import { renderBoosters } from "./parts/boosters.js";
 import { ensureCardRooms, joinCardsByCode, leaveCards, renderCards } from "./parts/cards.js";
+import { showSharedCrew } from "./parts/share.js";
 
 // The Boosters tab shows how many packs wait.
 function renderBoostTab() {
@@ -196,3 +197,5 @@ try { backToMatch = !!sessionStorage.getItem("dle:rejoin:crew"); } catch {}
 S.mode = location.hash === "#online" || joinHash || backToMatch ? "online" : location.hash === "#index" ? "index" : location.hash === "#boosters" ? "boosters" : location.hash.startsWith("#cards") ? "cards" : "solo";
 setMode(S.mode);
 selectGame(S.currentGame.id);
+// A crew shared by link (crew/#team=…).
+showSharedCrew();

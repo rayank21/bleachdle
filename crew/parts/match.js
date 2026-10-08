@@ -7,6 +7,7 @@ import { makeReel } from "./reel.js";
 import { popSlot, renderBoard, slotFace } from "./board.js";
 import { renderPicker, selectGame } from "./picker.js";
 import { draw, resultBlock } from "./solo.js";
+import { crewData, openShare } from "./share.js";
 import { cleanName, memberName, myName, renderLobby, rooms } from "./lobby.js";
 import { setMode } from "../crew.js";
 
@@ -640,7 +641,7 @@ export function finishMatch() {
     if (chosen) window.DLE_Profile?.recordTeam?.({ name: chosen, won: kind === "win", draw: kind === "draw", score: sc[mineK], vs: rival });
   }
   window.DLE_Profile?.recordDuel(kind === "win");
-  const actions = [[t("leave"), "btn-ghost", leaveMatch]];
+  const actions = [[t("leave"), "btn-ghost", leaveMatch], [t("shShare"), "btn-ghost", () => openShare(crewData(S.currentGame, mine, duelScore(mine), text))]];
   if (!S.match.closedByHost) actions.push([t("backRoom"), "btn-primary", backToRoom]);
   panel.append(resultBlock(duelScore(mine), mine, { title: t("finalRanking"), outcome: { kind, text }, actions }));
   const list = el("ol", "ranking");

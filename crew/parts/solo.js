@@ -5,6 +5,7 @@ import { $, DEFAULT_POWER, REROLLS, average, el, filledOf, fitsIn, icon, loadGam
 import { burst, countUp, fly, sfx } from "./fx.js";
 import { makeReel } from "./reel.js";
 import { popSlot, renderBoard, slotFace } from "./board.js";
+import { crewData, openShare } from "./share.js";
 
 // ════════════════════ SOLO ════════════════════
 export let solo = null;
@@ -106,7 +107,7 @@ function soloFinish() {
   panel.textContent = "";
   panel.append(resultBlock(average(solo.slots), solo.slots, {
     title: t("resultTitle"),
-    actions: [[t("share"), "btn-ghost", () => copyText(shareSolo())], [t("again"), "btn-primary", startSolo]],
+    actions: [[t("shShare"), "btn-ghost", () => openShare(crewData(solo.g, solo.slots, average(solo.slots)))], [t("again"), "btn-primary", startSolo]],
   }));
   // Saved once per crew to the player's profile (best crew and leaderboard).
   if (!solo.recorded) {
@@ -220,12 +221,6 @@ export function renderSolo(stagger) {
   renderSoloStatus();
   renderSoloActions();
   if (solo.done) soloFinish();
-}
-
-function shareSolo() {
-  const avg = average(solo.slots);
-  const lines = filledOf(solo.slots).map((s) => `${slotLabel(s)}: ${s.char.name} (${s.points})`);
-  return `${t("title")} · ${solo.g.anime} · ${rankOf(avg)} ${avg.toFixed(1)}/10\n${lines.join("\n")}`;
 }
 
 export async function copyText(text) {

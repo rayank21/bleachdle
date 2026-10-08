@@ -48,7 +48,7 @@ const T = {
     dmEmpty: (n) => `No messages with ${n} yet. Say hi!`, dmSay: (n) => `Message ${n}…`, dmFail: "Not sent, try again.", back: "Back",
     record: "Voice message", recording: "Recording", cancel: "Cancel", voiceNeed: "Create a profile to send voice messages.",
     micDenied: "Microphone blocked: allow it in your browser's settings for this site.", voiceUnsupported: "Your browser can't record audio.",
-    voiceFail: "The voice message didn't go through.", voiceMsg: "Voice message",
+    voiceFail: "The voice message didn't go through.", voiceMsg: "Voice message", featAch: (n) => `unlocked the achievement “${n}”!`,
     voiceTitle: "Voice chat", voiceHelp: "Talk live with everyone in the channel. Your microphone is only used while you're in it.",
     voiceGeneral: "General voice", voiceRoom: (c) => `Room voice · ${c}`, voiceJoin: "Join", voiceLeave: "Leave", mute: "Mute", unmute: "Unmute",
     voiceTap: "Tap anywhere to hear the others", voiceAlone: "Nobody else yet: invite your friends!", voiceLoading: "Connecting…",
@@ -87,7 +87,7 @@ const T = {
     dmEmpty: (n) => `Aucun message avec ${n} pour l'instant. Dis bonjour !`, dmSay: (n) => `Écrire à ${n}…`, dmFail: "Pas envoyé, réessaie.", back: "Retour",
     record: "Message vocal", recording: "Enregistrement", cancel: "Annuler", voiceNeed: "Crée un profil pour envoyer des messages vocaux.",
     micDenied: "Micro bloqué : autorise-le dans les réglages du navigateur pour ce site.", voiceUnsupported: "Ton navigateur ne sait pas enregistrer le son.",
-    voiceFail: "Le message vocal n'est pas passé.", voiceMsg: "Message vocal",
+    voiceFail: "Le message vocal n'est pas passé.", voiceMsg: "Message vocal", featAch: (n) => `a débloqué le succès « ${n} » !`,
     voiceTitle: "Chat vocal", voiceHelp: "Parle en direct avec tout le monde dans le salon. Ton micro n'est utilisé que pendant que tu y es.",
     voiceGeneral: "Vocal général", voiceRoom: (c) => `Vocal de la salle · ${c}`, voiceJoin: "Rejoindre", voiceLeave: "Quitter", mute: "Couper le micro", unmute: "Activer le micro",
     voiceTap: "Touche l'écran pour entendre les autres", voiceAlone: "Personne d'autre pour l'instant : invite tes amis !", voiceLoading: "Connexion…",
@@ -502,6 +502,13 @@ let lastSent = 0;
 const rate = new Map(); // peerId → recent receive times
 
 const realNow = () => window.DLE_CLOCK?.now() ?? Date.now();
+// An automatic message: an achievement unlocked or a record beaten (in both languages, each reader sees theirs).
+function cleanFeat(f) {
+  if (!f || typeof f !== "object" || !["ach", "rec"].includes(f.k)) return null;
+  const clip = (s) => String(s ?? "").replace(/[\u0000-\u001f<>]/g, "").slice(0, 120);
+  return { k: f.k, tier: ["bronze", "silver", "gold", "platinum"].includes(f.tier) ? f.tier : "silver", en: clip(f.en), fr: clip(f.fr) };
+}
+const featText = (f) => (lang() === "fr" ? f.fr || f.en : f.en || f.fr);
 function cleanMessage(m) {
   if (!m || typeof m !== "object") return null;
   const text = String(m.text ?? "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, CHAT_MAX);
@@ -520,6 +527,7 @@ function cleanMessage(m) {
     pid: cleanPid(m.pid),
     reacts: cleanReacts(m.reacts),
     mine: !!m.mine,
+    feat: cleanFeat(m.feat),
   };
 }
 
@@ -700,7 +708,12 @@ function renderChat({ scroll = false } = {}) {
       meta.append(time);
       li.append(meta);
     }
-    if (m.text) li.append(el("p", "chat-text", m.text));
+    if (m.feat) {
+      li.classList.add("is-feat", `tier-${m.feat.tier}`);
+      const p = el("p", "chat-feat");
+      p.append(el("span", "chat-feat-icon", m.feat.k === "ach" ? "🏆" : "🔥"), el("b", null, m.mine ? t("you") : m.name), " ", m.feat.k === "ach" ? t("featAch")(featText(m.feat)) : featText(m.feat));
+      li.append(p);
+    } else if (m.text) li.append(el("p", "chat-text", m.text));
     if (m.voice) li.append(voiceEl(m.voice, m.dur));
     // Reactions under the message (mine highlighted, a click toggles mine), and the button to add one.
     const me = shownName().toLowerCase();
@@ -771,6 +784,40 @@ $c(".chat-form").addEventListener("submit", (e) => {
   chatInput.value = "";
   renderChat({ scroll: true });
 });
+
+// Other pages post in the general chat (a shared crew).
+window.addEventListener("dle:say", (e) => {
+  const text = String(e.detail?.text ?? "").replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
+  const now = Date.now();
+  if (!text || !sendChat || now - lastSent < 800) return;
+  lastSent = now;
+  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now, badges: myBadges(), pid: myPid() };
+  sendChat(msg);
+  addMessage({ ...msg, mine: true });
+  renderChat({ scroll: true });
+});
+
+// Achievements and records go to the general chat by themselves (at most one every 5 s, queued).
+const featQueue = [];
+let featTimer = 0;
+window.addEventListener("dle:feat", (e) => {
+  const f = cleanFeat(e.detail);
+  if (!f || !myPid()) return;
+  featQueue.push(f);
+  if (!featTimer) flushFeat();
+});
+function flushFeat() {
+  featTimer = 0;
+  const f = featQueue.shift();
+  if (!f) return;
+  if (!sendChat) { featQueue.unshift(f); featTimer = setTimeout(flushFeat, 5000); return; }
+  const now = Date.now();
+  const msg = { id: `${now.toString(36)}-${Math.random().toString(36).slice(2, 10)}`, text: featText(f), feat: f, name: shownName(), game, ts: window.DLE_CLOCK?.now() ?? now, badges: myBadges(), pid: myPid() };
+  sendChat(msg);
+  addMessage({ ...msg, mine: true });
+  renderChat();
+  if (featQueue.length) featTimer = setTimeout(flushFeat, 5000);
+}
 
 // The six reactions, in a small bubble above the message.
 function reactPicker(anchor, m) {
@@ -876,7 +923,7 @@ function notify(m) {
   const logo = gameLogo(m.game);
   if (logo) head.append(logo);
   head.append(window.DLE_NAME(m.name, m.pid, "chat-author"), el("time", null, clock(m.ts)));
-  card.append(head, el("span", "chat-note-text", m.text || `🎤 ${t("voiceMsg")}`));
+  card.append(head, el("span", "chat-note-text", m.feat ? `${m.feat.k === "ach" ? "🏆" : "🔥"} ${m.feat.k === "ach" ? t("featAch")(featText(m.feat)) : featText(m.feat)}` : m.text || `🎤 ${t("voiceMsg")}`));
   card.addEventListener("click", () => { if (m.dmWith) openDm(m.dmWith); else { chat.view = "general"; setChatOpen(true); } });
   notes.append(card);
   while (notes.children.length > 2) notes.firstElementChild.remove();

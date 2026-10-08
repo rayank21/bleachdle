@@ -1766,6 +1766,37 @@ img.cl-game-crew { background: #5ed3c6; }
 @keyframes tcg-shine { 0% { transform: translateX(-110%); } 55%, 100% { transform: translateX(110%); } }
 .lite .tcg::after { animation: none !important; }
 
+/* Rare cards come alive. Epic: a neon frame, a light running round the edge and a flicker. Legendary: spiritual
+   pressure (reiatsu), flames of light rising from the bottom of the picture with sparks, and a gold glow round the card.
+   Secret: both, in every colour. Only transform and opacity move (no repaint); none of it on weak machines. */
+.tcg-frame { position: absolute; inset: 0; z-index: 4; pointer-events: none; border-radius: inherit; }
+.tcg-epic .tcg-frame, .tcg-legend .tcg-frame, .tcg-secret .tcg-frame { --neon: 200, 120, 255; --neon2: 80, 220, 255; padding: 1.3cqw; overflow: hidden; -webkit-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.tcg-legend .tcg-frame { --neon: 255, 230, 140; --neon2: 255, 140, 40; }
+.tcg-secret .tcg-frame { --neon: 255, 110, 220; --neon2: 90, 230, 255; }
+.tcg-epic .tcg-frame::before, .tcg-legend .tcg-frame::before, .tcg-secret .tcg-frame::before { content: ""; position: absolute; left: 50%; top: 50%; width: 160%; aspect-ratio: 1; translate: -50% -50%; background: conic-gradient(from 0deg, transparent 0 55%, rgba(var(--neon2), 0.9) 70%, #fff 75%, rgba(var(--neon), 0.9) 80%, transparent 92%); animation: tcg-run 3.4s linear infinite; }
+.tcg-secret .tcg-frame::before { background: conic-gradient(#ff4b6e, #ffd34d, #4bffb4, #4bb4ff, #c44bff, #ff4b6e); animation-duration: 2.6s; }
+@keyframes tcg-run { to { rotate: 360deg; } }
+.tcg-epic, .tcg-legend, .tcg-secret { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 14px rgba(var(--t1), 0.45); }
+.tcg-legend { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 22px rgba(255, 196, 60, 0.6), 0 0 44px rgba(255, 140, 30, 0.25); }
+.tcg-epic .tcg-art { animation: tcg-neon 4.5s steps(1) infinite; }
+@keyframes tcg-neon { 0%, 100% { box-shadow: 0 0 0 0.7cqw rgba(var(--t1), 0.95), 0 0 0 1.4cqw rgba(0, 0, 0, 0.55), 0 0 5cqw rgba(200, 120, 255, 0.7); } 91% { box-shadow: 0 0 0 0.7cqw rgba(var(--t1), 0.4), 0 0 0 1.4cqw rgba(0, 0, 0, 0.55), 0 0 1cqw rgba(200, 120, 255, 0.2); } 93% { box-shadow: 0 0 0 0.7cqw rgba(var(--t1), 0.95), 0 0 0 1.4cqw rgba(0, 0, 0, 0.55), 0 0 5cqw rgba(200, 120, 255, 0.7); } 95% { box-shadow: 0 0 0 0.7cqw rgba(var(--t1), 0.5), 0 0 0 1.4cqw rgba(0, 0, 0, 0.55), 0 0 1cqw rgba(200, 120, 255, 0.2); } }
+/* The aura sits over the picture: two layers of flames (each twice as tall, sliding up and looping) and the sparks. */
+.tcg-aura { position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; border-radius: inherit; mix-blend-mode: screen; }
+.tcg-common .tcg-aura { display: none; }
+.tcg-aura::before, .tcg-aura::after { content: ""; position: absolute; left: -10%; right: -10%; top: 0; height: 200%; }
+.tcg-epic .tcg-aura::before { background: radial-gradient(40% 9% at 20% 98%, rgba(200, 120, 255, 0.55), transparent 70%), radial-gradient(40% 9% at 80% 48%, rgba(80, 220, 255, 0.45), transparent 70%), radial-gradient(40% 9% at 80% 98%, rgba(80, 220, 255, 0.45), transparent 70%), radial-gradient(40% 9% at 20% 48%, rgba(200, 120, 255, 0.55), transparent 70%); animation: tcg-rise 4s linear infinite; }
+.tcg-legend .tcg-aura::before, .tcg-secret .tcg-aura::before { --a1: 255, 210, 90; --a2: 255, 120, 30; background: radial-gradient(22% 16% at 12% 100%, rgba(var(--a1), 0.75), transparent 70%), radial-gradient(18% 20% at 34% 100%, rgba(var(--a2), 0.6), transparent 70%), radial-gradient(22% 14% at 62% 100%, rgba(var(--a1), 0.7), transparent 70%), radial-gradient(20% 18% at 88% 100%, rgba(var(--a2), 0.65), transparent 70%), radial-gradient(22% 16% at 12% 50%, rgba(var(--a1), 0.75), transparent 70%), radial-gradient(18% 20% at 34% 50%, rgba(var(--a2), 0.6), transparent 70%), radial-gradient(22% 14% at 62% 50%, rgba(var(--a1), 0.7), transparent 70%), radial-gradient(20% 18% at 88% 50%, rgba(var(--a2), 0.65), transparent 70%); animation: tcg-rise 2.2s linear infinite; }
+.tcg-secret .tcg-aura::before { --a1: 120, 230, 255; --a2: 255, 90, 210; }
+.tcg-legend .tcg-aura::after, .tcg-secret .tcg-aura::after { background-image: radial-gradient(circle, rgba(255, 245, 200, 0.95) 0 1px, transparent 1.6px), radial-gradient(circle, rgba(255, 190, 80, 0.8) 0 0.8px, transparent 1.4px); background-size: 37px 61px, 23px 43px; background-position: 0 0, 11px 17px; animation: tcg-rise 3.6s linear infinite; }
+.tcg-secret .tcg-aura::after { background-image: radial-gradient(circle, rgba(200, 255, 255, 0.95) 0 1px, transparent 1.6px), radial-gradient(circle, rgba(255, 150, 240, 0.8) 0 0.8px, transparent 1.4px); }
+/* A glow that breathes at the foot of the picture, like pressure building up. */
+.tcg-legend .tcg-art::before, .tcg-secret .tcg-art::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(90% 45% at 50% 100%, rgba(255, 190, 60, 0.45), transparent 70%); animation: tcg-breathe 2.4s ease-in-out infinite; }
+.tcg-secret .tcg-art::before { background: radial-gradient(90% 45% at 50% 100%, rgba(140, 220, 255, 0.45), transparent 70%); }
+@keyframes tcg-rise { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+@keyframes tcg-breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.lite .tcg-frame::before, .lite .tcg-aura::before, .lite .tcg-aura::after, .lite .tcg-art, .lite .tcg-art::before { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .tcg-frame::before, .tcg-aura::before, .tcg-aura::after, .tcg-art, .tcg-art::before { animation: none !important; } }
+
 /* +1 booster: a small banner at the bottom; a click goes to the boosters. */
 .boost-toast { position: fixed; z-index: 1001; left: 50%; bottom: 22px; display: flex; align-items: center; gap: 12px; padding: 10px 14px 10px 10px; border-radius: 16px; color: #fff; text-decoration: none; background: linear-gradient(135deg, #24161a, #17171c); border: 1px solid rgba(255, 138, 61, 0.55); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 26px rgba(255, 110, 50, 0.35); transform: translateX(-50%); animation: boost-in 0.55s cubic-bezier(0.2, 1.4, 0.3, 1) both; }
 .boost-toast.is-out { animation: boost-out 0.45s ease both; }
@@ -1943,3 +1974,11 @@ img.cl-game-crew { background: #5ed3c6; }
   .presence-conn span { display: none; }
 }
 .conn-actions a { display: inline-flex; align-items: center; text-decoration: none; color: var(--text); }
+
+/* Automatic chat messages: an achievement unlocked or a record beaten. */
+.chat-msg.is-feat .chat-feat { margin: 2px 0; padding: 8px 10px; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; color: #fff; background: linear-gradient(120deg, rgba(255, 200, 60, 0.16), rgba(255, 90, 60, 0.12)); box-shadow: inset 0 0 0 1px rgba(255, 200, 60, 0.4), 0 0 16px rgba(255, 170, 40, 0.15); }
+.chat-msg.is-feat.tier-bronze .chat-feat { background: linear-gradient(120deg, rgba(205, 127, 50, 0.18), rgba(120, 60, 20, 0.1)); box-shadow: inset 0 0 0 1px rgba(205, 127, 50, 0.45); }
+.chat-msg.is-feat.tier-silver .chat-feat { background: linear-gradient(120deg, rgba(200, 215, 235, 0.16), rgba(120, 140, 170, 0.1)); box-shadow: inset 0 0 0 1px rgba(200, 215, 235, 0.4); }
+.chat-msg.is-feat.tier-platinum .chat-feat { background: linear-gradient(120deg, rgba(120, 230, 255, 0.18), rgba(200, 120, 255, 0.14)); box-shadow: inset 0 0 0 1px rgba(150, 220, 255, 0.5), 0 0 16px rgba(150, 120, 255, 0.2); }
+.chat-feat-icon { margin-right: 6px; }
+.chat-feat b { color: #ffd34d; }
