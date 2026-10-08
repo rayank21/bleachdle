@@ -489,6 +489,21 @@ window.DLE_CHARACTERS = [
   "arc": 3
  },
  {
+  "id": "velzard",
+  "name": "Velzard",
+  "gender": "F",
+  "height": null,
+  "image": "assets/characters/velzard.webp",
+  "race": [
+   "Dragon"
+  ],
+  "aff": [
+   "None"
+  ],
+  "title": "True Dragon",
+  "arc": 4
+ },
+ {
   "id": "shizu",
   "name": "Shizu",
   "gender": "F",

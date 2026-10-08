@@ -60,7 +60,7 @@ window.DLE_CONFIG = {
       "Bio-Android": "Bio-androïde", Majin: "Majin", "Frieza Clan": "Clan de Freezer", Alien: "Extraterrestre", God: "Dieu",
       Angel: "Ange", Demon: "Démon",
       Black: "Noir", Blue: "Bleu", Blonde: "Blond", Red: "Roux", White: "Blanc", Purple: "Violet", Green: "Vert", Bald: "Chauve", None: "Aucun",
-      Earth: "Terre", "Planet Vegeta": "Planète Vegeta", Namek: "Namek", "Other World": "Au-delà",
+      Earth: "Terre", "Planet Vegeta": "Planète Vegeta", Namek: "Namek", "Other World": "Au-delà", Cereal: "Céréale",
       "Universe 6": "Univers 6", "Universe 7": "Univers 7", "Universe 10": "Univers 10", "Universe 11": "Univers 11",
       "Z Fighters": "Guerriers Z", "Turtle School": "École de la Tortue", "Crane School": "École de la Grue", "Pilaf Gang": "Bande à Pilaf",
       "Red Ribbon Army": "Armée du Ruban Rouge", "Korin Tower": "Tour de Karin", "Penguin Village": "Village Pingouin",

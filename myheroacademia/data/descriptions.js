@@ -61,4 +61,8 @@ window.DLE_DESCRIPTIONS = {
   "stain": ["The Hero Killer, a bloodthirsty purist who paralyses heroes by licking their blood.", "Le Tueur de héros, un puriste sanguinaire qui paralyse les héros en léchant leur sang.", ["Bloodcurdle", "Sang caillé"], "Hero Killer"],
   "overhaul": ["A germophobic yakuza in a plague mask who takes apart and rebuilds anything he touches.", "Un yakuza germophobe au masque de médecin de peste qui démonte et reconstruit tout ce qu'il touche.", ["Overhaul", "Overhaul"], null],
   "re-destro": ["A company president who leads a hidden army and grows stronger with his stress.", "Un président d'entreprise qui dirige une armée secrète et devient plus fort avec son stress.", ["Stress", "Stress"], null],
+  "thirteen": ["A U.A. teacher in a space suit who rescues people with a quirk that pulls everything into a black hole.", "Un prof de Yuei en combinaison spatiale qui sauve les gens avec un alter qui aspire tout dans un trou noir.", ["Black Hole", "Trou noir"], null],
+  "moonfish": ["A masked villain of the Vanguard Action Squad who fights with long blades growing from his teeth.", "Un vilain masqué de l'Avant-garde qui se bat avec de longues lames qui sortent de ses dents.", ["Blades-for-Teeth", "Dents-lames"], null],
+  "mustard": ["A young villain in a gas mask who fills the forest with sleeping gas during the training camp.", "Un jeune vilain masqué à gaz qui remplit la forêt de gaz somnifère pendant le camp d'entraînement.", ["Gas", "Gaz"], null],
+  "kyudai-garaki": ["An old doctor with goggles who makes the Nomu for All For One in his hidden lab.", "Un vieux docteur à lunettes qui fabrique les Brainless pour All For One dans son labo caché.", ["Nomu", "Brainless"], null],
 };

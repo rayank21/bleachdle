@@ -370,7 +370,8 @@
     img.alt = "";
     img.decoding = "async";
     const form = formOf(c.g, c.id);
-    img.src = c.img || (c.f || form ? formSrc(c.g, c.id) : portrait(c.g, c.id));
+    // A character with a transformation always shows it (its card picture), whatever picture the card was drawn with.
+    img.src = c.f || form ? formSrc(c.g, c.id) : c.img || portrait(c.g, c.id);
     if (form) card.classList.add("has-form");
     // A tall full-body picture shows the head, a wide one its middle (or the form's own focus).
     frameForm(img, formFocus(form));

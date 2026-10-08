@@ -52,4 +52,11 @@ window.DLE_DESCRIPTIONS = {
   "motoya-komori": ["A cheerful libero and the cousin of his team's germophobic ace.", "Un libéro joyeux, cousin de l'as germophobe de son équipe.", ["Libero", "Libéro"], null],
   "korai-hoshiumi": ["A short, confident ace who can do everything and is nicknamed the Little Giant of his generation.", "Un as petit et sûr de lui qui sait tout faire, surnommé le Petit Géant de sa génération.", null, null],
   "sachiro-hirugami": ["A gentle, tall middle blocker who wants to play volleyball like a gentleman.", "Un grand central doux qui veut jouer au volley en gentleman.", null, null],
+  "ikkei-ukai": ["The legendary old coach who once led Karasuno to nationals, grandfather of their current coach.", "Le vieux coach légendaire qui a mené Karasuno aux nationales, grand-père de leur coach actuel.", ["Karasuno", "Karasuno"], null],
+  "yasufumi-nekomata": ["Nekoma's smiling old coach and the long-time rival of Karasuno's legendary coach.", "Le vieux coach souriant de Nekoma, rival de longue date du coach légendaire de Karasuno.", ["Nekoma", "Nekoma"], null],
+  "haruki-komi": ["Fukurodani's calm libero who quietly picks up every ball behind Bokuto.", "Le libéro calme de Fukurodani qui ramasse tous les ballons derrière Bokuto.", ["Fukurodani", "Fukurodani"], null],
+  "kosuke-sakunami": ["Date Tech's small first-year libero, who covers the ball when it gets past the Iron Wall.", "Le petit libéro de première année de Date Tech, qui rattrape les ballons qui passent le Mur de Fer.", ["Date Tech", "Date Tech"], null],
+  "hayato-yamagata": ["Shiratorizawa's cheerful libero, one of the best defenders of Miyagi.", "Le libéro jovial de Shiratorizawa, l'un des meilleurs défenseurs de Miyagi.", ["Shiratorizawa", "Shiratorizawa"], null],
+  "tanji-washijo": ["Shiratorizawa's stern old coach, who believes power beats everything.", "Le vieux coach sévère de Shiratorizawa, qui croit que la puissance bat tout.", ["Shiratorizawa", "Shiratorizawa"], null],
+  "michinari-akagi": ["Inarizaki's third-year libero, loud and very proud of his digs.", "Le libéro de troisième année d'Inarizaki, bruyant et très fier de ses défenses.", ["Inarizaki", "Inarizaki"], null],
 };

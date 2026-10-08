@@ -31,4 +31,7 @@ window.DLE_DESCRIPTIONS = {
   "inca-kasugatani": ["A thrill-seeking girl who sees the paths fires will take and loves danger.", "Une fille avide de sensations qui voit le chemin que prendront les flammes et adore le danger.", null, null],
   "nataku-son": ["A scared little boy used in experiments, whose fear releases destructive flames.", "Un petit garçon terrifié utilisé dans des expériences, dont la peur libère des flammes destructrices.", null, null],
   "kurono": ["A sadistic researcher who loves tormenting the weak with his smoke.", "Un chercheur sadique qui adore tourmenter les faibles avec sa fumée.", ["Smoke", "Fumée"], null],
+  "gustav-honda": ["The stern, mustached captain of Company 2.", "Le capitaine moustachu et sévère de la 2e brigade.", ["Company 2", "2e brigade"], null],
+  "soichiro-hague": ["The elderly captain of Company 4, a calm veteran of the Fire Force.", "Le vieux capitaine de la 4e brigade, un vétéran calme des pompiers.", ["Company 4", "4e brigade"], null],
+  "kayoko-huang": ["The calm captain of Company 6, the brigade of medics.", "La capitaine calme de la 6e brigade, la brigade des soigneurs.", ["Company 6", "6e brigade"], null],
 };

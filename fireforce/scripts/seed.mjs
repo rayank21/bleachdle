@@ -36,6 +36,9 @@ export const seed = [
   { wiki: "Karim Flam", gender: "M", role: "Lieutenant", gen: G2, aff: ["Company 1"], adolla: "No", arc: 0 },
   { wiki: "Rekka Hoshimiya", gender: "M", role: "Lieutenant", gen: G3, aff: ["Company 1", ...WC], adolla: "No", arc: 0 },
   { wiki: "Giovanni", gender: "M", role: "Captain", gen: G3, aff: ["Company 3", ...WC], adolla: "No", arc: 1 },
+  { wiki: "Gustav Honda", gender: "M", role: "Captain", gen: NO, aff: ["Company 2"], adolla: "No", arc: 3 },
+  { wiki: "Sōichirō Hague", name: "Soichiro Hague", gender: "M", role: "Captain", gen: NO, aff: ["Company 4"], adolla: "No", arc: 2 },
+  { wiki: "Kayoko Huang", gender: "F", role: "Captain", gen: G3, aff: ["Company 6"], adolla: "No", arc: 3 },
   // ── The White Clad and the Pillars ──
   { wiki: "Joker", gender: "M", role: "None", gen: G3, aff: ["None"], adolla: "Yes", arc: 0 },
   { wiki: "Sho Kusakabe", gender: "M", role: "Pillar", gen: G3, aff: WC, adolla: "Yes", arc: 1 },

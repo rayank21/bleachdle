@@ -573,6 +573,22 @@ window.DLE_CHARACTERS = [
   "arc": 0
  },
  {
+  "id": "thirteen",
+  "name": "Thirteen",
+  "gender": "F",
+  "height": 180,
+  "image": "assets/characters/thirteen.webp",
+  "quirk": "Emitter",
+  "aff": [
+   "U.A. Teachers"
+  ],
+  "status": "Pro Hero",
+  "hair": [
+   "Unknown"
+  ],
+  "arc": 0
+ },
+ {
   "id": "endeavor",
   "name": "Endeavor",
   "gender": "M",
@@ -912,6 +928,54 @@ window.DLE_CHARACTERS = [
   "status": "Villain",
   "hair": [
    "Blonde"
+  ],
+  "arc": 3
+ },
+ {
+  "id": "moonfish",
+  "name": "Moonfish",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/moonfish.webp",
+  "quirk": "Mutant",
+  "aff": [
+   "Vanguard Action Squad"
+  ],
+  "status": "Villain",
+  "hair": [
+   "None"
+  ],
+  "arc": 3
+ },
+ {
+  "id": "mustard",
+  "name": "Mustard",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/mustard.webp",
+  "quirk": "Emitter",
+  "aff": [
+   "Vanguard Action Squad"
+  ],
+  "status": "Villain",
+  "hair": [
+   "Black"
+  ],
+  "arc": 3
+ },
+ {
+  "id": "kyudai-garaki",
+  "name": "Kyudai Garaki",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/kyudai-garaki.webp",
+  "quirk": "Emitter",
+  "aff": [
+   "League of Villains"
+  ],
+  "status": "Villain",
+  "hair": [
+   "None"
   ],
   "arc": 3
  },

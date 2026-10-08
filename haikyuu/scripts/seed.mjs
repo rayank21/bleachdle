@@ -32,6 +32,7 @@ export const seed = [
   { wiki: "Hitoka Yachi", school: K, position: "Manager", year: "1st year", number: null, arc: 1 },
   { wiki: "Ittetsu Takeda", school: K, position: "Advisor", year: "Adult", number: null, arc: 0 },
   { wiki: "Keishin Ukai", school: K, position: "Coach", year: "Adult", number: null, arc: 0 },
+  { wiki: "Ikkei Ukai", school: K, position: "Coach", year: "Adult", number: null, arc: 0 },
   { wiki: "Saeko Tanaka", school: "None", position: "Supporter", year: "Adult", number: null, arc: 2 },
   // ── Aoba Johsai ──
   { wiki: "Tōru Oikawa", name: "Toru Oikawa", school: S, position: "Setter", year: "3rd year", number: 1, arc: 0 },
@@ -49,11 +50,14 @@ export const seed = [
   { wiki: "Lev Haiba", school: N, position: "Middle Blocker", year: "1st year", number: 11, arc: 2 },
   { wiki: "Taketora Yamamoto", school: N, position: "Wing Spiker", year: "2nd year", number: 4, arc: 0 },
   { wiki: "Nobuyuki Kai", school: N, position: "Wing Spiker", year: "3rd year", number: 2, arc: 0 },
+  { wiki: "Yasufumi Nekomata", school: N, position: "Coach", year: "Adult", number: null, arc: 1 },
   // ── Fukurodani, Date Tech, Johzenji ──
   { wiki: "Kōtarō Bokuto", name: "Kotaro Bokuto", school: "Fukurodani", position: "Wing Spiker", year: "3rd year", number: 4, arc: 2 },
   { wiki: "Keiji Akaashi", school: "Fukurodani", position: "Setter", year: "2nd year", number: 5, arc: 2 },
+  { wiki: "Haruki Komi", school: "Fukurodani", position: "Libero", year: "3rd year", number: 11, arc: 2 },
   { wiki: "Kenji Futakuchi", school: "Date Tech", position: "Wing Spiker", year: "2nd year", number: 2, arc: 1 },
   { wiki: "Takanobu Aone", school: "Date Tech", position: "Middle Blocker", year: "2nd year", number: 7, arc: 1 },
+  { wiki: "Kōsuke Sakunami", name: "Kosuke Sakunami", school: "Date Tech", position: "Libero", year: "1st year", number: 13, arc: 1 },
   { wiki: "Yūji Terushima", name: "Yuji Terushima", school: "Johzenji", position: "Wing Spiker", year: "3rd year", number: 1, arc: 3 },
   // ── Shiratorizawa ──
   { wiki: "Wakatoshi Ushijima", school: SH, position: "Opposite", year: "3rd year", number: 1, arc: 1 },
@@ -61,12 +65,15 @@ export const seed = [
   { wiki: "Kenjirō Shirabu", name: "Kenjiro Shirabu", school: SH, position: "Setter", year: "2nd year", number: 10, arc: 3 },
   { wiki: "Eita Semi", school: SH, position: "Setter", year: "3rd year", number: 3, arc: 3 },
   { wiki: "Tsutomu Goshiki", school: SH, position: "Wing Spiker", year: "1st year", number: 8, arc: 3 },
+  { wiki: "Hayato Yamagata", school: SH, position: "Libero", year: "3rd year", number: 14, arc: 3 },
+  { wiki: "Tanji Washijō", name: "Tanji Washijo", school: SH, position: "Coach", year: "Adult", number: null, arc: 3 },
   // ── Spring Nationals ──
   { wiki: "Atsumu Miya", school: I, position: "Setter", year: "2nd year", number: 7, arc: 4 },
   { wiki: "Osamu Miya", school: I, position: "Wing Spiker", year: "2nd year", number: 11, arc: 4 },
   { wiki: "Shinsuke Kita", school: I, position: "Wing Spiker", year: "3rd year", number: 1, arc: 4 },
   { wiki: "Rintarō Suna", name: "Rintaro Suna", school: I, position: "Middle Blocker", year: "2nd year", number: 10, arc: 4 },
   { wiki: "Aran Ojiro", school: I, position: "Opposite", year: "3rd year", number: 4, arc: 4 },
+  { wiki: "Michinari Akagi", school: I, position: "Libero", year: "3rd year", number: 15, arc: 4 },
   { wiki: "Kiyoomi Sakusa", school: "Itachiyama", position: "Wing Spiker", year: "2nd year", number: 15, arc: 4 },
   { wiki: "Motoya Komori", school: "Itachiyama", position: "Libero", year: "2nd year", number: 13, arc: 4 },
   { wiki: "Kōrai Hoshiumi", name: "Korai Hoshiumi", school: "Kamomedai", position: "Wing Spiker", year: "2nd year", number: 1, arc: 4 },

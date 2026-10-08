@@ -62,6 +62,7 @@ export const seed = [
   { wiki: "Sorahiko Torino", name: "Gran Torino", quirk: "Emitter", aff: PRO, status: "Pro Hero", hair: ["White"], arc: 2 },
   { wiki: "Mirai Sasaki", name: "Sir Nighteye", quirk: "Emitter", aff: PRO, status: "Pro Hero", hair: ["Green", "Blonde"], arc: 5 },
   { wiki: "Taishiro Toyomitsu", name: "Fatgum", quirk: "Mutant", aff: PRO, status: "Pro Hero", hair: ["Blonde"], arc: 5 },
+  { wiki: "Anan Kurose", name: "Thirteen", quirk: "Emitter", aff: UA, status: "Pro Hero", hair: ["Unknown"], arc: 0 },
   { wiki: "Cathleen Bate", name: "Star and Stripe", quirk: "Emitter", aff: PRO, status: "Pro Hero", hair: ["Blonde"], arc: 8 },
   { wiki: "Kaina Tsutsumi", name: "Lady Nagant", quirk: "Transformation", aff: ["None"], status: "Villain", hair: ["Black", "Pink"], arc: 7 },
   // ── Villains ──
@@ -76,6 +77,9 @@ export const seed = [
   { wiki: "Kenji Hikiishi", name: "Magne", quirk: "Emitter", aff: LOV, status: "Villain", hair: ["Pink"], arc: 3 },
   { wiki: "Gigantomachia", quirk: "Mutant", aff: LOV, status: "Villain", hair: ["White"], arc: 6 },
   { wiki: "Muscular", quirk: "Transformation", aff: ["Vanguard Action Squad"], status: "Villain", hair: ["Blonde"], arc: 3 },
+  { wiki: "Moonfish", quirk: "Mutant", aff: ["Vanguard Action Squad"], status: "Villain", hair: ["None"], arc: 3 },
+  { wiki: "Mustard", quirk: "Emitter", aff: ["Vanguard Action Squad"], status: "Villain", hair: ["Black"], arc: 3 },
+  { wiki: "Kyudai Garaki", name: "Kyudai Garaki", quirk: "Emitter", aff: LOV, status: "Villain", hair: ["None"], arc: 3 },
   { wiki: "Chizome Akaguro", name: "Stain", quirk: "Emitter", aff: ["None"], status: "Villain", hair: ["Black"], arc: 2 },
   { wiki: "Kai Chisaki", name: "Overhaul", quirk: "Emitter", aff: ["Shie Hassaikai"], status: "Villain", hair: ["Black"], arc: 5 },
   { wiki: "Rikiya Yotsubashi", name: "Re-Destro", quirk: "Transformation", aff: ["Meta Liberation Army"], status: "Villain", hair: ["Brown"], arc: 6 },

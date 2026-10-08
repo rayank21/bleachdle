@@ -7,6 +7,24 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T05:00",
+      title: { en: "20 new characters and a big balance pass", fr: "20 nouveaux persos et un gros rééquilibrage" },
+      items: [
+        { type: "improved", game: "crew", en: "Cards (inventory, boosters, duels, showcase) now always show the transformation picture of a character who has one.", fr: "Les cartes (inventaire, boosters, duels, vitrine) montrent toujours l'image de transformation d'un perso qui en a une." },
+        { type: "new", game: "dragonball", en: "Granolah joins Dragonballdle.", fr: "Granolah rejoint Dragonballdle." },
+        { type: "new", game: "myheroacademia", en: "New: Thirteen, Kyudai Garaki, Moonfish and Mustard.", fr: "Nouveaux : Thirteen, Kyudai Garaki, Moonfish et Mustard." },
+        { type: "new", game: "haikyuu", en: "New liberos (Yamagata, Komi, Akagi, Sakunami) and coaches (Ikkei Ukai, Washijo, Nekomata).", fr: "Nouveaux libéros (Yamagata, Komi, Akagi, Sakunami) et coachs (Ikkei Ukai, Washijo, Nekomata)." },
+        { type: "new", game: "slime", en: "Velzard, the White Ice Dragon.", fr: "Velzard, le Dragon de glace blanche." },
+        { type: "new", game: "onepunchman", en: "New: Bomb, Bakuzan, Choze and Dr. Kuseno.", fr: "Nouveaux : Bomb, Bakuzan, Choze et le Dr Kuseno." },
+        { type: "new", game: "fireforce", en: "New captains: Gustav Honda (Company 2), Soichiro Hague (Company 4) and Kayoko Huang (Company 6).", fr: "Nouveaux capitaines : Gustav Honda (2e brigade), Soichiro Hague (4e brigade) et Kayoko Huang (6e brigade)." },
+        { type: "balance", game: "crew", en: "My Hero Academia: healers Garaki 7, Thirteen 6, Tsuyu 6, Momo 5; strategists Momo 9, Bakugo 6, Lady Nagant 5, Mirio 4; villains Mr. Compress 5, Moonfish and Mustard 4; Pro Heroes Hawks 9, Sir Nighteye 5; Tokoyami 8 in Class 1-A.", fr: "My Hero Academia : soigneurs Garaki 7, Thirteen 6, Tsuyu 6, Momo 5 ; stratèges Momo 9, Bakugo 6, Lady Nagant 5, Mirio 4 ; vilains Mr. Compress 5, Moonfish et Mustard 4 ; héros pro Hawks 9, Sir Nighteye 5 ; Tokoyami 8 en Classe 1-A." },
+        { type: "balance", game: "crew", en: "Haikyuu: Terushima 7 as captain, Shirabu 5 as setter, Kunimi and Hanamaki 5 as spikers; middles Yamaguchi 4, Kindaichi 5, Lev 6, Aone 7; liberos Nishinoya 10, Yamagata 7, Komi and Akagi 5, Sakunami 4; coaches Ikkei Ukai 9, Washijo and Nekomata 6.", fr: "Haikyuu : Terushima 7 en capitaine, Shirabu 5 en passeur, Kunimi et Hanamaki 5 en attaquant ; centraux Yamaguchi 4, Kindaichi 5, Lev 6, Aone 7 ; libéros Nishinoya 10, Yamagata 7, Komi et Akagi 5, Sakunami 4 ; coachs Ikkei Ukai 9, Washijo et Nekomata 6." },
+        { type: "balance", game: "crew", en: "Slime: healers Shuna 10, Luminous 9, Shizu 5; humans Chloe 10, Hinata 8, Shizu 7; dragons Velzard 10, Veldora and Milim 9, Diablo and Guy 8, Testarossa 7, Ultima and Carrera 6; Demon Lords Rimuru 10, Guy and Milim 9, Leon and Dagruel 8, Carrion 7, Frey 6, Clayman 5; Tempest Benimaru 8, Ranga 7, Geld 6, Gabiru 5.", fr: "Slime : soigneurs Shuna 10, Luminous 9, Shizu 5 ; humains Chloé 10, Hinata 8, Shizu 7 ; dragons Velzard 10, Veldora et Milim 9, Diablo et Guy 8, Testarossa 7, Ultima et Carrera 6 ; seigneurs démons Rimuru 10, Guy et Milim 9, Léon et Dagruel 8, Carrion 7, Frey 6, Clayman 5 ; Tempest Benimaru 8, Ranga 7, Geld 6, Gabiru 5." },
+        { type: "balance", game: "crew", en: "One Punch Man: Stinger 4, Snek 3, Vaccine Man 5; free fighters Bomb 9, Bakuzan 6, Choze 5; healers Kuseno 10, Genus 9, Metal Knight 7, Mumen Rider 4; strategists Atomic Samurai 5, Sitch 4.", fr: "One Punch Man : Stinger 4, Snek 3, Vaccine Man 5 ; combattants libres Bomb 9, Bakuzan 6, Choze 5 ; soigneurs Kuseno 10, Genus 9, Metal Knight 7, Mumen Rider 4 ; stratèges Atomic Samurai 5, Sitch 4." },
+        { type: "balance", game: "crew", en: "Fire Force: captains Obi 10, Hibana 9, Honda and Huang 6, Hague 5; Lisa 5 in Company 8; Assault 4, Inca 5, Haumea 8, Nataku 7; second generation Karim 6, Hinawa 5. Companies 2 and 6 count as other companies.", fr: "Fire Force : capitaines Obi 10, Hibana 9, Honda et Huang 6, Hague 5 ; Lisa 5 en 8e brigade ; Assault 4, Inca 5, Haumea 8, Nataku 7 ; 2e génération Karim 6, Hinawa 5. Les 2e et 6e brigades comptent comme autres brigades." },
+      ],
+    },
+    {
       at: "2026-10-08T04:25",
       title: { en: "Bleach: Gerard, As Nodt and Kukaku", fr: "Bleach : Gerard, As Nodt et Kukaku" },
       items: [

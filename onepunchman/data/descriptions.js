@@ -45,4 +45,8 @@ window.DLE_DESCRIPTIONS = {
   "elder-centipede": ["A gigantic centipede monster with a hard shell.", "Un mille-pattes monstre gigantesque à la carapace dure.", null, null],
   "homeless-emperor": ["A homeless man with a crown who throws energy spheres gifted to him by God.", "Un sans-abri couronné qui lance des sphères d'énergie que Dieu lui a données.", null, null],
   "black-sperm": ["A monster made of billions of tiny cells that combine into any shape.", "Un monstre fait de milliards de minuscules cellules qui s'assemblent en toutes formes.", null, null],
+  "bomb": ["Bang's older brother, a master of the Whirlwind Iron Cutting Fist who joins the fight against Garou.", "Le grand frère de Bang, maître du Poing tranchant tourbillonnant, qui rejoint le combat contre Garou.", ["Whirlwind Iron Cutting Fist", "Poing tranchant tourbillonnant"], null],
+  "bakuzan": ["An arrogant martial artist of the Super Fight who mocks everyone, then becomes a monster.", "Un artiste martial arrogant du Super Fight qui se moque de tout le monde, puis devient un monstre.", ["Super Fight", "Super Fight"], null],
+  "choze": ["A martial artist of the Super Fight tournament who later eats a monster cell.", "Un artiste martial du tournoi Super Fight qui mange plus tard une cellule de monstre.", ["Super Fight", "Super Fight"], null],
+  "dr-kuseno": ["The kind old scientist who built Genos's cyborg body and repairs it after every fight.", "Le gentil vieux scientifique qui a construit le corps de cyborg de Genos et le répare après chaque combat.", ["Genos", "Genos"], null],
 };

@@ -121,4 +121,5 @@ export const seed = [
   { wiki: "Pan", name: "Pan", gender: "F", race: ["Saiyan"], hair: ["Black"], aff: Z, origin: EARTH },
   { wiki: "Belmod", name: "Belmod", gender: "M", race: ["God"], hair: ["None"], aff: [...GODS, "Pride Troopers"], origin: "Universe 11" },
   { wiki: "Moro", name: "Moro", gender: "M", race: ["Alien"], arc: 8, hair: ["White"], aff: ["Galactic Bandit Brigade"], origin: "Unknown" },
+  { wiki: "Granolah", name: "Granolah", gender: "M", race: ["Alien"], arc: 8, hair: ["Green"], aff: ["None"], origin: "Cereal" },
 ];

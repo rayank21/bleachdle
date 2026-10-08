@@ -47,6 +47,10 @@ export const seed = [
   { wiki: "Garou", race: H, aff: ["None"], rank: "None", arc: 2 },
   { wiki: "Charanko", race: H, aff: ["None"], rank: "None", arc: 2 },
   { wiki: "Suiryu", race: H, aff: ["None"], rank: "None", arc: 3 },
+  { wiki: "Bomb", race: H, aff: ["None"], rank: "None", arc: 3 },
+  { wiki: "Bakuzan", race: H, aff: ["None"], rank: "None", arc: 3 },
+  { wiki: "Choze", race: H, aff: ["None"], rank: "None", arc: 3 },
+  { wiki: "Dr. Kuseno", name: "Dr. Kuseno", race: H, aff: ["None"], rank: "None", arc: 0 },
   { wiki: "Dr. Genus", name: "Dr. Genus", race: H, aff: ["House of Evolution"], rank: "None", arc: 0 },
   // ── Monsters and invaders ──
   { wiki: "Vaccine Man", race: M, aff: ["None"], rank: "Demon", arc: 0 },

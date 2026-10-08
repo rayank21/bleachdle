@@ -47,6 +47,7 @@ export const seed = [
   { wiki: "Luminous Valentine", race: ["Vampire"], aff: DL, title: "Demon Lord", arc: 3 },
   { wiki: "Dino", race: ["Fallen Angel"], aff: DL, title: "Demon Lord", arc: 3 },
   { wiki: "Dagruel", race: ["Giant"], aff: DL, title: "Demon Lord", arc: 3 },
+  { wiki: "Velzard", race: ["Dragon"], aff: ["None"], title: "True Dragon", arc: 4 },
   // ── Humans and others ──
   { wiki: "Shizue Izawa", name: "Shizu", race: ["Human"], aff: ["Free Guild"], title: "Hero", arc: 0 },
   { wiki: "Hinata Sakaguchi", race: ["Human"], aff: ["Western Holy Church"], title: "Hero", arc: 2 },

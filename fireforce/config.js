@@ -40,8 +40,8 @@
       fr: {
         M: "Homme", F: "Femme", Unknown: "Inconnu", None: "Aucun",
         "Second Generation": "2e génération", "Third Generation": "3e génération", "Second & Third Generation": "2e & 3e génération",
-        "Non-Pyrokinetic": "Non-pyrokinésiste", "Company 1": "1re brigade", "Company 3": "3e brigade", "Company 4": "4e brigade",
-        "Company 5": "5e brigade", "Company 7": "7e brigade", "Company 8": "8e brigade", "White Clad": "Hommes en blanc", Haijima: "Haijima",
+        "Non-Pyrokinetic": "Non-pyrokinésiste", "Company 1": "1re brigade", "Company 2": "2e brigade", "Company 3": "3e brigade", "Company 4": "4e brigade",
+        "Company 5": "5e brigade", "Company 6": "6e brigade", "Company 7": "7e brigade", "Company 8": "8e brigade", "White Clad": "Hommes en blanc", Haijima: "Haijima",
         "Fire Soldier": "Soldat du feu", Captain: "Capitaine", Lieutenant: "Lieutenant", Sister: "Sœur", Researcher: "Chercheur",
         Engineer: "Ingénieur", Pillar: "Pilier", Knight: "Chevalier", Yes: "Oui", No: "Non",
       },

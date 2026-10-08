@@ -276,6 +276,48 @@ window.DLE_CHARACTERS = [
   "arc": 1
  },
  {
+  "id": "gustav-honda",
+  "name": "Gustav Honda",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/gustav-honda.webp",
+  "role": "Captain",
+  "gen": "Non-Pyrokinetic",
+  "aff": [
+   "Company 2"
+  ],
+  "adolla": "No",
+  "arc": 3
+ },
+ {
+  "id": "soichiro-hague",
+  "name": "Soichiro Hague",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/soichiro-hague.webp",
+  "role": "Captain",
+  "gen": "Non-Pyrokinetic",
+  "aff": [
+   "Company 4"
+  ],
+  "adolla": "No",
+  "arc": 2
+ },
+ {
+  "id": "kayoko-huang",
+  "name": "Kayoko Huang",
+  "gender": "F",
+  "height": null,
+  "image": "assets/characters/kayoko-huang.webp",
+  "role": "Captain",
+  "gen": "Third Generation",
+  "aff": [
+   "Company 6"
+  ],
+  "adolla": "No",
+  "arc": 3
+ },
+ {
   "id": "joker",
   "name": "Joker",
   "gender": "M",

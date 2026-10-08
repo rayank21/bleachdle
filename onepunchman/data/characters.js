@@ -440,6 +440,66 @@ window.DLE_CHARACTERS = [
   "arc": 3
  },
  {
+  "id": "bomb",
+  "name": "Bomb",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/bomb.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "None"
+  ],
+  "rank": "None",
+  "arc": 3
+ },
+ {
+  "id": "bakuzan",
+  "name": "Bakuzan",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/bakuzan.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "None"
+  ],
+  "rank": "None",
+  "arc": 3
+ },
+ {
+  "id": "choze",
+  "name": "Choze",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/choze.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "None"
+  ],
+  "rank": "None",
+  "arc": 3
+ },
+ {
+  "id": "dr-kuseno",
+  "name": "Dr. Kuseno",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/dr-kuseno.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "None"
+  ],
+  "rank": "None",
+  "arc": 0
+ },
+ {
   "id": "dr-genus",
   "name": "Dr. Genus",
   "gender": "M",

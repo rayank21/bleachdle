@@ -1750,5 +1750,23 @@ window.DLE_CHARACTERS = [
    "Galactic Bandit Brigade"
   ],
   "origin": "Unknown"
+ },
+ {
+  "id": "granolah",
+  "name": "Granolah",
+  "gender": "M",
+  "race": [
+   "Alien"
+  ],
+  "height": null,
+  "arc": 8,
+  "image": "assets/characters/granolah.webp",
+  "hair": [
+   "Green"
+  ],
+  "aff": [
+   "None"
+  ],
+  "origin": "Cereal"
  }
 ];

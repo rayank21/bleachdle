@@ -193,6 +193,18 @@ window.DLE_CHARACTERS = [
   "arc": 0
  },
  {
+  "id": "ikkei-ukai",
+  "name": "Ikkei Ukai",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/ikkei-ukai.webp",
+  "school": "Karasuno",
+  "position": "Coach",
+  "year": "Adult",
+  "number": null,
+  "arc": 0
+ },
+ {
   "id": "saeko-tanaka",
   "name": "Saeko Tanaka",
   "gender": "F",
@@ -373,6 +385,18 @@ window.DLE_CHARACTERS = [
   "arc": 0
  },
  {
+  "id": "yasufumi-nekomata",
+  "name": "Yasufumi Nekomata",
+  "gender": "M",
+  "height": 169,
+  "image": "assets/characters/yasufumi-nekomata.webp",
+  "school": "Nekoma",
+  "position": "Coach",
+  "year": "Adult",
+  "number": null,
+  "arc": 1
+ },
+ {
   "id": "kotaro-bokuto",
   "name": "Kotaro Bokuto",
   "gender": "M",
@@ -397,6 +421,18 @@ window.DLE_CHARACTERS = [
   "arc": 2
  },
  {
+  "id": "haruki-komi",
+  "name": "Haruki Komi",
+  "gender": "M",
+  "height": 166,
+  "image": "assets/characters/haruki-komi.webp",
+  "school": "Fukurodani",
+  "position": "Libero",
+  "year": "3rd year",
+  "number": 11,
+  "arc": 2
+ },
+ {
   "id": "kenji-futakuchi",
   "name": "Kenji Futakuchi",
   "gender": "M",
@@ -418,6 +454,18 @@ window.DLE_CHARACTERS = [
   "position": "Middle Blocker",
   "year": "2nd year",
   "number": 7,
+  "arc": 1
+ },
+ {
+  "id": "kosuke-sakunami",
+  "name": "Kosuke Sakunami",
+  "gender": "M",
+  "height": 166,
+  "image": "assets/characters/kosuke-sakunami.webp",
+  "school": "Date Tech",
+  "position": "Libero",
+  "year": "1st year",
+  "number": 13,
   "arc": 1
  },
  {
@@ -493,6 +541,30 @@ window.DLE_CHARACTERS = [
   "arc": 3
  },
  {
+  "id": "hayato-yamagata",
+  "name": "Hayato Yamagata",
+  "gender": "M",
+  "height": 174,
+  "image": "assets/characters/hayato-yamagata.webp",
+  "school": "Shiratorizawa",
+  "position": "Libero",
+  "year": "3rd year",
+  "number": 14,
+  "arc": 3
+ },
+ {
+  "id": "tanji-washijo",
+  "name": "Tanji Washijo",
+  "gender": "M",
+  "height": 169,
+  "image": "assets/characters/tanji-washijo.webp",
+  "school": "Shiratorizawa",
+  "position": "Coach",
+  "year": "Adult",
+  "number": null,
+  "arc": 3
+ },
+ {
   "id": "atsumu-miya",
   "name": "Atsumu Miya",
   "gender": "M",
@@ -550,6 +622,18 @@ window.DLE_CHARACTERS = [
   "position": "Opposite",
   "year": "3rd year",
   "number": 4,
+  "arc": 4
+ },
+ {
+  "id": "michinari-akagi",
+  "name": "Michinari Akagi",
+  "gender": "M",
+  "height": 174,
+  "image": "assets/characters/michinari-akagi.webp",
+  "school": "Inarizaki",
+  "position": "Libero",
+  "year": "3rd year",
+  "number": 15,
   "arc": 4
  },
  {

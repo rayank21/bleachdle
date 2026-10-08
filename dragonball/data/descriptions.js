@@ -94,4 +94,5 @@ window.DLE_DESCRIPTIONS = {
   "pan": ["A tiny, fearless girl, granddaughter of the world's strongest fighter, who can already fly as a toddler.", "Une petite fille intrépide, petite-fille du plus fort combattant du monde, qui sait déjà voler toute petite.", "p:Satan City", null],
   "belmod": ["The theatrical God of Destruction of a universe of justice, fond of magic tricks.", "Le Dieu de la Destruction théâtral d'un univers épris de justice, amateur de tours de magie.", "p:Universe 11", null],
   "moro": ["An ancient planet-eating sorcerer freed from the Galactic Patrol's prison, who drains the life of whole worlds.", "Un ancien sorcier mangeur de planètes évadé de la prison de la Patrouille galactique, qui aspire la vie de mondes entiers.", "a:Energy Absorption", ["The planet eater", "Le mangeur de planètes"]],
+  "granolah": ["The last Cerealian, a sniper who wished to become the strongest in the universe to avenge his people.", "Le dernier Céréalien, un sniper qui a souhaité devenir le plus fort de l'univers pour venger son peuple.", ["Cereal", "Céréale"], null],
 };
