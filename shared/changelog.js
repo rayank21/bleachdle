@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-08T04:25",
+      title: { en: "Bleach: Gerard, As Nodt and Kukaku", fr: "Bleach : Gerard, As Nodt et Kukaku" },
+      items: [
+        { type: "balance", game: "crew", en: "Bleach team: Gerard Valkyrie 9 as Quincy, As Nodt 7, Kukaku Shiba 5 in the Human / Wandering Soul slot.", fr: "Équipe Bleach : Gerard Valkyrie 9 en Quincy, As Nodt 7, Kukaku Shiba 5 dans la place Humain / Âme errante." },
+      ],
+    },
+    {
       at: "2026-10-08T04:10",
       title: { en: "Bleach: Pernida and Gerard, two Quincy slots", fr: "Bleach : Pernida et Gerard, deux places Quincy" },
       items: [

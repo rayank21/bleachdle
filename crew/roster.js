@@ -133,12 +133,13 @@
         // Ichigo inherited a Quincy's blood from his mother and wears a Hollow mask like the Visored.
         // Gerard and Pernida are the Soul King's heart and left arm, in Yhwach's royal guard.
         { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 2, fits: (c) => has(c.race, "Quincy") || c.id === "ichigo-kurosaki",
-          score: rated({ "uryu-ishida": 10, "lille-barro": 8, "ichigo-kurosaki": 10, "gerard-valkyrie": 10, "pernida-parnkgjas": 9 }) },
+          score: rated({ "uryu-ishida": 10, "lille-barro": 8, "ichigo-kurosaki": 10, "gerard-valkyrie": 9, "pernida-parnkgjas": 9 }) },
         { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") || c.id === "ichigo-kurosaki",
           score: rated({ "ichigo-kurosaki": 10, "shinji-hirako": 9, "rojuro-otoribashi": 7, "mashiro-kuna": 4 }) },
         // Humans, wandering souls and Fullbringers; Isshin, Ryuken and Masaki live as humans in Karakura.
         { label: { en: "Human / Wandering Soul / Fullbringer", fr: "Humain / Âme errante / Fullbringer" }, icon: "person", count: 1,
-          fits: (c) => has(c.race, "Human", "Fullbringer", "Mod Soul", "Soul", "Hybrid") || ["isshin-kurosaki", "ryuken-ishida", "masaki-kurosaki"].includes(c.id) },
+          fits: (c) => has(c.race, "Human", "Fullbringer", "Mod Soul", "Soul", "Hybrid") || ["isshin-kurosaki", "ryuken-ishida", "masaki-kurosaki"].includes(c.id),
+          score: rated({ "kukaku-shiba": 5 }) },
         { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone, score: role(ROLES.bleach.healer) },
         { label: STRATEGIST, icon: "chess", role: "engineer", count: 1, fits: anyone, score: role(ROLES.bleach.engineer) },
       ],
@@ -153,7 +154,7 @@
         tier-harribel:8 nnoitra-gilga:7 szayelaporro-granz:7 zommari-rureaux:6 aaroniero-arruruerie:6 luppi-antenor:4 nelliel-tu-odelschwanck:8 loly-aivirrne:2
         wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:9 shukuro-tsukishima:8 riruka-dokugamine:4
         yukio-hans-vorarlberna:5 jackie-tristan:4 giriko-kutsuzawa:5 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
-        bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:8 quilge-opie:6
+        bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:7 quilge-opie:6
         gremmy-thoumeaux:9 lille-barro:9 pernida-parnkgjas:9 gerard-valkyrie:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3 dordoni-alessandro-del-socaccio:5 cirucci-sanderwicci:5 gantenbainne-mosqueda:5 kiyone-kotetsu:3 sentaro-kotsubaki:3 zennosuke-kurumadani:2 ikumi-unagiya:2`),
     },
 
