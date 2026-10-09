@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T19:00",
+      title: { en: "The new pictures everywhere", fr: "Les nouvelles images partout" },
+      items: [
+        { type: "fix", game: "crew", en: "The new pictures of All Might, All For One, Black Frieza, Cosmic Garou, Shanks and Garp now show everywhere: Crew Roll, the transformation, cards, showcases and avatars (browsers kept showing the old ones).", fr: "Les nouvelles images d'All Might, All For One, Black Freezer, Garou cosmique, Shanks et Garp s'affichent partout : Roll ton équipage, la transformation, les cartes, les vitrines et les avatars (les navigateurs gardaient les anciennes)." },
+      ],
+    },
+    {
       at: "2026-10-09T18:00",
       title: { en: "A court for Haikyuu, the Sunny for One Piece", fr: "Un terrain pour Haikyuu, le Sunny pour One Piece" },
       items: [

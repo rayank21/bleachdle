@@ -117,7 +117,8 @@ export function formFor(game, c, arc) {
   const base = late ? { ...f, ...f.next } : f;
   const clip = late ? f.next.clip : f.clip;
   const scene = late ? f.next.scene : f.scene;
-  return { ...base, image: `assets/forms/${key}.webp`, clip: clip ? `assets/clips/${key}.mp4` : null, scene: scene ? `assets/scenes/${key}.webp` : null };
+  const pic = late ? f.next.pic : f.pic;
+  return { ...base, image: `assets/forms/${key}${pic ? `-v${pic}` : ""}.webp`, clip: clip ? `assets/clips/${key}.mp4` : null, scene: scene ? `assets/scenes/${key}.webp` : null };
 }
 
 // Ripple filters for transformations: an animated turbulence displaces the picture like heat or energy.

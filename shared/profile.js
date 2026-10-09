@@ -92,7 +92,8 @@
   // Characters with a transformation (crew/forms.js, loaded on every page) show it on their cards and as avatars.
   const formOf = (game, char) => window.CREW_FORMS?.[game]?.[char] ?? null;
   // A form can name another picture for cards, the showcase and avatars ("card"), framed on "cardFocus".
-  const formSrc = (g, id) => `${ROOT}crew/assets/forms/${g}-${formOf(g, id)?.card ?? id}.webp`;
+  // A replaced picture has a new name (-v<pic>), so cached copies of the old one are never shown.
+  const formSrc = (g, id) => { const f = formOf(g, id); return `${ROOT}crew/assets/forms/${g}-${f?.card ?? `${id}${f?.pic ? `-v${f.pic}` : ""}`}.webp`; };
   const formFocus = (f) => (f?.card ? f.cardFocus : f?.focus);
   const avatarSrc = (a) => (!a ? "" : formOf(a.game, a.char) ? formSrc(a.game, a.char) : portrait(a.game, a.char));
   // Frames a transformation picture in a circle or a card: on the form's focus, else on the head of a tall one.

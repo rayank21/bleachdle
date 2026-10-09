@@ -4,6 +4,7 @@
 // fx: the effect's shape (aura: flames and lightning, pillar: a beam of energy, domain: a sphere
 // that swallows the panel); c1/c2: its colours; kanji: the word slammed over the card.
 // scene: a still of the moment (crew/assets/scenes/<game>-<id>.webp), animated in the cinematic when there is no clip.
+// pic: the picture was replaced (file <game>-<id>-v<pic>.webp), so no browser keeps showing the old one from its cache.
 (() => {
   const SAIYAN = { fx: "aura", c1: "255, 225, 77", c2: "255, 157, 46", kanji: "超", lightning: true };
   const BANKAI = { fx: "pillar", c1: "255, 42, 42", c2: "30, 6, 8", kanji: "卍解" };
@@ -22,7 +23,7 @@
       vegeta: { arc: 6, name: { en: "Super Saiyan", fr: "Super Saiyan" }, ...SAIYAN },
       gohan: { arc: 6, name: { en: "Super Saiyan 2", fr: "Super Saiyan 2" }, ...SAIYAN, lightning: true },
       "future-trunks": { arc: 6, name: { en: "Super Saiyan", fr: "Super Saiyan" }, ...SAIYAN },
-      frieza: { arc: 8, name: { en: "Black Frieza", fr: "Black Freezer" }, fx: "aura", c1: "200, 110, 255", c2: "30, 0, 40", kanji: "黒", lightning: true },
+      frieza: { pic: 2, arc: 8, name: { en: "Black Frieza", fr: "Black Freezer" }, fx: "aura", c1: "200, 110, 255", c2: "30, 0, 40", kanji: "黒", lightning: true },
       "goku-black": { arc: 8, name: { en: "Super Saiyan Rosé", fr: "Super Saiyan Rosé" }, fx: "aura", c1: "255, 122, 217", c2: "176, 77, 255", kanji: "超", lightning: true },
       cell: { arc: 6, name: { en: "Super Perfect Cell", fr: "Cell Super Parfait" }, fx: "aura", c1: "140, 255, 120", c2: "255, 230, 90", kanji: "完全体", lightning: true },
       "majin-buu": { arc: 7, name: { en: "Super Buu", fr: "Super Boo" }, fx: "pillar", c1: "255, 120, 200", c2: "40, 6, 30", kanji: "魔人" },
@@ -113,12 +114,12 @@
       sanji: { arc: 8, name: { en: "Raid Suit · Stealth Black", fr: "Raid Suit · Stealth Black" }, fx: "aura", c1: "255, 120, 40", c2: "255, 40, 40", kanji: "黒足" },
       "charlotte-katakuri": { arc: 8, name: { en: "Future Sight", fr: "Haki de l'observation · Futur" }, fx: "domain", c1: "255, 90, 140", c2: "20, 4, 12", kanji: "見聞色" },
       kaidou: { arc: 9, name: { en: "Azure Dragon", fr: "Dragon azur" }, fx: "pillar", c1: "90, 160, 255", c2: "6, 12, 40", kanji: "龍", lightning: true },
-      shanks: { arc: 9, name: { en: "Divine Departure", fr: "Kamusari" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "覇王色", lightning: true },
+      shanks: { pic: 2, arc: 9, name: { en: "Divine Departure", fr: "Kamusari" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "覇王色", lightning: true },
       "monkey-d-dragon": { arc: 0, name: { en: "The storm", fr: "La tempête" }, fx: "pillar", c1: "150, 200, 255", c2: "10, 20, 40", kanji: "嵐", lightning: true },
       "gol-d-roger": { arc: 9, name: { en: "Divine Departure", fr: "Kamusari" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "神避", lightning: true, focus: "88% 15%" },
       "dracule-mihawk": { arc: 5, name: { en: "Black Blade Yoru", fr: "Lame noire Yoru" }, fx: "pillar", c1: "120, 255, 160", c2: "0, 20, 10", kanji: "黒刀" },
       "marshall-d-teach": { arc: 5, name: { en: "Darkness and Tremors", fr: "Ténèbres et séismes" }, fx: "domain", c1: "120, 40, 160", c2: "0, 0, 0", kanji: "闇" },
-      "monkey-d-garp": { focus: "62% 40%", arc: 10, name: { en: "Galaxy Impact", fr: "Galaxy Impact" }, fx: "aura", c1: "255, 230, 120", c2: "40, 20, 0", kanji: "拳骨", lightning: true },
+      "monkey-d-garp": { pic: 2, focus: "62% 40%", arc: 10, name: { en: "Galaxy Impact", fr: "Galaxy Impact" }, fx: "aura", c1: "255, 230, 120", c2: "40, 20, 0", kanji: "拳骨", lightning: true },
       "silvers-rayleigh": { focus: "68% 40%", arc: 5, name: { en: "Conqueror's Haki", fr: "Haki des rois" }, fx: "aura", c1: "255, 60, 60", c2: "20, 0, 0", kanji: "覇王色", lightning: true },
       "edward-newgate": { arc: 5, name: { en: "Tremors", fr: "Séismes" }, fx: "pillar", c1: "220, 240, 255", c2: "20, 30, 50", kanji: "震", lightning: true },
       sengoku: { arc: 5, name: { en: "Great Buddha", fr: "Grand Bouddha" }, fx: "pillar", c1: "255, 215, 90", c2: "60, 40, 0", kanji: "大仏" },
@@ -217,10 +218,10 @@
       dabi: { arc: 7, name: { en: "Dabi's Dance", fr: "La danse de Dabi" }, fx: "pillar", c1: "80, 160, 255", c2: "10, 20, 60", kanji: "荼毘" },
       "shoto-todoroki": { arc: 1, name: { en: "Half-Cold Half-Hot · Flames unleashed", fr: "Glace et feu · Flammes libérées" }, fx: "pillar", c1: "255, 100, 40", c2: "120, 200, 255", kanji: "氷炎" },
       "izuku-midoriya": { arc: 2, name: { en: "One For All · Full Cowl", fr: "One For All · Full Cowl" }, fx: "aura", c1: "120, 255, 140", c2: "20, 120, 60", kanji: "ワン・フォー・オール", lightning: true },
-      "all-might": { arc: 3, name: { en: "United States of Smash", fr: "United States of Smash" }, fx: "aura", c1: "255, 220, 60", c2: "40, 60, 200", kanji: "平和の象徴", lightning: true },
+      "all-might": { pic: 2, arc: 3, name: { en: "United States of Smash", fr: "United States of Smash" }, fx: "aura", c1: "255, 220, 60", c2: "40, 60, 200", kanji: "平和の象徴", lightning: true },
       endeavor: { arc: 6, name: { en: "Plus Ultra · Prominence Burn", fr: "Plus Ultra · Prominence Burn" }, fx: "pillar", c1: "255, 110, 30", c2: "60, 10, 0", kanji: "炎", lightning: true },
       "tomura-shigaraki": { arc: 7, name: { en: "Decay", fr: "Désintégration" }, fx: "domain", c1: "170, 170, 200", c2: "10, 10, 20", kanji: "崩壊" },
-      "all-for-one": { arc: 8, name: { en: "Prime All For One", fr: "All For One à son apogée" }, fx: "domain", c1: "200, 30, 60", c2: "4, 0, 4", kanji: "魔王", lightning: true },
+      "all-for-one": { pic: 2, arc: 8, name: { en: "Prime All For One", fr: "All For One à son apogée" }, fx: "domain", c1: "200, 30, 60", c2: "4, 0, 4", kanji: "魔王", lightning: true },
       "mirio-togata": { arc: 4, name: { en: "Phantom Menace", fr: "Phantom Menace" }, fx: "aura", c1: "255, 220, 90", c2: "120, 20, 20", kanji: "透過" },
       gigantomachia: { arc: 6, name: { en: "Rampage", fr: "Déchaînement" }, fx: "pillar", c1: "200, 140, 90", c2: "30, 14, 6", kanji: "巨人", lightning: true },
       "star-and-stripe": { arc: 8, name: { en: "New Order", fr: "New Order" }, fx: "aura", c1: "255, 240, 140", c2: "30, 60, 200", kanji: "新秩序", lightning: true },
@@ -272,7 +273,7 @@
       genos: { arc: 0, name: { en: "Incineration Cannon", fr: "Canon incinérateur" }, fx: "pillar", c1: "255, 150, 40", c2: "255, 230, 160", kanji: "焼却" },
       saitama: { arc: 1, name: { en: "Serious Punch", fr: "Coup de poing sérieux" }, fx: "pillar", c1: "255, 230, 120", c2: "40, 30, 0", kanji: "マジ殴り", lightning: true },
       tatsumaki: { arc: 1, name: { en: "Tornado of Terror", fr: "La Tornade de la terreur" }, fx: "domain", c1: "90, 255, 150", c2: "4, 30, 10", kanji: "戦慄のタツマキ" },
-      garou: { arc: 3, name: { en: "Cosmic Fear Mode", fr: "Mode Peur cosmique" }, fx: "domain", c1: "120, 140, 255", c2: "4, 4, 30", kanji: "宇宙的恐怖", lightning: true },
+      garou: { pic: 2, arc: 3, name: { en: "Cosmic Fear Mode", fr: "Mode Peur cosmique" }, fx: "domain", c1: "120, 140, 255", c2: "4, 4, 30", kanji: "宇宙的恐怖", lightning: true },
       "watchdog-man": { arc: 1, name: { en: "Guardian of Q-City", fr: "Le Gardien de la ville Q" }, fx: "aura", c1: "255, 255, 255", c2: "40, 40, 60", kanji: "番犬", lightning: true },
       psykos: { arc: 3, name: { en: "Psykos-Orochi fusion", fr: "Fusion Psykos-Orochi" }, fx: "domain", c1: "200, 120, 255", c2: "10, 0, 20", kanji: "融合" },
       bomb: { arc: 3, name: { en: "Whirlwind Iron Cutting Fist", fr: "Poing tranchant tourbillonnant" }, fx: "aura", c1: "200, 230, 255", c2: "30, 40, 60", kanji: "旋風鉄斬拳" },
