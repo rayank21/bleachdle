@@ -943,24 +943,25 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 .scene-bench-label { position: absolute; left: 0; right: 0; top: 9px; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; color: #ffd9a0; }
 
 /* Pictures with pins: each role is a round medallion standing on its spot, the picture showing all around. */
-.crew-board.scene-onepiece, .crew-board.scene-pokemon { grid-template-columns: 1fr; }
+.crew-board.has-scene:not(.scene-haikyuu) { grid-template-columns: 1fr; }
 .crew-board.has-scene .scene-field.has-pins { display: block; padding: 0; container-type: inline-size; }
 /* Medallions follow the picture's width (cqw: 1% of it), so they keep their spots on a phone or in a narrow online column. */
-.scene-field.has-pins .crew-slot.is-pin { --pf: clamp(32px, 6px + 8cqw, 66px); position: absolute; z-index: 1; translate: -50% -50%; width: clamp(58px, 10px + 12cqw, 112px); gap: 3px; padding: 0; overflow: visible;
+.scene-field.has-pins .crew-slot.is-pin { --pf: clamp(44px, 12px + 9cqw, 78px); position: absolute; z-index: 1; translate: -50% -50%; width: clamp(66px, 14px + 13cqw, 128px); gap: 3px; padding: 0; overflow: visible;
   background: none; border: 0; border-radius: 50%; box-shadow: none; }
-.scene-field.has-pins .crew-slot.is-pin.is-captain { --pf: clamp(38px, 7px + 9.5cqw, 78px); }
+.scene-field.has-pins .crew-slot.is-pin.is-captain { --pf: clamp(52px, 14px + 10.5cqw, 90px); }
 .scene-field.has-pins .crew-slot.is-pin.is-filled, .scene-field.has-pins .crew-slot.is-pin.is-captain { background: none; box-shadow: none; }
 .scene-field.has-pins .is-pin::after, .scene-field.has-pins .is-pin .crew-icon, .scene-field.has-pins .is-pin .crew-captain-tag { display: none; }
-.scene-field.has-pins .is-pin .crew-face { width: var(--pf); height: var(--pf); font-size: calc(var(--pf) / 3); color: #fff; border: clamp(2px, 0.4cqw, 3px) solid rgba(var(--role-rgb), 0.95); background: rgba(10, 12, 22, 0.72);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 6px 16px rgba(0, 0, 0, 0.55); }
-.scene-field.has-pins .is-pin.is-captain .crew-face { border-color: #ffd34d; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255, 205, 70, 0.75); }
-.scene-field.has-pins .is-pin .crew-name { display: block; min-height: 0; max-width: 100%; padding: 0 clamp(4px, 0.8cqw, 7px); border-radius: 999px; font-size: clamp(8.5px, 1.3cqw, 11.5px); color: #fff;
+/* Easy to spot on any picture: a dark disc, the role's colour ring, a white outline and a glow of the role's colour. */
+.scene-field.has-pins .is-pin .crew-face { width: var(--pf); height: var(--pf); font-size: calc(var(--pf) / 2.6); color: #fff; border: 3px solid rgb(var(--role-rgb)); background: rgba(8, 10, 18, 0.9);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 16px 2px rgba(var(--role-rgb), 0.85), 0 6px 16px rgba(0, 0, 0, 0.7); }
+.scene-field.has-pins .is-pin.is-captain .crew-face { border-color: #ffd34d; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 0 24px 4px rgba(255, 205, 70, 0.85), 0 6px 16px rgba(0, 0, 0, 0.7); }
+.scene-field.has-pins .is-pin .crew-name { display: block; min-height: 0; max-width: 100%; padding: 1px clamp(5px, 0.9cqw, 8px); border-radius: 999px; font-size: clamp(9.5px, 1.5cqw, 13px); font-weight: 800; color: #fff;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(8, 10, 18, 0.88); }
 .scene-field.has-pins .is-pin:not(.is-filled) .crew-name { display: none; }
-.scene-field.has-pins .is-pin .crew-role { max-width: 100%; padding: 0 clamp(4px, 0.8cqw, 7px); font-size: clamp(7px, 1.08cqw, 9.5px); line-height: 1.25; letter-spacing: 0.3px; border-radius: 8px;
-  color: rgb(var(--role-rgb)); background: rgba(8, 10, 18, 0.88); box-shadow: inset 0 0 0 1px rgba(var(--role-rgb), 0.6); }
+.scene-field.has-pins .is-pin .crew-role { max-width: 100%; padding: 1px clamp(5px, 0.9cqw, 8px); font-size: clamp(8px, 1.25cqw, 11px); line-height: 1.25; letter-spacing: 0.3px; border-radius: 8px;
+  color: #fff; background: rgba(8, 10, 18, 0.92); box-shadow: inset 0 0 0 1.5px rgb(var(--role-rgb)), 0 2px 6px rgba(0, 0, 0, 0.5); }
 .scene-field.has-pins .is-pin.is-captain .crew-role { color: #ffd34d; }
-.scene-field.has-pins .is-pin .crew-points { top: -5px; right: calc(50% - var(--pf) / 2 - 10px); min-width: 0; padding: 1px clamp(4px, 0.7cqw, 7px); font-size: clamp(9px, 1.3cqw, 12px); }
+.scene-field.has-pins .is-pin .crew-points { top: -5px; right: calc(50% - var(--pf) / 2 - 12px); min-width: 0; padding: 1px clamp(5px, 0.8cqw, 8px); font-size: clamp(10px, 1.5cqw, 13px); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); }
 /* Small pictures: a placed character shows just their name. */
 @container (max-width: 520px) { .scene-field.has-pins .is-pin.is-filled .crew-role { display: none; } }
 /* A spot that can take the drawn character: its ring pulses (the medallion, not a box around it). */
@@ -970,6 +971,12 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 .scene-field.has-pins .is-pin.pop { animation: pin-pop 0.55s cubic-bezier(.3, 1.6, .5, 1); }
 @keyframes pin-pulse { 50% { box-shadow: 0 0 0 5px rgba(var(--role-rgb), 0.45), 0 0 26px rgba(var(--role-rgb), 0.9); } }
 @keyframes pin-pop { 0% { transform: scale(0.85); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+/* Backdrops: the picture, a little darker at the edges so the medallions stand out; squarer on phones, for room. */
+.crew-board.has-scene .scene-field.is-backdrop { background: center / cover no-repeat #10131a; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45); overflow: hidden; }
+.scene-field.has-pins .scene-deco { background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.45)), rgba(0, 0, 0, 0.1); }
+.scene-pokemon .scene-field .scene-deco { background: none; }
+@media (max-width: 720px) { .crew-board.has-scene .scene-field.is-backdrop { aspect-ratio: 1 / 1.05 !important; } }
 
 /* One Piece: the Thousand Sunny (the anime's side view). */
 .scene-onepiece .scene-field { background: url("assets/boards/onepiece-sunny.webp") center / cover no-repeat, #6fb6e8; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45); }

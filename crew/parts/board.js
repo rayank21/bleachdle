@@ -33,6 +33,21 @@ const SCENES = {
     pins: { start: [50, 50], leg: [50, 15], fire: [24, 27], drag: [76, 27], wild: [14, 50], strat: [86, 50], water: [24, 74], grass: [76, 74], heal: [50, 86] },
   },
 };
+// The other anime stand in one of their iconic places (crew/assets/boards/<game>.webp, 4:3): Sōkyoku Hill, Whale Island,
+// Kame House, Konoha, the Shibuya crossing, the Black Bulls' hideout, Trost's walls, the Infinity Castle, U.A., Cathedral 8,
+// Rimuru's city, the Hero Association, a gate, a Viking ship. The medallions are spread over it in rows (autoPins).
+for (const g of ["bleach", "hunterxhunter", "dragonball", "naruto", "jujutsukaisen", "blackclover", "attackontitan", "demonslayer",
+  "myheroacademia", "fireforce", "slime", "onepunchman", "sololeveling", "vinlandsaga"]) {
+  SCENES[g] = { areas: {}, bench: [], ratio: 4 / 3, backdrop: `assets/boards/${g}.webp` };
+}
+
+// n medallions in up to three rows (fewer on top: 10 → 3, 4, 3), each row spread across, as [x, y] in %.
+function autoPins(n) {
+  const rows = n <= 3 ? [n] : n <= 6 ? [Math.floor(n / 2), Math.ceil(n / 2)] : [Math.floor(n / 3), Math.ceil((n - Math.floor(n / 3)) / 2)];
+  if (n > 6) rows.push(n - rows[0] - rows[1]);
+  const ys = { 1: [52], 2: [30, 72], 3: [19, 50, 81] }[rows.length];
+  return rows.flatMap((k, r) => Array.from({ length: k }, (_, i) => [13 + (74 * (i + 0.5)) / k, ys[r]]));
+}
 
 // ── Board ──
 export function renderBoard(container, slots, { rolled = null, onPlace = null, mini = false, stagger = false } = {}) {
@@ -45,8 +60,9 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
   let bench = null;
   if (scene) {
     container.classList.add(`scene-${S.currentGame.id}`);
-    court = el("div", `scene-field${scene.pins ? " has-pins" : ""}`);
+    court = el("div", `scene-field${scene.pins || scene.backdrop ? " has-pins" : ""}${scene.backdrop ? " is-backdrop" : ""}`);
     if (scene.ratio) court.style.aspectRatio = scene.ratio;
+    if (scene.backdrop) court.style.backgroundImage = `url("${scene.backdrop}")`;
     court.append(el("i", "scene-deco"));
     container.append(court);
     if (scene.bench.length) {
@@ -56,6 +72,20 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
     }
   }
   const seen = {};
+  // Backdrops: the leader takes the middle of the top row, the others fill the rows in order.
+  const auto = new Map();
+  if (scene?.backdrop) {
+    const shown = slots.filter((s) => !s.locked);
+    const spots = autoPins(shown.length);
+    const lead = shown.findIndex(isCaptain);
+    if (lead > 0) {
+      const top = spots.filter((p) => p[1] === spots[0][1]);
+      const mid = spots.indexOf(top[Math.floor((top.length - 1) / 2)]);
+      shown.unshift(...shown.splice(lead, 1));
+      spots.unshift(...spots.splice(mid, 1));
+    }
+    shown.forEach((s, k) => auto.set(s, spots[k]));
+  }
   // Two rows: 10 roles make a 5 × 2 grid.
   container.style.setProperty("--cols", Math.max(1, Math.ceil(slots.filter((s) => !s.locked).length / 2)));
   slots.forEach((slot, i) => {
@@ -100,7 +130,7 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
       const n = (seen[slot.def.label.en] = (seen[slot.def.label.en] ?? 0) + 1);
       const area = scene.areas[`${slot.def.label.en} ${n}`];
       const onBench = scene.bench.includes(area);
-      const pin = scene.pins?.[area];
+      const pin = scene.pins?.[area] ?? auto.get(slot);
       if (pin) {
         card.classList.add("is-pin");
         card.style.left = `${pin[0]}%`;

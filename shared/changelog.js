@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-10T00:40",
+      title: { en: "Every crew in its iconic place", fr: "Chaque équipage dans son lieu culte" },
+      items: [
+        { type: "new", game: "crew", en: "Crew Roll: every anime now has its own scene behind the team, like One Piece's Sunny: Sōkyoku Hill (Bleach), Whale Island (Hunter × Hunter), Kame House (Dragon Ball), Konoha (Naruto), the Shibuya crossing (Jujutsu Kaisen), the Black Bulls' hideout (Black Clover), Trost's walls (Attack on Titan), the Infinity Castle (Demon Slayer), U.A. (My Hero Academia), Cathedral 8 (Fire Force), Rimuru's city (Slime), the Hero Association (One Punch Man), a gate (Solo Leveling) and a Viking ship (Vinland Saga).", fr: "Roll ton équipage : chaque anime a maintenant son décor derrière l'équipe, comme le Sunny de One Piece : la colline du Sōkyoku (Bleach), Whale Island (Hunter × Hunter), la Kame House (Dragon Ball), Konoha (Naruto), le carrefour de Shibuya (Jujutsu Kaisen), la base des Taureaux noirs (Black Clover), les murs de Trost (L'Attaque des Titans), le château de l'Infini (Demon Slayer), U.A. (My Hero Academia), la cathédrale de la 8e (Fire Force), la ville de Rimuru (Slime), l'Association des héros (One Punch Man), un portail (Solo Leveling) et un drakkar (Vinland Saga)." },
+        { type: "improved", game: "crew", en: "The places on these scenes are bigger and easier to spot: a dark disc ringed in the role's colour with a white outline and a glow, larger labels, and the picture slightly darkened at the edges.", fr: "Les places sur ces décors sont plus grandes et bien plus visibles : un rond sombre cerclé de la couleur du rôle, avec un contour blanc et un halo, des étiquettes plus grandes, et l'image un peu assombrie sur les bords." },
+      ],
+    },
+    {
       at: "2026-10-10T00:00",
       title: { en: "Stronger Pokémon teams", fr: "Des équipes Pokémon plus fortes" },
       items: [
