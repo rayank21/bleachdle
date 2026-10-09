@@ -17,8 +17,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.9,
   "arc": 0,
   "stats": 318,
-  "power": 3,
-  "starter": true
+  "power": 2,
+  "starter": true,
+  "final": false
  },
  {
   "id": "ivysaur",
@@ -37,7 +38,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "venusaur",
@@ -55,8 +57,9 @@ window.DLE_CHARACTERS = [
   "weight": 100.0,
   "arc": 0,
   "stats": 525,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "charmander",
@@ -73,8 +76,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.5,
   "arc": 0,
   "stats": 309,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "charmeleon",
@@ -92,7 +96,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "charizard",
@@ -110,8 +115,9 @@ window.DLE_CHARACTERS = [
   "weight": 90.5,
   "arc": 0,
   "stats": 534,
-  "power": 7,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "squirtle",
@@ -129,7 +135,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 314,
   "power": 2,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "wartortle",
@@ -147,7 +154,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "blastoise",
@@ -164,8 +172,9 @@ window.DLE_CHARACTERS = [
   "weight": 85.5,
   "arc": 0,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "caterpie",
@@ -183,7 +192,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 195,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "metapod",
@@ -201,7 +211,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 205,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "butterfree",
@@ -220,7 +231,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 395,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "weedle",
@@ -239,7 +251,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 195,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "kakuna",
@@ -258,7 +271,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 205,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "beedrill",
@@ -277,7 +291,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 395,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "pidgey",
@@ -296,7 +311,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 251,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "pidgeotto",
@@ -315,7 +331,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 349,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "pidgeot",
@@ -334,7 +351,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 479,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "rattata",
@@ -352,7 +370,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 253,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "raticate",
@@ -370,7 +389,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 413,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "spearow",
@@ -388,8 +408,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.0,
   "arc": 0,
   "stats": 262,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "fearow",
@@ -408,7 +429,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 442,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "ekans",
@@ -425,8 +447,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.9,
   "arc": 0,
   "stats": 288,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "arbok",
@@ -443,8 +466,9 @@ window.DLE_CHARACTERS = [
   "weight": 65.0,
   "arc": 0,
   "stats": 448,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pikachu",
@@ -461,8 +485,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.0,
   "arc": 0,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "raichu",
@@ -479,8 +504,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 0,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sandshrew",
@@ -497,8 +523,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.0,
   "arc": 0,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sandslash",
@@ -515,8 +542,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.5,
   "arc": 0,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "nidoran-f",
@@ -533,8 +561,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.0,
   "arc": 0,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "nidorina",
@@ -552,7 +581,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 365,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "nidoqueen",
@@ -570,8 +600,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 0,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "nidoran-m",
@@ -588,8 +619,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.0,
   "arc": 0,
   "stats": 273,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "nidorino",
@@ -607,7 +639,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 365,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "nidoking",
@@ -625,8 +658,9 @@ window.DLE_CHARACTERS = [
   "weight": 62.0,
   "arc": 0,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "clefairy",
@@ -643,8 +677,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.5,
   "arc": 0,
   "stats": 323,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "clefable",
@@ -661,8 +696,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.0,
   "arc": 0,
   "stats": 483,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "vulpix",
@@ -679,8 +715,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.9,
   "arc": 0,
   "stats": 299,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ninetales",
@@ -697,8 +734,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.9,
   "arc": 0,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "jigglypuff",
@@ -716,8 +754,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.5,
   "arc": 0,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "wigglytuff",
@@ -736,7 +775,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 435,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "zubat",
@@ -755,7 +795,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "golbat",
@@ -773,8 +814,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.0,
   "arc": 0,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "oddish",
@@ -792,8 +834,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.4,
   "arc": 0,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gloom",
@@ -812,7 +855,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 395,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "vileplume",
@@ -830,8 +874,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.6,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "paras",
@@ -849,8 +894,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.4,
   "arc": 0,
   "stats": 285,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "parasect",
@@ -869,7 +915,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "venonat",
@@ -887,8 +934,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 0,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "venomoth",
@@ -906,8 +954,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.5,
   "arc": 0,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "diglett",
@@ -924,8 +973,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.8,
   "arc": 0,
   "stats": 265,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dugtrio",
@@ -943,7 +993,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 425,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "meowth",
@@ -960,8 +1011,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.2,
   "arc": 0,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "persian",
@@ -979,7 +1031,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "psyduck",
@@ -996,8 +1049,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.6,
   "arc": 0,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "golduck",
@@ -1014,8 +1068,9 @@ window.DLE_CHARACTERS = [
   "weight": 76.6,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mankey",
@@ -1032,8 +1087,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.0,
   "arc": 0,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "primeape",
@@ -1050,8 +1106,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.0,
   "arc": 0,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "growlithe",
@@ -1069,7 +1126,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "arcanine",
@@ -1086,8 +1144,9 @@ window.DLE_CHARACTERS = [
   "weight": 155.0,
   "arc": 0,
   "stats": 555,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "poliwag",
@@ -1104,8 +1163,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.4,
   "arc": 0,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "poliwhirl",
@@ -1123,7 +1183,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 385,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "poliwrath",
@@ -1141,8 +1202,9 @@ window.DLE_CHARACTERS = [
   "weight": 54.0,
   "arc": 0,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "abra",
@@ -1159,8 +1221,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.5,
   "arc": 0,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "kadabra",
@@ -1178,7 +1241,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 400,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "alakazam",
@@ -1195,8 +1259,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.0,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "machop",
@@ -1213,8 +1278,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.5,
   "arc": 0,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "machoke",
@@ -1232,7 +1298,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "machamp",
@@ -1249,8 +1316,9 @@ window.DLE_CHARACTERS = [
   "weight": 130.0,
   "arc": 0,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bellsprout",
@@ -1268,8 +1336,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 0,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "weepinbell",
@@ -1288,7 +1357,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 390,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "victreebel",
@@ -1306,8 +1376,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.5,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tentacool",
@@ -1325,8 +1396,9 @@ window.DLE_CHARACTERS = [
   "weight": 45.5,
   "arc": 0,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "tentacruel",
@@ -1344,8 +1416,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.0,
   "arc": 0,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "geodude",
@@ -1363,8 +1436,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.0,
   "arc": 0,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "graveler",
@@ -1383,7 +1457,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 390,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "golem",
@@ -1401,8 +1476,9 @@ window.DLE_CHARACTERS = [
   "weight": 300.0,
   "arc": 0,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ponyta",
@@ -1420,7 +1496,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "rapidash",
@@ -1437,8 +1514,9 @@ window.DLE_CHARACTERS = [
   "weight": 95.0,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "slowpoke",
@@ -1457,7 +1535,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 315,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "slowbro",
@@ -1475,8 +1554,9 @@ window.DLE_CHARACTERS = [
   "weight": 78.5,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "magnemite",
@@ -1494,8 +1574,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.0,
   "arc": 0,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "magneton",
@@ -1513,8 +1594,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 0,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "farfetchd",
@@ -1532,8 +1614,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 0,
   "stats": 377,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "doduo",
@@ -1551,8 +1634,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.2,
   "arc": 0,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dodrio",
@@ -1570,8 +1654,9 @@ window.DLE_CHARACTERS = [
   "weight": 85.2,
   "arc": 0,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "seel",
@@ -1588,8 +1673,9 @@ window.DLE_CHARACTERS = [
   "weight": 90.0,
   "arc": 0,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dewgong",
@@ -1607,8 +1693,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 0,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "grimer",
@@ -1625,8 +1712,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 0,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "muk",
@@ -1643,8 +1731,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shellder",
@@ -1661,8 +1750,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 0,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "cloyster",
@@ -1680,8 +1770,9 @@ window.DLE_CHARACTERS = [
   "weight": 132.5,
   "arc": 0,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gastly",
@@ -1699,8 +1790,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.1,
   "arc": 0,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "haunter",
@@ -1719,7 +1811,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gengar",
@@ -1737,8 +1830,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.5,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "onix",
@@ -1757,7 +1851,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 385,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "drowzee",
@@ -1774,8 +1869,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.4,
   "arc": 0,
   "stats": 328,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "hypno",
@@ -1792,8 +1888,9 @@ window.DLE_CHARACTERS = [
   "weight": 75.6,
   "arc": 0,
   "stats": 483,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "krabby",
@@ -1810,8 +1907,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.5,
   "arc": 0,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "kingler",
@@ -1828,8 +1926,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 0,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "voltorb",
@@ -1846,8 +1945,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.4,
   "arc": 0,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "electrode",
@@ -1864,8 +1964,9 @@ window.DLE_CHARACTERS = [
   "weight": 66.6,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "exeggcute",
@@ -1883,8 +1984,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.5,
   "arc": 0,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "exeggutor",
@@ -1902,8 +2004,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 0,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cubone",
@@ -1920,8 +2023,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.5,
   "arc": 0,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "marowak",
@@ -1939,7 +2043,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 425,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "hitmonlee",
@@ -1956,8 +2061,9 @@ window.DLE_CHARACTERS = [
   "weight": 49.8,
   "arc": 0,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hitmonchan",
@@ -1974,8 +2080,9 @@ window.DLE_CHARACTERS = [
   "weight": 50.2,
   "arc": 0,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lickitung",
@@ -1993,7 +2100,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 385,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "koffing",
@@ -2010,8 +2118,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 0,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "weezing",
@@ -2028,8 +2137,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.5,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rhyhorn",
@@ -2047,8 +2157,9 @@ window.DLE_CHARACTERS = [
   "weight": 115.0,
   "arc": 0,
   "stats": 345,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "rhydon",
@@ -2066,8 +2177,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 0,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "chansey",
@@ -2084,8 +2196,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.6,
   "arc": 0,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "tangela",
@@ -2103,7 +2216,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 435,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "kangaskhan",
@@ -2120,8 +2234,9 @@ window.DLE_CHARACTERS = [
   "weight": 80.0,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "horsea",
@@ -2138,8 +2253,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.0,
   "arc": 0,
   "stats": 295,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "seadra",
@@ -2157,7 +2273,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "goldeen",
@@ -2174,8 +2291,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 0,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "seaking",
@@ -2192,8 +2310,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.0,
   "arc": 0,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "staryu",
@@ -2210,8 +2329,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.5,
   "arc": 0,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "starmie",
@@ -2229,8 +2349,9 @@ window.DLE_CHARACTERS = [
   "weight": 80.0,
   "arc": 0,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mr-mime",
@@ -2248,8 +2369,9 @@ window.DLE_CHARACTERS = [
   "weight": 54.5,
   "arc": 0,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "scyther",
@@ -2267,8 +2389,9 @@ window.DLE_CHARACTERS = [
   "weight": 56.0,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "jynx",
@@ -2286,8 +2409,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.6,
   "arc": 0,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "electabuzz",
@@ -2304,8 +2428,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "magmar",
@@ -2322,8 +2447,9 @@ window.DLE_CHARACTERS = [
   "weight": 44.5,
   "arc": 0,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "pinsir",
@@ -2340,8 +2466,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.0,
   "arc": 0,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tauros",
@@ -2358,8 +2485,9 @@ window.DLE_CHARACTERS = [
   "weight": 88.4,
   "arc": 0,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "magikarp",
@@ -2377,7 +2505,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 200,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gyarados",
@@ -2395,8 +2524,9 @@ window.DLE_CHARACTERS = [
   "weight": 235.0,
   "arc": 0,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lapras",
@@ -2414,8 +2544,9 @@ window.DLE_CHARACTERS = [
   "weight": 220.0,
   "arc": 0,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ditto",
@@ -2432,8 +2563,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 0,
   "stats": 288,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": true
  },
  {
   "id": "eevee",
@@ -2450,8 +2582,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.5,
   "arc": 0,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "vaporeon",
@@ -2468,8 +2601,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.0,
   "arc": 0,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "jolteon",
@@ -2486,8 +2620,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.5,
   "arc": 0,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "flareon",
@@ -2504,8 +2639,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.0,
   "arc": 0,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "porygon",
@@ -2523,7 +2659,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 395,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "omanyte",
@@ -2542,7 +2679,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "omastar",
@@ -2560,8 +2698,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.0,
   "arc": 0,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kabuto",
@@ -2580,7 +2719,8 @@ window.DLE_CHARACTERS = [
   "arc": 0,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "kabutops",
@@ -2598,8 +2738,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.5,
   "arc": 0,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "aerodactyl",
@@ -2617,8 +2758,9 @@ window.DLE_CHARACTERS = [
   "weight": 59.0,
   "arc": 0,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "snorlax",
@@ -2635,8 +2777,9 @@ window.DLE_CHARACTERS = [
   "weight": 460.0,
   "arc": 0,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "articuno",
@@ -2654,8 +2797,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.4,
   "arc": 0,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zapdos",
@@ -2673,8 +2817,9 @@ window.DLE_CHARACTERS = [
   "weight": 52.6,
   "arc": 0,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "moltres",
@@ -2692,8 +2837,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 0,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dratini",
@@ -2710,8 +2856,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.3,
   "arc": 0,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dragonair",
@@ -2728,8 +2875,9 @@ window.DLE_CHARACTERS = [
   "weight": 16.5,
   "arc": 0,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dragonite",
@@ -2747,8 +2895,9 @@ window.DLE_CHARACTERS = [
   "weight": 210.0,
   "arc": 0,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mewtwo",
@@ -2765,8 +2914,9 @@ window.DLE_CHARACTERS = [
   "weight": 122.0,
   "arc": 0,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mew",
@@ -2783,8 +2933,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 0,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chikorita",
@@ -2801,8 +2952,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.4,
   "arc": 1,
   "stats": 318,
-  "power": 3,
-  "starter": true
+  "power": 2,
+  "starter": true,
+  "final": false
  },
  {
   "id": "bayleef",
@@ -2820,7 +2972,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "meganium",
@@ -2837,8 +2990,9 @@ window.DLE_CHARACTERS = [
   "weight": 100.5,
   "arc": 1,
   "stats": 525,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "cyndaquil",
@@ -2855,8 +3009,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.9,
   "arc": 1,
   "stats": 309,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "quilava",
@@ -2874,7 +3029,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "typhlosion",
@@ -2891,8 +3047,9 @@ window.DLE_CHARACTERS = [
   "weight": 79.5,
   "arc": 1,
   "stats": 534,
-  "power": 7,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "totodile",
@@ -2910,7 +3067,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 314,
   "power": 2,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "croconaw",
@@ -2928,7 +3086,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "feraligatr",
@@ -2945,8 +3104,9 @@ window.DLE_CHARACTERS = [
   "weight": 88.8,
   "arc": 1,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "sentret",
@@ -2964,7 +3124,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 215,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "furret",
@@ -2981,8 +3142,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.5,
   "arc": 1,
   "stats": 415,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hoothoot",
@@ -3000,8 +3162,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.2,
   "arc": 1,
   "stats": 262,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "noctowl",
@@ -3019,8 +3182,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.8,
   "arc": 1,
   "stats": 452,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ledyba",
@@ -3038,8 +3202,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.8,
   "arc": 1,
   "stats": 265,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ledian",
@@ -3058,7 +3223,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 390,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "spinarak",
@@ -3077,7 +3243,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "ariados",
@@ -3096,7 +3263,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 400,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "crobat",
@@ -3114,8 +3282,9 @@ window.DLE_CHARACTERS = [
   "weight": 75.0,
   "arc": 1,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chinchou",
@@ -3133,8 +3302,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.0,
   "arc": 1,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lanturn",
@@ -3152,8 +3322,9 @@ window.DLE_CHARACTERS = [
   "weight": 22.5,
   "arc": 1,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pichu",
@@ -3171,7 +3342,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 205,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "cleffa",
@@ -3189,7 +3361,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 218,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "igglybuff",
@@ -3208,7 +3381,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 210,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "togepi",
@@ -3226,7 +3400,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "togetic",
@@ -3245,7 +3420,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "natu",
@@ -3263,8 +3439,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.0,
   "arc": 1,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "xatu",
@@ -3282,8 +3459,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 1,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mareep",
@@ -3300,8 +3478,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.8,
   "arc": 1,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "flaaffy",
@@ -3319,7 +3498,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 365,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "ampharos",
@@ -3336,8 +3516,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.5,
   "arc": 1,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bellossom",
@@ -3354,8 +3535,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.8,
   "arc": 1,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "marill",
@@ -3374,7 +3556,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "azumarill",
@@ -3392,8 +3575,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.5,
   "arc": 1,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sudowoodo",
@@ -3411,7 +3595,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "politoed",
@@ -3428,8 +3613,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.9,
   "arc": 1,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hoppip",
@@ -3448,7 +3634,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "skiploom",
@@ -3466,8 +3653,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 1,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "jumpluff",
@@ -3485,8 +3673,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.0,
   "arc": 1,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "aipom",
@@ -3504,7 +3693,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 360,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "sunkern",
@@ -3522,7 +3712,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 180,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "sunflora",
@@ -3540,7 +3731,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 425,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "yanma",
@@ -3559,7 +3751,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 390,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "wooper",
@@ -3578,7 +3771,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 210,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "quagsire",
@@ -3597,7 +3791,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "espeon",
@@ -3614,8 +3809,9 @@ window.DLE_CHARACTERS = [
   "weight": 26.5,
   "arc": 1,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "umbreon",
@@ -3632,8 +3828,9 @@ window.DLE_CHARACTERS = [
   "weight": 27.0,
   "arc": 1,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "murkrow",
@@ -3652,7 +3849,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "slowking",
@@ -3670,8 +3868,9 @@ window.DLE_CHARACTERS = [
   "weight": 79.5,
   "arc": 1,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "misdreavus",
@@ -3689,7 +3888,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 435,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "unown",
@@ -3706,8 +3906,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.0,
   "arc": 1,
   "stats": 336,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wobbuffet",
@@ -3725,7 +3926,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "girafarig",
@@ -3743,8 +3945,9 @@ window.DLE_CHARACTERS = [
   "weight": 41.5,
   "arc": 1,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "pineco",
@@ -3761,8 +3964,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.2,
   "arc": 1,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "forretress",
@@ -3780,8 +3984,9 @@ window.DLE_CHARACTERS = [
   "weight": 125.8,
   "arc": 1,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dunsparce",
@@ -3798,8 +4003,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.0,
   "arc": 1,
   "stats": 415,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gligar",
@@ -3818,7 +4024,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "steelix",
@@ -3836,8 +4043,9 @@ window.DLE_CHARACTERS = [
   "weight": 400.0,
   "arc": 1,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "snubbull",
@@ -3854,8 +4062,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.8,
   "arc": 1,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "granbull",
@@ -3872,8 +4081,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.7,
   "arc": 1,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "qwilfish",
@@ -3892,7 +4102,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "scizor",
@@ -3910,8 +4121,9 @@ window.DLE_CHARACTERS = [
   "weight": 118.0,
   "arc": 1,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shuckle",
@@ -3929,8 +4141,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.5,
   "arc": 1,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "heracross",
@@ -3948,8 +4161,9 @@ window.DLE_CHARACTERS = [
   "weight": 54.0,
   "arc": 1,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sneasel",
@@ -3968,7 +4182,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "teddiursa",
@@ -3985,8 +4200,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.8,
   "arc": 1,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ursaring",
@@ -4003,8 +4219,9 @@ window.DLE_CHARACTERS = [
   "weight": 125.8,
   "arc": 1,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "slugma",
@@ -4022,7 +4239,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "magcargo",
@@ -4041,7 +4259,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "swinub",
@@ -4060,7 +4279,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "piloswine",
@@ -4078,8 +4298,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.8,
   "arc": 1,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "corsola",
@@ -4098,7 +4319,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "remoraid",
@@ -4115,8 +4337,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.0,
   "arc": 1,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "octillery",
@@ -4134,7 +4357,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "delibird",
@@ -4152,8 +4376,9 @@ window.DLE_CHARACTERS = [
   "weight": 16.0,
   "arc": 1,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mantine",
@@ -4171,8 +4396,9 @@ window.DLE_CHARACTERS = [
   "weight": 220.0,
   "arc": 1,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "skarmory",
@@ -4190,8 +4416,9 @@ window.DLE_CHARACTERS = [
   "weight": 50.5,
   "arc": 1,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "houndour",
@@ -4209,8 +4436,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.8,
   "arc": 1,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "houndoom",
@@ -4228,8 +4456,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.0,
   "arc": 1,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kingdra",
@@ -4247,8 +4476,9 @@ window.DLE_CHARACTERS = [
   "weight": 152.0,
   "arc": 1,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "phanpy",
@@ -4265,8 +4495,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.5,
   "arc": 1,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "donphan",
@@ -4283,8 +4514,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 1,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "porygon2",
@@ -4301,8 +4533,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.5,
   "arc": 1,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": false
  },
  {
   "id": "stantler",
@@ -4319,8 +4552,9 @@ window.DLE_CHARACTERS = [
   "weight": 71.2,
   "arc": 1,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "smeargle",
@@ -4338,7 +4572,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "tyrogue",
@@ -4356,7 +4591,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 210,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "hitmontop",
@@ -4373,8 +4609,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.0,
   "arc": 1,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "smoochum",
@@ -4392,8 +4629,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.0,
   "arc": 1,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "elekid",
@@ -4411,7 +4649,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 360,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "magby",
@@ -4429,7 +4668,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 365,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "miltank",
@@ -4446,8 +4686,9 @@ window.DLE_CHARACTERS = [
   "weight": 75.5,
   "arc": 1,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "blissey",
@@ -4464,8 +4705,9 @@ window.DLE_CHARACTERS = [
   "weight": 46.8,
   "arc": 1,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "raikou",
@@ -4482,8 +4724,9 @@ window.DLE_CHARACTERS = [
   "weight": 178.0,
   "arc": 1,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "entei",
@@ -4500,8 +4743,9 @@ window.DLE_CHARACTERS = [
   "weight": 198.0,
   "arc": 1,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "suicune",
@@ -4518,8 +4762,9 @@ window.DLE_CHARACTERS = [
   "weight": 187.0,
   "arc": 1,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "larvitar",
@@ -4537,8 +4782,9 @@ window.DLE_CHARACTERS = [
   "weight": 72.0,
   "arc": 1,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "pupitar",
@@ -4557,7 +4803,8 @@ window.DLE_CHARACTERS = [
   "arc": 1,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "tyranitar",
@@ -4575,8 +4822,9 @@ window.DLE_CHARACTERS = [
   "weight": 202.0,
   "arc": 1,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lugia",
@@ -4594,8 +4842,9 @@ window.DLE_CHARACTERS = [
   "weight": 216.0,
   "arc": 1,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ho-oh",
@@ -4613,8 +4862,9 @@ window.DLE_CHARACTERS = [
   "weight": 199.0,
   "arc": 1,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "celebi",
@@ -4632,8 +4882,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.0,
   "arc": 1,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "treecko",
@@ -4650,8 +4901,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.0,
   "arc": 2,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "grovyle",
@@ -4669,7 +4921,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "sceptile",
@@ -4686,8 +4939,9 @@ window.DLE_CHARACTERS = [
   "weight": 52.2,
   "arc": 2,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "torchic",
@@ -4704,8 +4958,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.5,
   "arc": 2,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "combusken",
@@ -4724,7 +4979,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "blaziken",
@@ -4742,8 +4998,9 @@ window.DLE_CHARACTERS = [
   "weight": 52.0,
   "arc": 2,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "mudkip",
@@ -4760,8 +5017,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.6,
   "arc": 2,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "marshtomp",
@@ -4780,7 +5038,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "swampert",
@@ -4798,8 +5057,9 @@ window.DLE_CHARACTERS = [
   "weight": 81.9,
   "arc": 2,
   "stats": 535,
-  "power": 7,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "poochyena",
@@ -4817,7 +5077,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 220,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "mightyena",
@@ -4834,8 +5095,9 @@ window.DLE_CHARACTERS = [
   "weight": 37.0,
   "arc": 2,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zigzagoon",
@@ -4853,7 +5115,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 240,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "linoone",
@@ -4870,8 +5133,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.5,
   "arc": 2,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "wurmple",
@@ -4889,7 +5153,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 195,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "silcoon",
@@ -4907,7 +5172,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 205,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "beautifly",
@@ -4926,7 +5192,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 395,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "cascoon",
@@ -4944,7 +5211,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 205,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "dustox",
@@ -4963,7 +5231,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 385,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "lotad",
@@ -4982,7 +5251,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 220,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "lombre",
@@ -5000,8 +5270,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.5,
   "arc": 2,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ludicolo",
@@ -5020,7 +5291,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "seedot",
@@ -5038,7 +5310,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 220,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "nuzleaf",
@@ -5056,8 +5329,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.0,
   "arc": 2,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "shiftry",
@@ -5076,7 +5350,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "taillow",
@@ -5094,8 +5369,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.3,
   "arc": 2,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "swellow",
@@ -5113,8 +5389,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.8,
   "arc": 2,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wingull",
@@ -5132,8 +5409,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.5,
   "arc": 2,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "pelipper",
@@ -5152,7 +5430,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "ralts",
@@ -5171,7 +5450,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 198,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "kirlia",
@@ -5189,8 +5469,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.2,
   "arc": 2,
   "stats": 278,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gardevoir",
@@ -5208,8 +5489,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.4,
   "arc": 2,
   "stats": 518,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "surskit",
@@ -5227,8 +5509,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.7,
   "arc": 2,
   "stats": 269,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "masquerain",
@@ -5246,8 +5529,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.6,
   "arc": 2,
   "stats": 454,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shroomish",
@@ -5264,8 +5548,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.5,
   "arc": 2,
   "stats": 295,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "breloom",
@@ -5283,8 +5568,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.2,
   "arc": 2,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "slakoth",
@@ -5301,8 +5587,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.0,
   "arc": 2,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "vigoroth",
@@ -5320,7 +5607,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "slaking",
@@ -5337,8 +5625,9 @@ window.DLE_CHARACTERS = [
   "weight": 130.5,
   "arc": 2,
   "stats": 670,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "nincada",
@@ -5356,8 +5645,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.5,
   "arc": 2,
   "stats": 266,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ninjask",
@@ -5375,8 +5665,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.0,
   "arc": 2,
   "stats": 456,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shedinja",
@@ -5395,7 +5686,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 236,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "whismur",
@@ -5413,7 +5705,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 240,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "loudred",
@@ -5431,7 +5724,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 360,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "exploud",
@@ -5448,8 +5742,9 @@ window.DLE_CHARACTERS = [
   "weight": 84.0,
   "arc": 2,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "makuhita",
@@ -5467,7 +5762,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 237,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "hariyama",
@@ -5484,8 +5780,9 @@ window.DLE_CHARACTERS = [
   "weight": 253.8,
   "arc": 2,
   "stats": 474,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "azurill",
@@ -5504,7 +5801,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 190,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "nosepass",
@@ -5521,8 +5819,9 @@ window.DLE_CHARACTERS = [
   "weight": 97.0,
   "arc": 2,
   "stats": 375,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "skitty",
@@ -5540,7 +5839,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 260,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "delcatty",
@@ -5558,7 +5858,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 400,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "sableye",
@@ -5577,7 +5878,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 380,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "mawile",
@@ -5596,7 +5898,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 380,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "aron",
@@ -5614,8 +5917,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 2,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lairon",
@@ -5634,7 +5938,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "aggron",
@@ -5652,8 +5957,9 @@ window.DLE_CHARACTERS = [
   "weight": 360.0,
   "arc": 2,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "meditite",
@@ -5671,8 +5977,9 @@ window.DLE_CHARACTERS = [
   "weight": 11.2,
   "arc": 2,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "medicham",
@@ -5691,7 +5998,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "electrike",
@@ -5708,8 +6016,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.2,
   "arc": 2,
   "stats": 295,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "manectric",
@@ -5726,8 +6035,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.2,
   "arc": 2,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "plusle",
@@ -5745,7 +6055,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "minun",
@@ -5763,7 +6074,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "volbeat",
@@ -5781,7 +6093,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "illumise",
@@ -5799,7 +6112,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "roselia",
@@ -5818,7 +6132,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 400,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gulpin",
@@ -5835,8 +6150,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.3,
   "arc": 2,
   "stats": 302,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "swalot",
@@ -5853,8 +6169,9 @@ window.DLE_CHARACTERS = [
   "weight": 80.0,
   "arc": 2,
   "stats": 467,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "carvanha",
@@ -5872,8 +6189,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.8,
   "arc": 2,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sharpedo",
@@ -5891,8 +6209,9 @@ window.DLE_CHARACTERS = [
   "weight": 88.8,
   "arc": 2,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wailmer",
@@ -5910,7 +6229,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 400,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "wailord",
@@ -5927,8 +6247,9 @@ window.DLE_CHARACTERS = [
   "weight": 398.0,
   "arc": 2,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "numel",
@@ -5946,8 +6267,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.0,
   "arc": 2,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "camerupt",
@@ -5965,8 +6287,9 @@ window.DLE_CHARACTERS = [
   "weight": 220.0,
   "arc": 2,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "torkoal",
@@ -5983,8 +6306,9 @@ window.DLE_CHARACTERS = [
   "weight": 80.4,
   "arc": 2,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "spoink",
@@ -6001,8 +6325,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.6,
   "arc": 2,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "grumpig",
@@ -6019,8 +6344,9 @@ window.DLE_CHARACTERS = [
   "weight": 71.5,
   "arc": 2,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "spinda",
@@ -6038,7 +6364,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 360,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "trapinch",
@@ -6055,8 +6382,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 2,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "vibrava",
@@ -6074,8 +6402,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.3,
   "arc": 2,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "flygon",
@@ -6093,8 +6422,9 @@ window.DLE_CHARACTERS = [
   "weight": 82.0,
   "arc": 2,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cacnea",
@@ -6111,8 +6441,9 @@ window.DLE_CHARACTERS = [
   "weight": 51.3,
   "arc": 2,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "cacturne",
@@ -6130,8 +6461,9 @@ window.DLE_CHARACTERS = [
   "weight": 77.4,
   "arc": 2,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "swablu",
@@ -6149,8 +6481,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.2,
   "arc": 2,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "altaria",
@@ -6168,8 +6501,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.6,
   "arc": 2,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zangoose",
@@ -6186,8 +6520,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.3,
   "arc": 2,
   "stats": 458,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "seviper",
@@ -6204,8 +6539,9 @@ window.DLE_CHARACTERS = [
   "weight": 52.5,
   "arc": 2,
   "stats": 458,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lunatone",
@@ -6223,8 +6559,9 @@ window.DLE_CHARACTERS = [
   "weight": 168.0,
   "arc": 2,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "solrock",
@@ -6242,8 +6579,9 @@ window.DLE_CHARACTERS = [
   "weight": 154.0,
   "arc": 2,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "barboach",
@@ -6261,8 +6599,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.9,
   "arc": 2,
   "stats": 288,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "whiscash",
@@ -6280,8 +6619,9 @@ window.DLE_CHARACTERS = [
   "weight": 23.6,
   "arc": 2,
   "stats": 468,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "corphish",
@@ -6298,8 +6638,9 @@ window.DLE_CHARACTERS = [
   "weight": 11.5,
   "arc": 2,
   "stats": 308,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "crawdaunt",
@@ -6317,8 +6658,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.8,
   "arc": 2,
   "stats": 468,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "baltoy",
@@ -6336,8 +6678,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.5,
   "arc": 2,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "claydol",
@@ -6355,8 +6698,9 @@ window.DLE_CHARACTERS = [
   "weight": 108.0,
   "arc": 2,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lileep",
@@ -6375,7 +6719,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "cradily",
@@ -6393,8 +6738,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.4,
   "arc": 2,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "anorith",
@@ -6413,7 +6759,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "armaldo",
@@ -6431,8 +6778,9 @@ window.DLE_CHARACTERS = [
   "weight": 68.2,
   "arc": 2,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "feebas",
@@ -6450,7 +6798,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 200,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "milotic",
@@ -6467,8 +6816,9 @@ window.DLE_CHARACTERS = [
   "weight": 162.0,
   "arc": 2,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "castform",
@@ -6485,8 +6835,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.8,
   "arc": 2,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kecleon",
@@ -6504,7 +6855,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "shuppet",
@@ -6521,8 +6873,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.3,
   "arc": 2,
   "stats": 295,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "banette",
@@ -6539,8 +6892,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.5,
   "arc": 2,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "duskull",
@@ -6557,8 +6911,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 2,
   "stats": 295,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dusclops",
@@ -6575,8 +6930,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.6,
   "arc": 2,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "tropius",
@@ -6594,8 +6950,9 @@ window.DLE_CHARACTERS = [
   "weight": 100.0,
   "arc": 2,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chimecho",
@@ -6612,8 +6969,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 2,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "absol",
@@ -6630,8 +6988,9 @@ window.DLE_CHARACTERS = [
   "weight": 47.0,
   "arc": 2,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wynaut",
@@ -6649,7 +7008,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 260,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "snorunt",
@@ -6666,8 +7026,9 @@ window.DLE_CHARACTERS = [
   "weight": 16.8,
   "arc": 2,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "glalie",
@@ -6685,7 +7046,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "spheal",
@@ -6703,8 +7065,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.5,
   "arc": 2,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sealeo",
@@ -6723,7 +7086,8 @@ window.DLE_CHARACTERS = [
   "arc": 2,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "walrein",
@@ -6741,8 +7105,9 @@ window.DLE_CHARACTERS = [
   "weight": 150.6,
   "arc": 2,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "clamperl",
@@ -6759,8 +7124,9 @@ window.DLE_CHARACTERS = [
   "weight": 52.5,
   "arc": 2,
   "stats": 345,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "huntail",
@@ -6777,8 +7143,9 @@ window.DLE_CHARACTERS = [
   "weight": 27.0,
   "arc": 2,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gorebyss",
@@ -6795,8 +7162,9 @@ window.DLE_CHARACTERS = [
   "weight": 22.6,
   "arc": 2,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "relicanth",
@@ -6814,8 +7182,9 @@ window.DLE_CHARACTERS = [
   "weight": 23.4,
   "arc": 2,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "luvdisc",
@@ -6832,8 +7201,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.7,
   "arc": 2,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bagon",
@@ -6850,8 +7220,9 @@ window.DLE_CHARACTERS = [
   "weight": 42.1,
   "arc": 2,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "shelgon",
@@ -6868,8 +7239,9 @@ window.DLE_CHARACTERS = [
   "weight": 110.5,
   "arc": 2,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "salamence",
@@ -6887,8 +7259,9 @@ window.DLE_CHARACTERS = [
   "weight": 102.6,
   "arc": 2,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "beldum",
@@ -6906,8 +7279,9 @@ window.DLE_CHARACTERS = [
   "weight": 95.2,
   "arc": 2,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "metang",
@@ -6925,8 +7299,9 @@ window.DLE_CHARACTERS = [
   "weight": 202.5,
   "arc": 2,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "metagross",
@@ -6944,8 +7319,9 @@ window.DLE_CHARACTERS = [
   "weight": 550.0,
   "arc": 2,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "regirock",
@@ -6962,8 +7338,9 @@ window.DLE_CHARACTERS = [
   "weight": 230.0,
   "arc": 2,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "regice",
@@ -6980,8 +7357,9 @@ window.DLE_CHARACTERS = [
   "weight": 175.0,
   "arc": 2,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "registeel",
@@ -6998,8 +7376,9 @@ window.DLE_CHARACTERS = [
   "weight": 205.0,
   "arc": 2,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "latias",
@@ -7017,8 +7396,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.0,
   "arc": 2,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "latios",
@@ -7036,8 +7416,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 2,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kyogre",
@@ -7054,8 +7435,9 @@ window.DLE_CHARACTERS = [
   "weight": 352.0,
   "arc": 2,
   "stats": 670,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "groudon",
@@ -7072,8 +7454,9 @@ window.DLE_CHARACTERS = [
   "weight": 950.0,
   "arc": 2,
   "stats": 670,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rayquaza",
@@ -7091,8 +7474,9 @@ window.DLE_CHARACTERS = [
   "weight": 206.5,
   "arc": 2,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "jirachi",
@@ -7110,8 +7494,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.1,
   "arc": 2,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "deoxys",
@@ -7128,8 +7513,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.8,
   "arc": 2,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "turtwig",
@@ -7146,8 +7532,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.2,
   "arc": 3,
   "stats": 318,
-  "power": 3,
-  "starter": true
+  "power": 2,
+  "starter": true,
+  "final": false
  },
  {
   "id": "grotle",
@@ -7165,7 +7552,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "torterra",
@@ -7183,8 +7571,9 @@ window.DLE_CHARACTERS = [
   "weight": 310.0,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "chimchar",
@@ -7201,8 +7590,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.2,
   "arc": 3,
   "stats": 309,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "monferno",
@@ -7221,7 +7611,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "infernape",
@@ -7239,8 +7630,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.0,
   "arc": 3,
   "stats": 534,
-  "power": 7,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "piplup",
@@ -7258,7 +7650,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 314,
   "power": 2,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "prinplup",
@@ -7276,7 +7669,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "empoleon",
@@ -7294,8 +7688,9 @@ window.DLE_CHARACTERS = [
   "weight": 84.5,
   "arc": 3,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "starly",
@@ -7314,7 +7709,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "staravia",
@@ -7332,8 +7728,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.5,
   "arc": 3,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "staraptor",
@@ -7351,8 +7748,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.9,
   "arc": 3,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bidoof",
@@ -7370,7 +7768,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "bibarel",
@@ -7389,7 +7788,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "kricketot",
@@ -7407,7 +7807,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 194,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "kricketune",
@@ -7425,7 +7826,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 384,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "shinx",
@@ -7442,8 +7844,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.5,
   "arc": 3,
   "stats": 263,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "luxio",
@@ -7461,7 +7864,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 363,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "luxray",
@@ -7478,8 +7882,9 @@ window.DLE_CHARACTERS = [
   "weight": 42.0,
   "arc": 3,
   "stats": 523,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "budew",
@@ -7497,8 +7902,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.2,
   "arc": 3,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "roserade",
@@ -7516,8 +7922,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.5,
   "arc": 3,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cranidos",
@@ -7535,7 +7942,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "rampardos",
@@ -7552,8 +7960,9 @@ window.DLE_CHARACTERS = [
   "weight": 102.5,
   "arc": 3,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shieldon",
@@ -7572,7 +7981,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "bastiodon",
@@ -7590,8 +8000,9 @@ window.DLE_CHARACTERS = [
   "weight": 149.5,
   "arc": 3,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "burmy",
@@ -7609,7 +8020,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 224,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "wormadam",
@@ -7628,7 +8040,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 424,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "mothim",
@@ -7647,7 +8060,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 424,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "combee",
@@ -7666,7 +8080,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 244,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "vespiquen",
@@ -7684,8 +8099,9 @@ window.DLE_CHARACTERS = [
   "weight": 38.5,
   "arc": 3,
   "stats": 474,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pachirisu",
@@ -7703,7 +8119,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "buizel",
@@ -7720,8 +8137,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.5,
   "arc": 3,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "floatzel",
@@ -7738,8 +8156,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.5,
   "arc": 3,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cherubi",
@@ -7756,8 +8175,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.3,
   "arc": 3,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "cherrim",
@@ -7774,8 +8194,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.3,
   "arc": 3,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shellos",
@@ -7792,8 +8213,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.3,
   "arc": 3,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gastrodon",
@@ -7811,8 +8233,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.9,
   "arc": 3,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ambipom",
@@ -7829,8 +8252,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.3,
   "arc": 3,
   "stats": 482,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "drifloon",
@@ -7849,7 +8273,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 348,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "drifblim",
@@ -7867,8 +8292,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 3,
   "stats": 498,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "buneary",
@@ -7886,7 +8312,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "lopunny",
@@ -7904,7 +8331,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "mismagius",
@@ -7921,8 +8349,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.4,
   "arc": 3,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "honchkrow",
@@ -7940,8 +8369,9 @@ window.DLE_CHARACTERS = [
   "weight": 27.3,
   "arc": 3,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "glameow",
@@ -7958,8 +8388,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.9,
   "arc": 3,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "purugly",
@@ -7976,8 +8407,9 @@ window.DLE_CHARACTERS = [
   "weight": 43.8,
   "arc": 3,
   "stats": 452,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chingling",
@@ -7994,8 +8426,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.6,
   "arc": 3,
   "stats": 285,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "stunky",
@@ -8013,8 +8446,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.2,
   "arc": 3,
   "stats": 329,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "skuntank",
@@ -8033,7 +8467,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 479,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "bronzor",
@@ -8051,8 +8486,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.5,
   "arc": 3,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "bronzong",
@@ -8070,8 +8506,9 @@ window.DLE_CHARACTERS = [
   "weight": 187.0,
   "arc": 3,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bonsly",
@@ -8088,8 +8525,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 3,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "mime-jr",
@@ -8107,8 +8545,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.0,
   "arc": 3,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "happiny",
@@ -8126,7 +8565,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 220,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "chatot",
@@ -8145,7 +8585,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 411,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "spiritomb",
@@ -8163,8 +8604,9 @@ window.DLE_CHARACTERS = [
   "weight": 108.0,
   "arc": 3,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gible",
@@ -8182,8 +8624,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.5,
   "arc": 3,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gabite",
@@ -8202,7 +8645,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "garchomp",
@@ -8220,8 +8664,9 @@ window.DLE_CHARACTERS = [
   "weight": 95.0,
   "arc": 3,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "munchlax",
@@ -8239,7 +8684,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 390,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "riolu",
@@ -8256,8 +8702,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.2,
   "arc": 3,
   "stats": 285,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lucario",
@@ -8275,8 +8722,9 @@ window.DLE_CHARACTERS = [
   "weight": 54.0,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hippopotas",
@@ -8293,8 +8741,9 @@ window.DLE_CHARACTERS = [
   "weight": 49.5,
   "arc": 3,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "hippowdon",
@@ -8311,8 +8760,9 @@ window.DLE_CHARACTERS = [
   "weight": 300.0,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "skorupi",
@@ -8330,8 +8780,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.0,
   "arc": 3,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "drapion",
@@ -8349,8 +8800,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.5,
   "arc": 3,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "croagunk",
@@ -8368,8 +8820,9 @@ window.DLE_CHARACTERS = [
   "weight": 23.0,
   "arc": 3,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "toxicroak",
@@ -8387,8 +8840,9 @@ window.DLE_CHARACTERS = [
   "weight": 44.4,
   "arc": 3,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "carnivine",
@@ -8405,8 +8859,9 @@ window.DLE_CHARACTERS = [
   "weight": 27.0,
   "arc": 3,
   "stats": 454,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "finneon",
@@ -8423,8 +8878,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.0,
   "arc": 3,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lumineon",
@@ -8441,8 +8897,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.0,
   "arc": 3,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mantyke",
@@ -8461,7 +8918,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 345,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "snover",
@@ -8479,8 +8937,9 @@ window.DLE_CHARACTERS = [
   "weight": 50.5,
   "arc": 3,
   "stats": 334,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "abomasnow",
@@ -8498,8 +8957,9 @@ window.DLE_CHARACTERS = [
   "weight": 135.5,
   "arc": 3,
   "stats": 494,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "weavile",
@@ -8517,8 +8977,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.0,
   "arc": 3,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "magnezone",
@@ -8536,8 +8997,9 @@ window.DLE_CHARACTERS = [
   "weight": 180.0,
   "arc": 3,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lickilicky",
@@ -8554,8 +9016,9 @@ window.DLE_CHARACTERS = [
   "weight": 140.0,
   "arc": 3,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rhyperior",
@@ -8573,8 +9036,9 @@ window.DLE_CHARACTERS = [
   "weight": 282.8,
   "arc": 3,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tangrowth",
@@ -8591,8 +9055,9 @@ window.DLE_CHARACTERS = [
   "weight": 128.6,
   "arc": 3,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "electivire",
@@ -8609,8 +9074,9 @@ window.DLE_CHARACTERS = [
   "weight": 138.6,
   "arc": 3,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "magmortar",
@@ -8627,8 +9093,9 @@ window.DLE_CHARACTERS = [
   "weight": 68.0,
   "arc": 3,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "togekiss",
@@ -8646,8 +9113,9 @@ window.DLE_CHARACTERS = [
   "weight": 38.0,
   "arc": 3,
   "stats": 545,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "yanmega",
@@ -8665,8 +9133,9 @@ window.DLE_CHARACTERS = [
   "weight": 51.5,
   "arc": 3,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "leafeon",
@@ -8683,8 +9152,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.5,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "glaceon",
@@ -8701,8 +9171,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.9,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gliscor",
@@ -8720,8 +9191,9 @@ window.DLE_CHARACTERS = [
   "weight": 42.5,
   "arc": 3,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mamoswine",
@@ -8739,8 +9211,9 @@ window.DLE_CHARACTERS = [
   "weight": 291.0,
   "arc": 3,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "porygon-z",
@@ -8757,8 +9230,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.0,
   "arc": 3,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gallade",
@@ -8776,8 +9250,9 @@ window.DLE_CHARACTERS = [
   "weight": 52.0,
   "arc": 3,
   "stats": 518,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "probopass",
@@ -8795,8 +9270,9 @@ window.DLE_CHARACTERS = [
   "weight": 340.0,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dusknoir",
@@ -8813,8 +9289,9 @@ window.DLE_CHARACTERS = [
   "weight": 106.6,
   "arc": 3,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "froslass",
@@ -8833,7 +9310,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "rotom",
@@ -8852,7 +9330,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "uxie",
@@ -8869,8 +9348,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 3,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mesprit",
@@ -8887,8 +9367,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 3,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "azelf",
@@ -8905,8 +9386,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 3,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dialga",
@@ -8924,8 +9406,9 @@ window.DLE_CHARACTERS = [
   "weight": 683.0,
   "arc": 3,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "palkia",
@@ -8943,8 +9426,9 @@ window.DLE_CHARACTERS = [
   "weight": 336.0,
   "arc": 3,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "heatran",
@@ -8962,8 +9446,9 @@ window.DLE_CHARACTERS = [
   "weight": 430.0,
   "arc": 3,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "regigigas",
@@ -8980,8 +9465,9 @@ window.DLE_CHARACTERS = [
   "weight": 420.0,
   "arc": 3,
   "stats": 670,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "giratina",
@@ -8999,8 +9485,9 @@ window.DLE_CHARACTERS = [
   "weight": 750.0,
   "arc": 3,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cresselia",
@@ -9017,8 +9504,9 @@ window.DLE_CHARACTERS = [
   "weight": 85.6,
   "arc": 3,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "phione",
@@ -9036,7 +9524,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 480,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "manaphy",
@@ -9053,8 +9542,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.4,
   "arc": 3,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "darkrai",
@@ -9071,8 +9561,9 @@ window.DLE_CHARACTERS = [
   "weight": 50.5,
   "arc": 3,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shaymin",
@@ -9089,8 +9580,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.1,
   "arc": 3,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "arceus",
@@ -9108,7 +9600,8 @@ window.DLE_CHARACTERS = [
   "arc": 3,
   "stats": 720,
   "power": 10,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "victini",
@@ -9126,8 +9619,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 4,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "snivy",
@@ -9144,8 +9638,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.1,
   "arc": 4,
   "stats": 308,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "servine",
@@ -9163,7 +9658,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 413,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "serperior",
@@ -9180,8 +9676,9 @@ window.DLE_CHARACTERS = [
   "weight": 63.0,
   "arc": 4,
   "stats": 528,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "tepig",
@@ -9198,8 +9695,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.9,
   "arc": 4,
   "stats": 308,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "pignite",
@@ -9217,8 +9715,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.5,
   "arc": 4,
   "stats": 418,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "emboar",
@@ -9236,8 +9735,9 @@ window.DLE_CHARACTERS = [
   "weight": 150.0,
   "arc": 4,
   "stats": 528,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "oshawott",
@@ -9254,8 +9754,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.9,
   "arc": 4,
   "stats": 308,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "dewott",
@@ -9273,7 +9774,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 413,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "samurott",
@@ -9290,8 +9792,9 @@ window.DLE_CHARACTERS = [
   "weight": 94.6,
   "arc": 4,
   "stats": 528,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "patrat",
@@ -9309,7 +9812,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 255,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "watchog",
@@ -9326,8 +9830,9 @@ window.DLE_CHARACTERS = [
   "weight": 27.0,
   "arc": 4,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lillipup",
@@ -9344,8 +9849,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.1,
   "arc": 4,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "herdier",
@@ -9362,8 +9868,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.7,
   "arc": 4,
   "stats": 370,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "stoutland",
@@ -9380,8 +9887,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.0,
   "arc": 4,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "purrloin",
@@ -9398,8 +9906,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.1,
   "arc": 4,
   "stats": 281,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "liepard",
@@ -9417,7 +9926,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 446,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "pansage",
@@ -9434,8 +9944,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.5,
   "arc": 4,
   "stats": 316,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "simisage",
@@ -9452,8 +9963,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.5,
   "arc": 4,
   "stats": 498,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pansear",
@@ -9470,8 +9982,9 @@ window.DLE_CHARACTERS = [
   "weight": 11.0,
   "arc": 4,
   "stats": 316,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "simisear",
@@ -9488,8 +10001,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.0,
   "arc": 4,
   "stats": 498,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "panpour",
@@ -9506,8 +10020,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.5,
   "arc": 4,
   "stats": 316,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "simipour",
@@ -9524,8 +10039,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.0,
   "arc": 4,
   "stats": 498,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "munna",
@@ -9542,8 +10058,9 @@ window.DLE_CHARACTERS = [
   "weight": 23.3,
   "arc": 4,
   "stats": 292,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "musharna",
@@ -9560,8 +10077,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.5,
   "arc": 4,
   "stats": 487,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pidove",
@@ -9579,8 +10097,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.1,
   "arc": 4,
   "stats": 264,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "tranquill",
@@ -9599,7 +10118,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 358,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "unfezant",
@@ -9617,8 +10137,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.0,
   "arc": 4,
   "stats": 488,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "blitzle",
@@ -9635,8 +10156,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.8,
   "arc": 4,
   "stats": 295,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "zebstrika",
@@ -9653,8 +10175,9 @@ window.DLE_CHARACTERS = [
   "weight": 79.5,
   "arc": 4,
   "stats": 497,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "roggenrola",
@@ -9671,8 +10194,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.0,
   "arc": 4,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "boldore",
@@ -9690,7 +10214,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 390,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gigalith",
@@ -9707,8 +10232,9 @@ window.DLE_CHARACTERS = [
   "weight": 260.0,
   "arc": 4,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "woobat",
@@ -9726,8 +10252,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.1,
   "arc": 4,
   "stats": 323,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "swoobat",
@@ -9746,7 +10273,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 425,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "drilbur",
@@ -9763,8 +10291,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.5,
   "arc": 4,
   "stats": 328,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "excadrill",
@@ -9782,8 +10311,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.4,
   "arc": 4,
   "stats": 508,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "audino",
@@ -9801,7 +10331,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 445,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "timburr",
@@ -9818,8 +10349,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.5,
   "arc": 4,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gurdurr",
@@ -9837,7 +10369,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "conkeldurr",
@@ -9854,8 +10387,9 @@ window.DLE_CHARACTERS = [
   "weight": 87.0,
   "arc": 4,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tympole",
@@ -9872,8 +10406,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.5,
   "arc": 4,
   "stats": 294,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "palpitoad",
@@ -9892,7 +10427,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 384,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "seismitoad",
@@ -9910,8 +10446,9 @@ window.DLE_CHARACTERS = [
   "weight": 62.0,
   "arc": 4,
   "stats": 509,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "throh",
@@ -9928,8 +10465,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.5,
   "arc": 4,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sawk",
@@ -9946,8 +10484,9 @@ window.DLE_CHARACTERS = [
   "weight": 51.0,
   "arc": 4,
   "stats": 465,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sewaddle",
@@ -9965,8 +10504,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.5,
   "arc": 4,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "swadloon",
@@ -9985,7 +10525,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 380,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "leavanny",
@@ -10003,8 +10544,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.5,
   "arc": 4,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "venipede",
@@ -10023,7 +10565,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 260,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "whirlipede",
@@ -10042,7 +10585,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 360,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "scolipede",
@@ -10060,8 +10604,9 @@ window.DLE_CHARACTERS = [
   "weight": 200.5,
   "arc": 4,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cottonee",
@@ -10079,8 +10624,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.6,
   "arc": 4,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "whimsicott",
@@ -10099,7 +10645,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "petilil",
@@ -10116,8 +10663,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.6,
   "arc": 4,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lilligant",
@@ -10135,7 +10683,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "basculin",
@@ -10152,8 +10701,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.0,
   "arc": 4,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sandile",
@@ -10171,8 +10721,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.2,
   "arc": 4,
   "stats": 292,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "krokorok",
@@ -10191,7 +10742,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 351,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "krookodile",
@@ -10209,8 +10761,9 @@ window.DLE_CHARACTERS = [
   "weight": 96.3,
   "arc": 4,
   "stats": 519,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "darumaka",
@@ -10228,7 +10781,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 315,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "darmanitan",
@@ -10246,7 +10800,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "maractus",
@@ -10263,8 +10818,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.0,
   "arc": 4,
   "stats": 461,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dwebble",
@@ -10282,8 +10838,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.5,
   "arc": 4,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "crustle",
@@ -10301,8 +10858,9 @@ window.DLE_CHARACTERS = [
   "weight": 200.0,
   "arc": 4,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "scraggy",
@@ -10321,7 +10879,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 348,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "scrafty",
@@ -10339,8 +10898,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 4,
   "stats": 488,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sigilyph",
@@ -10358,8 +10918,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.0,
   "arc": 4,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "yamask",
@@ -10376,8 +10937,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.5,
   "arc": 4,
   "stats": 303,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "cofagrigus",
@@ -10394,8 +10956,9 @@ window.DLE_CHARACTERS = [
   "weight": 76.5,
   "arc": 4,
   "stats": 483,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tirtouga",
@@ -10414,7 +10977,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "carracosta",
@@ -10432,8 +10996,9 @@ window.DLE_CHARACTERS = [
   "weight": 81.0,
   "arc": 4,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "archen",
@@ -10452,7 +11017,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 401,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "archeops",
@@ -10470,8 +11036,9 @@ window.DLE_CHARACTERS = [
   "weight": 32.0,
   "arc": 4,
   "stats": 567,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "trubbish",
@@ -10488,8 +11055,9 @@ window.DLE_CHARACTERS = [
   "weight": 31.0,
   "arc": 4,
   "stats": 329,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "garbodor",
@@ -10506,8 +11074,9 @@ window.DLE_CHARACTERS = [
   "weight": 107.3,
   "arc": 4,
   "stats": 474,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zorua",
@@ -10524,8 +11093,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.5,
   "arc": 4,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "zoroark",
@@ -10542,8 +11112,9 @@ window.DLE_CHARACTERS = [
   "weight": 81.1,
   "arc": 4,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "minccino",
@@ -10560,8 +11131,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.8,
   "arc": 4,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "cinccino",
@@ -10578,8 +11150,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.5,
   "arc": 4,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gothita",
@@ -10596,8 +11169,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.8,
   "arc": 4,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gothorita",
@@ -10615,7 +11189,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 390,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gothitelle",
@@ -10632,8 +11207,9 @@ window.DLE_CHARACTERS = [
   "weight": 44.0,
   "arc": 4,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "solosis",
@@ -10650,8 +11226,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 4,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "duosion",
@@ -10668,8 +11245,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.0,
   "arc": 4,
   "stats": 370,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "reuniclus",
@@ -10686,8 +11264,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.1,
   "arc": 4,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ducklett",
@@ -10705,8 +11284,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.5,
   "arc": 4,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "swanna",
@@ -10724,8 +11304,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.2,
   "arc": 4,
   "stats": 473,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "vanillite",
@@ -10742,8 +11323,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.7,
   "arc": 4,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "vanillish",
@@ -10761,7 +11343,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 395,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "vanilluxe",
@@ -10778,8 +11361,9 @@ window.DLE_CHARACTERS = [
   "weight": 57.5,
   "arc": 4,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "deerling",
@@ -10797,8 +11381,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.5,
   "arc": 4,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sawsbuck",
@@ -10816,8 +11401,9 @@ window.DLE_CHARACTERS = [
   "weight": 92.5,
   "arc": 4,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "emolga",
@@ -10836,7 +11422,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 428,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "karrablast",
@@ -10854,7 +11441,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 315,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "escavalier",
@@ -10872,8 +11460,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.0,
   "arc": 4,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "foongus",
@@ -10891,8 +11480,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 4,
   "stats": 294,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "amoonguss",
@@ -10910,8 +11500,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.5,
   "arc": 4,
   "stats": 464,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "frillish",
@@ -10929,8 +11520,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.0,
   "arc": 4,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "jellicent",
@@ -10949,7 +11541,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "alomomola",
@@ -10966,8 +11559,9 @@ window.DLE_CHARACTERS = [
   "weight": 31.6,
   "arc": 4,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "joltik",
@@ -10985,8 +11579,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.6,
   "arc": 4,
   "stats": 319,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "galvantula",
@@ -11004,8 +11599,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.3,
   "arc": 4,
   "stats": 472,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ferroseed",
@@ -11023,8 +11619,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.8,
   "arc": 4,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ferrothorn",
@@ -11042,8 +11639,9 @@ window.DLE_CHARACTERS = [
   "weight": 110.0,
   "arc": 4,
   "stats": 489,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "klink",
@@ -11060,8 +11658,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.0,
   "arc": 4,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "klang",
@@ -11079,7 +11678,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "klinklang",
@@ -11096,8 +11696,9 @@ window.DLE_CHARACTERS = [
   "weight": 81.0,
   "arc": 4,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tynamo",
@@ -11114,8 +11715,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 4,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "eelektrik",
@@ -11133,7 +11735,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "eelektross",
@@ -11150,8 +11753,9 @@ window.DLE_CHARACTERS = [
   "weight": 80.5,
   "arc": 4,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "elgyem",
@@ -11168,8 +11772,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.0,
   "arc": 4,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "beheeyem",
@@ -11186,8 +11791,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.5,
   "arc": 4,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "litwick",
@@ -11205,8 +11811,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.1,
   "arc": 4,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lampent",
@@ -11224,8 +11831,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.0,
   "arc": 4,
   "stats": 370,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "chandelure",
@@ -11243,8 +11851,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.3,
   "arc": 4,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "axew",
@@ -11261,8 +11870,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.0,
   "arc": 4,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "fraxure",
@@ -11280,7 +11890,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "haxorus",
@@ -11297,8 +11908,9 @@ window.DLE_CHARACTERS = [
   "weight": 105.5,
   "arc": 4,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cubchoo",
@@ -11315,8 +11927,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.5,
   "arc": 4,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "beartic",
@@ -11333,8 +11946,9 @@ window.DLE_CHARACTERS = [
   "weight": 260.0,
   "arc": 4,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cryogonal",
@@ -11351,8 +11965,9 @@ window.DLE_CHARACTERS = [
   "weight": 148.0,
   "arc": 4,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shelmet",
@@ -11369,8 +11984,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.7,
   "arc": 4,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "accelgor",
@@ -11387,8 +12003,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.3,
   "arc": 4,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "stunfisk",
@@ -11406,8 +12023,9 @@ window.DLE_CHARACTERS = [
   "weight": 11.0,
   "arc": 4,
   "stats": 471,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mienfoo",
@@ -11425,7 +12043,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "mienshao",
@@ -11442,8 +12061,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.5,
   "arc": 4,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "druddigon",
@@ -11460,8 +12080,9 @@ window.DLE_CHARACTERS = [
   "weight": 139.0,
   "arc": 4,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "golett",
@@ -11479,8 +12100,9 @@ window.DLE_CHARACTERS = [
   "weight": 92.0,
   "arc": 4,
   "stats": 303,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "golurk",
@@ -11498,8 +12120,9 @@ window.DLE_CHARACTERS = [
   "weight": 330.0,
   "arc": 4,
   "stats": 483,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pawniard",
@@ -11517,8 +12140,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.2,
   "arc": 4,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "bisharp",
@@ -11536,8 +12160,9 @@ window.DLE_CHARACTERS = [
   "weight": 70.0,
   "arc": 4,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "bouffalant",
@@ -11554,8 +12179,9 @@ window.DLE_CHARACTERS = [
   "weight": 94.6,
   "arc": 4,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rufflet",
@@ -11574,7 +12200,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "braviary",
@@ -11592,8 +12219,9 @@ window.DLE_CHARACTERS = [
   "weight": 41.0,
   "arc": 4,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "vullaby",
@@ -11611,8 +12239,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.0,
   "arc": 4,
   "stats": 370,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "mandibuzz",
@@ -11630,8 +12259,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.5,
   "arc": 4,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "heatmor",
@@ -11648,8 +12278,9 @@ window.DLE_CHARACTERS = [
   "weight": 58.0,
   "arc": 4,
   "stats": 484,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "durant",
@@ -11667,8 +12298,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.0,
   "arc": 4,
   "stats": 484,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "deino",
@@ -11686,8 +12318,9 @@ window.DLE_CHARACTERS = [
   "weight": 17.3,
   "arc": 4,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "zweilous",
@@ -11705,8 +12338,9 @@ window.DLE_CHARACTERS = [
   "weight": 50.0,
   "arc": 4,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "hydreigon",
@@ -11724,8 +12358,9 @@ window.DLE_CHARACTERS = [
   "weight": 160.0,
   "arc": 4,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "larvesta",
@@ -11744,7 +12379,8 @@ window.DLE_CHARACTERS = [
   "arc": 4,
   "stats": 360,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "volcarona",
@@ -11762,8 +12398,9 @@ window.DLE_CHARACTERS = [
   "weight": 46.0,
   "arc": 4,
   "stats": 550,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cobalion",
@@ -11781,8 +12418,9 @@ window.DLE_CHARACTERS = [
   "weight": 250.0,
   "arc": 4,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "terrakion",
@@ -11800,8 +12438,9 @@ window.DLE_CHARACTERS = [
   "weight": 260.0,
   "arc": 4,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "virizion",
@@ -11819,8 +12458,9 @@ window.DLE_CHARACTERS = [
   "weight": 200.0,
   "arc": 4,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tornadus",
@@ -11837,8 +12477,9 @@ window.DLE_CHARACTERS = [
   "weight": 63.0,
   "arc": 4,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "thundurus",
@@ -11856,8 +12497,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.0,
   "arc": 4,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "reshiram",
@@ -11875,8 +12517,9 @@ window.DLE_CHARACTERS = [
   "weight": 330.0,
   "arc": 4,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zekrom",
@@ -11894,8 +12537,9 @@ window.DLE_CHARACTERS = [
   "weight": 345.0,
   "arc": 4,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "landorus",
@@ -11913,8 +12557,9 @@ window.DLE_CHARACTERS = [
   "weight": 68.0,
   "arc": 4,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kyurem",
@@ -11932,8 +12577,9 @@ window.DLE_CHARACTERS = [
   "weight": 325.0,
   "arc": 4,
   "stats": 660,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "keldeo",
@@ -11951,8 +12597,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.5,
   "arc": 4,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "meloetta",
@@ -11970,8 +12617,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.5,
   "arc": 4,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "genesect",
@@ -11989,8 +12637,9 @@ window.DLE_CHARACTERS = [
   "weight": 82.5,
   "arc": 4,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chespin",
@@ -12008,7 +12657,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 313,
   "power": 2,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "quilladin",
@@ -12026,7 +12676,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "chesnaught",
@@ -12044,8 +12695,9 @@ window.DLE_CHARACTERS = [
   "weight": 90.0,
   "arc": 5,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "fennekin",
@@ -12062,8 +12714,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.4,
   "arc": 5,
   "stats": 307,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "braixen",
@@ -12081,7 +12734,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 409,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "delphox",
@@ -12099,8 +12753,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.0,
   "arc": 5,
   "stats": 534,
-  "power": 7,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "froakie",
@@ -12118,7 +12773,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 314,
   "power": 2,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "frogadier",
@@ -12136,7 +12792,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 405,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "greninja",
@@ -12154,8 +12811,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.0,
   "arc": 5,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "bunnelby",
@@ -12173,7 +12831,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 237,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "diggersby",
@@ -12191,8 +12850,9 @@ window.DLE_CHARACTERS = [
   "weight": 42.4,
   "arc": 5,
   "stats": 423,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "fletchling",
@@ -12210,8 +12870,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.7,
   "arc": 5,
   "stats": 278,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "fletchinder",
@@ -12230,7 +12891,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 382,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "talonflame",
@@ -12248,8 +12910,9 @@ window.DLE_CHARACTERS = [
   "weight": 24.5,
   "arc": 5,
   "stats": 499,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "scatterbug",
@@ -12267,7 +12930,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 200,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "spewpa",
@@ -12285,7 +12949,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 213,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "vivillon",
@@ -12304,7 +12969,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 411,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "litleo",
@@ -12322,8 +12988,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.5,
   "arc": 5,
   "stats": 369,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "pyroar",
@@ -12341,8 +13008,9 @@ window.DLE_CHARACTERS = [
   "weight": 81.5,
   "arc": 5,
   "stats": 507,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "flabebe",
@@ -12359,8 +13027,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.1,
   "arc": 5,
   "stats": 303,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "floette",
@@ -12377,8 +13046,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.9,
   "arc": 5,
   "stats": 371,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "florges",
@@ -12395,8 +13065,9 @@ window.DLE_CHARACTERS = [
   "weight": 10.0,
   "arc": 5,
   "stats": 552,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "skiddo",
@@ -12414,7 +13085,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gogoat",
@@ -12431,8 +13103,9 @@ window.DLE_CHARACTERS = [
   "weight": 91.0,
   "arc": 5,
   "stats": 531,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pancham",
@@ -12450,7 +13123,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 348,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "pangoro",
@@ -12468,8 +13142,9 @@ window.DLE_CHARACTERS = [
   "weight": 136.0,
   "arc": 5,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "furfrou",
@@ -12486,8 +13161,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.0,
   "arc": 5,
   "stats": 472,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "espurr",
@@ -12505,7 +13181,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "meowstic",
@@ -12522,8 +13199,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.5,
   "arc": 5,
   "stats": 466,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "honedge",
@@ -12541,8 +13219,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.0,
   "arc": 5,
   "stats": 325,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "doublade",
@@ -12560,8 +13239,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.5,
   "arc": 5,
   "stats": 448,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "aegislash",
@@ -12579,8 +13259,9 @@ window.DLE_CHARACTERS = [
   "weight": 53.0,
   "arc": 5,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "spritzee",
@@ -12597,8 +13278,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.5,
   "arc": 5,
   "stats": 341,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "aromatisse",
@@ -12615,8 +13297,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.5,
   "arc": 5,
   "stats": 462,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "swirlix",
@@ -12633,8 +13316,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.5,
   "arc": 5,
   "stats": 341,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "slurpuff",
@@ -12652,7 +13336,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "inkay",
@@ -12670,8 +13355,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.5,
   "arc": 5,
   "stats": 288,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "malamar",
@@ -12689,8 +13375,9 @@ window.DLE_CHARACTERS = [
   "weight": 47.0,
   "arc": 5,
   "stats": 482,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "binacle",
@@ -12708,8 +13395,9 @@ window.DLE_CHARACTERS = [
   "weight": 31.0,
   "arc": 5,
   "stats": 306,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "barbaracle",
@@ -12727,8 +13415,9 @@ window.DLE_CHARACTERS = [
   "weight": 96.0,
   "arc": 5,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "skrelp",
@@ -12746,8 +13435,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.3,
   "arc": 5,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dragalge",
@@ -12765,8 +13455,9 @@ window.DLE_CHARACTERS = [
   "weight": 81.5,
   "arc": 5,
   "stats": 494,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "clauncher",
@@ -12783,8 +13474,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.3,
   "arc": 5,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "clawitzer",
@@ -12801,8 +13493,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.3,
   "arc": 5,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "helioptile",
@@ -12820,8 +13513,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.0,
   "arc": 5,
   "stats": 289,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "heliolisk",
@@ -12840,7 +13534,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 481,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "tyrunt",
@@ -12859,7 +13554,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 362,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "tyrantrum",
@@ -12877,8 +13573,9 @@ window.DLE_CHARACTERS = [
   "weight": 270.0,
   "arc": 5,
   "stats": 521,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "amaura",
@@ -12897,7 +13594,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 362,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "aurorus",
@@ -12915,8 +13613,9 @@ window.DLE_CHARACTERS = [
   "weight": 225.0,
   "arc": 5,
   "stats": 521,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sylveon",
@@ -12933,8 +13632,9 @@ window.DLE_CHARACTERS = [
   "weight": 23.5,
   "arc": 5,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hawlucha",
@@ -12952,8 +13652,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.5,
   "arc": 5,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dedenne",
@@ -12972,7 +13673,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 431,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "carbink",
@@ -12990,8 +13692,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.7,
   "arc": 5,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "goomy",
@@ -13008,8 +13711,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.8,
   "arc": 5,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sliggoo",
@@ -13026,8 +13730,9 @@ window.DLE_CHARACTERS = [
   "weight": 17.5,
   "arc": 5,
   "stats": 452,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": false
  },
  {
   "id": "goodra",
@@ -13044,8 +13749,9 @@ window.DLE_CHARACTERS = [
   "weight": 150.5,
   "arc": 5,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "klefki",
@@ -13063,8 +13769,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.0,
   "arc": 5,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "phantump",
@@ -13082,8 +13789,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.0,
   "arc": 5,
   "stats": 309,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "trevenant",
@@ -13101,8 +13809,9 @@ window.DLE_CHARACTERS = [
   "weight": 71.0,
   "arc": 5,
   "stats": 474,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pumpkaboo",
@@ -13120,8 +13829,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.0,
   "arc": 5,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gourgeist",
@@ -13139,8 +13849,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.5,
   "arc": 5,
   "stats": 494,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bergmite",
@@ -13157,8 +13868,9 @@ window.DLE_CHARACTERS = [
   "weight": 99.5,
   "arc": 5,
   "stats": 304,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "avalugg",
@@ -13175,8 +13887,9 @@ window.DLE_CHARACTERS = [
   "weight": 505.0,
   "arc": 5,
   "stats": 514,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "noibat",
@@ -13195,7 +13908,8 @@ window.DLE_CHARACTERS = [
   "arc": 5,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "noivern",
@@ -13213,8 +13927,9 @@ window.DLE_CHARACTERS = [
   "weight": 85.0,
   "arc": 5,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "xerneas",
@@ -13231,8 +13946,9 @@ window.DLE_CHARACTERS = [
   "weight": 215.0,
   "arc": 5,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "yveltal",
@@ -13250,8 +13966,9 @@ window.DLE_CHARACTERS = [
   "weight": 203.0,
   "arc": 5,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zygarde",
@@ -13269,8 +13986,9 @@ window.DLE_CHARACTERS = [
   "weight": 305.0,
   "arc": 5,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "diancie",
@@ -13288,8 +14006,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.8,
   "arc": 5,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hoopa",
@@ -13307,8 +14026,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.0,
   "arc": 5,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "volcanion",
@@ -13326,8 +14046,9 @@ window.DLE_CHARACTERS = [
   "weight": 195.0,
   "arc": 5,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rowlet",
@@ -13345,8 +14066,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.5,
   "arc": 6,
   "stats": 320,
-  "power": 3,
-  "starter": true
+  "power": 2,
+  "starter": true,
+  "final": false
  },
  {
   "id": "dartrix",
@@ -13364,8 +14086,9 @@ window.DLE_CHARACTERS = [
   "weight": 16.0,
   "arc": 6,
   "stats": 420,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "decidueye",
@@ -13383,8 +14106,9 @@ window.DLE_CHARACTERS = [
   "weight": 36.6,
   "arc": 6,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "litten",
@@ -13401,8 +14125,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.3,
   "arc": 6,
   "stats": 320,
-  "power": 3,
-  "starter": true
+  "power": 2,
+  "starter": true,
+  "final": false
  },
  {
   "id": "torracat",
@@ -13419,8 +14144,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.0,
   "arc": 6,
   "stats": 420,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "incineroar",
@@ -13438,8 +14164,9 @@ window.DLE_CHARACTERS = [
   "weight": 83.0,
   "arc": 6,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "popplio",
@@ -13456,8 +14183,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.5,
   "arc": 6,
   "stats": 320,
-  "power": 3,
-  "starter": true
+  "power": 2,
+  "starter": true,
+  "final": false
  },
  {
   "id": "brionne",
@@ -13474,8 +14202,9 @@ window.DLE_CHARACTERS = [
   "weight": 17.5,
   "arc": 6,
   "stats": 420,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "primarina",
@@ -13493,8 +14222,9 @@ window.DLE_CHARACTERS = [
   "weight": 44.0,
   "arc": 6,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "pikipek",
@@ -13512,8 +14242,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.2,
   "arc": 6,
   "stats": 265,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "trumbeak",
@@ -13532,7 +14263,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "toucannon",
@@ -13550,8 +14282,9 @@ window.DLE_CHARACTERS = [
   "weight": 26.0,
   "arc": 6,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "yungoos",
@@ -13569,7 +14302,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 253,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "gumshoos",
@@ -13586,8 +14320,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.2,
   "arc": 6,
   "stats": 418,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "grubbin",
@@ -13604,8 +14339,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.4,
   "arc": 6,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "charjabug",
@@ -13624,7 +14360,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 400,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "vikavolt",
@@ -13642,8 +14379,9 @@ window.DLE_CHARACTERS = [
   "weight": 45.0,
   "arc": 6,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "crabrawler",
@@ -13660,8 +14398,9 @@ window.DLE_CHARACTERS = [
   "weight": 7.0,
   "arc": 6,
   "stats": 338,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "crabominable",
@@ -13680,7 +14419,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 478,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "oricorio",
@@ -13698,8 +14438,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.4,
   "arc": 6,
   "stats": 476,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cutiefly",
@@ -13717,8 +14458,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.2,
   "arc": 6,
   "stats": 304,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "ribombee",
@@ -13736,8 +14478,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.5,
   "arc": 6,
   "stats": 464,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rockruff",
@@ -13754,8 +14497,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.2,
   "arc": 6,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "lycanroc",
@@ -13772,8 +14516,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.0,
   "arc": 6,
   "stats": 487,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wishiwashi",
@@ -13791,7 +14536,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 175,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "mareanie",
@@ -13809,8 +14555,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.0,
   "arc": 6,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "toxapex",
@@ -13828,8 +14575,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.5,
   "arc": 6,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mudbray",
@@ -13847,7 +14595,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 385,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "mudsdale",
@@ -13864,8 +14613,9 @@ window.DLE_CHARACTERS = [
   "weight": 920.0,
   "arc": 6,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dewpider",
@@ -13883,8 +14633,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 6,
   "stats": 269,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "araquanid",
@@ -13902,8 +14653,9 @@ window.DLE_CHARACTERS = [
   "weight": 82.0,
   "arc": 6,
   "stats": 454,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "fomantis",
@@ -13921,7 +14673,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "lurantis",
@@ -13939,7 +14692,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "morelull",
@@ -13957,8 +14711,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.5,
   "arc": 6,
   "stats": 285,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "shiinotic",
@@ -13977,7 +14732,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 405,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "salandit",
@@ -13995,8 +14751,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.8,
   "arc": 6,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "salazzle",
@@ -14015,7 +14772,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "stufful",
@@ -14033,8 +14791,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.8,
   "arc": 6,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "bewear",
@@ -14052,8 +14811,9 @@ window.DLE_CHARACTERS = [
   "weight": 135.0,
   "arc": 6,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bounsweet",
@@ -14071,7 +14831,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 210,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "steenee",
@@ -14088,8 +14849,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.2,
   "arc": 6,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "tsareena",
@@ -14106,8 +14868,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.4,
   "arc": 6,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "comfey",
@@ -14124,8 +14887,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 6,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "oranguru",
@@ -14143,8 +14907,9 @@ window.DLE_CHARACTERS = [
   "weight": 76.0,
   "arc": 6,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "passimian",
@@ -14161,8 +14926,9 @@ window.DLE_CHARACTERS = [
   "weight": 82.8,
   "arc": 6,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wimpod",
@@ -14181,7 +14947,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 230,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "golisopod",
@@ -14199,8 +14966,9 @@ window.DLE_CHARACTERS = [
   "weight": 108.0,
   "arc": 6,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sandygast",
@@ -14218,8 +14986,9 @@ window.DLE_CHARACTERS = [
   "weight": 70.0,
   "arc": 6,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "palossand",
@@ -14238,7 +15007,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "pyukumuku",
@@ -14256,7 +15026,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "type-null",
@@ -14274,7 +15045,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 534,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "silvally",
@@ -14291,8 +15063,9 @@ window.DLE_CHARACTERS = [
   "weight": 100.5,
   "arc": 6,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "minior",
@@ -14311,7 +15084,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "komala",
@@ -14329,7 +15103,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "turtonator",
@@ -14347,8 +15122,9 @@ window.DLE_CHARACTERS = [
   "weight": 212.0,
   "arc": 6,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "togedemaru",
@@ -14367,7 +15143,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 435,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "mimikyu",
@@ -14385,8 +15162,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.7,
   "arc": 6,
   "stats": 476,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bruxish",
@@ -14404,8 +15182,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.0,
   "arc": 6,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "drampa",
@@ -14423,8 +15202,9 @@ window.DLE_CHARACTERS = [
   "weight": 185.0,
   "arc": 6,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dhelmise",
@@ -14442,8 +15222,9 @@ window.DLE_CHARACTERS = [
   "weight": 210.0,
   "arc": 6,
   "stats": 517,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "jangmo-o",
@@ -14460,8 +15241,9 @@ window.DLE_CHARACTERS = [
   "weight": 29.7,
   "arc": 6,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "hakamo-o",
@@ -14479,8 +15261,9 @@ window.DLE_CHARACTERS = [
   "weight": 47.0,
   "arc": 6,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "kommo-o",
@@ -14498,8 +15281,9 @@ window.DLE_CHARACTERS = [
   "weight": 78.2,
   "arc": 6,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tapu-koko",
@@ -14517,8 +15301,9 @@ window.DLE_CHARACTERS = [
   "weight": 20.5,
   "arc": 6,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tapu-lele",
@@ -14536,8 +15321,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.6,
   "arc": 6,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tapu-bulu",
@@ -14555,8 +15341,9 @@ window.DLE_CHARACTERS = [
   "weight": 45.5,
   "arc": 6,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tapu-fini",
@@ -14574,8 +15361,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.2,
   "arc": 6,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cosmog",
@@ -14593,7 +15381,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 200,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "cosmoem",
@@ -14611,7 +15400,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 400,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "solgaleo",
@@ -14629,8 +15419,9 @@ window.DLE_CHARACTERS = [
   "weight": 230.0,
   "arc": 6,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "lunala",
@@ -14648,8 +15439,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 6,
   "stats": 680,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "nihilego",
@@ -14667,8 +15459,9 @@ window.DLE_CHARACTERS = [
   "weight": 55.5,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "buzzwole",
@@ -14686,8 +15479,9 @@ window.DLE_CHARACTERS = [
   "weight": 333.6,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pheromosa",
@@ -14705,8 +15499,9 @@ window.DLE_CHARACTERS = [
   "weight": 25.0,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "xurkitree",
@@ -14723,8 +15518,9 @@ window.DLE_CHARACTERS = [
   "weight": 100.0,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "celesteela",
@@ -14742,8 +15538,9 @@ window.DLE_CHARACTERS = [
   "weight": 999.9,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kartana",
@@ -14761,8 +15558,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.1,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "guzzlord",
@@ -14780,8 +15578,9 @@ window.DLE_CHARACTERS = [
   "weight": 888.0,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "necrozma",
@@ -14798,8 +15597,9 @@ window.DLE_CHARACTERS = [
   "weight": 230.0,
   "arc": 6,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "magearna",
@@ -14817,8 +15617,9 @@ window.DLE_CHARACTERS = [
   "weight": 80.5,
   "arc": 6,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "marshadow",
@@ -14836,8 +15637,9 @@ window.DLE_CHARACTERS = [
   "weight": 22.2,
   "arc": 6,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "poipole",
@@ -14854,8 +15656,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.8,
   "arc": 6,
   "stats": 420,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "naganadel",
@@ -14873,8 +15676,9 @@ window.DLE_CHARACTERS = [
   "weight": 150.0,
   "arc": 6,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "stakataka",
@@ -14892,8 +15696,9 @@ window.DLE_CHARACTERS = [
   "weight": 820.0,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "blacephalon",
@@ -14911,8 +15716,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.0,
   "arc": 6,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zeraora",
@@ -14929,8 +15735,9 @@ window.DLE_CHARACTERS = [
   "weight": 44.5,
   "arc": 6,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "meltan",
@@ -14948,7 +15755,8 @@ window.DLE_CHARACTERS = [
   "arc": 6,
   "stats": 300,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "melmetal",
@@ -14965,8 +15773,9 @@ window.DLE_CHARACTERS = [
   "weight": 800.0,
   "arc": 6,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "grookey",
@@ -14983,8 +15792,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.0,
   "arc": 7,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "thwackey",
@@ -15001,8 +15811,9 @@ window.DLE_CHARACTERS = [
   "weight": 14.0,
   "arc": 7,
   "stats": 420,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "rillaboom",
@@ -15019,8 +15830,9 @@ window.DLE_CHARACTERS = [
   "weight": 90.0,
   "arc": 7,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "scorbunny",
@@ -15037,8 +15849,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.5,
   "arc": 7,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "raboot",
@@ -15055,8 +15868,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.0,
   "arc": 7,
   "stats": 420,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "cinderace",
@@ -15073,8 +15887,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.0,
   "arc": 7,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "sobble",
@@ -15091,8 +15906,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 7,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "drizzile",
@@ -15109,8 +15925,9 @@ window.DLE_CHARACTERS = [
   "weight": 11.5,
   "arc": 7,
   "stats": 420,
-  "power": 4,
-  "starter": true
+  "power": 5,
+  "starter": true,
+  "final": false
  },
  {
   "id": "inteleon",
@@ -15127,8 +15944,9 @@ window.DLE_CHARACTERS = [
   "weight": 45.2,
   "arc": 7,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "skwovet",
@@ -15145,8 +15963,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.5,
   "arc": 7,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "greedent",
@@ -15163,8 +15982,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.0,
   "arc": 7,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rookidee",
@@ -15182,7 +16002,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "corvisquire",
@@ -15200,7 +16021,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 365,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "corviknight",
@@ -15218,8 +16040,9 @@ window.DLE_CHARACTERS = [
   "weight": 75.0,
   "arc": 7,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "blipbug",
@@ -15237,7 +16060,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 180,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "dottler",
@@ -15255,8 +16079,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.5,
   "arc": 7,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "orbeetle",
@@ -15274,8 +16099,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.8,
   "arc": 7,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "nickit",
@@ -15293,7 +16119,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "thievul",
@@ -15310,8 +16137,9 @@ window.DLE_CHARACTERS = [
   "weight": 19.9,
   "arc": 7,
   "stats": 455,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gossifleur",
@@ -15329,7 +16157,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 250,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "eldegoss",
@@ -15346,8 +16175,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.5,
   "arc": 7,
   "stats": 460,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wooloo",
@@ -15364,8 +16194,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.0,
   "arc": 7,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dubwool",
@@ -15382,8 +16213,9 @@ window.DLE_CHARACTERS = [
   "weight": 43.0,
   "arc": 7,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chewtle",
@@ -15400,8 +16232,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.5,
   "arc": 7,
   "stats": 284,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "drednaw",
@@ -15419,8 +16252,9 @@ window.DLE_CHARACTERS = [
   "weight": 115.5,
   "arc": 7,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "yamper",
@@ -15437,8 +16271,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.5,
   "arc": 7,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "boltund",
@@ -15455,8 +16290,9 @@ window.DLE_CHARACTERS = [
   "weight": 34.0,
   "arc": 7,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rolycoly",
@@ -15474,7 +16310,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 240,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "carkol",
@@ -15493,7 +16330,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "coalossal",
@@ -15511,8 +16349,9 @@ window.DLE_CHARACTERS = [
   "weight": 310.5,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "applin",
@@ -15531,7 +16370,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 260,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "flapple",
@@ -15549,8 +16389,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 7,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "appletun",
@@ -15568,8 +16409,9 @@ window.DLE_CHARACTERS = [
   "weight": 13.0,
   "arc": 7,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "silicobra",
@@ -15587,7 +16429,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 315,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "sandaconda",
@@ -15604,8 +16447,9 @@ window.DLE_CHARACTERS = [
   "weight": 65.5,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cramorant",
@@ -15623,8 +16467,9 @@ window.DLE_CHARACTERS = [
   "weight": 18.0,
   "arc": 7,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "arrokuda",
@@ -15641,8 +16486,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 7,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "barraskewda",
@@ -15659,8 +16505,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 7,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "toxel",
@@ -15679,7 +16526,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 242,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "toxtricity",
@@ -15697,8 +16545,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.0,
   "arc": 7,
   "stats": 502,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sizzlipede",
@@ -15716,8 +16565,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 7,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "centiskorch",
@@ -15735,8 +16585,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 7,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "clobbopus",
@@ -15753,8 +16604,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 7,
   "stats": 310,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "grapploct",
@@ -15772,7 +16624,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "sinistea",
@@ -15789,8 +16642,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.2,
   "arc": 7,
   "stats": 308,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "polteageist",
@@ -15807,8 +16661,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.4,
   "arc": 7,
   "stats": 508,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hatenna",
@@ -15825,8 +16680,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.4,
   "arc": 7,
   "stats": 265,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "hattrem",
@@ -15843,8 +16699,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.8,
   "arc": 7,
   "stats": 370,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "hatterene",
@@ -15862,8 +16719,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.1,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "impidimp",
@@ -15881,8 +16739,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.5,
   "arc": 7,
   "stats": 265,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "morgrem",
@@ -15900,8 +16759,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.5,
   "arc": 7,
   "stats": 370,
-  "power": 4,
-  "starter": false
+  "power": 3,
+  "starter": false,
+  "final": false
  },
  {
   "id": "grimmsnarl",
@@ -15919,8 +16779,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.0,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "obstagoon",
@@ -15938,8 +16799,9 @@ window.DLE_CHARACTERS = [
   "weight": 46.0,
   "arc": 7,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "perrserker",
@@ -15957,7 +16819,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 440,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "cursola",
@@ -15974,8 +16837,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.4,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sirfetchd",
@@ -15992,8 +16856,9 @@ window.DLE_CHARACTERS = [
   "weight": 117.0,
   "arc": 7,
   "stats": 507,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "mr-rime",
@@ -16011,8 +16876,9 @@ window.DLE_CHARACTERS = [
   "weight": 58.2,
   "arc": 7,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "runerigus",
@@ -16030,8 +16896,9 @@ window.DLE_CHARACTERS = [
   "weight": 66.6,
   "arc": 7,
   "stats": 483,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "milcery",
@@ -16048,8 +16915,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 7,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "alcremie",
@@ -16066,8 +16934,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.5,
   "arc": 7,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "falinks",
@@ -16084,8 +16953,9 @@ window.DLE_CHARACTERS = [
   "weight": 62.0,
   "arc": 7,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pincurchin",
@@ -16103,7 +16973,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 435,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "snom",
@@ -16122,7 +16993,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 185,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "frosmoth",
@@ -16140,8 +17012,9 @@ window.DLE_CHARACTERS = [
   "weight": 42.0,
   "arc": 7,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "stonjourner",
@@ -16158,8 +17031,9 @@ window.DLE_CHARACTERS = [
   "weight": 520.0,
   "arc": 7,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "eiscue",
@@ -16176,8 +17050,9 @@ window.DLE_CHARACTERS = [
   "weight": 89.0,
   "arc": 7,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "indeedee",
@@ -16195,8 +17070,9 @@ window.DLE_CHARACTERS = [
   "weight": 28.0,
   "arc": 7,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "morpeko",
@@ -16215,7 +17091,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 436,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "cufant",
@@ -16232,8 +17109,9 @@ window.DLE_CHARACTERS = [
   "weight": 100.0,
   "arc": 7,
   "stats": 330,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "copperajah",
@@ -16250,8 +17128,9 @@ window.DLE_CHARACTERS = [
   "weight": 650.0,
   "arc": 7,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dracozolt",
@@ -16269,8 +17148,9 @@ window.DLE_CHARACTERS = [
   "weight": 190.0,
   "arc": 7,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "arctozolt",
@@ -16288,8 +17168,9 @@ window.DLE_CHARACTERS = [
   "weight": 150.0,
   "arc": 7,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dracovish",
@@ -16307,8 +17188,9 @@ window.DLE_CHARACTERS = [
   "weight": 215.0,
   "arc": 7,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "arctovish",
@@ -16326,8 +17208,9 @@ window.DLE_CHARACTERS = [
   "weight": 175.0,
   "arc": 7,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "duraludon",
@@ -16345,8 +17228,9 @@ window.DLE_CHARACTERS = [
   "weight": 40.0,
   "arc": 7,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": false
  },
  {
   "id": "dreepy",
@@ -16364,8 +17248,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.0,
   "arc": 7,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "drakloak",
@@ -16384,7 +17269,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 410,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "dragapult",
@@ -16402,8 +17288,9 @@ window.DLE_CHARACTERS = [
   "weight": 50.0,
   "arc": 7,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zacian",
@@ -16420,8 +17307,9 @@ window.DLE_CHARACTERS = [
   "weight": 110.0,
   "arc": 7,
   "stats": 660,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zamazenta",
@@ -16438,8 +17326,9 @@ window.DLE_CHARACTERS = [
   "weight": 210.0,
   "arc": 7,
   "stats": 660,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "eternatus",
@@ -16457,8 +17346,9 @@ window.DLE_CHARACTERS = [
   "weight": 950.0,
   "arc": 7,
   "stats": 690,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kubfu",
@@ -16476,7 +17366,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 385,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "urshifu",
@@ -16494,8 +17385,9 @@ window.DLE_CHARACTERS = [
   "weight": 105.0,
   "arc": 7,
   "stats": 550,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "zarude",
@@ -16513,8 +17405,9 @@ window.DLE_CHARACTERS = [
   "weight": 70.0,
   "arc": 7,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "regieleki",
@@ -16531,8 +17424,9 @@ window.DLE_CHARACTERS = [
   "weight": 145.0,
   "arc": 7,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "regidrago",
@@ -16549,8 +17443,9 @@ window.DLE_CHARACTERS = [
   "weight": 200.0,
   "arc": 7,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "glastrier",
@@ -16567,8 +17462,9 @@ window.DLE_CHARACTERS = [
   "weight": 800.0,
   "arc": 7,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "spectrier",
@@ -16585,8 +17481,9 @@ window.DLE_CHARACTERS = [
   "weight": 44.5,
   "arc": 7,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "calyrex",
@@ -16605,7 +17502,8 @@ window.DLE_CHARACTERS = [
   "arc": 7,
   "stats": 500,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "wyrdeer",
@@ -16623,8 +17521,9 @@ window.DLE_CHARACTERS = [
   "weight": 95.1,
   "arc": 7,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kleavor",
@@ -16642,8 +17541,9 @@ window.DLE_CHARACTERS = [
   "weight": 89.0,
   "arc": 7,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ursaluna",
@@ -16661,8 +17561,9 @@ window.DLE_CHARACTERS = [
   "weight": 290.0,
   "arc": 7,
   "stats": 550,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "basculegion",
@@ -16680,8 +17581,9 @@ window.DLE_CHARACTERS = [
   "weight": 110.0,
   "arc": 7,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sneasler",
@@ -16699,8 +17601,9 @@ window.DLE_CHARACTERS = [
   "weight": 43.0,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "overqwil",
@@ -16718,8 +17621,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.5,
   "arc": 7,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "enamorus",
@@ -16737,8 +17641,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.0,
   "arc": 7,
   "stats": 580,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sprigatito",
@@ -16755,8 +17660,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.1,
   "arc": 8,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "floragato",
@@ -16774,7 +17680,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 410,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "meowscarada",
@@ -16792,8 +17699,9 @@ window.DLE_CHARACTERS = [
   "weight": 31.2,
   "arc": 8,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "fuecoco",
@@ -16810,8 +17718,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.8,
   "arc": 8,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "crocalor",
@@ -16829,7 +17738,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 411,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "skeledirge",
@@ -16847,8 +17757,9 @@ window.DLE_CHARACTERS = [
   "weight": 326.5,
   "arc": 8,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "quaxly",
@@ -16865,8 +17776,9 @@ window.DLE_CHARACTERS = [
   "weight": 6.1,
   "arc": 8,
   "stats": 310,
-  "power": 2,
-  "starter": true
+  "power": 1,
+  "starter": true,
+  "final": false
  },
  {
   "id": "quaxwell",
@@ -16884,7 +17796,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 410,
   "power": 4,
-  "starter": true
+  "starter": true,
+  "final": false
  },
  {
   "id": "quaquaval",
@@ -16902,8 +17815,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.9,
   "arc": 8,
   "stats": 530,
-  "power": 6,
-  "starter": true
+  "power": 8,
+  "starter": true,
+  "final": true
  },
  {
   "id": "lechonk",
@@ -16921,7 +17835,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 254,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "oinkologne",
@@ -16938,8 +17853,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 8,
   "stats": 489,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tarountula",
@@ -16957,7 +17873,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 210,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "spidops",
@@ -16975,7 +17892,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 404,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "nymble",
@@ -16993,7 +17911,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 210,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "lokix",
@@ -17011,8 +17930,9 @@ window.DLE_CHARACTERS = [
   "weight": 17.5,
   "arc": 8,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "pawmi",
@@ -17030,7 +17950,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 240,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "pawmo",
@@ -17049,7 +17970,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "pawmot",
@@ -17067,8 +17989,9 @@ window.DLE_CHARACTERS = [
   "weight": 41.0,
   "arc": 8,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tandemaus",
@@ -17085,8 +18008,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.8,
   "arc": 8,
   "stats": 305,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "maushold",
@@ -17103,8 +18027,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.8,
   "arc": 8,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "fidough",
@@ -17122,7 +18047,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 312,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "dachsbun",
@@ -17140,7 +18066,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 477,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "smoliv",
@@ -17159,7 +18086,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 260,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "dolliv",
@@ -17178,7 +18106,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 354,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "arboliva",
@@ -17196,8 +18125,9 @@ window.DLE_CHARACTERS = [
   "weight": 48.2,
   "arc": 8,
   "stats": 510,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "squawkabilly",
@@ -17215,8 +18145,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.4,
   "arc": 8,
   "stats": 417,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": true
  },
  {
   "id": "nacli",
@@ -17233,8 +18164,9 @@ window.DLE_CHARACTERS = [
   "weight": 16.0,
   "arc": 8,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "naclstack",
@@ -17252,7 +18184,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 355,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "garganacl",
@@ -17269,8 +18202,9 @@ window.DLE_CHARACTERS = [
   "weight": 240.0,
   "arc": 8,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "charcadet",
@@ -17288,7 +18222,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 255,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "armarouge",
@@ -17306,8 +18241,9 @@ window.DLE_CHARACTERS = [
   "weight": 85.0,
   "arc": 8,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ceruledge",
@@ -17325,8 +18261,9 @@ window.DLE_CHARACTERS = [
   "weight": 62.0,
   "arc": 8,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tadbulb",
@@ -17343,8 +18280,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.4,
   "arc": 8,
   "stats": 272,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "bellibolt",
@@ -17361,8 +18299,9 @@ window.DLE_CHARACTERS = [
   "weight": 113.0,
   "arc": 8,
   "stats": 495,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wattrel",
@@ -17380,8 +18319,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.6,
   "arc": 8,
   "stats": 280,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "kilowattrel",
@@ -17399,8 +18339,9 @@ window.DLE_CHARACTERS = [
   "weight": 38.6,
   "arc": 8,
   "stats": 490,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "maschiff",
@@ -17417,8 +18358,9 @@ window.DLE_CHARACTERS = [
   "weight": 16.0,
   "arc": 8,
   "stats": 340,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "mabosstiff",
@@ -17435,8 +18377,9 @@ window.DLE_CHARACTERS = [
   "weight": 61.0,
   "arc": 8,
   "stats": 505,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "shroodle",
@@ -17454,8 +18397,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.7,
   "arc": 8,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "grafaiai",
@@ -17473,8 +18417,9 @@ window.DLE_CHARACTERS = [
   "weight": 27.2,
   "arc": 8,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "bramblin",
@@ -17492,8 +18437,9 @@ window.DLE_CHARACTERS = [
   "weight": 0.6,
   "arc": 8,
   "stats": 275,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "brambleghast",
@@ -17512,7 +18458,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "toedscool",
@@ -17530,8 +18477,9 @@ window.DLE_CHARACTERS = [
   "weight": 33.0,
   "arc": 8,
   "stats": 335,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "toedscruel",
@@ -17549,8 +18497,9 @@ window.DLE_CHARACTERS = [
   "weight": 58.0,
   "arc": 8,
   "stats": 515,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "klawf",
@@ -17567,8 +18516,9 @@ window.DLE_CHARACTERS = [
   "weight": 79.0,
   "arc": 8,
   "stats": 450,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "capsakid",
@@ -17585,8 +18535,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.0,
   "arc": 8,
   "stats": 304,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "scovillain",
@@ -17604,8 +18555,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 8,
   "stats": 486,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "rellor",
@@ -17622,8 +18574,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.0,
   "arc": 8,
   "stats": 270,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "rabsca",
@@ -17641,8 +18594,9 @@ window.DLE_CHARACTERS = [
   "weight": 3.5,
   "arc": 8,
   "stats": 470,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "flittle",
@@ -17660,7 +18614,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 255,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "espathra",
@@ -17678,7 +18633,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 481,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "tinkatink",
@@ -17696,8 +18652,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.9,
   "arc": 8,
   "stats": 297,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "tinkatuff",
@@ -17716,7 +18673,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 380,
   "power": 4,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "tinkaton",
@@ -17734,8 +18692,9 @@ window.DLE_CHARACTERS = [
   "weight": 112.8,
   "arc": 8,
   "stats": 506,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wiglett",
@@ -17753,7 +18712,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 245,
   "power": 1,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "wugtrio",
@@ -17771,7 +18731,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 425,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "bombirdier",
@@ -17789,8 +18750,9 @@ window.DLE_CHARACTERS = [
   "weight": 42.9,
   "arc": 8,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "finizen",
@@ -17808,7 +18770,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 315,
   "power": 2,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "palafin",
@@ -17825,8 +18788,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.2,
   "arc": 8,
   "stats": 457,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "varoom",
@@ -17844,8 +18808,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.0,
   "arc": 8,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "revavroom",
@@ -17863,8 +18828,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 8,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cyclizar",
@@ -17882,8 +18848,9 @@ window.DLE_CHARACTERS = [
   "weight": 63.0,
   "arc": 8,
   "stats": 501,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "orthworm",
@@ -17901,7 +18868,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 480,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "glimmet",
@@ -17920,7 +18888,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 350,
   "power": 3,
-  "starter": false
+  "starter": false,
+  "final": false
  },
  {
   "id": "glimmora",
@@ -17938,8 +18907,9 @@ window.DLE_CHARACTERS = [
   "weight": 45.0,
   "arc": 8,
   "stats": 525,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "greavard",
@@ -17956,8 +18926,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.0,
   "arc": 8,
   "stats": 290,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "houndstone",
@@ -17974,8 +18945,9 @@ window.DLE_CHARACTERS = [
   "weight": 15.0,
   "arc": 8,
   "stats": 488,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "flamigo",
@@ -17993,8 +18965,9 @@ window.DLE_CHARACTERS = [
   "weight": 37.0,
   "arc": 8,
   "stats": 500,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "cetoddle",
@@ -18011,8 +18984,9 @@ window.DLE_CHARACTERS = [
   "weight": 45.0,
   "arc": 8,
   "stats": 334,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "cetitan",
@@ -18029,8 +19003,9 @@ window.DLE_CHARACTERS = [
   "weight": 700.0,
   "arc": 8,
   "stats": 521,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "veluza",
@@ -18049,7 +19024,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 478,
   "power": 6,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "dondozo",
@@ -18066,8 +19042,9 @@ window.DLE_CHARACTERS = [
   "weight": 220.0,
   "arc": 8,
   "stats": 530,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "tatsugiri",
@@ -18085,8 +19062,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.0,
   "arc": 8,
   "stats": 475,
-  "power": 5,
-  "starter": false
+  "power": 6,
+  "starter": false,
+  "final": true
  },
  {
   "id": "annihilape",
@@ -18104,8 +19082,9 @@ window.DLE_CHARACTERS = [
   "weight": 56.0,
   "arc": 8,
   "stats": 535,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "clodsire",
@@ -18124,7 +19103,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 430,
   "power": 5,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "farigiraf",
@@ -18142,8 +19122,9 @@ window.DLE_CHARACTERS = [
   "weight": 160.0,
   "arc": 8,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dudunsparce",
@@ -18160,8 +19141,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.2,
   "arc": 8,
   "stats": 520,
-  "power": 6,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "kingambit",
@@ -18179,8 +19161,9 @@ window.DLE_CHARACTERS = [
   "weight": 120.0,
   "arc": 8,
   "stats": 550,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "great-tusk",
@@ -18198,8 +19181,9 @@ window.DLE_CHARACTERS = [
   "weight": 320.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "scream-tail",
@@ -18217,8 +19201,9 @@ window.DLE_CHARACTERS = [
   "weight": 8.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "brute-bonnet",
@@ -18236,8 +19221,9 @@ window.DLE_CHARACTERS = [
   "weight": 21.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "flutter-mane",
@@ -18255,8 +19241,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "slither-wing",
@@ -18274,8 +19261,9 @@ window.DLE_CHARACTERS = [
   "weight": 92.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "sandy-shocks",
@@ -18293,8 +19281,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-treads",
@@ -18312,8 +19301,9 @@ window.DLE_CHARACTERS = [
   "weight": 240.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-bundle",
@@ -18331,8 +19321,9 @@ window.DLE_CHARACTERS = [
   "weight": 11.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-hands",
@@ -18350,8 +19341,9 @@ window.DLE_CHARACTERS = [
   "weight": 380.7,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-jugulis",
@@ -18369,8 +19361,9 @@ window.DLE_CHARACTERS = [
   "weight": 111.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-moth",
@@ -18388,8 +19381,9 @@ window.DLE_CHARACTERS = [
   "weight": 36.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-thorns",
@@ -18407,8 +19401,9 @@ window.DLE_CHARACTERS = [
   "weight": 303.0,
   "arc": 8,
   "stats": 570,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "frigibax",
@@ -18426,8 +19421,9 @@ window.DLE_CHARACTERS = [
   "weight": 17.0,
   "arc": 8,
   "stats": 320,
-  "power": 3,
-  "starter": false
+  "power": 2,
+  "starter": false,
+  "final": false
  },
  {
   "id": "arctibax",
@@ -18445,8 +19441,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 8,
   "stats": 423,
-  "power": 4,
-  "starter": false
+  "power": 5,
+  "starter": false,
+  "final": false
  },
  {
   "id": "baxcalibur",
@@ -18464,8 +19461,9 @@ window.DLE_CHARACTERS = [
   "weight": 210.0,
   "arc": 8,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gimmighoul",
@@ -18482,8 +19480,9 @@ window.DLE_CHARACTERS = [
   "weight": 5.0,
   "arc": 8,
   "stats": 300,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "gholdengo",
@@ -18501,8 +19500,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.0,
   "arc": 8,
   "stats": 550,
-  "power": 7,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "wo-chien",
@@ -18520,8 +19520,9 @@ window.DLE_CHARACTERS = [
   "weight": 74.2,
   "arc": 8,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chien-pao",
@@ -18539,8 +19540,9 @@ window.DLE_CHARACTERS = [
   "weight": 152.2,
   "arc": 8,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ting-lu",
@@ -18558,8 +19560,9 @@ window.DLE_CHARACTERS = [
   "weight": 699.7,
   "arc": 8,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "chi-yu",
@@ -18577,8 +19580,9 @@ window.DLE_CHARACTERS = [
   "weight": 4.9,
   "arc": 8,
   "stats": 570,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "roaring-moon",
@@ -18596,8 +19600,9 @@ window.DLE_CHARACTERS = [
   "weight": 380.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-valiant",
@@ -18615,8 +19620,9 @@ window.DLE_CHARACTERS = [
   "weight": 35.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "koraidon",
@@ -18634,8 +19640,9 @@ window.DLE_CHARACTERS = [
   "weight": 303.0,
   "arc": 8,
   "stats": 670,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "miraidon",
@@ -18653,8 +19660,9 @@ window.DLE_CHARACTERS = [
   "weight": 240.0,
   "arc": 8,
   "stats": 670,
-  "power": 9,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "walking-wake",
@@ -18672,8 +19680,9 @@ window.DLE_CHARACTERS = [
   "weight": 280.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-leaves",
@@ -18691,8 +19700,9 @@ window.DLE_CHARACTERS = [
   "weight": 125.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "dipplin",
@@ -18710,8 +19720,9 @@ window.DLE_CHARACTERS = [
   "weight": 9.7,
   "arc": 8,
   "stats": 485,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": false
  },
  {
   "id": "poltchageist",
@@ -18729,8 +19740,9 @@ window.DLE_CHARACTERS = [
   "weight": 1.1,
   "arc": 8,
   "stats": 308,
-  "power": 2,
-  "starter": false
+  "power": 1,
+  "starter": false,
+  "final": false
  },
  {
   "id": "sinistcha",
@@ -18748,8 +19760,9 @@ window.DLE_CHARACTERS = [
   "weight": 2.2,
   "arc": 8,
   "stats": 508,
-  "power": 6,
-  "starter": false
+  "power": 7,
+  "starter": false,
+  "final": true
  },
  {
   "id": "okidogi",
@@ -18767,8 +19780,9 @@ window.DLE_CHARACTERS = [
   "weight": 92.2,
   "arc": 8,
   "stats": 555,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "munkidori",
@@ -18786,8 +19800,9 @@ window.DLE_CHARACTERS = [
   "weight": 12.2,
   "arc": 8,
   "stats": 555,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "fezandipiti",
@@ -18805,8 +19820,9 @@ window.DLE_CHARACTERS = [
   "weight": 30.1,
   "arc": 8,
   "stats": 555,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "ogerpon",
@@ -18823,8 +19839,9 @@ window.DLE_CHARACTERS = [
   "weight": 39.8,
   "arc": 8,
   "stats": 550,
-  "power": 8,
-  "starter": false
+  "power": 9,
+  "starter": false,
+  "final": true
  },
  {
   "id": "archaludon",
@@ -18842,8 +19859,9 @@ window.DLE_CHARACTERS = [
   "weight": 60.0,
   "arc": 8,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "hydrapple",
@@ -18861,8 +19879,9 @@ window.DLE_CHARACTERS = [
   "weight": 93.0,
   "arc": 8,
   "stats": 540,
-  "power": 7,
-  "starter": false
+  "power": 8,
+  "starter": false,
+  "final": true
  },
  {
   "id": "gouging-fire",
@@ -18880,8 +19899,9 @@ window.DLE_CHARACTERS = [
   "weight": 590.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "raging-bolt",
@@ -18899,8 +19919,9 @@ window.DLE_CHARACTERS = [
   "weight": 480.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-boulder",
@@ -18918,8 +19939,9 @@ window.DLE_CHARACTERS = [
   "weight": 162.5,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "iron-crown",
@@ -18937,8 +19959,9 @@ window.DLE_CHARACTERS = [
   "weight": 156.0,
   "arc": 8,
   "stats": 590,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  },
  {
   "id": "terapagos",
@@ -18956,7 +19979,8 @@ window.DLE_CHARACTERS = [
   "arc": 8,
   "stats": 450,
   "power": 8,
-  "starter": false
+  "starter": false,
+  "final": true
  },
  {
   "id": "pecharunt",
@@ -18974,7 +19998,8 @@ window.DLE_CHARACTERS = [
   "weight": 0.3,
   "arc": 8,
   "stats": 600,
-  "power": 8,
-  "starter": false
+  "power": 10,
+  "starter": false,
+  "final": true
  }
 ];

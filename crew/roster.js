@@ -332,9 +332,13 @@
     },
   };
   // ── The six anime added in October 2026 ──
-  // Pokémon: a team of starters, legends and types. Every Pokémon's power comes with the data (pokemon/scripts/build.py:
+  // Pokémon: a team of starters, legends and types, drawn among the fully evolved Pokémon and the legends (plus Pikachu
+  // and Eevee), so a team isn't full of first stages. Every Pokémon's power comes with the data (pokemon/scripts/build.py:
   // its base stats), the few below are set by hand.
+  // Healing and strategy are side roles for a Pokémon: one that isn't listed still brings 60 % of its power.
+  const pokeRole = (table) => (c, power) => table[c.id] ?? Math.max(1, Math.round(power * 0.6));
   window.CREW_GAMES.pokemon = {
+    pool: (c) => c.final || ["Legendary", "Mythical"].includes(c.category) || ["pikachu", "eevee"].includes(c.id),
     slots: [
       { label: { en: "Starter", fr: "Starter" }, icon: "star", count: 1, fits: (c) => c.starter === true },
       { label: { en: "Legendary / Mythical", fr: "Légendaire / Fabuleux" }, icon: "crown", count: 1, fits: (c) => ["Legendary", "Mythical"].includes(c.category) },
@@ -344,11 +348,11 @@
       { label: { en: "Dragon / Psychic / Ghost", fr: "Dragon / Psy / Spectre" }, icon: "eye", count: 1, fits: (c) => has(c.types, "Dragon", "Psychic", "Ghost") },
       // The Pokémon Centre's nurses and the great healers of the games.
       { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
-        score: role(parse(`blissey:10 chansey:9 audino:8 comfey:7 alomomola:7 sylveon:7 togekiss:7 hatterene:7 florges:6 clefable:6
+        score: pokeRole(parse(`blissey:10 chansey:9 audino:8 comfey:7 alomomola:7 sylveon:7 togekiss:7 hatterene:7 florges:6 clefable:6
           indeedee:6 happiny:5 wigglytuff:5 miltank:5 lumineon:4 bellossom:4`)) },
       // The cleverest: Alakazam's IQ of 5000, Metagross's four brains, Slowking's crown.
       { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
-        score: role(parse(`alakazam:10 mewtwo:10 metagross:9 slowking:9 necrozma:8 hoopa:8 deoxys:8 xatu:7 espeon:7 gardevoir:7 lucario:7
+        score: pokeRole(parse(`alakazam:10 mewtwo:10 metagross:9 slowking:9 necrozma:8 hoopa:8 deoxys:8 xatu:7 espeon:7 gardevoir:7 lucario:7
           beheeyem:6 kadabra:6 bronzong:6 porygon-z:6 rotom:5 abra:4`)) },
       { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
     ],

@@ -67,7 +67,7 @@ export const displayName = (config, baseName) => config.names?.[S.lang]?.[baseNa
 export function makePool(g, data, arc) {
   const crew = CREW[g.id];
   return data.chars
-    .filter((c) => c.arc <= arc && c.image)
+    .filter((c) => c.arc <= arc && c.image && (!crew.pool || crew.pool(c)))
     .map((c) => {
       const v = { id: c.id, image: `${ROOT}${g.path}${c.image}`, baseName: c.name };
       for (const [k, val] of Object.entries(c)) if (k !== "image") v[k] = resolve(val, arc);

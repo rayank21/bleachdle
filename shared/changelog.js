@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-10T00:00",
+      title: { en: "Stronger Pokémon teams", fr: "Des équipes Pokémon plus fortes" },
+      items: [
+        { type: "balance", game: "pokemon", en: "Crew Roll Pokémon: only fully evolved Pokémon and the legends are drawn now (plus Pikachu and Eevee), their power follows their stats more generously (a 500-stat Pokémon is a 7, a 600 one a 10), and any Pokémon is worth 60 % of its power as healer or strategist instead of a third. A team now averages about 7 instead of 3 or 4.", fr: "Roll ton équipage Pokémon : on ne tire plus que les Pokémon à leur dernière évolution et les légendaires (plus Pikachu et Évoli), leur puissance suit plus généreusement leurs stats (un Pokémon à 500 de stats vaut 7, à 600 il vaut 10), et n'importe quel Pokémon vaut 60 % de sa puissance en soigneur ou stratège au lieu d'un tiers. Une équipe vaut maintenant environ 7 au lieu de 3 ou 4." },
+      ],
+    },
+    {
       at: "2026-10-09T23:30",
       title: { en: "Vinlanddle: Vinland Saga joins the site", fr: "Vinlanddle : Vinland Saga arrive sur le site" },
       items: [

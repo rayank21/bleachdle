@@ -87,21 +87,24 @@ for s in sorted(species, key=lambda s: int(s["id"])):
     if (sid, EN) in dex and (sid, FR) in dex:
         descs[cid] = [clean(dex[(sid, EN)][1], en), clean(dex[(sid, FR)][1], fr), [g_en, g_fr], None]
 
-# Crew Roll: power 1–10 from the base stat total (legendary and mythical Pokémon at least 8, babies at most 2), and
-# the starters' evolution lines.
+# Crew Roll: power 1–10 from the base stat total (about 300 → 1, 500 → 7, 600 → 10; legendary and mythical Pokémon
+# at least 8, babies at most 2), the starters' evolution lines, and "final" for the Pokémon that don't evolve any
+# further (only those and the legends are drawn in Crew Roll, so a team isn't full of first stages).
 total = {}
 for st in table("pokemon_stats"):
     total[int(st["pokemon_id"])] = total.get(int(st["pokemon_id"]), 0) + int(st["base_stat"])
 STARTERS = {1, 4, 7, 152, 155, 158, 252, 255, 258, 387, 390, 393, 495, 498, 501, 650, 653, 656, 722, 725, 728, 810, 813, 816, 906, 909, 912}
 starter_chains = {by_id[i]["evolution_chain_id"] for i in STARTERS}
+evolves_from = {int(s["evolves_from_species_id"]) for s in species if s["evolves_from_species_id"]}
 for c in chars:
     s = by_id[c["dex"]]
     c["stats"] = total[c["dex"]]
-    p = max(1, min(10, round((c["stats"] - 180) / 54)))
+    p = max(1, min(10, round((c["stats"] - 260) / 34)))
     if c["category"] in ("Legendary", "Mythical"): p = max(p, 8)
     if c["category"] == "Baby": p = min(p, 2)
     c["power"] = p
     c["starter"] = s["evolution_chain_id"] in starter_chains
+    c["final"] = c["dex"] not in evolves_from
 
 values_fr = {**{type_en[k]: type_fr[k] for k in type_en if k in type_fr}, **{colour_en[k]: colour_fr[k] for k in colour_en}}
 os.makedirs(os.path.join(GAME, "data"), exist_ok=True)
