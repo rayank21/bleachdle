@@ -7,6 +7,15 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T20:00",
+      title: { en: "The real Sunny, a Poké Ball, living showcases", fr: "Le vrai Sunny, une Poké Ball, des vitrines animées" },
+      items: [
+        { type: "improved", game: "onepiece", en: "Crew Roll One Piece: the crew now stands on the real Thousand Sunny from the anime, each one a medallion on their spot: the captain on the lion's head, the first mate in the crow's nest, the navigator by her cabin, the cook at the galley, the doctor, the archaeologist and the shipwright on the hull.", fr: "Roll ton équipage One Piece : l'équipage est maintenant sur le vrai Thousand Sunny de l'anime, chacun en médaillon à sa place : le capitaine sur la tête du lion, le second dans la vigie, la navigatrice près de sa cabine, le cuisinier à la cuisine, le médecin, l'archéologue et le charpentier sur la coque." },
+        { type: "new", game: "pokemon", en: "Crew Roll Pokémon: the team is set on a Poké Ball, the starter on its button.", fr: "Roll ton équipage Pokémon : l'équipe est placée sur une Poké Ball, le starter sur son bouton." },
+        { type: "fix", en: "The neon and aura of transformed cards keep moving in showcases, even on computers in light mode.", fr: "Le néon et l'aura des cartes transformées bougent dans les vitrines, même sur les ordinateurs en mode léger." },
+      ],
+    },
+    {
       at: "2026-10-09T19:00",
       title: { en: "The new pictures everywhere", fr: "Les nouvelles images partout" },
       items: [

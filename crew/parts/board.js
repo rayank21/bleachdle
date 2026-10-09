@@ -6,9 +6,11 @@ import { burst, ensureFilters, frameImg, sfx, shockwave } from "./fx.js";
 
 // ── Scenes: some anime place their roles on a picture instead of a plain grid ──
 // Haikyuu: a volleyball court seen from above (the net at the top, the front row, the back row, the libero), with the
-// coach and the wildcard on the bench. One Piece: the Thousand Sunny (the captain on the lion's head, the first mate in
-// the crow's nest, the navigator at the helm…). Each place is a grid area, by the role's English name (and its number
-// when a role has several places).
+// coach and the wildcard on the bench. Each place is a grid area, by the role's English name (and its number when a
+// role has several places).
+// Scenes with "pins" are a picture instead (ratio: its width / height), each role a round medallion at a point of it
+// (x, y in %): One Piece on the Thousand Sunny (the captain on the lion's head, the first mate in the crow's nest, the
+// navigator at her tangerine cabin…), Pokémon on a Poké Ball (the starter on its button).
 const SCENES = {
   haikyuu: {
     areas: { "Spiker 1": "sp1", "Middle Blocker 1": "mb1", "Spiker 2": "sp2", "Setter 1": "set", "Middle Blocker 2": "mb2", "Captain 1": "cap",
@@ -19,6 +21,16 @@ const SCENES = {
     areas: { "First Mate 1": "mate", "Navigator 1": "nav", "Captain 1": "cap", "Combatant 1": "com1", "Combatant 2": "com2", "Cook 1": "cook",
       "Doctor 1": "doc", "Archaeologist 1": "arch", "Shipwright 1": "ship", "Combatant 3": "com3" },
     bench: [],
+    ratio: 1132 / 919,
+    pins: { cap: [12, 56], mate: [39, 14], com1: [53, 26], com3: [74, 33], com2: [40, 52], nav: [86, 58], cook: [64, 70],
+      doc: [24, 84], arch: [51, 88], ship: [80, 87] },
+  },
+  pokemon: {
+    areas: { "Starter 1": "start", "Legendary / Mythical 1": "leg", "Fire / Electric 1": "fire", "Dragon / Psychic / Ghost 1": "drag",
+      "Strategist / Engineer 1": "strat", "Wildcard 1": "wild", "Water / Ice 1": "water", "Grass / Ground / Rock 1": "grass", "Healer 1": "heal" },
+    bench: [],
+    ratio: 1,
+    pins: { start: [50, 50], leg: [50, 15], fire: [24, 27], drag: [76, 27], wild: [14, 50], strat: [86, 50], water: [24, 74], grass: [76, 74], heal: [50, 86] },
   },
 };
 
@@ -33,7 +45,8 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
   let bench = null;
   if (scene) {
     container.classList.add(`scene-${S.currentGame.id}`);
-    court = el("div", "scene-field");
+    court = el("div", `scene-field${scene.pins ? " has-pins" : ""}`);
+    if (scene.ratio) court.style.aspectRatio = scene.ratio;
     court.append(el("i", "scene-deco"));
     container.append(court);
     if (scene.bench.length) {
@@ -87,7 +100,12 @@ export function renderBoard(container, slots, { rolled = null, onPlace = null, m
       const n = (seen[slot.def.label.en] = (seen[slot.def.label.en] ?? 0) + 1);
       const area = scene.areas[`${slot.def.label.en} ${n}`];
       const onBench = scene.bench.includes(area);
-      if (area && !onBench) card.style.gridArea = area;
+      const pin = scene.pins?.[area];
+      if (pin) {
+        card.classList.add("is-pin");
+        card.style.left = `${pin[0]}%`;
+        card.style.top = `${pin[1]}%`;
+      } else if (area && !onBench) card.style.gridArea = area;
       (onBench ? bench : court).append(card);
     } else container.append(card);
   });

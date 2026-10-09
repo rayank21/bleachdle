@@ -2000,6 +2000,14 @@ img.cl-game-crew { background: #5ed3c6; }
 .lite .tcg.has-form, .lite .tcg.has-form .tcg-frame::before, .lite .tcg.has-form .tcg-aura::before, .lite .tcg.has-form .tcg-aura::after, .lite .tcg.has-form .tcg-art::before { animation: none !important; }
 @media (prefers-reduced-motion: reduce) { .tcg.has-form, .tcg.has-form .tcg-frame::before, .tcg.has-form .tcg-aura::before, .tcg.has-form .tcg-aura::after { animation: none !important; } }
 
+/* The showcase keeps its animation on weak machines and with reduced motion: its owner chose it (the button under each
+   card turns it off), and three cards cost little. */
+.pf-showcase .tcg.has-form { animation: tcg-pulse 2.6s ease-in-out infinite !important; }
+.pf-showcase .tcg.has-form .tcg-frame::before { animation: tcg-run 2.8s linear infinite !important; }
+.pf-showcase .tcg.has-form .tcg-aura::before { animation: tcg-rise 2s linear infinite !important; }
+.pf-showcase .tcg.has-form .tcg-aura::after { animation: tcg-rise 3.2s linear infinite !important; }
+.pf-showcase .tcg.has-form .tcg-art::before { animation: tcg-breathe 2.2s ease-in-out infinite !important; }
+
 /* Showcase: animated (the transformation) or the normal picture. */
 .pf-show-anim { position: absolute; z-index: 6; left: 50%; bottom: -12px; translate: -50% 0; padding: 3px 10px; border-radius: 99px; border: 1px solid rgba(255, 255, 255, 0.25); font-size: 11px; font-weight: 800; white-space: nowrap; color: #ddd; background: #22222b; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); cursor: pointer; }
 .pf-show-anim.is-on { color: #1a1205; border-color: transparent; background: linear-gradient(90deg, #ffe16b, #ff9d2e); box-shadow: 0 0 12px rgba(255, 190, 60, 0.6); }

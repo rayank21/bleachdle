@@ -920,7 +920,7 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 .share-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 
 
-/* ── Scenes: Haikyuu's court and One Piece's Thousand Sunny (board.js puts each role in its place) ── */
+/* ── Scenes: Haikyuu's court, One Piece's Thousand Sunny, Pokémon's Poké Ball (board.js puts each role in its place) ── */
 .crew-board.has-scene { display: grid; gap: 14px; }
 .crew-board.has-scene .scene-field { position: relative; display: grid; gap: 12px; padding: 16px; border-radius: 18px; isolation: isolate; }
 .crew-board.has-scene .scene-deco { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; }
@@ -942,19 +942,42 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
   background: linear-gradient(180deg, #6b4423, #4a2e16); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08), inset 0 -10px 0 #3a230f, 0 14px 30px rgba(0, 0, 0, 0.4); }
 .scene-bench-label { position: absolute; left: 0; right: 0; top: 9px; text-align: center; font-size: 12px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; color: #ffd9a0; }
 
-/* One Piece: the Thousand Sunny, side on, at sea; the roles stand where they work on board. */
-.crew-board.scene-onepiece { grid-template-columns: 1fr; }
-.scene-onepiece .scene-field { grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-areas: ". . mate . nav" "cap com1 com2 cook com3" ". doc arch ship ."; gap: 16px 12px; padding: 18px 18px 54px;
-  background: linear-gradient(180deg, #7cc8f2 0%, #bfe6fb 55%, #e9f7ff 100%); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45); overflow: hidden; }
-.scene-onepiece .scene-deco { background: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 300%22 preserveAspectRatio=%22none%22%3E %3Cdefs%3E%3ClinearGradient id=%22h%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23e3a04f%22/%3E%3Cstop offset=%221%22 stop-color=%22%239c5a22%22/%3E%3C/linearGradient%3E %3ClinearGradient id=%22s%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%220%22%3E%3Cstop offset=%220%22 stop-color=%22%23f4efe2%22/%3E%3Cstop offset=%22.5%22 stop-color=%22%23fffdf6%22/%3E%3Cstop offset=%221%22 stop-color=%22%23e6dfcc%22/%3E%3C/linearGradient%3E%3C/defs%3E %3Cpath d=%22M318 152V58%22 stroke=%22%236b3d16%22 stroke-width=%225%22/%3E %3Cpath d=%22M290 74q35 -6 66 0v62q-33 6 -66 0z%22 fill=%22%23c4262e%22/%3E %3Cpath d=%22M290 88q35 -6 66 0M290 104q35 -6 66 0M290 120q35 -6 66 0%22 stroke=%22%231b1b1f%22 stroke-width=%227%22 fill=%22none%22/%3E %3Cpath d=%22M212 152V14%22 stroke=%22%236b3d16%22 stroke-width=%226%22/%3E %3Cpath d=%22M212 14l26 7-26 7z%22 fill=%22%23111%22/%3E %3Crect x=%22198%22 y=%2236%22 width=%2228%22 height=%2212%22 rx=%223%22 fill=%22%237a4518%22 stroke=%22%234a280c%22 stroke-width=%222%22/%3E %3Cpath d=%22M140 52q72 -14 144 0q6 44 0 88q-72 12 -144 0q-6 -44 0 -88z%22 fill=%22url(%23s)%22 stroke=%22%23cfc6ae%22 stroke-width=%222%22/%3E %3Cg transform=%22translate(212 96)%22%3E%3Cpath d=%22M-30 -22L30 22M30 -22L-30 22%22 stroke=%22%23fff%22 stroke-width=%229%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M-30 -22L30 22M30 -22L-30 22%22 stroke=%22%231b1b1f%22 stroke-width=%225%22 stroke-linecap=%22round%22/%3E %3Ccircle r=%2217%22 fill=%22%231b1b1f%22/%3E%3Ccircle cx=%22-6%22 cy=%22-2%22 r=%224%22 fill=%22%23fff%22/%3E%3Ccircle cx=%226%22 cy=%22-2%22 r=%224%22 fill=%22%23fff%22/%3E%3Crect x=%22-6%22 y=%228%22 width=%2212%22 height=%224%22 fill=%22%23fff%22/%3E %3Cellipse cy=%22-15%22 rx=%2226%22 ry=%226%22 fill=%22%23f2c94c%22/%3E%3Cpath d=%22M-14 -16q14 -22 28 0z%22 fill=%22%23f2c94c%22/%3E%3Crect x=%22-14%22 y=%22-19%22 width=%2228%22 height=%224%22 fill=%22%23c4262e%22/%3E%3C/g%3E %3Cpath d=%22M30 150h356q-6 70 -60 98h-246q-40 -26 -50 -98z%22 fill=%22url(%23h)%22 stroke=%22%236b3d16%22 stroke-width=%223%22/%3E %3Cpath d=%22M36 166h346%22 stroke=%22%23fff%22 stroke-width=%229%22/%3E%3Cg fill=%22%23c4262e%22%3E%3Ccircle cx=%22110%22 cy=%22166%22 r=%225%22/%3E%3Ccircle cx=%22170%22 cy=%22166%22 r=%225%22/%3E%3Ccircle cx=%22230%22 cy=%22166%22 r=%225%22/%3E%3Ccircle cx=%22290%22 cy=%22166%22 r=%225%22/%3E%3C/g%3E %3Cpath d=%22M60 196h300M78 222h262%22 stroke=%22%237d4518%22 stroke-width=%222%22 opacity=%22.6%22/%3E %3Ccircle cx=%22200%22 cy=%22208%22 r=%2217%22 fill=%22%23f2c94c%22 stroke=%22%236b3d16%22 stroke-width=%223%22/%3E%3Ctext x=%22200%22 y=%22215%22 font-size=%2220%22 font-family=%22Arial%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%236b3d16%22%3E1%3C/text%3E %3Cpath d=%22M30 150q-4 -6 4 -10h352q8 4 4 10z%22 fill=%22%235fae4a%22/%3E %3Cg transform=%22translate(46 130)%22%3E%3Ccircle r=%2242%22 fill=%22%23f08a24%22/%3E%3Cg stroke=%22%23f6c343%22 stroke-width=%2210%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M0 -46V-36M0 46V36M-46 0H-36M46 0H36M-33 -33l7 7M33 33l-7 -7M-33 33l7 -7M33 -33l-7 7%22/%3E%3C/g%3E %3Ccircle r=%2228%22 fill=%22%23ffd95a%22/%3E%3Ccircle cx=%22-9%22 cy=%22-6%22 r=%224%22 fill=%22%231b1b1f%22/%3E%3Ccircle cx=%229%22 cy=%22-6%22 r=%224%22 fill=%22%231b1b1f%22/%3E%3Cpath d=%22M-10 8q10 9 20 0%22 stroke=%22%231b1b1f%22 stroke-width=%223%22 fill=%22none%22/%3E%3C/g%3E %3Cpath d=%22M0 262q25 -12 50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0V300H0z%22 fill=%22%231f7fd0%22 opacity=%22.9%22/%3E %3Cpath d=%22M0 276q25 -10 50 0t50 0t50 0t50 0t50 0t50 0t50 0t50 0V300H0z%22 fill=%22%231666ad%22/%3E %3C/svg%3E") center / 100% 100% no-repeat; }
-.scene-onepiece .scene-deco::before { content: ""; position: absolute; left: 6%; top: 6%; width: 14%; aspect-ratio: 2.4; border-radius: 99px; background: rgba(255, 255, 255, 0.85); box-shadow: 30px 8px 0 -6px rgba(255, 255, 255, 0.7); }
+/* Pictures with pins: each role is a round medallion standing on its spot, the picture showing all around. */
+.crew-board.scene-onepiece, .crew-board.scene-pokemon { grid-template-columns: 1fr; }
+.crew-board.has-scene .scene-field.has-pins { display: block; padding: 0; }
+.scene-field.has-pins .crew-slot.is-pin { position: absolute; z-index: 1; translate: -50% -50%; width: 112px; gap: 3px; padding: 0; overflow: visible;
+  background: none; border: 0; border-radius: 50%; box-shadow: none; }
+.scene-field.has-pins .crew-slot.is-pin.is-filled, .scene-field.has-pins .crew-slot.is-pin.is-captain { background: none; box-shadow: none; }
+.is-pin::after, .is-pin .crew-icon, .is-pin .crew-captain-tag { display: none; }
+.is-pin .crew-face { width: 66px; height: 66px; font-size: 22px; color: #fff; border: 3px solid rgba(var(--role-rgb), 0.95); background: rgba(10, 12, 22, 0.72);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 6px 16px rgba(0, 0, 0, 0.55); }
+.is-pin.is-captain .crew-face { width: 78px; height: 78px; border-color: #ffd34d; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255, 205, 70, 0.75); }
+.is-pin .crew-name { display: block; min-height: 0; max-width: 100%; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(8, 10, 18, 0.88); }
+.is-pin:not(.is-filled) .crew-name { display: none; }
+.is-pin .crew-role { max-width: 100%; padding: 1px 7px; font-size: 9.5px; line-height: 1.25; letter-spacing: 0.3px; border-radius: 8px;
+  color: rgb(var(--role-rgb)); background: rgba(8, 10, 18, 0.88); box-shadow: inset 0 0 0 1px rgba(var(--role-rgb), 0.6); }
+.is-pin.is-captain .crew-role { color: #ffd34d; }
+.is-pin .crew-points { top: -4px; right: calc(50% - 44px); }
+/* A spot that can take the drawn character: its ring pulses (the medallion, not a box around it). */
+.scene-field.has-pins .crew-slot.is-pin.is-target { box-shadow: none; animation: target-in 0.45s var(--d, 0ms) cubic-bezier(.3, 1.6, .5, 1) both; }
+.is-pin.is-target .crew-face { border-color: #fff; animation: pin-pulse 1.4s calc(var(--d, 0ms) + 0.45s) ease-in-out infinite; }
+.is-pin.is-target:hover { transform: scale(1.08); }
+.is-pin.pop { animation: pin-pop 0.55s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes pin-pulse { 50% { box-shadow: 0 0 0 5px rgba(var(--role-rgb), 0.45), 0 0 26px rgba(var(--role-rgb), 0.9); } }
+@keyframes pin-pop { 0% { transform: scale(0.85); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
-/* On the ship the cards are small and see-through, so the Sunny shows between them. */
-.scene-onepiece .crew-slot { padding: 26px 6px 8px; background: rgba(10, 14, 26, 0.55); backdrop-filter: blur(2px); }
-.scene-onepiece .crew-slot.is-filled { background: rgba(10, 14, 26, 0.72); }
-.scene-onepiece .crew-face { width: 60px; height: 60px; font-size: 20px; }
-.scene-onepiece .crew-name { font-size: 12.5px; }
-.scene-onepiece .crew-captain-tag { display: none; }
+/* One Piece: the Thousand Sunny (the anime's side view). */
+.scene-onepiece .scene-field { background: url("assets/boards/onepiece-sunny.webp") center / cover no-repeat, #6fb6e8; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45); }
+
+/* Pokémon: a Poké Ball, the red half, the black band and its button, the white half. */
+.crew-board.scene-pokemon .scene-field { width: min(100%, 600px); justify-self: center; border-radius: 50%;
+  background: radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.5), transparent 22%), linear-gradient(#ee1c25 0 46.5%, #16161a 46.5% 53.5%, #f4f4f6 53.5%);
+  box-shadow: inset 0 0 0 10px #16161a, inset -18px -24px 40px rgba(0, 0, 0, 0.25), 0 18px 40px rgba(0, 0, 0, 0.5); }
+.scene-pokemon .scene-deco { border-radius: 50%; }
+.scene-pokemon .scene-deco::before { content: ""; position: absolute; left: 50%; top: 50%; width: 25%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 55%, #d9d9de 56% 62%, #16161a 63%); }
+
 .scene-haikyuu .crew-slot { background: rgba(14, 10, 8, 0.62); }
 .scene-haikyuu .crew-slot.is-filled { background: rgba(14, 10, 8, 0.8); }
 
@@ -962,8 +985,13 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
   .crew-board.scene-haikyuu { grid-template-columns: 1fr; }
   .scene-haikyuu .scene-field { gap: 8px; padding: 34px 10px 12px; }
   .scene-bench { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 30px; }
-  .scene-onepiece .scene-field { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "mate . nav" "cap com1 com2" "cook . com3" "doc arch ship"; gap: 10px 8px; padding: 12px 10px 44px; }
-  .scene-onepiece .crew-face { width: 48px; height: 48px; }
+  .scene-field.has-pins .crew-slot.is-pin { width: 76px; gap: 2px; }
+  .is-pin .crew-face { width: 42px; height: 42px; font-size: 16px; border-width: 2px; }
+  .is-pin.is-captain .crew-face { width: 50px; height: 50px; }
+  .is-pin .crew-name { padding: 0 5px; font-size: 9.5px; }
+  .is-pin .crew-role { padding: 0 5px; font-size: 7.5px; }
+  .is-pin.is-filled .crew-role { display: none; }
+  .is-pin .crew-points { top: -6px; right: calc(50% - 30px); min-width: 20px; padding: 1px 5px; font-size: 10px; }
 }
 
 /* The page behind them: a gym's wooden floor under the lights for Haikyuu, the open sea for One Piece. */
