@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T18:00",
+      title: { en: "A court for Haikyuu, the Sunny for One Piece", fr: "Un terrain pour Haikyuu, le Sunny pour One Piece" },
+      items: [
+        { type: "new", game: "haikyuu", en: "Crew Roll Haikyuu!!: the team stands on a volleyball court (the net, the 3 m line): spikers and middles at the net, setter, captain and middle behind, the libero at the back, the coach and the wildcard on the bench.", fr: "Roll ton équipage Haikyuu!! : l'équipe est sur un terrain de volley (le filet, la ligne des 3 m) : attaquants et central au filet, passeur, capitaine et central derrière, le libéro au fond, le coach et le joker sur le banc." },
+        { type: "new", game: "onepiece", en: "Crew Roll One Piece: the crew boards the Thousand Sunny: the captain on the lion's head, the first mate in the crow's nest, the navigator at the helm, the doctor, the archaeologist and the shipwright below deck.", fr: "Roll ton équipage One Piece : l'équipage monte sur le Thousand Sunny : le capitaine sur la tête du lion, le second dans la vigie, le navigateur à la barre, le médecin, l'archéologue et le charpentier sous le pont." },
+      ],
+    },
+    {
       at: "2026-10-09T16:00",
       title: { en: "Pokédle, turn-by-turn online games and new transformation pictures", fr: "Pokédle, parties en ligne au tour par tour et nouvelles images de transformation" },
       items: [
