@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T22:00",
+      title: { en: "Visored and Fullbringers", fr: "Visored et Fullbringers" },
+      items: [
+        { type: "balance", game: "bleach", en: "Crew Roll Bleach: as a Visored, Hirako rises to 10, Muguruma to 9 and Hachigen to 8; as a human, Ginjo is now worth 10 and Tsukishima 9.", fr: "Roll ton équipage Bleach : en Visored, Hirako passe à 10, Muguruma à 9 et Hachigen à 8 ; en humain, Ginjô vaut maintenant 10 et Tsukishima 9." },
+      ],
+    },
+    {
       at: "2026-10-09T21:00",
       title: { en: "The Sunny fixed online", fr: "Le Sunny réparé en ligne" },
       items: [
