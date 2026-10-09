@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-10T01:00",
+      title: { en: "New scenes picked by the players", fr: "Des décors choisis par les joueurs" },
+      items: [
+        { type: "improved", game: "crew", en: "Crew Roll: new scenes for Bleach (Hueco Mundo under its crescent moon), Hunter × Hunter (a tower on the plains), Vinland Saga (wheat fields) and Solo Leveling (a gate tearing open the sky over the city).", fr: "Roll ton équipage : nouveaux décors pour Bleach (le Hueco Mundo sous son croissant de lune), Hunter × Hunter (une tour dans la plaine), Vinland Saga (des champs de blé) et Solo Leveling (un portail qui déchire le ciel au-dessus de la ville)." },
+      ],
+    },
+    {
       at: "2026-10-10T00:40",
       title: { en: "Every crew in its iconic place", fr: "Chaque équipage dans son lieu culte" },
       items: [

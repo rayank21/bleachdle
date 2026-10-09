@@ -33,12 +33,15 @@ const SCENES = {
     pins: { start: [50, 50], leg: [50, 15], fire: [24, 27], drag: [76, 27], wild: [14, 50], strat: [86, 50], water: [24, 74], grass: [76, 74], heal: [50, 86] },
   },
 };
-// The other anime stand in one of their iconic places (crew/assets/boards/<game>.webp, 4:3): Sōkyoku Hill, Whale Island,
-// Kame House, Konoha, the Shibuya crossing, the Black Bulls' hideout, Trost's walls, the Infinity Castle, U.A., Cathedral 8,
-// Rimuru's city, the Hero Association, a gate, a Viking ship. The medallions are spread over it in rows (autoPins).
+// Backdrops replaced since by the players' picks (a new file name, so no browser keeps the old one): Hueco Mundo for
+// Bleach, a tower on the plains for Hunter × Hunter, wheat fields for Vinland Saga, a gate opening over the city for Solo Leveling.
+const REDONE = ["bleach", "hunterxhunter", "vinlandsaga", "sololeveling"];
+// The other anime stand in one of their iconic places (crew/assets/boards/<game>.webp, 4:3): Kame House, Konoha, the
+// Shibuya crossing, the Black Bulls' hideout, Trost's walls, the Infinity Castle, U.A., Cathedral 8, Rimuru's city, the
+// Hero Association. The medallions are spread over it in rows (autoPins).
 for (const g of ["bleach", "hunterxhunter", "dragonball", "naruto", "jujutsukaisen", "blackclover", "attackontitan", "demonslayer",
   "myheroacademia", "fireforce", "slime", "onepunchman", "sololeveling", "vinlandsaga"]) {
-  SCENES[g] = { areas: {}, bench: [], ratio: 4 / 3, backdrop: `assets/boards/${g}.webp` };
+  SCENES[g] = { areas: {}, bench: [], ratio: 4 / 3, backdrop: `assets/boards/${g}${REDONE.includes(g) ? "-v2" : ""}.webp` };
 }
 
 // n medallions in up to three rows (fewer on top: 10 → 3, 4, 3), each row spread across, as [x, y] in %.
