@@ -7,6 +7,13 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T21:00",
+      title: { en: "The Sunny fixed online", fr: "Le Sunny réparé en ligne" },
+      items: [
+        { type: "fix", game: "onepiece", en: "Crew Roll One Piece and Pokémon: the medallions now scale with the ship (or the ball), so the roles keep their spots instead of piling up in online games, where your board is narrower, and on phones.", fr: "Roll ton équipage One Piece et Pokémon : les médaillons suivent la taille du bateau (ou de la Poké Ball) : les rôles restent à leur place au lieu de s'entasser en ligne, où ton plateau est plus étroit, et sur téléphone." },
+      ],
+    },
+    {
       at: "2026-10-09T20:00",
       title: { en: "The real Sunny, a Poké Ball, living showcases", fr: "Le vrai Sunny, une Poké Ball, des vitrines animées" },
       items: [

@@ -944,26 +944,30 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 
 /* Pictures with pins: each role is a round medallion standing on its spot, the picture showing all around. */
 .crew-board.scene-onepiece, .crew-board.scene-pokemon { grid-template-columns: 1fr; }
-.crew-board.has-scene .scene-field.has-pins { display: block; padding: 0; }
-.scene-field.has-pins .crew-slot.is-pin { position: absolute; z-index: 1; translate: -50% -50%; width: 112px; gap: 3px; padding: 0; overflow: visible;
+.crew-board.has-scene .scene-field.has-pins { display: block; padding: 0; container-type: inline-size; }
+/* Medallions follow the picture's width (cqw: 1% of it), so they keep their spots on a phone or in a narrow online column. */
+.scene-field.has-pins .crew-slot.is-pin { --pf: clamp(32px, 6px + 8cqw, 66px); position: absolute; z-index: 1; translate: -50% -50%; width: clamp(58px, 10px + 12cqw, 112px); gap: 3px; padding: 0; overflow: visible;
   background: none; border: 0; border-radius: 50%; box-shadow: none; }
+.scene-field.has-pins .crew-slot.is-pin.is-captain { --pf: clamp(38px, 7px + 9.5cqw, 78px); }
 .scene-field.has-pins .crew-slot.is-pin.is-filled, .scene-field.has-pins .crew-slot.is-pin.is-captain { background: none; box-shadow: none; }
-.is-pin::after, .is-pin .crew-icon, .is-pin .crew-captain-tag { display: none; }
-.is-pin .crew-face { width: 66px; height: 66px; font-size: 22px; color: #fff; border: 3px solid rgba(var(--role-rgb), 0.95); background: rgba(10, 12, 22, 0.72);
+.scene-field.has-pins .is-pin::after, .scene-field.has-pins .is-pin .crew-icon, .scene-field.has-pins .is-pin .crew-captain-tag { display: none; }
+.scene-field.has-pins .is-pin .crew-face { width: var(--pf); height: var(--pf); font-size: calc(var(--pf) / 3); color: #fff; border: clamp(2px, 0.4cqw, 3px) solid rgba(var(--role-rgb), 0.95); background: rgba(10, 12, 22, 0.72);
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 6px 16px rgba(0, 0, 0, 0.55); }
-.is-pin.is-captain .crew-face { width: 78px; height: 78px; border-color: #ffd34d; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255, 205, 70, 0.75); }
-.is-pin .crew-name { display: block; min-height: 0; max-width: 100%; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; color: #fff;
+.scene-field.has-pins .is-pin.is-captain .crew-face { border-color: #ffd34d; box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255, 205, 70, 0.75); }
+.scene-field.has-pins .is-pin .crew-name { display: block; min-height: 0; max-width: 100%; padding: 0 clamp(4px, 0.8cqw, 7px); border-radius: 999px; font-size: clamp(8.5px, 1.3cqw, 11.5px); color: #fff;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(8, 10, 18, 0.88); }
-.is-pin:not(.is-filled) .crew-name { display: none; }
-.is-pin .crew-role { max-width: 100%; padding: 1px 7px; font-size: 9.5px; line-height: 1.25; letter-spacing: 0.3px; border-radius: 8px;
+.scene-field.has-pins .is-pin:not(.is-filled) .crew-name { display: none; }
+.scene-field.has-pins .is-pin .crew-role { max-width: 100%; padding: 0 clamp(4px, 0.8cqw, 7px); font-size: clamp(7px, 1.08cqw, 9.5px); line-height: 1.25; letter-spacing: 0.3px; border-radius: 8px;
   color: rgb(var(--role-rgb)); background: rgba(8, 10, 18, 0.88); box-shadow: inset 0 0 0 1px rgba(var(--role-rgb), 0.6); }
-.is-pin.is-captain .crew-role { color: #ffd34d; }
-.is-pin .crew-points { top: -4px; right: calc(50% - 44px); }
+.scene-field.has-pins .is-pin.is-captain .crew-role { color: #ffd34d; }
+.scene-field.has-pins .is-pin .crew-points { top: -5px; right: calc(50% - var(--pf) / 2 - 10px); min-width: 0; padding: 1px clamp(4px, 0.7cqw, 7px); font-size: clamp(9px, 1.3cqw, 12px); }
+/* Small pictures: a placed character shows just their name. */
+@container (max-width: 520px) { .scene-field.has-pins .is-pin.is-filled .crew-role { display: none; } }
 /* A spot that can take the drawn character: its ring pulses (the medallion, not a box around it). */
 .scene-field.has-pins .crew-slot.is-pin.is-target { box-shadow: none; animation: target-in 0.45s var(--d, 0ms) cubic-bezier(.3, 1.6, .5, 1) both; }
-.is-pin.is-target .crew-face { border-color: #fff; animation: pin-pulse 1.4s calc(var(--d, 0ms) + 0.45s) ease-in-out infinite; }
-.is-pin.is-target:hover { transform: scale(1.08); }
-.is-pin.pop { animation: pin-pop 0.55s cubic-bezier(.3, 1.6, .5, 1); }
+.scene-field.has-pins .is-pin.is-target .crew-face { border-color: #fff; animation: pin-pulse 1.4s calc(var(--d, 0ms) + 0.45s) ease-in-out infinite; }
+.scene-field.has-pins .is-pin.is-target:hover { transform: scale(1.08); }
+.scene-field.has-pins .is-pin.pop { animation: pin-pop 0.55s cubic-bezier(.3, 1.6, .5, 1); }
 @keyframes pin-pulse { 50% { box-shadow: 0 0 0 5px rgba(var(--role-rgb), 0.45), 0 0 26px rgba(var(--role-rgb), 0.9); } }
 @keyframes pin-pop { 0% { transform: scale(0.85); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
@@ -985,13 +989,6 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
   .crew-board.scene-haikyuu { grid-template-columns: 1fr; }
   .scene-haikyuu .scene-field { gap: 8px; padding: 34px 10px 12px; }
   .scene-bench { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 30px; }
-  .scene-field.has-pins .crew-slot.is-pin { width: 76px; gap: 2px; }
-  .is-pin .crew-face { width: 42px; height: 42px; font-size: 16px; border-width: 2px; }
-  .is-pin.is-captain .crew-face { width: 50px; height: 50px; }
-  .is-pin .crew-name { padding: 0 5px; font-size: 9.5px; }
-  .is-pin .crew-role { padding: 0 5px; font-size: 7.5px; }
-  .is-pin.is-filled .crew-role { display: none; }
-  .is-pin .crew-points { top: -6px; right: calc(50% - 30px); min-width: 20px; padding: 1px 5px; font-size: 10px; }
 }
 
 /* The page behind them: a gym's wooden floor under the lights for Haikyuu, the open sea for One Piece. */
