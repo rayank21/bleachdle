@@ -518,6 +518,31 @@
         igris:9 iron:6 tank:6 tusk:7 kaisel:6 beru:10 bellion:9 greed:7 jima:7 frost-monarch:8 rakan:8 ashborn:10 antares:10 querehsha:8 legia:8
         tarnak:8 yogumunt:9`),
     },
+    // Vinland Saga: a war band of Vikings, farmhands and explorers. Leaders are the kings and chiefs, the captains of the
+    // bands (Askeladd, Thorkell, the Jomsviking commanders), Snake who heads Ketil's guards and Thorfinn's expedition.
+    vinlandsaga: {
+      slots: [
+        { label: { en: "Leader", fr: "Chef" }, icon: "crown", role: "captain", count: 1, score: leader,
+          fits: (c) => has(c.job, "Royalty", "Landowner", "Chief") || ["askeladd", "thorkell", "floki", "sigvaldi", "vagn", "thors", "leif-ericson", "snake", "thorfinn", "asgeir", "ragnar", "wulf"].includes(c.id) },
+        { label: { en: "Warrior", fr: "Guerrier" }, icon: "swords", count: 3, fits: (c) => has(c.job, "Warrior", "Mercenary") },
+        { label: { en: "Viking band", fr: "Bande de Vikings" }, icon: "skull", count: 1, fits: (c) => has(c.aff, "Askeladd's Band", "Jomsvikings", "Thorkell's Army") },
+        { label: { en: "Farmhand / Slave", fr: "Paysan / Esclave" }, icon: "leaf", count: 1, fits: (c) => has(c.job, "Farmer", "Slave", "Servant") },
+        { label: { en: "Explorer", fr: "Explorateur" }, icon: "compass", count: 1, fits: (c) => has(c.aff, "Thorfinn's Expedition") || has(c.job, "Sailor") },
+        // The Lnu shaman heals with herbs and visions; Arnheid nurses old Sverkel; Helga and Ylva keep the family alive.
+        { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
+          score: role(parse("miskwekepu-j:10 niskawaji-j:8 arnheid:7 helga:6 ylva:6 willibald:6 gudrid:6 pater:5 leif-ericson:5 sverkel:4")) },
+        // Askeladd plays kings against each other; Canute and Sweyn rule by cunning; Hild builds crossbows and traps.
+        { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+          score: role(parse(`askeladd:10 canute:10 sweyn:9 floki:9 halfdan:8 hild:8 eadric:7 leif-ericson:7 thorfinn:7 snake:6 styrk:6 wulf:6
+            sigvaldi:6 gudrid:6 ragnar:5 vagn:5 einar:5`)) },
+        { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+      ],
+      // Thors and Thorkell are the strongest warriors of the saga; Garm and Snake the best fighters of the later arcs.
+      power: parse(`thorfinn:9 thors:10 ylva:2 helga:1 leif-ericson:3 halfdan:4 askeladd:9 bjorn:7 atli:4 torgrim:4 floki:6 sigvaldi:6
+        thorkell:10 asgeir:6 canute:6 sweyn:5 harald:3 ragnar:5 willibald:2 gratianus:6 lydia:1 olaf:6 einar:5 ketil:4 olmar:3 thorgil:6
+        sverkel:2 pater:2 arnheid:1 gardar:6 snake:8 fox:5 badger:4 edmund:5 ethelred:2 eadric:3 wulf:6 estrid:2 gudrid:4 karli:1 hild:7
+        sigurd:4 garm:9 baldr:2 vagn:7 ivar:4 styrk:3 cordelia:4 miskwekepu-j:2 niskawaji-j:2 kitpui:3`),
+    },
   });
   window.CREW_DEFAULT_POWER = DEFAULT_POWER;
 })();

@@ -252,6 +252,7 @@ body[data-game="fireforce"] { --kanji: "炎"; }
 body[data-game="slime"] { --kanji: "転"; }
 body[data-game="onepunchman"] { --kanji: "拳"; }
 body[data-game="sololeveling"] { --kanji: "影"; }
+body[data-game="vinlandsaga"] { --kanji: "戦"; }
 body[data-game="pokemon"] { --kanji: "球"; }
 /* The seven newest anime: their accent and the colour of their backdrop. */
 body[data-game="demonslayer"] { --accent: #ff4d6d; --accent-strong: #ff7a92; --accent-rgb: 255, 77, 109; --tint-rgb: 30, 120, 90; }
@@ -261,6 +262,7 @@ body[data-game="fireforce"] { --accent: #ff5a1f; --accent-strong: #ff8150; --acc
 body[data-game="slime"] { --accent: #4fc3ff; --accent-strong: #80d4ff; --accent-rgb: 79, 195, 255; --tint-rgb: 40, 90, 200; }
 body[data-game="onepunchman"] { --accent: #ffd60a; --accent-strong: #ffe14d; --accent-rgb: 255, 214, 10; --tint-rgb: 200, 30, 30; }
 body[data-game="sololeveling"] { --accent: #7c6cff; --accent-strong: #a097ff; --accent-rgb: 124, 108, 255; --tint-rgb: 90, 40, 200; }
+body[data-game="vinlandsaga"] { --accent: #5aa9d6; --accent-strong: #8cc8ea; --accent-rgb: 90, 169, 214; --tint-rgb: 30, 70, 110; }
 body[data-game="pokemon"] { --accent: #ff3b3b; --accent-strong: #ff6b6b; --accent-rgb: 255, 59, 59; --tint-rgb: 40, 80, 200; }
 .stat-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; }
 .stat {
@@ -732,6 +734,7 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
 .game-card[data-game="slime"] { --accent-rgb: 79, 195, 255; }
 .game-card[data-game="onepunchman"] { --accent-rgb: 255, 214, 10; }
 .game-card[data-game="sololeveling"] { --accent-rgb: 124, 108, 255; }
+.game-card[data-game="vinlandsaga"] { --accent-rgb: 90, 169, 214; }
 .game-card[data-game="pokemon"] { --accent-rgb: 255, 59, 59; }
 .game-card:hover, .game-card:focus-visible { transform: translateY(-4px); border-color: rgba(var(--accent-rgb), 0.7); }
 .game-strip { display: grid; grid-template-columns: repeat(6, 1fr); height: 130px; }
@@ -1357,6 +1360,7 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .pf-stat[data-game="slime"] { --g-rgb: 79, 195, 255; }
 .pf-stat[data-game="onepunchman"] { --g-rgb: 255, 214, 10; }
 .pf-stat[data-game="sololeveling"] { --g-rgb: 124, 108, 255; }
+.pf-stat[data-game="vinlandsaga"] { --g-rgb: 90, 169, 214; }
 .pf-stat[data-game="pokemon"] { --g-rgb: 255, 59, 59; }
 .pf-stat.is-empty { opacity: 0.5; }
 .pf-stat img { width: 36px; height: 36px; flex: none; border-radius: 50%; object-fit: cover; background: #fff; }

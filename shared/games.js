@@ -30,6 +30,8 @@ window.DLE_GAMES = [
     featured: ["saitama", "genos", "tatsumaki", "garou", "bang", "boros"] },
   { id: "sololeveling", storage: "sololevelingdle", brand: "Sololevelingdle", anime: "Solo Leveling", path: "sololeveling/", logo: "assets/logos/sololevelingdle.webp", count: 62, arcs: 5,
     featured: ["sung-jinwoo", "cha-hae-in", "igris", "beru", "go-gunhee", "thomas-andre"] },
+  { id: "vinlandsaga", storage: "vinlanddle", brand: "Vinlanddle", anime: "Vinland Saga", path: "vinlandsaga/", logo: "assets/logos/vinlanddle.webp", count: 51, arcs: 6,
+    featured: ["thorfinn", "askeladd", "thorkell", "canute", "einar", "thors"] },
   { id: "pokemon", storage: "pokedle", brand: "Pokédle", anime: "Pokémon", path: "pokemon/", logo: "assets/logos/pokedle.webp", count: 1025, arcs: 9,
     featured: ["pikachu", "charizard", "mewtwo", "lucario", "gengar", "eevee"] },
 ];

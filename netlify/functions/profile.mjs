@@ -32,7 +32,7 @@
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
-const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover", "attackontitan", "demonslayer", "myheroacademia", "haikyuu", "fireforce", "slime", "onepunchman", "sololeveling", "pokemon"];
+const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover", "attackontitan", "demonslayer", "myheroacademia", "haikyuu", "fireforce", "slime", "onepunchman", "sololeveling", "vinlandsaga", "pokemon"];
 const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;

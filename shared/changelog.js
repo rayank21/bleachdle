@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T23:30",
+      title: { en: "Vinlanddle: Vinland Saga joins the site", fr: "Vinlanddle : Vinland Saga arrive sur le site" },
+      items: [
+        { type: "new", game: "vinlandsaga", en: "Vinlanddle: guess the Vinland Saga character of the day among 51 (Thorfinn, Askeladd, Thorkell, Canute, Einar…), by gender, hair, people, affiliation, occupation and first arc, from Thors's prologue to Vinland. Classic, blur and description modes, endless and online games.", fr: "Vinlanddle : devine le perso Vinland Saga du jour parmi 51 (Thorfinn, Askeladd, Thorkell, Canute, Einar…), par genre, cheveux, peuple, affiliation, métier et 1er arc, du prologue de Thors jusqu'au Vinland. Modes classique, flou et description, partie infinie et en ligne." },
+        { type: "new", game: "crew", en: "Crew Roll Vinland Saga: a leader, three warriors, a Viking band, a farmhand, an explorer, a healer, a strategist and a wildcard; Vinland Saga booster packs and cards.", fr: "Roll ton équipage Vinland Saga : un chef, trois guerriers, une bande de Vikings, un paysan, un explorateur, un soigneur, un stratège et un joker ; boosters et cartes Vinland Saga." },
+      ],
+    },
+    {
       at: "2026-10-09T22:00",
       title: { en: "Visored and Fullbringers", fr: "Visored et Fullbringers" },
       items: [

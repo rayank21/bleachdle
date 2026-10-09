@@ -149,6 +149,8 @@
     // Solo Leveling: blue System sparks and the purple smoke of the shadows.
     sololeveling: [[() => [glow("110, 140, 255"), glow("170, 110, 255")], "rise", 40, [5, 13], 0.6, 0, 18], [() => [ember("150, 100, 255")], "rise", 14, [12, 22], 0.55, 0, 8]],
     // Pokémon: sparks of every type's colour (electric, fire, water, grass) rising softly.
+    // Vinland Saga: snow drifting over the North Sea, a few sparks of the war.
+    vinlandsaga: [[() => [glow("220, 235, 255"), glow("170, 205, 235")], "fall", 40, [8, 16], 0.55, 0, 16], [() => [ember("255, 170, 90")], "rise", 8, [12, 22], 0.4, 0, 6]],
     pokemon: [[() => [glow("255, 214, 60"), glow("255, 90, 70"), glow("80, 160, 255"), glow("110, 220, 110")], "rise", 34, [6, 14], 0.55, 0, 18], [() => [ember("255, 230, 120")], "rise", 10, [12, 20], 0.45, 0, 6]],
   };
   const theme = THEMES[game] || THEMES.home;

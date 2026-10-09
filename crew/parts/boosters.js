@@ -12,7 +12,7 @@ const PACKS = {
   blackclover: ["48, 209, 88", "4, 19, 10", "魔"], attackontitan: ["201, 163, 107", "26, 18, 10", "巨"], demonslayer: ["255, 77, 109", "19, 6, 11", "鬼"],
   myheroacademia: ["46, 197, 255", "4, 18, 28", "英"], haikyuu: ["255, 140, 0", "22, 11, 0", "翔"], fireforce: ["255, 90, 31", "26, 5, 0", "炎"],
   slime: ["79, 195, 255", "4, 17, 29", "転"], onepunchman: ["255, 214, 10", "26, 20, 0", "拳"],
-  sololeveling: ["124, 108, 255", "8, 6, 24", "影"], pokemon: ["255, 59, 59", "20, 24, 40", "球"],
+  sololeveling: ["124, 108, 255", "8, 6, 24", "影"], vinlandsaga: ["90, 169, 214", "6, 14, 24", "戦"], pokemon: ["255, 59, 59", "20, 24, 40", "球"],
 };
 export const packColours = (id) => PACKS[id];
 const PROFILE = () => window.DLE_Profile;
