@@ -53,7 +53,7 @@
         Lizardmen: "Hommes-lézards", "Orc Army": "Armée des orcs", "Jura Forest": "Forêt de Jura", "Clayman's Army": "Armée de Clayman",
         "Free Guild": "Guilde libre", "Western Holy Church": "Sainte Église de l'Ouest", "Kingdom of Blumund": "Royaume de Blumund",
         "Kingdom of Falmuth": "Royaume de Falmuth", "Sorcerous Dynasty of Sarion": "Dynastie magique de Sarion",
-        "Moderate Harlequin Alliance": "Alliance des Arlequins modérés",
+        "Moderate Harlequin Alliance": "Alliance des Arlequins modérés", "Rozzo Family": "Famille Rozzo",
         "Demon Lord": "Seigneur démon", "True Dragon": "Vrai dragon", "Primordial Demon": "Démon primordial", Hero: "Héros", "< 160 cm": "< 160 cm", "160-169 cm": "160-169 cm", "170-179 cm": "170-179 cm", "180-189 cm": "180-189 cm", "190+ cm": "190 cm et +",
       },
     },

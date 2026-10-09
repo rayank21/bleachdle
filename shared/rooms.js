@@ -25,7 +25,8 @@
     for (const [id, v] of Object.entries(m?.team ?? {})) if (ids.has(id) && (v === 0 || v === 1)) team[id] = v;
     // Team names chosen by the host ("" = the default red / blue name).
     const names = [0, 1].map((k) => cleanName(Array.isArray(m?.names) ? m.names[k] : ""));
-    return { play: PLAYS.includes(m?.play) ? m.play : "classic", teams: m?.teams === true, team, names };
+    // turns: the players guess one after the other on a shared board (on unless the host turns it off).
+    return { play: PLAYS.includes(m?.play) ? m.play : "classic", teams: m?.teams === true, team, names, turns: m?.turns !== false };
   }
 
   // Room codes: 5 characters, no 0/O or 1/I to mix up.
@@ -336,7 +337,7 @@
         size: clamp(size, 2, 8),
         members: [{ id: api.selfId, name: api.profile.name, arc: api.profile.arc, pid: myPid() }],
         started: false,
-        meta: { play: PLAYS.includes(play) ? play : "classic", teams: false, team: { [api.selfId]: 0 } },
+        meta: { play: PLAYS.includes(play) ? play : "classic", teams: false, team: { [api.selfId]: 0 }, turns: true },
       };
       announce();
       onChange();
@@ -460,6 +461,7 @@
       const meta = (api.myRoom.meta ??= { play: "classic", teams: false, team: {} });
       if (PLAYS.includes(patch.play)) meta.play = patch.play;
       if (typeof patch.teams === "boolean") meta.teams = patch.teams;
+      if (typeof patch.turns === "boolean") meta.turns = patch.turns;
       if (Array.isArray(patch.names)) meta.names = [0, 1].map((k) => cleanName(patch.names[k] ?? meta.names?.[k] ?? ""));
       for (const m of api.myRoom.members) placeInTeam(m.id);
       announce();

@@ -115,7 +115,7 @@ export const seed = [
   { name: "Äs Nödt", wiki: "Äs Nödt", gender: "M", race: ["Quincy"], age: "Unknown", hair: ["Black"], height: 184, residence: ["Wandenreich"], arc: 6, affiliation: "Sternritter" },
   { name: "Quilge Opie", wiki: "Quilge Opie", gender: "M", race: ["Quincy"], age: "Unknown", hair: ["Black"], height: 197, residence: ["Wandenreich"], arc: 6, affiliation: "Sternritter" },
   { name: "Gremmy Thoumeaux", wiki: "Gremmy Thoumeaux", gender: "M", race: ["Quincy"], age: "Unknown", hair: ["White"], height: 150, residence: ["Wandenreich"], arc: 6, affiliation: "Sternritter" },
-  { name: "Lille Barro", wiki: "Lille Barro", gender: "M", race: ["Quincy"], age: "1000+", hair: ["Black"], height: 188, residence: ["Wandenreich"], arc: 6, affiliation: "Schutzstaffel" },
+  { name: "Lille Barro", wiki: "Lille Barro", gender: "M", race: ["Quincy"], age: "1000+", hair: ["Blonde"], height: 188, residence: ["Wandenreich"], arc: 6, affiliation: "Schutzstaffel" },
   { name: "Pernida Parnkgjas", wiki: "Pernida Parnkgjas", img: "Ep390PernidaProfile.png", gender: "Unknown", race: ["Quincy"], age: "Unknown", hair: ["Unknown"], height: 150, residence: ["Wandenreich"], arc: 6, affiliation: "Schutzstaffel" },
   { name: "Gerard Valkyrie", wiki: "Gerard Valkyrie", img: "Ep405GerardUnmaskedProfile.png", gender: "M", race: ["Quincy"], age: "Unknown", hair: ["Blonde"], height: 222, residence: ["Wandenreich"], arc: 6, affiliation: "Schutzstaffel" },
   { name: "Ichibē Hyōsube", wiki: "Ichibē Hyōsube", gender: "M", race: ["Shinigami"], age: "1000+", hair: ["Black"], height: 172, residence: ["Soul King Palace"], arc: 6, affiliation: "Zero Division" },

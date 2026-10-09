@@ -49,6 +49,9 @@ export function renderRow(id, animate) {
     }
     row.append(tile);
   });
+  // Turn by turn: who made this guess.
+  const by = S.race?.turns && S.race.by.get(id);
+  if (by) row.append(el("span", `row-by${by === rooms.selfId ? " is-me" : ""}`, esc(S.race.players.get(by)?.name ?? "?")));
   return row;
 }
 
@@ -209,9 +212,10 @@ function renderRaceResult(banner, form) {
   banner.innerHTML = `
     <div class="result-portrait ${won ? "is-won" : ""}${auraOf(tg.id)}"><img src="${esc(tg.image)}" alt="${esc(tg.name)}" /></div>
     <div class="result-body">
-      <p class="result-kicker">${won ? t("winTitle") : t("giveUpTitle")}</p>
+      <p class="result-kicker">${won ? t("winTitle") : S.race.turns ? t("turnOver") : t("giveUpTitle")}</p>
       <h2 class="result-name">${esc(tg.name)}</h2>
-      ${won ? `<p class="muted">${t("raceWon")(place, S.game.guesses.length, clock(me.ms ?? 0))}</p>` : ""}
+      ${S.race.turns ? `<p class="muted">${esc(S.race.winner ? (S.race.winner === me.id ? t("turnYouFound")(S.game.guesses.length) : t("turnFoundBy")(S.race.players.get(S.race.winner)?.name ?? "?", S.game.guesses.length)) : t("turnNobody"))}</p>`
+        : won ? `<p class="muted">${t("raceWon")(place, S.game.guesses.length, clock(me.ms ?? 0))}</p>` : ""}
       ${S.race.teams && S.race.done ? teamOutcomeHtml() : ""}
       <p class="muted">${S.race.done ? "" : esc(t("raceWait"))}</p>
     </div>`;
@@ -220,7 +224,7 @@ function renderRaceResult(banner, form) {
 
 export function renderGiveUp() {
   const existing = $("#giveUp");
-  const canGiveUp = settings.mode === "endless" || (isOnline() && S.race && !S.race.done);
+  const canGiveUp = settings.mode === "endless" || (isOnline() && S.race && !S.race.done && !S.race.turns);
   if (!canGiveUp || S.game.guesses.length === 0) { existing?.remove(); return; }
   if (existing) { existing.textContent = t("giveUp"); return; }
   const b = el("button", "link-btn", esc(t("giveUp")));

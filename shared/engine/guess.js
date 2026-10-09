@@ -4,14 +4,16 @@ import { S } from "./state.js";
 import { $, COLS, FLIP_STEP, auraOf, isOnline, nameOf, normalize, play, pool, saveGame, t } from "./core.js";
 import { recordStart, recordWin } from "./stats.js";
 import { el, esc, thumb } from "./dom.js";
-import { burst, renderGiveUp, renderHead, renderHints, renderResult, renderRow, renderStatsBar, renderWeekly } from "./render.js";
-import { raceProgress } from "./race.js";
+import { burst, renderGiveUp, renderHead, renderHints, renderResult, renderRow, renderStatsBar, renderWeekly, toast } from "./render.js";
+import { myTurn, raceProgress, sendTurnGuess, turnOwnerName } from "./race.js";
 import { renderPlay } from "./play.js";
 
 // ── Guessing ──
 export function submitGuess(id) {
   if (S.game.status !== "playing" || S.game.guesses.includes(id)) return;
   if (isOnline() && (!S.race || !S.race.startedAt || S.race.done)) return;
+  // Turn by turn: only the player whose turn it is guesses.
+  if (isOnline() && S.race.turns && !myTurn()) { toast(t("notYourTurn")(turnOwnerName())); return; }
   if (!isOnline() && S.game.guesses.length === 0) recordStart();
   S.game.guesses.push(id);
   window.DLE_Profile?.count("guesses");
@@ -25,7 +27,7 @@ export function submitGuess(id) {
     if (play() === "desc") window.DLE_Profile?.count("descWins");
   }
   saveGame();
-  if (isOnline()) raceProgress();
+  if (isOnline()) { if (S.race.turns) sendTurnGuess(id, won); else raceProgress(); }
 
   // Blur and description: no attribute row, the panel updates (sharper picture, new clue, wrong-guess shake).
   if (play() !== "classic") {

@@ -72,7 +72,7 @@ export function makePool(g, data, arc) {
       const v = { id: c.id, image: `${ROOT}${g.path}${c.image}`, baseName: c.name };
       for (const [k, val] of Object.entries(c)) if (k !== "image") v[k] = resolve(val, arc);
       v.name = displayName(data.config, c.name);
-      v.power = crew.power[c.id] ?? DEFAULT_POWER;
+      v.power = crew.power[c.id] ?? c.power ?? DEFAULT_POWER;
       return v;
     });
 }

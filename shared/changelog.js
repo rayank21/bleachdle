@@ -7,6 +7,20 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-09T16:00",
+      title: { en: "Pokédle, turn-by-turn online games and new transformation pictures", fr: "Pokédle, parties en ligne au tour par tour et nouvelles images de transformation" },
+      items: [
+        { type: "new", game: "pokemon", en: "Pokédle: guess one of the 1025 Pokémon (French names in French), with generations instead of arcs. Types, colour, evolution, category, height, weight and generation; blurred picture and Pokédex modes; Pokémon also join Crew Roll (starter, legendary, types, healer, strategist), boosters and cards.", fr: "Pokédle : devine l'un des 1025 Pokémon (noms en français), avec les générations à la place des arcs. Types, couleur, évolution, catégorie, taille, poids et génération ; modes image floue et Pokédex ; les Pokémon rejoignent aussi Roll ton équipage (starter, légendaire, types, soigneur, stratège), les boosters et les cartes." },
+        { type: "new", en: "Online games (classic, blur and description) are now turn by turn: one guess each on a shared board, 40 s per turn, whoever finds it wins. The host can still pick the free race.", fr: "Les parties en ligne (classique, flou et description) se jouent maintenant au tour par tour : un essai chacun sur un plateau commun, 40 s par tour, celui qui trouve gagne. L'hôte peut toujours choisir la course libre." },
+        { type: "new", game: "crew", en: "Showcase: choose for each card whether it shows its transformation (animated) or its normal picture.", fr: "Vitrine : choisis pour chaque carte si elle montre sa transformation (animée) ou son image normale." },
+        { type: "improved", game: "crew", en: "Every card with a transformation gets a moving neon frame and a luminous aura in its transformation's colours.", fr: "Chaque carte avec une transformation a un cadre néon et une aura lumineuse qui bougent, aux couleurs de sa transformation." },
+        { type: "improved", game: "crew", en: "New pictures: Garp's Galaxy Impact, Shanks's Divine Departure, Cosmic Garou, All Might, All For One, Black Frieza, and Ichigo's Mugetsu form for his showcase card.", fr: "Nouvelles images : Galaxy Impact de Garp, Kamusari de Shanks, Garou cosmique, All Might, All For One, Black Freezer, et la forme Mugetsu d'Ichigo pour sa carte en vitrine." },
+        { type: "new", game: "slime", en: "Granbell Rozzo joins Slimedle (Human 8, Strategist 8, Wildcard 8).", fr: "Granbell Rozzo rejoint Slimedle (Humain 8, Stratège 8, Joker 8)." },
+        { type: "balance", game: "crew", en: "Bleach: Quincy Gremmy 8, Lille Barro 9, Liltotto 6. Slime: strategists Testarossa 9, Clayman 8, Kurobe 10 as engineer.", fr: "Bleach : Quincy Gremmy 8, Lille Barro 9, Liltotto 6. Slime : stratèges Testarossa 9, Clayman 8, Kurobe 10 en ingénieur." },
+        { type: "fix", en: "Lille Barro has blond hair (Bleachdle), Yu Haibara black hair (Jujutsudle).", fr: "Lille Barro a les cheveux blonds (Bleachdle), Yu Haibara les cheveux noirs (Jujutsudle)." },
+      ],
+    },
+    {
       at: "2026-10-08T09:00",
       title: { en: "Living cards, crew sharing and new duel rules", fr: "Cartes vivantes, partage d'équipage et nouvelles règles de duel" },
       items: [

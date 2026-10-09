@@ -26,7 +26,7 @@ function metaOf(gid) {
       const m = new Map();
       for (const c of data.chars) {
         if (!c.image) continue;
-        m.set(c.id, { n: displayName(data.config, c.name), p: CREW[gid]?.power?.[c.id] ?? DEFAULT_POWER, image: `${ROOT}${g.path}${c.image}` });
+        m.set(c.id, { n: displayName(data.config, c.name), p: CREW[gid]?.power?.[c.id] ?? c.power ?? DEFAULT_POWER, image: `${ROOT}${g.path}${c.image}` });
       }
       return m;
     }));

@@ -6,6 +6,8 @@ export const CFG = window.DLE_CONFIG;
 export const CHARS = window.DLE_CHARACTERS;
 export const GAMES = window.DLE_GAMES;
 export const UI = window.DLE_UI;
+// A game can reword the interface (Pokédle says "generation" where the others say "arc").
+for (const l of Object.keys(CFG.ui ?? {})) if (UI[l]) Object.assign(UI[l], CFG.ui[l]);
 export const ROOT = "../";
 
 export const COLS = CFG.columns;

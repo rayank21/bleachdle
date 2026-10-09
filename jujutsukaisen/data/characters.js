@@ -672,7 +672,7 @@ window.DLE_CHARACTERS = [
   ],
   "age": 17,
   "hair": [
-   "Unknown"
+   "Black"
   ],
   "aff": [
    "Tokyo Jujutsu High"

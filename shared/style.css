@@ -252,6 +252,7 @@ body[data-game="fireforce"] { --kanji: "炎"; }
 body[data-game="slime"] { --kanji: "転"; }
 body[data-game="onepunchman"] { --kanji: "拳"; }
 body[data-game="sololeveling"] { --kanji: "影"; }
+body[data-game="pokemon"] { --kanji: "球"; }
 /* The seven newest anime: their accent and the colour of their backdrop. */
 body[data-game="demonslayer"] { --accent: #ff4d6d; --accent-strong: #ff7a92; --accent-rgb: 255, 77, 109; --tint-rgb: 30, 120, 90; }
 body[data-game="myheroacademia"] { --accent: #2ec5ff; --accent-strong: #66d6ff; --accent-rgb: 46, 197, 255; --tint-rgb: 30, 140, 90; }
@@ -260,6 +261,7 @@ body[data-game="fireforce"] { --accent: #ff5a1f; --accent-strong: #ff8150; --acc
 body[data-game="slime"] { --accent: #4fc3ff; --accent-strong: #80d4ff; --accent-rgb: 79, 195, 255; --tint-rgb: 40, 90, 200; }
 body[data-game="onepunchman"] { --accent: #ffd60a; --accent-strong: #ffe14d; --accent-rgb: 255, 214, 10; --tint-rgb: 200, 30, 30; }
 body[data-game="sololeveling"] { --accent: #7c6cff; --accent-strong: #a097ff; --accent-rgb: 124, 108, 255; --tint-rgb: 90, 40, 200; }
+body[data-game="pokemon"] { --accent: #ff3b3b; --accent-strong: #ff6b6b; --accent-rgb: 255, 59, 59; --tint-rgb: 40, 80, 200; }
 .stat-row { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; }
 .stat {
   display: flex;
@@ -730,6 +732,7 @@ body[data-game="home"] { --tint-rgb: 120, 40, 60; }
 .game-card[data-game="slime"] { --accent-rgb: 79, 195, 255; }
 .game-card[data-game="onepunchman"] { --accent-rgb: 255, 214, 10; }
 .game-card[data-game="sololeveling"] { --accent-rgb: 124, 108, 255; }
+.game-card[data-game="pokemon"] { --accent-rgb: 255, 59, 59; }
 .game-card:hover, .game-card:focus-visible { transform: translateY(-4px); border-color: rgba(var(--accent-rgb), 0.7); }
 .game-strip { display: grid; grid-template-columns: repeat(6, 1fr); height: 130px; }
 .game-strip span { background: center 15% / cover no-repeat; filter: grayscale(0.35); transition: filter 0.2s; }
@@ -1354,6 +1357,7 @@ body[data-game="home"] .cat .cat-name { display: none; }
 .pf-stat[data-game="slime"] { --g-rgb: 79, 195, 255; }
 .pf-stat[data-game="onepunchman"] { --g-rgb: 255, 214, 10; }
 .pf-stat[data-game="sololeveling"] { --g-rgb: 124, 108, 255; }
+.pf-stat[data-game="pokemon"] { --g-rgb: 255, 59, 59; }
 .pf-stat.is-empty { opacity: 0.5; }
 .pf-stat img { width: 36px; height: 36px; flex: none; border-radius: 50%; object-fit: cover; background: #fff; }
 .pf-stat-nums { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
@@ -1982,3 +1986,21 @@ img.cl-game-crew { background: #5ed3c6; }
 .chat-msg.is-feat.tier-platinum .chat-feat { background: linear-gradient(120deg, rgba(120, 230, 255, 0.18), rgba(200, 120, 255, 0.14)); box-shadow: inset 0 0 0 1px rgba(150, 220, 255, 0.5), 0 0 16px rgba(150, 120, 255, 0.2); }
 .chat-feat-icon { margin-right: 6px; }
 .chat-feat b { color: #ffd34d; }
+
+/* Cards with a transformation (any rarity): a neon frame and a luminous aura in the transformation's colours
+   (--fc1 / --fc2, set by profile.js), moving all the time. */
+.tcg.has-form .tcg-frame { --neon: var(--fc1); --neon2: var(--fc2); padding: 1.3cqw; overflow: hidden; -webkit-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.tcg.has-form .tcg-frame::before { content: ""; position: absolute; left: 50%; top: 50%; width: 160%; aspect-ratio: 1; translate: -50% -50%; background: conic-gradient(from 0deg, transparent 0 40%, rgba(var(--fc1), 0.95) 55%, #fff 62%, rgba(var(--fc1), 0.95) 68%, transparent 80%, rgba(var(--fc1), 0.6) 92%, transparent); animation: tcg-run 2.8s linear infinite; }
+.tcg.has-form { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 18px rgba(var(--fc1), 0.65), 0 0 40px rgba(var(--fc1), 0.25); animation: tcg-pulse 2.6s ease-in-out infinite; }
+@keyframes tcg-pulse { 50% { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 28px rgba(var(--fc1), 0.9), 0 0 60px rgba(var(--fc1), 0.4); } }
+.tcg.has-form .tcg-aura { display: block; }
+.tcg.has-form .tcg-aura::before { background: radial-gradient(22% 16% at 12% 100%, rgba(var(--fc1), 0.75), transparent 70%), radial-gradient(18% 20% at 36% 100%, rgba(var(--fc2), 0.55), transparent 70%), radial-gradient(22% 14% at 64% 100%, rgba(var(--fc1), 0.7), transparent 70%), radial-gradient(20% 18% at 88% 100%, rgba(var(--fc2), 0.6), transparent 70%), radial-gradient(22% 16% at 12% 50%, rgba(var(--fc1), 0.75), transparent 70%), radial-gradient(18% 20% at 36% 50%, rgba(var(--fc2), 0.55), transparent 70%), radial-gradient(22% 14% at 64% 50%, rgba(var(--fc1), 0.7), transparent 70%), radial-gradient(20% 18% at 88% 50%, rgba(var(--fc2), 0.6), transparent 70%); animation: tcg-rise 2s linear infinite; }
+.tcg.has-form .tcg-aura::after { background-image: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1px, transparent 1.6px), radial-gradient(circle, rgba(var(--fc1), 0.9) 0 0.9px, transparent 1.5px); background-size: 37px 61px, 23px 43px; background-position: 0 0, 11px 17px; animation: tcg-rise 3.2s linear infinite; }
+.tcg.has-form .tcg-art::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(90% 45% at 50% 100%, rgba(var(--fc1), 0.5), transparent 70%); animation: tcg-breathe 2.2s ease-in-out infinite; }
+.lite .tcg.has-form, .lite .tcg.has-form .tcg-frame::before, .lite .tcg.has-form .tcg-aura::before, .lite .tcg.has-form .tcg-aura::after, .lite .tcg.has-form .tcg-art::before { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .tcg.has-form, .tcg.has-form .tcg-frame::before, .tcg.has-form .tcg-aura::before, .tcg.has-form .tcg-aura::after { animation: none !important; } }
+
+/* Showcase: animated (the transformation) or the normal picture. */
+.pf-show-anim { position: absolute; z-index: 6; left: 50%; bottom: -12px; translate: -50% 0; padding: 3px 10px; border-radius: 99px; border: 1px solid rgba(255, 255, 255, 0.25); font-size: 11px; font-weight: 800; white-space: nowrap; color: #ddd; background: #22222b; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); cursor: pointer; }
+.pf-show-anim.is-on { color: #1a1205; border-color: transparent; background: linear-gradient(90deg, #ffe16b, #ff9d2e); box-shadow: 0 0 12px rgba(255, 190, 60, 0.6); }
+.pf-show-slot { position: relative; }

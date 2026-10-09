@@ -24,12 +24,14 @@ window.DLE_GAMES = [
     featured: ["shoyo-hinata", "tobio-kageyama", "kei-tsukishima", "yu-nishinoya", "toru-oikawa", "kotaro-bokuto"] },
   { id: "fireforce", storage: "fireforcedle", brand: "Fireforcedle", anime: "Fire Force", path: "fireforce/", logo: "assets/logos/fireforcedle.webp", count: 32, arcs: 5,
     featured: ["shinra-kusakabe", "arthur-boyle", "maki-oze", "benimaru-shinmon", "tamaki-kotatsu", "akitaru-obi"] },
-  { id: "slime", storage: "slimedle", brand: "Slimedle", anime: "That Time I Got Reincarnated as a Slime", path: "slime/", logo: "assets/logos/slimedle.webp", count: 47, arcs: 5,
+  { id: "slime", storage: "slimedle", brand: "Slimedle", anime: "That Time I Got Reincarnated as a Slime", path: "slime/", logo: "assets/logos/slimedle.webp", count: 48, arcs: 5,
     featured: ["rimuru-tempest", "benimaru", "shuna", "shion", "milim-nava", "diablo"] },
   { id: "onepunchman", storage: "onepunchdle", brand: "Onepunchdle", anime: "One Punch Man", path: "onepunchman/", logo: "assets/logos/onepunchdle.webp", count: 47, arcs: 5,
     featured: ["saitama", "genos", "tatsumaki", "garou", "bang", "boros"] },
   { id: "sololeveling", storage: "sololevelingdle", brand: "Sololevelingdle", anime: "Solo Leveling", path: "sololeveling/", logo: "assets/logos/sololevelingdle.webp", count: 62, arcs: 5,
     featured: ["sung-jinwoo", "cha-hae-in", "igris", "beru", "go-gunhee", "thomas-andre"] },
+  { id: "pokemon", storage: "pokedle", brand: "Pokédle", anime: "Pokémon", path: "pokemon/", logo: "assets/logos/pokedle.webp", count: 1025, arcs: 9,
+    featured: ["pikachu", "charizard", "mewtwo", "lucario", "gengar", "eevee"] },
 ];
 
 // Link to the Crew Roll mini-game, shown after the categories in every header (its logo: the Thousand Sunny).

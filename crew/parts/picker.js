@@ -44,6 +44,8 @@ export async function renderArcChip() {
   $("#crewArc").textContent = arc == null ? t("allArcs") : data.config.arcs[arc][S.lang];
   $("#crewArcLink").title = arc == null ? t("spoilerAll") : t("spoiler")(data.config.arcs[arc][S.lang]);
   $("#crewArcLink").href = `${ROOT}${S.currentGame.path}`;
+  // Pokémon counts in generations, not arcs.
+  $("#crewArcLabel").textContent = data.config.ui?.[S.lang]?.arcLabel ?? t("arcLabel");
 }
 
 export async function selectGame(id, { quiet = false } = {}) {

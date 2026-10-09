@@ -133,7 +133,7 @@
         // Ichigo inherited a Quincy's blood from his mother and wears a Hollow mask like the Visored.
         // Gerard and Pernida are the Soul King's heart and left arm, in Yhwach's royal guard.
         { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 2, fits: (c) => has(c.race, "Quincy") || c.id === "ichigo-kurosaki",
-          score: rated({ "uryu-ishida": 10, "lille-barro": 8, "ichigo-kurosaki": 10, "gerard-valkyrie": 9, "pernida-parnkgjas": 9 }) },
+          score: rated({ "uryu-ishida": 10, "lille-barro": 9, "gremmy-thoumeaux": 8, "liltotto-lamperd": 6, "ichigo-kurosaki": 10, "gerard-valkyrie": 9, "pernida-parnkgjas": 9 }) },
         { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") || c.id === "ichigo-kurosaki",
           score: rated({ "ichigo-kurosaki": 10, "shinji-hirako": 9, "rojuro-otoribashi": 7, "mashiro-kuna": 4 }) },
         // Humans, wandering souls and Fullbringers; Isshin, Ryuken and Masaki live as humans in Karakura.
@@ -154,8 +154,8 @@
         tier-harribel:8 nnoitra-gilga:7 szayelaporro-granz:7 zommari-rureaux:6 aaroniero-arruruerie:6 luppi-antenor:4 nelliel-tu-odelschwanck:8 loly-aivirrne:2
         wonderweiss-margela:6 lilynette-gingerbuck:3 emilou-apacci:3 ggio-vega:3 kugo-ginjo:9 shukuro-tsukishima:8 riruka-dokugamine:4
         yukio-hans-vorarlberna:5 jackie-tristan:4 giriko-kutsuzawa:5 yhwach:10 jugram-haschwalth:9 bazz-b:7 askin-nakk-le-vaar:8
-        bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:7 meninas-mcallon:4 giselle-gewelle:5 as-nodt:7 quilge-opie:6
-        gremmy-thoumeaux:9 lille-barro:9 pernida-parnkgjas:9 gerard-valkyrie:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3 dordoni-alessandro-del-socaccio:5 cirucci-sanderwicci:5 gantenbainne-mosqueda:5 kiyone-kotetsu:3 sentaro-kotsubaki:3 zennosuke-kurumadani:2 ikumi-unagiya:2`),
+        bambietta-basterbine:7 candice-catnipp:6 liltotto-lamperd:6 meninas-mcallon:4 giselle-gewelle:5 as-nodt:7 quilge-opie:6
+        gremmy-thoumeaux:8 lille-barro:9 pernida-parnkgjas:9 gerard-valkyrie:9 ichibe-hyosube:10 senjumaru-shutara:9 tenjiro-kirinji:9 oetsu-nimaiya:9 kirio-hikifune:9 akon:3 dordoni-alessandro-del-socaccio:5 cirucci-sanderwicci:5 gantenbainne-mosqueda:5 kiyone-kotetsu:3 sentaro-kotsubaki:3 zennosuke-kurumadani:2 ikumi-unagiya:2`),
     },
 
     hunterxhunter: {
@@ -332,6 +332,29 @@
     },
   };
   // ── The six anime added in October 2026 ──
+  // Pokémon: a team of starters, legends and types. Every Pokémon's power comes with the data (pokemon/scripts/build.py:
+  // its base stats), the few below are set by hand.
+  window.CREW_GAMES.pokemon = {
+    slots: [
+      { label: { en: "Starter", fr: "Starter" }, icon: "star", count: 1, fits: (c) => c.starter === true },
+      { label: { en: "Legendary / Mythical", fr: "Légendaire / Fabuleux" }, icon: "crown", count: 1, fits: (c) => ["Legendary", "Mythical"].includes(c.category) },
+      { label: { en: "Fire / Electric", fr: "Feu / Électrik" }, icon: "flame", count: 1, fits: (c) => has(c.types, "Fire", "Electric") },
+      { label: { en: "Water / Ice", fr: "Eau / Glace" }, icon: "globe", count: 1, fits: (c) => has(c.types, "Water", "Ice") },
+      { label: { en: "Grass / Ground / Rock", fr: "Plante / Sol / Roche" }, icon: "leaf", count: 1, fits: (c) => has(c.types, "Grass", "Ground", "Rock") },
+      { label: { en: "Dragon / Psychic / Ghost", fr: "Dragon / Psy / Spectre" }, icon: "eye", count: 1, fits: (c) => has(c.types, "Dragon", "Psychic", "Ghost") },
+      // The Pokémon Centre's nurses and the great healers of the games.
+      { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
+        score: role(parse(`blissey:10 chansey:9 audino:8 comfey:7 alomomola:7 sylveon:7 togekiss:7 hatterene:7 florges:6 clefable:6
+          indeedee:6 happiny:5 wigglytuff:5 miltank:5 lumineon:4 bellossom:4`)) },
+      // The cleverest: Alakazam's IQ of 5000, Metagross's four brains, Slowking's crown.
+      { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
+        score: role(parse(`alakazam:10 mewtwo:10 metagross:9 slowking:9 necrozma:8 hoopa:8 deoxys:8 xatu:7 espeon:7 gardevoir:7 lucario:7
+          beheeyem:6 kadabra:6 bronzong:6 porygon-z:6 rotom:5 abra:4`)) },
+      { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
+    ],
+    power: parse(`pikachu:6 raichu:7 charizard:8 gengar:8 lucario:8 eevee:4 greninja:8 snorlax:8 gyarados:8 lapras:7`),
+  };
+
   Object.assign(window.CREW_GAMES, {
     demonslayer: {
       slots: [
@@ -435,19 +458,20 @@
         { label: { en: "Demon / Dragon", fr: "Démon / Dragon" }, icon: "flame", count: 1, fits: (c) => has(c.race, "Demon", "Dragon", "Dragonoid"),
           score: rated({ velzard: 10, "veldora-tempest": 9, "milim-nava": 9, diablo: 8, "guy-crimson": 8, testarossa: 7, ultima: 6, carrera: 6 }) },
         { label: { en: "Human", fr: "Humain" }, icon: "person", count: 1, fits: (c) => has(c.race, "Human"),
-          score: rated({ "chloe-aubert": 10, "hinata-sakaguchi": 8, shizu: 7 }) },
+          score: rated({ "chloe-aubert": 10, "hinata-sakaguchi": 8, "granbell-rozzo": 8, shizu: 7 }) },
         { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
           score: role(parse("shuna:10 luminous-valentine:9 rimuru-tempest:8 treyni:7 ramiris:6 hinata-sakaguchi:6 shizu:5")) },
         { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
-          score: role(parse(`diablo:10 rimuru-tempest:9 benimaru:9 guy-crimson:9 yuuki-kagurazaka:9 souei:8 luminous-valentine:8 gazel-dwargo:8
-            elmesia-el-ru-sarion:8 clayman:7 shuna:7 laplace:6 hakuro:6 rigurd:5 fuze:5`)) },
+          // Kurobe forges Tempest's weapons; Granbell schemed for centuries behind the Western Nations.
+          score: role(parse(`diablo:10 kurobe:10 rimuru-tempest:9 benimaru:9 guy-crimson:9 yuuki-kagurazaka:9 testarossa:9 souei:8 luminous-valentine:8
+            gazel-dwargo:8 elmesia-el-ru-sarion:8 clayman:8 granbell-rozzo:8 shuna:7 laplace:6 hakuro:6 rigurd:5 fuze:5`)) },
         { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
       ],
       power: parse(`rimuru-tempest:10 veldora-tempest:10 benimaru:9 shuna:6 shion:8 souei:7 hakuro:7 kurobe:3 ranga:8 rigurd:4 gobta:5 rigur:5
         gabiru:7 geld:8 kaijin:3 treyni:6 diablo:10 testarossa:9 ultima:9 carrera:9 mjurran:5 milim-nava:10 carrion:8 frey:7 clayman:6
         guy-crimson:10 leon-cromwell:9 ramiris:4 luminous-valentine:9 dino:8 dagruel:9 shizu:6 hinata-sakaguchi:9 masayuki-honjo:3
         yuuki-kagurazaka:9 chloe-aubert:9 fuze:4 youm:5 gazel-dwargo:8 elmesia-el-ru-sarion:6 edmaris:2 razen:6 gelmud:3 phobio:5
-        laplace:6 footman:5 velzard:10`),
+        laplace:6 footman:5 velzard:10 granbell-rozzo:8`),
     },
 
     onepunchman: {

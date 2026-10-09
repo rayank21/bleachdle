@@ -49,4 +49,5 @@ window.DLE_DESCRIPTIONS = {
   "laplace": ["A clownish majin in a mask who works behind the scenes for a secret alliance.", "Un majin clownesque masqué qui agit en coulisses pour une alliance secrète.", null, null],
   "footman": ["A fat, smiling clown majin who loves anger and destruction.", "Un majin clown gros et souriant qui adore la colère et la destruction.", null, null],
   "velzard": ["The White Ice Dragon, eldest of the True Dragons, who lives in the frozen north with Guy Crimson.", "Le Dragon de glace blanche, aînée des Vrais Dragons, qui vit dans le Grand Nord gelé avec Guy Crimson.", ["White Ice Dragon", "Dragon de glace"], null],
+  "granbell-rozzo": ["The old patriarch of the Rozzo family, a former Hero who rules the Western Nations from the shadows.", "Le vieux patriarche de la famille Rozzo, un ancien Héros qui dirige les nations de l'Ouest dans l'ombre.", ["Rozzo", "Rozzo"], null],
 };

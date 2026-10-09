@@ -32,13 +32,13 @@
 import { getStore } from "@netlify/blobs";
 import { createHash, randomBytes } from "node:crypto";
 
-const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover", "attackontitan", "demonslayer", "myheroacademia", "haikyuu", "fireforce", "slime", "onepunchman", "sololeveling"];
+const GAMES = ["bleach", "hunterxhunter", "dragonball", "naruto", "onepiece", "jujutsukaisen", "blackclover", "attackontitan", "demonslayer", "myheroacademia", "haikyuu", "fireforce", "slime", "onepunchman", "sololeveling", "pokemon"];
 const MODES = ["daily", "endless", "online"];
 const RANKS = ["S", "A", "B", "C", "D"];
 const MAX_FRIENDS = 100;
 // Activity counters sent as increments (rolls, rerolls, guesses, seconds played), capped per request.
 const COUNTERS = { rolls: 2000, rerolls: 2000, guesses: 5000, seconds: 6 * 3600, oneShot: 200, blurWins: 500, descWins: 500, boostEarn: 60, boostOpen: 60, cardDuels: 50, cardWins: 50, chats: 300, voice: 30, voiceMsgs: 100 };
-const MAX_COLLECTION = 400; // cards kept per anime
+const MAX_COLLECTION = 1100; // cards kept per anime (Pokémon has 1025)
 const MAX_DUPES = 99; // extra copies kept per card
 const MAX_TRADES = 20; // offers kept per profile, received and sent
 const TRADE_TTL = 7 * 24 * 3600 * 1000; // an unanswered offer is dropped after a week
@@ -123,6 +123,7 @@ function cleanShowcase(list) {
     n: String(c?.n ?? "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 40),
     p: Math.min(10, Math.max(1, Math.round(+c?.p || 1))),
     f: c?.f === true,
+    a: c?.a !== false,
   })).filter((c) => c.g && c.id && c.n);
 }
 

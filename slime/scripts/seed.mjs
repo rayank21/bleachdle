@@ -51,6 +51,7 @@ export const seed = [
   // ── Humans and others ──
   { wiki: "Shizue Izawa", name: "Shizu", race: ["Human"], aff: ["Free Guild"], title: "Hero", arc: 0 },
   { wiki: "Hinata Sakaguchi", race: ["Human"], aff: ["Western Holy Church"], title: "Hero", arc: 2 },
+  { wiki: "Granbell Rozzo", race: ["Human"], aff: ["Rozzo Family"], title: "Hero", arc: 4 },
   { wiki: "Masayuki Honjo", race: ["Human"], aff: ["Free Guild"], title: "Hero", arc: 4 },
   { wiki: "Yuuki Kagurazaka", race: ["Human"], aff: ["Free Guild"], title: "None", arc: 1 },
   { wiki: "Chloe Aubert", race: ["Human"], aff: ["Free Guild"], title: "None", arc: 1 },

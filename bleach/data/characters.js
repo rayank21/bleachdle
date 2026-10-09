@@ -1856,7 +1856,7 @@ window.DLE_CHARACTERS = [
   ],
   "age": "1000+",
   "hair": [
-   "Black"
+   "Blonde"
   ],
   "height": 182,
   "residence": [

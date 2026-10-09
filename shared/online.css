@@ -244,3 +244,21 @@
 .score-chip.team-1 { box-shadow: inset 0 -3px 0 #2d7dff; }
 .ranking li.team-0 { box-shadow: inset 4px 0 0 #e5262e; }
 .ranking li.team-1 { box-shadow: inset 4px 0 0 #2d7dff; }
+
+/* Turn by turn: the order of play, the current player lit up, the time left; who made each guess on the board. */
+.turn-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0; }
+.turn-chip { padding: 4px 10px; border-radius: 99px; font-size: 13px; font-weight: 800; color: var(--muted); background: var(--surface-2, rgba(255, 255, 255, 0.06)); border: 1px solid transparent; transition: all 0.25s; }
+.turn-chip.is-me { color: var(--text); }
+.turn-chip.is-turn { color: #fff; background: rgba(var(--accent-rgb), 0.3); border-color: rgba(var(--accent-rgb), 0.9); box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.45); }
+.turn-chip.has-left { opacity: 0.4; text-decoration: line-through; }
+.turn-time { position: relative; flex: 1 1 100%; height: 22px; border-radius: 99px; overflow: hidden; background: var(--surface-2, rgba(255, 255, 255, 0.06)); }
+.turn-time i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.55), rgba(var(--accent-rgb), 0.9)); transition: width 0.25s linear; }
+.turn-time.is-low i { background: linear-gradient(90deg, #ff4b4b, #ff9d2e); }
+.turn-time span { position: relative; display: block; text-align: center; font-size: 12px; font-weight: 800; line-height: 22px; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
+.room-turns { display: flex; gap: 6px; margin: 8px 0 2px; }
+.room-turn-pick { width: auto; padding: 0 12px; }
+.room-turns-help { margin: 2px 0 8px; font-size: 13px; }
+.row { position: relative; }
+.row-by { position: absolute; left: 4px; top: -9px; z-index: 2; padding: 1px 7px; border-radius: 99px; font-size: 10px; font-weight: 800; color: #fff; background: rgba(0, 0, 0, 0.75); border: 1px solid rgba(255, 255, 255, 0.25); pointer-events: none; }
+.row-by.is-me { background: rgba(var(--accent-rgb), 0.85); }
+#searchInput:disabled { opacity: 0.6; cursor: not-allowed; }

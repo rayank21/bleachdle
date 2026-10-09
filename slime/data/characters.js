@@ -534,6 +534,21 @@ window.DLE_CHARACTERS = [
   "arc": 2
  },
  {
+  "id": "granbell-rozzo",
+  "name": "Granbell Rozzo",
+  "gender": "M",
+  "height": null,
+  "image": "assets/characters/granbell-rozzo.webp",
+  "race": [
+   "Human"
+  ],
+  "aff": [
+   "Rozzo Family"
+  ],
+  "title": "Hero",
+  "arc": 4
+ },
+ {
   "id": "masayuki-honjo",
   "name": "Masayuki Honjo",
   "gender": "M",

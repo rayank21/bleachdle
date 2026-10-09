@@ -6,10 +6,13 @@ import { saveStats, stats } from "./stats.js";
 import { compare } from "./compare.js";
 import { el, esc } from "./dom.js";
 import { renderResult, toast } from "./render.js";
-import { startGame } from "./ui.js";
+import { renderAll, startGame } from "./ui.js";
 import { PLAY_LABEL, renderPlayTabs } from "./play.js";
 
 // ── Online race (2–8 players, first to find the character wins) ──
+// Turn by turn (on by default, the host can switch it off): the players guess one after the other on one shared board,
+// every guess (and every clue it uncovers) is seen by all, and whoever finds the character wins. A turn lasts
+// TURN_MS; then it passes to the next player.
 // Rooms come from shared/rooms.js, with one lobby per anime. The host draws the character at the
 // lowest arc among the players so nobody gets spoiled. Players share their progress live: the
 // number of guesses and the tile colours of their last guess, never the names they tried.
@@ -57,7 +60,8 @@ function raceStartData(room) {
   const p = PLAYS.includes(room.meta?.play) && (room.meta.play !== "desc" || Object.keys(DESC).length) ? room.meta.play : "classic";
   const candidates = CHARS.filter((c) => c.arc <= arc && (p !== "desc" || DESC[c.id]));
   const teams = room.meta?.teams ? Object.fromEntries(room.members.map((m) => [m.id, rooms.teamOf(m.id, room) ?? 0])) : null;
-  return { arc, play: p, teams, target: candidates[Math.floor(Math.random() * candidates.length)].id, key: Math.random().toString(36).slice(2, 10) };
+  const order = room.members.map((m) => m.id).sort(() => Math.random() - 0.5);
+  return { arc, play: p, teams, turns: room.meta?.turns !== false, order, target: candidates[Math.floor(Math.random() * candidates.length)].id, key: Math.random().toString(36).slice(2, 10) };
 }
 
 export function updateRaceProfile() {
@@ -82,12 +86,18 @@ function startRace(room, data) {
     players: new Map(room.members.map((m) => [m.id, {
       id: m.id, name: m.id === rooms.selfId ? myName() || t("you") : m.name, n: 0, last: [], found: false, gaveUp: false, ms: null, left: false,
     }])),
+    // Turn by turn: the order of play, whose turn it is (a counter), and who made each guess.
+    turns: data.turns === true,
+    order: Array.isArray(data.order) && data.order.every((id) => room.members.some((m) => m.id === id)) && data.order.length === room.members.length
+      ? data.order : room.members.map((m) => m.id).sort(),
+    turn: 0, turnAt: 0, by: new Map(), winner: null,
   };
   if (!isOnline()) { settings.mode = "online"; saveSettings(); }
   startGame();
   raceSplash().then(() => {
     if (!S.race || S.race.room.id !== room.id) return;
     S.race.startedAt = Date.now();
+    if (S.race.turns) startTurn(0);
     renderRace();
     $("#searchInput").focus();
   });
@@ -148,8 +158,18 @@ function onRaceMessage(type, d, from) {
     p.found = !!d.found;
     p.gaveUp = !!d.gaveUp && !p.found;
     p.ms = p.found && Number.isFinite(d.ms) ? Math.max(0, d.ms) : null;
+  } else if (type === "tguess" || type === "tpass") {
+    if (!S.race.turns || String(d.key) !== S.race.key || S.race.done) return;
+    onTurnMessage(type, d, from);
+    return;
   } else if (type === "left") {
     p.left = true;
+    // Turn by turn: the game goes on without them (their turn passes), until one player is left.
+    if (S.race.turns && !S.race.done) {
+      if (activeOrder().length < 2) { endTurns(null); return; }
+      // The turn starts again for whoever plays now (everyone drops the same player, so everyone agrees).
+      startTurn(S.race.turn);
+    }
   } else if (type === "rejoin") {
     // Their link dropped for a moment: send my progress again, they may have missed some.
     if (S.race.startedAt) raceProgressResend();
@@ -157,6 +177,100 @@ function onRaceMessage(type, d, from) {
   } else return;
   renderRace();
   checkRaceEnd();
+}
+
+// ── Turn by turn ──
+const TURN_MS = 40000;
+// After this long without a word from the player whose turn it is, everyone moves on (they lost their link).
+const TURN_GRACE = 8000;
+const MAX_TURNS = 80;
+const activeOrder = () => S.race.order.filter((id) => !S.race.players.get(id)?.left);
+const turnOwner = (n) => { const a = activeOrder(); return a.length ? a[n % a.length] : undefined; };
+export const myTurn = () => !!S.race?.turns && !S.race.done && turnOwner(S.race.turn) === rooms?.selfId;
+export const turnOwnerName = () => S.race?.players.get(turnOwner(S.race.turn))?.name ?? "?";
+
+let turnTimer = 0;
+let turnTick = 0;
+function startTurn(n) {
+  const run = S.race;
+  if (!run || run.done) return;
+  if (n >= MAX_TURNS) { endTurns(null); return; }
+  run.turn = n;
+  run.turnAt = Date.now();
+  clearTimeout(turnTimer);
+  const mine = turnOwner(n) === rooms.selfId;
+  // My turn runs out: I pass. Someone else's: I move on by myself a little later if their pass never comes.
+  turnTimer = setTimeout(() => {
+    if (S.race !== run || run.done || run.turn !== n) return;
+    if (mine) rooms.broadcast("tpass", { key: run.key, turn: n });
+    startTurn(n + 1);
+  }, TURN_MS + (mine ? 0 : TURN_GRACE));
+  lockInput();
+  if (mine) { window.DLE_FX?.play("place"); toast(t("yourTurn")); $("#searchInput")?.focus({ preventScroll: true }); }
+  renderRace();
+}
+
+// The search box only works on my turn.
+function lockInput() {
+  const input = $("#searchInput");
+  if (!input || !S.race?.turns) return;
+  const on = myTurn();
+  input.disabled = !on;
+  input.placeholder = S.race.done ? "" : on ? t("yourTurnPh") : t("theirTurnPh")(turnOwnerName());
+}
+
+// My guess, on my turn: everyone gets it.
+export function sendTurnGuess(id, won) {
+  const run = S.race;
+  run.by.set(id, rooms.selfId);
+  const me = run.players.get(rooms.selfId);
+  me.n++;
+  rooms.broadcast("tguess", { key: run.key, turn: run.turn, id });
+  if (won) { endTurns(rooms.selfId); return; }
+  startTurn(run.turn + 1);
+}
+
+function onTurnMessage(type, d, from) {
+  const run = S.race;
+  const n = Math.floor(Number(d.turn));
+  // Messages for a turn already gone (my clock ran ahead) are still taken: a guess is never lost.
+  if (!Number.isInteger(n) || n < run.turn - 1) return;
+  if (type === "tpass") { if (n >= run.turn) startTurn(n + 1); return; }
+  const id = String(d.id ?? "");
+  if (!byId.has(id) || !CHARS.some((c) => c.id === id && c.arc <= run.arc)) return;
+  if (!S.game.guesses.includes(id)) {
+    S.game.guesses.push(id);
+    run.by.set(id, from);
+    const p = run.players.get(from);
+    if (p) p.n++;
+  }
+  if (id === S.game.target) { endTurns(from); return; }
+  if (n >= run.turn) startTurn(n + 1);
+  showRemoteGuess();
+}
+
+// Someone else's guess lands on my board, with the same flip as mine.
+function showRemoteGuess() {
+  renderAll();
+  window.DLE_FX?.play("wrong");
+  const row = $("#boardRows")?.firstElementChild;
+  if (row) [...row.querySelectorAll(".tile")].forEach((tile, i) => { tile.classList.add("flip"); tile.style.animationDelay = `${i * 120}ms`; });
+}
+
+function endTurns(winner) {
+  const run = S.race;
+  if (!run || run.done) return;
+  clearTimeout(turnTimer);
+  run.winner = winner;
+  for (const p of run.players.values()) { p.found = p.id === winner; p.gaveUp = !p.found; }
+  const w = run.players.get(winner);
+  if (w) w.ms = Date.now() - run.startedAt;
+  S.game.status = winner === rooms.selfId ? "won" : "lost";
+  const input = $("#searchInput");
+  if (input) { input.disabled = false; input.placeholder = ""; }
+  finishRace();
+  renderAll();
+  window.DLE_FX?.play(winner === rooms.selfId ? "win" : "lose");
 }
 
 function checkRaceEnd() {
@@ -213,13 +327,21 @@ function teamBar() {
   return bar;
 }
 
+function unlockInput() {
+  clearTimeout(turnTimer);
+  const input = $("#searchInput");
+  if (input) input.disabled = false;
+}
+
 function leaveRace() {
+  unlockInput();
   S.race = null;
   rooms?.leave();
   startGame();
 }
 
 function backToRoom() {
+  unlockInput();
   S.race = null;
   if (rooms?.isHost()) rooms.reopen();
   startGame();
@@ -237,7 +359,7 @@ export function renderRace() {
 
 function renderRaceBoard(box) {
   const head = el("div", "race-head");
-  head.append(el("h2", null, esc(S.race.done ? t("finalRanking") : t("raceLive"))));
+  head.append(el("h2", null, esc(S.race.done ? t("finalRanking") : S.race.turns ? t("turnLive") : t("raceLive"))));
   if (!S.race.done && S.race.startedAt) {
     const timer = el("span", "race-timer", clock(Date.now() - S.race.startedAt));
     head.append(timer);
@@ -249,11 +371,13 @@ function renderRaceBoard(box) {
   }
   box.append(head);
   if (S.race.teams) box.append(teamBar());
+  if (S.race.turns) { box.append(turnBar()); lockInput(); }
   const list = el("ol", "ranking race-list");
   for (const p of raceRanking()) {
     const li = el("li", `${p.id === rooms.selfId ? "is-me" : ""}${p.found ? " is-found" : ""}${p.left ? " has-left" : ""}${S.race.teams ? ` team-${S.race.teams[p.id] ?? 0}` : ""}`);
     const name = window.DLE_NAME(p.id === rooms.selfId ? `${p.name} (${t("you")})` : p.name, rooms.pidOf(p.id), "ranking-name");
-    const status = p.found ? t("foundIn")(p.n, clock(p.ms)) : p.gaveUp ? t("gaveUpShort") : p.left ? t("left") : t("looking")(p.n);
+    const status = S.race.turns ? (p.found ? t("turnWinner") : p.left ? t("left") : t("turnGuesses")(p.n))
+      : p.found ? t("foundIn")(p.n, clock(p.ms)) : p.gaveUp ? t("gaveUpShort") : p.left ? t("left") : t("looking")(p.n);
     const sq = el("span", "race-squares");
     for (const s of p.last) sq.append(el("i", `sq is-${s}`));
     li.append(name, sq, el("span", "race-status", esc(status)));
@@ -272,6 +396,36 @@ function renderRaceBoard(box) {
     box.append(actions);
     if (rooms.myRoom) box.append(rooms.chatBox());
   }
+}
+
+// Turn by turn: the order of play, the current player lit up, and the time left in the turn.
+function turnBar() {
+  const bar = el("div", "turn-bar");
+  const owner = turnOwner(S.race.turn);
+  S.race.order.forEach((id) => {
+    const p = S.race.players.get(id);
+    const chip = el("span", `turn-chip${id === owner && !S.race.done ? " is-turn" : ""}${id === rooms.selfId ? " is-me" : ""}${p?.left ? " has-left" : ""}${S.race.teams ? ` team-${S.race.teams[id] ?? 0}` : ""}`);
+    chip.textContent = id === rooms.selfId ? t("you") : p?.name ?? "?";
+    bar.append(chip);
+  });
+  if (!S.race.done && S.race.turnAt) {
+    const left = el("div", "turn-time");
+    const fill = el("i");
+    const label = el("span", null, "");
+    left.append(fill, label);
+    bar.append(left);
+    clearInterval(turnTick);
+    const tick = () => {
+      if (!S.race || S.race.done || !document.body.contains(fill)) return clearInterval(turnTick);
+      const ms = Math.max(0, TURN_MS - (Date.now() - S.race.turnAt));
+      fill.style.width = `${(ms / TURN_MS) * 100}%`;
+      label.textContent = `${myTurn() ? t("yourTurn") : turnOwnerName()} · ${Math.ceil(ms / 1000)} s`;
+      left.classList.toggle("is-low", ms < 10000);
+    };
+    tick();
+    turnTick = setInterval(tick, 250);
+  }
+  return bar;
 }
 
 // Invite links: <game>/#join=<room id>. Wait for the room to be announced (and for an arc), then join.
@@ -460,7 +614,18 @@ function renderRaceLobby(box) {
     const variant = el("p", "room-play");
     variant.append(el("span", null, esc(t("playLabel"))), el("b", null, esc(t(PLAY_LABEL[room.meta?.play ?? "classic"]))));
     if (!rooms.isHost()) variant.append(el("small", "muted", esc(t("hostPicks"))));
-    card.append(variant, rooms.teamsBox());
+    // Turn by turn or a free race (the host chooses).
+    const turns = room.meta?.turns !== false;
+    const how = el("div", "room-turns");
+    for (const [on, label] of [[true, t("turnMode")], [false, t("raceMode")]]) {
+      const b = el("button", `size-pick room-turn-pick${turns === on ? " is-active" : ""}`, esc(label));
+      b.type = "button";
+      b.disabled = !rooms.isHost();
+      b.setAttribute("aria-pressed", turns === on);
+      b.addEventListener("click", () => rooms.setMeta({ turns: on }));
+      how.append(b);
+    }
+    card.append(variant, how, el("p", "muted room-turns-help", esc(turns ? t("turnHelp") : t("raceHelpShort"))), rooms.teamsBox());
     const actions = el("div", "result-actions");
     if (rooms.isHost()) {
       const start = el("button", "btn-primary", esc(t("startRace")));

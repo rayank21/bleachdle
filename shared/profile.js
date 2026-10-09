@@ -39,6 +39,7 @@
       boostGot: (n) => `+${n} booster${n > 1 ? "s" : ""}`, boostOpen: "Open",
       boostWhy: { welcome: "Welcome gift!", daily: "Daily booster", win: "Victory reward", crew: "Crew built", duel: "Online win" },
       boosters: (n) => `${n} booster${n > 1 ? "s" : ""} to open`, boostersGo: "Open my boosters",
+      showAnimOn: "✨ Animated", showAnimOff: "Normal", showAnimHelp: "Show this card with its transformation (animated) or its normal picture",
       showcase: "Showcase", showcaseHelp: "Pick 3 cards from your collection (Crew Roll index, ★ button): everyone sees them on your profile.",
       showAdd: "Add a card", showRemove: "Take out", seeProfile: "See profile", back: "Back", playerCards: (n) => `${n} cards collected`,
       tradeDone: (n) => `${n} accepted your trade!`, tradeDoneSub: "The card is in your collection.", cardDuel: "Card duel",
@@ -71,6 +72,7 @@
       boostGot: (n) => `+${n} booster${n > 1 ? "s" : ""}`, boostOpen: "Ouvrir",
       boostWhy: { welcome: "Cadeau de bienvenue !", daily: "Booster du jour", win: "Récompense de victoire", crew: "Équipage construit", duel: "Victoire en ligne" },
       boosters: (n) => `${n} booster${n > 1 ? "s" : ""} à ouvrir`, boostersGo: "Ouvrir mes boosters",
+      showAnimOn: "✨ Animée", showAnimOff: "Normale", showAnimHelp: "Montrer cette carte avec sa transformation (animée) ou son image normale",
       showcase: "Vitrine", showcaseHelp: "Choisis 3 cartes de ta collection (Index de Roll ton équipage, bouton ★) : tout le monde les voit sur ton profil.",
       showAdd: "Ajouter une carte", showRemove: "Retirer", seeProfile: "Voir le profil", back: "Retour", playerCards: (n) => `${n} cartes collectionnées`,
       tradeDone: (n) => `${n} a accepté ton échange !`, tradeDoneSub: "La carte est dans ta collection.", cardDuel: "Duel de cartes",
@@ -370,11 +372,18 @@
     img.alt = "";
     img.decoding = "async";
     const form = formOf(c.g, c.id);
-    // A character with a transformation always shows it (its card picture), whatever picture the card was drawn with.
-    img.src = c.f || form ? formSrc(c.g, c.id) : c.img || portrait(c.g, c.id);
-    if (form) card.classList.add("has-form");
+    // A character with a transformation shows it (its card picture), whatever picture the card was drawn with, unless
+    // its owner turned the animation off for their showcase (a: false).
+    const anim = c.a !== false;
+    img.src = (c.f || form) && anim ? formSrc(c.g, c.id) : c.img || portrait(c.g, c.id);
+    // Its neon and aura take the transformation's colours, and keep moving.
+    if (form && anim) {
+      card.classList.add("has-form");
+      card.style.setProperty("--fc1", form.c1 ?? "255, 200, 90");
+      card.style.setProperty("--fc2", form.c2 ?? "255, 120, 40");
+    }
     // A tall full-body picture shows the head, a wide one its middle (or the form's own focus).
-    frameForm(img, formFocus(form));
+    frameForm(img, anim ? formFocus(form) : null);
     art.append(img, el("i", "tcg-aura"));
     const top = el("div", "tcg-top");
     if (game) { const logo = el("img", "tcg-logo"); logo.src = ROOT + game.logo; logo.alt = ""; top.append(logo); }
@@ -418,7 +427,7 @@
     if (!session) { open("profile"); return false; }
     const list = showcase();
     const has = list.some((x) => sameCard(x, c));
-    const next = has ? list.filter((x) => !sameCard(x, c)) : [...list, { g: c.g, id: c.id, n: c.n, p: c.p, f: !!c.f }].slice(-3);
+    const next = has ? list.filter((x) => !sameCard(x, c)) : [...list, { g: c.g, id: c.id, n: c.n, p: c.p, f: !!c.f, a: true }].slice(-3);
     saveShowcase(next);
     return !has;
   }
@@ -436,6 +445,15 @@
           rm.title = rm.ariaLabel = t("showRemove");
           rm.addEventListener("click", () => saveShowcase(list.filter((x) => !sameCard(x, c))));
           slot.append(rm);
+          // A card with a transformation: show it animated (the transformation) or the normal portrait.
+          if (formOf(c.g, c.id) || c.f) {
+            const on = c.a !== false;
+            const anim = el("button", `pf-show-anim${on ? " is-on" : ""}`, on ? t("showAnimOn") : t("showAnimOff"));
+            anim.type = "button";
+            anim.title = anim.ariaLabel = t("showAnimHelp");
+            anim.addEventListener("click", () => saveShowcase(list.map((x) => (sameCard(x, c) ? { ...x, a: !on } : x))));
+            slot.append(anim);
+          }
         }
       } else if (mine) {
         const add = el("a", "pf-show-add");

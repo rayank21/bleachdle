@@ -44,7 +44,7 @@ export const seed = [
   { wiki: "Toji Fushiguro" },
   { wiki: "Riko Amanai" },
   { wiki: "Misato Kuroi" },
-  { wiki: "Yu Haibara" },
+  { wiki: "Yu Haibara", hair: ["Black"] },
   { wiki: "Yuki Tsukumo" },
   { wiki: "Naoya Zenin", name: "Naoya Zen'in", race: ["Human"] },
   { wiki: "Naobito Zenin", name: "Naobito Zen'in" },
