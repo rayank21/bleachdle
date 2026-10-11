@@ -133,7 +133,7 @@
         // Ichigo inherited a Quincy's blood from his mother and wears a Hollow mask like the Visored.
         // Gerard and Pernida are the Soul King's heart and left arm, in Yhwach's royal guard.
         { label: { en: "Quincy", fr: "Quincy" }, icon: "star", count: 2, fits: (c) => has(c.race, "Quincy") || c.id === "ichigo-kurosaki",
-          score: rated({ "uryu-ishida": 10, "lille-barro": 9, "gremmy-thoumeaux": 8, "liltotto-lamperd": 6, "ichigo-kurosaki": 10, "gerard-valkyrie": 9, "pernida-parnkgjas": 9 }) },
+          score: rated({ "uryu-ishida": 10, "lille-barro": 9, "gremmy-thoumeaux": 8, "liltotto-lamperd": 6, "ichigo-kurosaki": 10, "gerard-valkyrie": 9, "pernida-parnkgjas": 9, "jugram-haschwalth": 10 }) },
         { label: { en: "Visored", fr: "Visored" }, icon: "mask", count: 1, fits: (c) => has(c.race, "Visored") || c.id === "ichigo-kurosaki",
           score: rated({ "ichigo-kurosaki": 10, "shinji-hirako": 10, "kensei-muguruma": 9, "hachigen-ushoda": 8, "rojuro-otoribashi": 7, "mashiro-kuna": 4 }) },
         // Humans, wandering souls and Fullbringers; Isshin, Ryuken and Masaki live as humans in Karakura.

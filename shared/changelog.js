@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-11T12:00",
+      title: { en: "Mega Evolutions and Gigantamax", fr: "Méga-Évolutions et Gigamax" },
+      items: [
+        { type: "new", game: "pokemon", en: "117 Pokémon get a transformation: their Mega Evolution (Mega Charizard X, Mega Gengar, Mega Garchomp…), Primal Reversion (Kyogre, Groudon) or Gigantamax form (Pikachu, Eevee, Snorlax…), with its official artwork. Their cards glow with the neon and aura of their type, in Crew Roll, the collection and showcases.", fr: "117 Pokémon ont une transformation : leur Méga-Évolution (Méga-Dracaufeu X, Méga-Ectoplasma, Méga-Carchacrok…), leur Primo-Résurgence (Kyogre, Groudon) ou leur forme Gigamax (Pikachu, Évoli, Ronflex…), avec leur illustration officielle. Leurs cartes brillent du néon et de l'aura de leur type, dans Roll ton équipage, la collection et les vitrines." },
+        { type: "balance", game: "bleach", en: "Crew Roll Bleach: Jugram Haschwalth is worth 10 as a Quincy.", fr: "Roll ton équipage Bleach : Jugram Haschwalth vaut 10 en Quincy." },
+      ],
+    },
+    {
       at: "2026-10-10T01:00",
       title: { en: "New scenes picked by the players", fr: "Des décors choisis par les joueurs" },
       items: [
