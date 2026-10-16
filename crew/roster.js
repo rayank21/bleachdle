@@ -337,26 +337,37 @@
   // its base stats), the few below are set by hand.
   // Healing and strategy are side roles for a Pokémon: one that isn't listed still brings 60 % of its power.
   const pokeRole = (table) => (c, power) => table[c.id] ?? Math.max(1, Math.round(power * 0.6));
+  // Arceus, the Original One, takes any type with its plates (Multitype): it fits every slot and is worth 10 in each.
+  const ARCEUS = (c) => c.id === "arceus";
+  // Healers and strategists that aren't fully evolved are drawn too (Chansey, Team Rocket's Meowth, Kadabra…).
+  const POKE_ROLE_EXTRAS = ["chansey", "happiny", "meowth", "kadabra", "abra", "porygon2", "mr-mime"];
   window.CREW_GAMES.pokemon = {
-    pool: (c) => c.final || ["Legendary", "Mythical"].includes(c.category) || ["pikachu", "eevee"].includes(c.id),
+    pool: (c) => c.final || ["Legendary", "Mythical"].includes(c.category) || ["pikachu", "eevee", ...POKE_ROLE_EXTRAS].includes(c.id),
     slots: [
-      { label: { en: "Starter", fr: "Starter" }, icon: "star", count: 1, fits: (c) => c.starter === true },
+      { label: { en: "Starter", fr: "Starter" }, icon: "star", count: 1, fits: (c) => c.starter === true || ARCEUS(c) },
       { label: { en: "Legendary / Mythical", fr: "Légendaire / Fabuleux" }, icon: "crown", count: 1, fits: (c) => ["Legendary", "Mythical"].includes(c.category) },
-      { label: { en: "Fire / Electric", fr: "Feu / Électrik" }, icon: "flame", count: 1, fits: (c) => has(c.types, "Fire", "Electric") },
-      { label: { en: "Water / Ice", fr: "Eau / Glace" }, icon: "globe", count: 1, fits: (c) => has(c.types, "Water", "Ice") },
-      { label: { en: "Grass / Ground / Rock", fr: "Plante / Sol / Roche" }, icon: "leaf", count: 1, fits: (c) => has(c.types, "Grass", "Ground", "Rock") },
-      { label: { en: "Dragon / Psychic / Ghost", fr: "Dragon / Psy / Spectre" }, icon: "eye", count: 1, fits: (c) => has(c.types, "Dragon", "Psychic", "Ghost") },
-      // The Pokémon Centre's nurses and the great healers of the games.
+      { label: { en: "Fire / Electric", fr: "Feu / Électrik" }, icon: "flame", count: 1, fits: (c) => has(c.types, "Fire", "Electric") || ARCEUS(c) },
+      { label: { en: "Water / Ice", fr: "Eau / Glace" }, icon: "globe", count: 1, fits: (c) => has(c.types, "Water", "Ice") || ARCEUS(c) },
+      { label: { en: "Grass / Ground / Rock", fr: "Plante / Sol / Roche" }, icon: "leaf", count: 1, fits: (c) => has(c.types, "Grass", "Ground", "Rock") || ARCEUS(c) },
+      { label: { en: "Dragon / Psychic / Ghost", fr: "Dragon / Psy / Spectre" }, icon: "eye", count: 1, fits: (c) => has(c.types, "Dragon", "Psychic", "Ghost") || ARCEUS(c) },
+      // The Pokémon Centre's nurses and the great healers of the games: Ho-Oh revived the legendary beasts, Xerneas
+      // gives life, Cresselia drives away nightmares, Tapu Lele's scales heal, Jirachi grants wishes, Latias heals with Heal Pulse.
       { label: HEALER, icon: "cross", role: "healer", count: 1, fits: anyone,
-        score: pokeRole(parse(`blissey:10 chansey:9 audino:8 comfey:7 alomomola:7 sylveon:7 togekiss:7 hatterene:7 florges:6 clefable:6
-          indeedee:6 happiny:5 wigglytuff:5 miltank:5 lumineon:4 bellossom:4`)) },
-      // The cleverest: Alakazam's IQ of 5000, Metagross's four brains, Slowking's crown.
+        score: pokeRole(parse(`arceus:10 blissey:10 chansey:9 ho-oh:9 xerneas:9 audino:8 cresselia:8 tapu-lele:8 jirachi:8 celebi:8 comfey:7
+          alomomola:7 sylveon:7 togekiss:7 hatterene:7 latias:7 mew:7 florges:6 clefable:6 indeedee:6 shaymin:6 manaphy:6 suicune:6
+          vaporeon:6 sinistcha:6 happiny:5 wigglytuff:5 miltank:5 umbreon:5 gardevoir:5 primarina:5 musharna:5 altaria:5 lumineon:4
+          bellossom:4 lilligant:4`)) },
+      // The cleverest: Team Rocket's Meowth taught himself to talk and schemes every episode, Alakazam's IQ of 5000,
+      // Metagross's four brains, Slowking's crown, Uxie the being of knowledge, Calyrex the wise king, Oranguru the
+      // forest's sage, Kingambit commanding its Bisharp.
       { label: STRATEGIST, icon: "chess", role: "strategist", count: 1, fits: anyone,
-        score: pokeRole(parse(`alakazam:10 mewtwo:10 metagross:9 slowking:9 necrozma:8 hoopa:8 deoxys:8 xatu:7 espeon:7 gardevoir:7 lucario:7
-          beheeyem:6 kadabra:6 bronzong:6 porygon-z:6 rotom:5 abra:4`)) },
+        score: pokeRole(parse(`arceus:10 meowth:10 alakazam:10 mewtwo:10 metagross:9 slowking:9 uxie:9 calyrex:9 necrozma:8 hoopa:8 deoxys:8
+          mew:8 oranguru:8 kingambit:8 xatu:7 espeon:7 gardevoir:7 lucario:7 malamar:7 gothitelle:7 honchkrow:7 zoroark:7 inteleon:7
+          beheeyem:6 kadabra:6 bronzong:6 porygon-z:6 porygon2:6 starmie:6 delphox:6 zygarde:6 persian:6 noctowl:6 claydol:5 hypno:5
+          mr-mime:5 rotom:5 abra:4 wobbuffet:4`)) },
       { label: { en: "Wildcard", fr: "Joker" }, icon: "dice", count: 1, fits: anyone },
     ],
-    power: parse(`pikachu:6 raichu:7 charizard:8 gengar:8 lucario:8 eevee:4 greninja:8 snorlax:8 gyarados:8 lapras:7`),
+    power: parse(`pikachu:6 raichu:7 charizard:10 gengar:8 lucario:8 eevee:4 greninja:8 snorlax:8 gyarados:8 lapras:7`),
   };
 
   Object.assign(window.CREW_GAMES, {

@@ -7,6 +7,14 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-16T12:00",
+      title: { en: "More Pokémon healers and strategists", fr: "Plus de Pokémon soigneurs et stratèges" },
+      items: [
+        { type: "balance", game: "pokemon", en: "Crew Roll Pokémon: about twenty more healers (Ho-Oh, Xerneas, Cresselia, Tapu Lele, Jirachi, Latias…) and strategists (Uxie, Calyrex, Oranguru, Kingambit, Malamar…). Chansey, Meowth, Kadabra and Porygon2 can now be drawn.", fr: "Roll ton équipage Pokémon : une vingtaine de soigneurs (Ho-Oh, Xerneas, Cresselia, Tokopiyon, Jirachi, Latias…) et de stratèges (Créhelf, Sylveroy, Gouroutan, Gromago, Sepiatroce…) en plus. Leveinard, Miaouss, Kadabra et Porygon2 peuvent maintenant être tirés." },
+        { type: "balance", game: "pokemon", en: "Charizard is worth 10 (Starter and Fire). Team Rocket's Meowth is worth 10 as a strategist. Arceus fits every slot and is worth 10 everywhere.", fr: "Dracaufeu vaut 10 (Starter et Feu). Miaouss de la Team Rocket vaut 10 en stratège. Arceus va dans toutes les cases et vaut 10 partout." },
+      ],
+    },
+    {
       at: "2026-10-11T12:00",
       title: { en: "Mega Evolutions and Gigantamax", fr: "Méga-Évolutions et Gigamax" },
       items: [
