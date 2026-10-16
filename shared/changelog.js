@@ -7,11 +7,19 @@
   // game: a category id (shows its logo), "crew" (Crew Roll) or nothing.
   const LOG = [
     {
+      at: "2026-10-16T13:00",
+      title: { en: "Leave a game at any time, lighter on phones", fr: "Quitter une partie à tout moment, plus léger sur téléphone" },
+      items: [
+        { type: "new", en: "A “Leave the match” button during every online game (Crew Roll, card duels, the -dle races), and while getting back into a match after a reload: no more closing the site when a game gets stuck.", fr: "Un bouton « Quitter la partie » pendant toutes les parties en ligne (Roll ton équipage, duels de cartes, courses des -dle) et pendant le retour dans une partie après un rechargement : plus besoin de fermer le site quand une partie bloque." },
+        { type: "improved", en: "Phones: the light mode is on by default (no endless decorative animations) and the site keeps fewer connections open, for less battery, less data and a cooler phone.", fr: "Téléphones : le mode léger est activé d'office (plus d'animations décoratives en boucle) et le site garde moins de connexions ouvertes, pour moins de batterie, moins de données et un téléphone qui chauffe moins." },
+      ],
+    },
+    {
       at: "2026-10-16T12:00",
       title: { en: "More Pokémon healers and strategists", fr: "Plus de Pokémon soigneurs et stratèges" },
       items: [
         { type: "balance", game: "pokemon", en: "Crew Roll Pokémon: about twenty more healers (Ho-Oh, Xerneas, Cresselia, Tapu Lele, Jirachi, Latias…) and strategists (Uxie, Calyrex, Oranguru, Kingambit, Malamar…). Chansey, Meowth, Kadabra and Porygon2 can now be drawn.", fr: "Roll ton équipage Pokémon : une vingtaine de soigneurs (Ho-Oh, Xerneas, Cresselia, Tokopiyon, Jirachi, Latias…) et de stratèges (Créhelf, Sylveroy, Gouroutan, Gromago, Sepiatroce…) en plus. Leveinard, Miaouss, Kadabra et Porygon2 peuvent maintenant être tirés." },
-        { type: "balance", game: "pokemon", en: "Charizard is worth 10 (Starter and Fire). Team Rocket's Meowth is worth 10 as a strategist. Arceus fits every slot and is worth 10 everywhere.", fr: "Dracaufeu vaut 10 (Starter et Feu). Miaouss de la Team Rocket vaut 10 en stratège. Arceus va dans toutes les cases et vaut 10 partout." },
+        { type: "balance", game: "pokemon", en: "Charizard is worth 10 (Starter and Fire). Team Rocket's Meowth is worth 10 as a strategist. Arceus fits every slot except Starter and is worth 10 everywhere.", fr: "Dracaufeu vaut 10 (Starter et Feu). Miaouss de la Team Rocket vaut 10 en stratège. Arceus va dans toutes les cases sauf Starter et vaut 10 partout." },
       ],
     },
     {

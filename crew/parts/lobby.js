@@ -75,7 +75,11 @@ export function renderLobby() {
     box.textContent = "";
     const w = el("p", "lobby-waiting");
     w.append(el("span", "spinner"), t("rejoining"));
-    box.append(el("h2", null, t("lobbyTitle")), w);
+    // Never stuck here: give up the match and go back to the lobby.
+    const give = el("button", "btn-ghost", t("quitMatch"));
+    give.type = "button";
+    give.addEventListener("click", () => { S.resume = null; rooms?.leave(); renderLobby(); });
+    box.append(el("h2", null, t("lobbyTitle")), w, give);
     return;
   }
   // The host changed the anime: follow it (and send my spoiler limit for that anime).

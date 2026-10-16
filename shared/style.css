@@ -2016,3 +2016,4 @@ img.cl-game-crew { background: #5ed3c6; }
 .pf-show-anim { position: absolute; z-index: 6; left: 50%; bottom: -12px; translate: -50% 0; padding: 3px 10px; border-radius: 99px; border: 1px solid rgba(255, 255, 255, 0.25); font-size: 11px; font-weight: 800; white-space: nowrap; color: #ddd; background: #22222b; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); cursor: pointer; }
 .pf-show-anim.is-on { color: #1a1205; border-color: transparent; background: linear-gradient(90deg, #ffe16b, #ff9d2e); box-shadow: 0 0 12px rgba(255, 190, 60, 0.6); }
 .pf-show-slot { position: relative; }
+.lite .cl-spark, .lite .cl-spark svg, .lite .cl-btn.has-news::after { animation: none !important; }

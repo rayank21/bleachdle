@@ -968,6 +968,18 @@ function drawMatch() {
   if (m.teams) top.append(el("span", "cvm-name team-0", m.teamNames[0]), el("b", "cvm-pts", `${m.teamPts[0]} – ${m.teamPts[1]}`), el("span", "cvm-name team-1 is-left", m.teamNames[1]));
   board.append(top, scoreChips(m), el("p", `cvm-round${roundPoints(m, m.round) > 1 ? " is-double" : ""}`, m.done ? "" : `${t("cRound")(m.round + 1, ROUNDS(m))}${roundPoints(m, m.round) > 1 ? ` · ${t("cDouble")}` : ""}`));
   if (m.mode === "deck" && !m.done) board.append(el("p", "cvm-rules", t("cDeckRules")));
+  // Leave at any moment, even when the duel is stuck (the others win by forfeit).
+  if (!m.done) {
+    const quit = el("button", "btn-ghost duel-quit", t("quitMatch"));
+    quit.type = "button";
+    quit.addEventListener("click", () => {
+      if (!confirm(t(cardRooms?.isHost() ? "quitConfirmHost" : "quitConfirm"))) return;
+      cardRooms?.leave();
+      S.cardMatch = null;
+      renderCards();
+    });
+    board.append(quit);
+  }
 
   if (m.mode === "pack") {
     // One row per player (mine last); the packs stay face down until everyone has opened theirs.

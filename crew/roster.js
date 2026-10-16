@@ -337,14 +337,14 @@
   // its base stats), the few below are set by hand.
   // Healing and strategy are side roles for a Pokémon: one that isn't listed still brings 60 % of its power.
   const pokeRole = (table) => (c, power) => table[c.id] ?? Math.max(1, Math.round(power * 0.6));
-  // Arceus, the Original One, takes any type with its plates (Multitype): it fits every slot and is worth 10 in each.
+  // Arceus, the Original One, takes any type with its plates (Multitype): it fits every type slot and is worth 10 in each.
   const ARCEUS = (c) => c.id === "arceus";
   // Healers and strategists that aren't fully evolved are drawn too (Chansey, Team Rocket's Meowth, Kadabra…).
   const POKE_ROLE_EXTRAS = ["chansey", "happiny", "meowth", "kadabra", "abra", "porygon2", "mr-mime"];
   window.CREW_GAMES.pokemon = {
     pool: (c) => c.final || ["Legendary", "Mythical"].includes(c.category) || ["pikachu", "eevee", ...POKE_ROLE_EXTRAS].includes(c.id),
     slots: [
-      { label: { en: "Starter", fr: "Starter" }, icon: "star", count: 1, fits: (c) => c.starter === true || ARCEUS(c) },
+      { label: { en: "Starter", fr: "Starter" }, icon: "star", count: 1, fits: (c) => c.starter === true },
       { label: { en: "Legendary / Mythical", fr: "Légendaire / Fabuleux" }, icon: "crown", count: 1, fits: (c) => ["Legendary", "Mythical"].includes(c.category) },
       { label: { en: "Fire / Electric", fr: "Feu / Électrik" }, icon: "flame", count: 1, fits: (c) => has(c.types, "Fire", "Electric") || ARCEUS(c) },
       { label: { en: "Water / Ice", fr: "Eau / Glace" }, icon: "globe", count: 1, fits: (c) => has(c.types, "Water", "Ice") || ARCEUS(c) },

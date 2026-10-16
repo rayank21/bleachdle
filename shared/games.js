@@ -66,6 +66,11 @@ window.DLE_NAME = (text, pid, cls = "") => {
 // Nostr relays used to find other players (Trystero). Pinned so a dead default relay can't keep players apart.
 window.DLE_RELAYS = ["wss://nos.lol", "wss://relay.snort.social", "wss://nostr.mom", "wss://relay.primal.net", "wss://relay.damus.io",
   "wss://relay.nostr.net", "wss://nostr.oxtr.dev"];
+// Phones and tablets: a touch screen without a mouse.
+window.DLE_PHONE = matchMedia("(pointer: coarse)").matches && !matchMedia("(any-pointer: fine)").matches;
+// A phone keeps fewer sockets open (each one costs battery, data and wakes the radio): four of the same relays, so it
+// still meets every computer, which listens on all of them.
+if (window.DLE_PHONE) window.DLE_RELAYS = ["wss://nos.lol", "wss://nostr.mom", "wss://relay.primal.net", "wss://relay.nostr.net"];
 
 // The real time, from the site's server. A computer whose clock is off (days behind) gets every message refused by
 // the relays as "expired", so nobody sees that player: messages are dated with this offset instead of the local clock.

@@ -1001,3 +1001,11 @@ html.bopen-lock, html.bopen-lock body { overflow: hidden; }
 /* The page behind them: a gym's wooden floor under the lights for Haikyuu, the open sea for One Piece. */
 body.crew-page[data-game="haikyuu"] .bg { background: radial-gradient(90% 50% at 50% 0%, rgba(255, 230, 190, 0.18), transparent 70%), repeating-linear-gradient(90deg, #2a1a0e 0 120px, #24160b 120px 240px), #24160b; }
 body.crew-page[data-game="onepiece"] .bg { background: radial-gradient(80% 45% at 50% 0%, rgba(140, 210, 255, 0.25), transparent 70%), linear-gradient(180deg, #0b2a4a, #061629 60%, #04101e); }
+.duel-head { position: relative; }
+.duel-quit { position: absolute; top: 8px; right: 10px; padding: 5px 10px; font-size: 12px; }
+@media (max-width: 640px) { .duel-quit { position: static; align-self: center; } }
+.cvm { position: relative; }
+@media (max-width: 640px) { .cvm > .duel-quit { order: 99; } }
+/* Light mode (weak machines and phones): no endless decorative loops on idle screens (a roll keeps its own). */
+.lite .reel-glow, .lite .reel-shine, .lite .power-fill::after, .lite .ix-hero::after, .lite .boost-tab-n, .lite .bcard-back-shine,
+.lite .bpack.is-idle, .lite .bpack.is-idle .bpack-tab, .lite .bopen-rays { animation: none; }

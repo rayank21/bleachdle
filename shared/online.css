@@ -148,6 +148,8 @@
 .race-box p { margin: 0; }
 .race-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .race-timer { font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--accent-strong); }
+.race-head { flex-wrap: wrap; }
+.race-quit { padding: 5px 10px; font-size: 12px; }
 .race-list li { gap: 10px; }
 .race-list li.is-found { background: rgba(31, 157, 76, 0.18); }
 .race-list li.has-left { opacity: 0.5; }

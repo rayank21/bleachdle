@@ -661,6 +661,14 @@ function leaveMatch() {
   renderLobby();
 }
 
+// Leaving a match under way: the others see me leave (my turns are skipped) and I'm back in the lobby.
+export function quitMatch() {
+  if (S.match && !S.match.done && !confirm(t(rooms.isHost() ? "quitConfirmHost" : "quitConfirm"))) return;
+  document.querySelectorAll(".vs-splash").forEach((n) => n.remove());
+  S.resume = null;
+  leaveMatch();
+}
+
 export function backToRoom() {
   S.match = null;
   if (rooms.isHost()) rooms.reopen();
@@ -712,7 +720,11 @@ export function renderMatch() {
   round.id = "duelRound";
   const board = el("div", "scoreboard");
   board.id = "scoreboard";
-  head.append(round, board);
+  // Leave at any moment, even when the match is stuck (a player gone, a lost message).
+  const quit = el("button", "btn-ghost duel-quit", t("quitMatch"));
+  quit.type = "button";
+  quit.addEventListener("click", quitMatch);
+  head.append(round, board, quit);
 
   const grid = el("div", "duel-grid");
   const mine = el("div", "crew-board");

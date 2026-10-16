@@ -369,6 +369,13 @@ function renderRaceBoard(box) {
       timer.textContent = clock(Date.now() - S.race.startedAt);
     }, 1000);
   }
+  // Leave at any moment, even when the game is stuck.
+  if (!S.race.done) {
+    const quit = el("button", "btn-ghost race-quit", esc(t("quitRace")));
+    quit.type = "button";
+    quit.addEventListener("click", () => { if (confirm(t(rooms.isHost() ? "quitRaceHost" : "quitRaceConfirm"))) leaveRace(); });
+    head.append(quit);
+  }
   box.append(head);
   if (S.race.teams) box.append(teamBar());
   if (S.race.turns) { box.append(turnBar()); lockInput(); }

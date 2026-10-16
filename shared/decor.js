@@ -22,7 +22,9 @@
   // The admin panel can force it on ("1") or off ("0") to test both.
   let forcedLite = null;
   try { forcedLite = localStorage.getItem("dle:admin-lite"); } catch {}
-  if (forcedLite === "1" || (forcedLite !== "0" && (cores <= 4 || mem <= 4))) document.documentElement.classList.add("lite");
+  // Phones too: they report plenty of cores (and iPhones no memory at all) but heat up and drain on endless animations.
+  const phone = window.DLE_PHONE ?? (matchMedia("(pointer: coarse)").matches && !matchMedia("(any-pointer: fine)").matches);
+  if (forcedLite === "1" || (forcedLite !== "0" && (cores <= 4 || mem <= 4 || phone))) document.documentElement.classList.add("lite");
 
   // Machines slow despite their specs (a weak graphics chip, hardware acceleration turned off): a few seconds after
   // loading, the page counts its own frames; under ~25 per second it goes light, and remembers it for a week (then

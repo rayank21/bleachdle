@@ -355,6 +355,10 @@
 
     api.leave = () => {
       dropTicket();
+      // Leaving also gives up a seat being reclaimed after a reload, and the seat kept for the next reload.
+      api.rejoining = false;
+      ticket = null;
+      api.keepSeat = false;
       if (!api.myRoom) return;
       const room = api.myRoom;
       if (room.host === api.selfId) {
